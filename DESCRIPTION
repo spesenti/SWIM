@@ -1,9 +1,22 @@
 Package: SWIM
-Title: What the Package Does (one line, title case)
+Title: Scenario Weights for Importance Measurement
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R: c(
+  person("Silvana M.", "Pesenti", email = "a@gmail.com", 
+  role = c("aut", "cre")), 
+  person("Alberto", "Bettini", email = "a@gmail.com", 
+  role = c("aut")), 
+  person("Pietro", "Millossovich", email = "Pietro.Millossovich.1@city.ac.uk", 
+  role = c("aut")), 
+  person("Andreas", "Tsanakas", email = "A.Tsanakas.1@city.ac.uk", 
+  role = c("aut"))
+  )
+Description: An efficient sensitivity analysis for models based on Monte Carlo samples.
+    For a stress to an input / output, the (stressed) probabilty (meaure) scenario
+    weights RE calculated by minimising the Kullback-Leobler divergence with respect
+    to the baseline model.
 Depends: R (>= 3.5.1)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.1.1
