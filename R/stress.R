@@ -1,8 +1,9 @@
-# this function combines the subfunctions: 
-# stress_VaR, stress_VaR_ES, stress_prob
+#'  this function combines the subfunctions:
+#' stress_VaR, stress_VaR_ES, stress_prob
 
-# = c("VaR", "VaR ES", "prob", "user")
-
+#' @param type The type of stress. A choice of "VaR", "VaR ES", "prob", "user", "moments"
+#' @param ... Arguments to be passed to subsequent funcitons
+#' @return A SWIM object
 stress <- function(type = c("VaR", "VaR ES", "prob", "user"), ...){
 
   if(type == "VaR") SWIM <- stress_VaR(...)
