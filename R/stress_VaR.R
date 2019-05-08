@@ -7,19 +7,35 @@
 
 
  #' @param x       Vector, matrix, data frame, realisations of a random variable or a SWIM object.
- #' @param k       Numeric, the column of x that is stressed (default = 1)
- #' @param alpha   Numeric, vector, level of VaR
- #' @param q       Numeric, vector, new VaR at level alpha
- #' @param q_ratio Numeric, vector, ratio of new VaR to old VaR, that is q /  VaR.
+ #' @param k       Numeric, the column of x that is stressed (default = 1).
+ #' @param alpha   Numeric, vector, level of VaR.
+ #' @param q       Numeric, vector, stressed VaR at level alpha.
+ #' @param q_ratio Numeric, vector, ratio of stressed VaR to base VaR, \eqn{q_ratio =  q /  VaR}.
 
    ## If alpha and q or q_ratio are vectors, they have to be of the same length. 
  
  #' @details The new weights are 
- #' @return A SWIM object containing x, the new weights and specifications of what has been stressed, see the `SWIM` object for details. 
+ #' 
+ #' @return A `SWIM` object containing \code{x}; a list of functions, \code{new_weights}
+ #'   that, applied to the kth component of \code{x}, generate the vectors of new
+ #'   weights; and \code{specs} of what has been stressed.
+ #'   The \code{specs} are a data.frame consisting of 
+ #'       \tabular{rllll}{
+ #'         \tab \code{type} \tab \code{k} \tab \code{alpha} \tab \code{q}\cr
+ #'         stress 1 \tab VaR \tab \tab 
+ #'       }
+
+ #'  
+ #'    see the `SWIM` object for details. 
  #' 
  #' @author Silvana M. Pesenti 
- #' @references \url{}
- #' @seealso \code{\link[SWIM]{stress}, \link[SWIM]{stress_VaR_ES}, \link[SWIM]{stress_moment}, \link[SWIM]{stress_prob}, \link[SWIM]{stress_user}}
+ #' 
+#   #' @references This is my reference 
+#   #'   \insertAllCited{}
+#   #'   \insertCite{Pesenti2019}{SWIM}
+ #' 
+ #' @family stress functions
+ #' @seealso \code{\link{stress}}, \code{\link{stress_VaR_ES}} for stressing the VaR and ES jointly, \code{\link{stress_moment}} for stressing moments, \code{\link{stress_prob}} for stressing intervals and \code{\link{stress_user}} for user defined weights.
 
  ## OUTPUT:  SWIM object with
  ## x              vector, matrix, data frame - realisations of a random variable
@@ -28,9 +44,9 @@
  ## alpha          numeric, vector - VaR level
  ## q              numeric, vector - constraints: new VaR at level alpha
 
- ## ASSUMPTIONS:
- ## The data stem from continuously distributed random variables
 
+ #' @export
+ #' 
   stress_VaR <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1){
    if(is.SWIM(x)) x_data <- get.data(x) else x_data <- as.matrix(x)
    if(anyNA(x_data)) warning("'x' contains NA")

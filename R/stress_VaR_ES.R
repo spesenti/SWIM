@@ -1,17 +1,20 @@
-## DESCRIPTION:
-## This function solves the optimisation problem: Given a random variable
-## and a constraint on its VaR and ES, it provides the distribution of the random
-## variable with is closest to the input wrt the Kullback-Leibler divergence and fulfils the constraints.
+ #' Stressing Value-at-Risk and Expected Shortfall
+ #'
+ #' This function solves the optimisation problem: Given a random variable
+ #'   and a constraint on its VaR and ES, it provides the distribution of 
+ #'   the random variable with is closest to the input wrt the Kullback-Leibler
+ #'   divergence and fulfils the constraints.
 
-## INPUT:
-## x             vector, matrix, data.frame - realisation of a random variable
-##               By detfault, the first row of x is stressed
-## k             numeric - column of x that are stressed (default = 1)
-## alpha         numeric, vector - level of VaR and ES 
-## q             numeric, vector - constraints: new VaR at level alpha
-## q_ratio       numeric, vector - constraints: q / VaR
-## s             numeric, vector - constraints: new ES at level alpha
-## s_ratio       numeric, vector - constraints: s / ES
+ #' @inheritParams    stress_VaR
+ #' @param s          Numeric, vector - constraints: new ES at level alpha
+ #' @param s_ratio    Numeric, vector, ratio of stressed ES to base ES, \eqn{s_ratio = s / ES}.
+
+ #' @inherit stress_VaR seealso
+ 
+ #' @export
+ #' 
+
+
 
 ## If q, s are vectors, they have to be of the same length. 
 ## If q is a vector and s numeric, the stress s is used for all q's. Similarly for s vector and q numeric.

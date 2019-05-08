@@ -9,16 +9,25 @@ stress_VaR(x, alpha, q_ratio = NULL, q = NULL, k = 1)
 \arguments{
 \item{x}{Vector, matrix, data frame, realisations of a random variable or a SWIM object.}
 
-\item{alpha}{Numeric, vector, level of VaR}
+\item{alpha}{Numeric, vector, level of VaR.}
 
-\item{q_ratio}{Numeric, vector, ratio of new VaR to old VaR, that is q /  VaR.}
+\item{q_ratio}{Numeric, vector, ratio of stressed VaR to base VaR, \eqn{q_ratio =  q /  VaR}.}
 
-\item{q}{Numeric, vector, new VaR at level alpha}
+\item{q}{Numeric, vector, stressed VaR at level alpha.}
 
-\item{k}{Numeric, the column of x that is stressed (default = 1)}
+\item{k}{Numeric, the column of x that is stressed (default = 1).}
 }
 \value{
-A SWIM object containing x, the new weights and specifications of what has been stressed, see the `SWIM` object for details.
+A `SWIM` object containing \code{x}; a list of functions, \code{new_weights}
+  that, applied to the kth component of \code{x}, generate the vectors of new
+  weights; and \code{specs} of what has been stressed.
+  The \code{specs} are a data.frame consisting of 
+      \tabular{rllll}{
+        \tab \code{type} \tab \code{k} \tab \code{alpha} \tab \code{q}\cr
+        stress 1 \tab VaR \tab \tab 
+      }
+ 
+   see the `SWIM` object for details.
 }
 \description{
 This function solves the optimisation problem: Given a random variable
@@ -26,9 +35,13 @@ This function solves the optimisation problem: Given a random variable
   variable with is closest to the input wrt the Kullback-Leibler divergence
   and which fulfils the constraints.
 }
+\details{
+The new weights are
+}
 \seealso{
-\code{\link[SWIM]{stress}, \link[SWIM]{stress_VaR_ES}, \link[SWIM]{stress_moment}, \link[SWIM]{stress_prob}, \link[SWIM]{stress_user}}
+\code{\link{stress}}, \code{\link{stress_VaR_ES}} for stressing the VaR and ES jointly, \code{\link{stress_moment}} for stressing moments, \code{\link{stress_prob}} for stressing intervals and \code{\link{stress_user}} for user defined weights.
 }
 \author{
 Silvana M. Pesenti
 }
+\concept{stress functions}

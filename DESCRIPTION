@@ -16,6 +16,8 @@ Description: An efficient sensitivity analysis for models based on Monte Carlo s
     weights RE calculated by minimising the Kullback-Leobler divergence with respect
     to the baseline model.
 Depends: R (>= 3.5.1)
+Imports: Rdpack
+RdMacros: Rdpack
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
