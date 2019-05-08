@@ -2,7 +2,8 @@
 % Please edit documentation in R/stress.R
 \name{stress}
 \alias{stress}
-\title{this function combines the subfunctions:
+\title{This function combines the subfunctions:
+ 
 stress_VaR, stress_VaR_ES, stress_prob}
 \usage{
 stress(type = c("VaR", "VaR ES", "prob", "user"), ...)
@@ -16,6 +17,7 @@ stress(type = c("VaR", "VaR ES", "prob", "user"), ...)
 A SWIM object
 }
 \description{
-this function combines the subfunctions:
+This function combines the subfunctions:
+ 
 stress_VaR, stress_VaR_ES, stress_prob
 }

@@ -1,4 +1,5 @@
-#'  this function combines the subfunctions:
+#' This function combines the subfunctions:
+#'  
 #' stress_VaR, stress_VaR_ES, stress_prob
 
 #' @param type The type of stress. A choice of "VaR", "VaR ES", "prob", "user", "moments"

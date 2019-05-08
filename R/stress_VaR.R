@@ -1,18 +1,25 @@
- ## DESCRIPTION:
- ## This function solves the optimisation problem: Given a random variable
- ## and a constraint on its VaR, it provides the distribution of the random variable
- ## with is closest to the input wrt the Kullback-Leibler divergence and which fulfils the constraints.
+ #' Stressing Value-at-Risk
+ #' 
+ #' This function solves the optimisation problem: Given a random variable
+ #'   and a constraint on its VaR, it provides the distribution of the random
+ #'   variable with is closest to the input wrt the Kullback-Leibler divergence
+ #'   and which fulfils the constraints.
 
 
- ## INPUT:
- ## x              vector, matrix, data frame - realisations of a random variable or SWIM object
- ##                By detfault, the first row of x is stressed
- ## k              numeric - column of x that are stressed (default = 1)
- ## alpha          numeric, vector - level of VaR
- ## q              numeric, vector - constraints: new VaR at level alpha
- ## q_ratio        numeric, vector - constraints: q /  VaR
+ #' @param x       Vector, matrix, data frame, realisations of a random variable or a SWIM object.
+ #' @param k       Numeric, the column of x that is stressed (default = 1)
+ #' @param alpha   Numeric, vector, level of VaR
+ #' @param q       Numeric, vector, new VaR at level alpha
+ #' @param q_ratio Numeric, vector, ratio of new VaR to old VaR, that is q /  VaR.
 
    ## If alpha and q or q_ratio are vectors, they have to be of the same length. 
+ 
+ #' @details The new weights are 
+ #' @return A SWIM object containing x, the new weights and specifications of what has been stressed, see the `SWIM` object for details. 
+ #' 
+ #' @author Silvana M. Pesenti 
+ #' @references \url{}
+ #' @seealso \code{\link[SWIM]{stress}, \link[SWIM]{stress_VaR_ES}, \link[SWIM]{stress_moment}, \link[SWIM]{stress_prob}, \link[SWIM]{stress_user}}
 
  ## OUTPUT:  SWIM object with
  ## x              vector, matrix, data frame - realisations of a random variable
