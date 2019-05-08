@@ -5,6 +5,11 @@
 #' @param type The type of stress. A choice of "VaR", "VaR ES", "prob", "user", "moments"
 #' @param ... Arguments to be passed to subsequent funcitons
 #' @return A SWIM object
+#' 
+#' @importFrom Rdpack reprompt
+#' 
+#' 
+#' 
 stress <- function(type = c("VaR", "VaR ES", "prob", "user"), ...){
 
   if(type == "VaR") SWIM <- stress_VaR(...)
