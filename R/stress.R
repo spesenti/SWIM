@@ -1,12 +1,20 @@
-#' This function combines the subfunctions:
-#'  
+#' Stressing random variables 
+#' 
+#' Provides the scenario weights such that a random variable
+#'    under the new scenraio weights fulfils probabilistic constraints and
+#'    has minimal Kullback-Leibler divergence to the baseline random
+#'    variable.
+#'    
 #' stress_VaR, stress_VaR_ES, stress_prob
 
-#' @param type The type of stress. A choice of "VaR", "VaR ES", "prob", "user", "moments"
-#' @param ... Arguments to be passed to subsequent funcitons
-#' @return A SWIM object
+#' @param type    The type of stress. A choice of "VaR", "VaR ES", "prob", "user", "moments"
+#' @param ...     Arguments to be passed depending on \code{type}.
+#' @return        A SWIM object.
 #' 
-#' @importFrom Rdpack reprompt
+#' @export
+#' 
+#' 
+#' @importFrom    Rdpack reprompt
 #' 
 #' 
 #' 

@@ -2,22 +2,23 @@
 % Please edit documentation in R/stress.R
 \name{stress}
 \alias{stress}
-\title{This function combines the subfunctions:
- 
-stress_VaR, stress_VaR_ES, stress_prob}
+\title{Stressing random variables}
 \usage{
 stress(type = c("VaR", "VaR ES", "prob", "user"), ...)
 }
 \arguments{
 \item{type}{The type of stress. A choice of "VaR", "VaR ES", "prob", "user", "moments"}
 
-\item{...}{Arguments to be passed to subsequent funcitons}
+\item{...}{Arguments to be passed depending on \code{type}.}
 }
 \value{
-A SWIM object
+A SWIM object.
 }
 \description{
-This function combines the subfunctions:
- 
+Provides the scenario weights such that a random variable
+   under the new scenraio weights fulfils probabilistic constraints and
+   has minimal Kullback-Leibler divergence to the baseline random
+   variable.
+   
 stress_VaR, stress_VaR_ES, stress_prob
 }

@@ -8,19 +8,23 @@ stress_VaR_ES(x, alpha, q_ratio = NULL, s_ratio = NULL, q = NULL,
   s = NULL, k = 1)
 }
 \arguments{
-\item{x}{Vector, matrix, data frame, realisations of a random variable or a SWIM object.}
+\item{x}{A SWIM object or a vector, matrix or data frame 
+containing realisations of random variables. Colums of \code{x} 
+are interpreted to correspond to random variables.}
 
-\item{alpha}{Numeric, vector, level of VaR.}
+\item{alpha}{Numeric vector, the levels of the stressed VaR.}
 
-\item{q_ratio}{Numeric, vector, ratio of stressed VaR to base VaR, \eqn{q_ratio =  q /  VaR}.}
+\item{q_ratio}{Numeric vector, the ratio of the stressed VaR to the
+original VaR, \eqn{q_ratio =  q /  VaR}.}
 
 \item{s_ratio}{Numeric, vector, ratio of stressed ES to base ES, \eqn{s_ratio = s / ES}.}
 
-\item{q}{Numeric, vector, stressed VaR at level alpha.}
+\item{q}{Numeric vector, the stressed VaR at level \code{alpha}.}
 
 \item{s}{Numeric, vector - constraints: new ES at level alpha}
 
-\item{k}{Numeric, the column of x that is stressed (default = 1).}
+\item{k}{Numeric, the column of \code{x} that is stressed
+(default = 1).}
 }
 \description{
 This function solves the optimisation problem: Given a random variable

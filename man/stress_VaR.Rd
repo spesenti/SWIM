@@ -7,36 +7,35 @@
 stress_VaR(x, alpha, q_ratio = NULL, q = NULL, k = 1)
 }
 \arguments{
-\item{x}{Vector, matrix, data frame, realisations of a random variable or a SWIM object.}
+\item{x}{A SWIM object or a vector, matrix or data frame 
+containing realisations of random variables. Colums of \code{x} 
+are interpreted to correspond to random variables.}
 
-\item{alpha}{Numeric, vector, level of VaR.}
+\item{alpha}{Numeric vector, the levels of the stressed VaR.}
 
-\item{q_ratio}{Numeric, vector, ratio of stressed VaR to base VaR, \eqn{q_ratio =  q /  VaR}.}
+\item{q_ratio}{Numeric vector, the ratio of the stressed VaR to the
+original VaR, \eqn{q_ratio =  q /  VaR}.}
 
-\item{q}{Numeric, vector, stressed VaR at level alpha.}
+\item{q}{Numeric vector, the stressed VaR at level \code{alpha}.}
 
-\item{k}{Numeric, the column of x that is stressed (default = 1).}
+\item{k}{Numeric, the column of \code{x} that is stressed
+(default = 1).}
 }
 \value{
-A `SWIM` object containing \code{x}; a list of functions, \code{new_weights}
-  that, applied to the kth component of \code{x}, generate the vectors of new
-  weights; and \code{specs} of what has been stressed.
-  The \code{specs} are a data.frame consisting of 
-      \tabular{rllll}{
-        \tab \code{type} \tab \code{k} \tab \code{alpha} \tab \code{q}\cr
-        stress 1 \tab VaR \tab \tab 
-      }
- 
-   see the `SWIM` object for details.
+A \code{\link{SWIM}} object containing \code{x}, the data; \code{new_weights}, a list of functions, that applied to the \code{k}th component of \code{x} generate the vectors of the new weights; and \code{specs}, the specification of what has been stressed.
+  The \code{specs} is a data.frame consisting of \code{type}, \code{k} \code{alpha} and \code{q}. Each row correponds to a different stress, see  \code{\link{SWIM}} object for details.
 }
 \description{
-This function solves the optimisation problem: Given a random variable
-  and a constraint on its VaR, it provides the distribution of the random
-  variable with is closest to the input wrt the Kullback-Leibler divergence
-  and which fulfils the constraints.
+Provides the scenario weights such that the random variable
+   under the new scenraio weights fulfils the constraint on the VaR and
+   has minimal Kullback-Leibler divergence to the baseline random
+   variable.
 }
 \details{
 The new weights are
+}
+\note{
+If alpha and q or q_ratio are vectors, they have to be of the same length.
 }
 \seealso{
 \code{\link{stress}}, \code{\link{stress_VaR_ES}} for stressing the VaR and ES jointly, \code{\link{stress_moment}} for stressing moments, \code{\link{stress_prob}} for stressing intervals and \code{\link{stress_user}} for user defined weights.
