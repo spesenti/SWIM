@@ -19,10 +19,17 @@ plot_sensitivity <- function(x, xCol = "all", wCol = "all", type = c("Gamma", "W
   sens <- sensitivity(x, xCol = xCol, wCol = wCol, type = type, f)
   sens <- melt(sens, id.var = c("stress", "type"), variable_name = "X_all")
   if(displ == TRUE){
+    if(type == "all" | length(levels(as.factor(sens$stress))) > 1){
   ggplot(sens, aes(x = X_all, y = value)) +
-   geom_jitter(aes(color = factor(stress), shape = type)) +
-   labs(x = "", y = "sensitivites") +
+      geom_jitter(height = 0, width = 0.15, aes(color = factor(stress), shape = type)) +
+      labs(x = "", y = "sensitivites") +
    theme(legend.title = element_blank(), legend.key = element_blank(), legend.text = element_text(size = 10))
+    }else{
+      ggplot(sens, aes(x = X_all, y = value)) +
+        geom_point(aes(color = factor(stress), shape = type)) +
+        labs(x = "", y = "sensitivites") +
+        theme(legend.title = element_blank(), legend.key = element_blank(), legend.text = element_text(size = 10))
+    }
   }else{
     return(sens)
   }
