@@ -11,7 +11,7 @@ stress_user <- function(x, new_weights, k = 1){
   if(is.null(colnames(x_data))) colnames(x_data) <- paste("X", 1 : ncol(x_data), sep = "")
   
   if(is.data.frame(new_weights) | is.vector(new_weights)) new_weights <- as.matrix(new_weights)
-  # ADD THE POSSIBILITY FOR 'new_weights' TO BE A FUNCTION OR LIST OF FUNCTIONS? RETURN A MATRIX OR FUNCTION IN THIS CASE?
+
   if(is.function(new_weights)) new_weights <- as.list(new_weights)
   if(is.list(new_weights)) new_weights <- sapply(new_weights, function(f)f(x[, k]))
   if(any(new_weights < 0)) stop("invalid 'new_weights' argument")
