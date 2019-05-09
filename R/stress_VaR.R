@@ -62,7 +62,7 @@
       if(length(alpha) > 1 && length(q_ratio) > 1 && length(alpha) != length(q_perc)) stop("arguments 'alpha' and 'q_ratio' must have length one or equal length")
       max_length <- max(length(q_ratio), length(alpha))
       q <- q_ratio * VaR
-   }else{
+   } else {
       if(!is.numeric(q)) stop("invalid 'q' argument")
       if(length(alpha) > 1 && length(q) > 1 && length(alpha) != length(q)) stop("arguments 'alpha' and 'q' must have length one or equal length")
       max_length <- max(length(q), length(alpha))
@@ -76,14 +76,14 @@
    if(any(q >= max(x_data[, k])) || any(q <= min(x_data[, k]))) stop("all q need to be smaller than the largest data point and bigger than the smallest data point.") 
 
     # the temporary function 
-    rn_VaR_temp <- function(y, constraints){
+    .rn_VaR <- function(y, constraints){
     constraints <- as.numeric(constraints)
     prob_q <- mean(y < constraints[2])
     rn_weights <- function(z)(constraints[1] / prob_q) * (z < constraints[2]) + (1 - constraints[1]) / (1 - prob_q) * (z >= constraints[2])
       return(rn_weights)
     }
     constr = cbind(alpha, q)
-    new_weights <- apply(X = constr, FUN = rn_VaR_temp, MARGIN = 1, y = x_data[, k])
+    new_weights <- apply(constr, 1, .rn_VaR, y = x_data[, k])
     if(is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1 : ncol(x_data), sep = "")
     names(new_weights) <- paste("stress", 1 : max_length)
     specs <- data.frame("type" = rep("VaR", length.out = max_length), "k" = rep(k, length.out = max_length), constr, stringsAsFactors = FALSE)
@@ -92,4 +92,3 @@
    if(is.SWIM(x)) my_list <- merge(x, my_list)
   return(my_list)
   }
-
