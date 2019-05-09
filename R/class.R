@@ -69,7 +69,7 @@ get.specs <- function(x){
 }
   
  
-# method of the merge generic: merges two SWIM objects if they have (at minimum) one equal colum in x.
+# method of the merge generic: merges two SWIM objects if they are based on the same data.
 
 # x     SWIM object
 # y     SWIM object
@@ -78,7 +78,7 @@ merge.SWIM <- function(x, y){
  if(!is.SWIM(x) | !is.SWIM(y)) stop("'x' and 'y' are not of class SWIM.")
  if(!identical(get.data(x), get.data(y))) stop("'x' and 'y' are not based on the same data")
  require(plyr, quietly = TRUE)
- new_weights <- c(get.weights(x), get.weights(y))
+ new_weights <- c(get.weightsfun(x), get.weightsfun(y))
  specs <- rbind.fill(get.specs(x), get.specs(y))
  m <- length(specs$type)
  rownames(specs) <- names(new_weights) <- paste("stress", 1 : m)
