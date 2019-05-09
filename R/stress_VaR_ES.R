@@ -79,7 +79,7 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL, s_ratio = NULL, q = NULL, s 
   if(any(VaR > q)) print("VaR > q, quantile constraint is interpreted as probability constraint.")
   if(any(q > s)) stop("All q need to be smaller than s.")
   if(any(ecdfx(VaR) == ecdfx(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
-  if(any(ecdfx(q) < ecdfx(s))) stop("There are not enough data points, specifically, there is none between q and s.")
+  if(any(ecdfx(q) > ecdfx(s))) stop("There are not enough data points, specifically, there is none between q and s.")
   if(any(s >= max(x[, k])) || any(s <= min(x[, k]))) stop("all 's' need to be smaller than the largest data point and bigger than the smallest data point.")
   
   q_matrix <- matrix(rep(q, each = n), ncol = max_length)
