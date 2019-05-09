@@ -39,7 +39,7 @@ get.weights <- function(x){
   m <- nrow(specs)
   new_weights <- matrix(0, nrow = nrow(x_data), ncol = m)
   for(i in 1 : m){
-    if(specs$type[i] %in% c("user", "moments"))
+    if(specs$type[i] %in% c("user", "moment"))
     new_weights[, i] <- x$new_weights[, i]
     else {
     k <- specs$k[i]
@@ -59,7 +59,7 @@ get.weightsfun <- function(x){
   if(!is.SWIM(x)) stop("object is not of class 'SWIM'")
   specs <- get.specs(x)
   typeCol <- which((specs$type != "user") & (specs$type != "moment"))
-  if(length(typeCol) != length(specs$type)) warning("type 'user' and 'moments' are ignored. Use get.weights() instead.")    
+  if(length(typeCol) != length(specs$type)) warning("type 'user' and 'moment' are ignored. Use get.weights() instead.")    
   return(x$new_weights[as.vector(typeCol)])
 }
 
