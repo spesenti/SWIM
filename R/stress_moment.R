@@ -50,6 +50,9 @@ stress_mean <- function(x, k, new_means, ...)
   return(res)
 }
 
+
+# k, new_means, new_sd have to be the same length
+# one can only stress the mean and sd together. 
 stress_mean_sd <- function(x, k, new_means, new_sd, ...)
 {
   means <- rep(list(function(x)x), length(k))
