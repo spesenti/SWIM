@@ -28,9 +28,6 @@
  #' 
  #' @author Silvana M. Pesenti 
  #' 
-#   #' @references This is my reference 
-#   #'   \insertAllCited{}
-#   #'   \insertCite{Pesenti2019}{SWIM}
  #' 
  #' @family stress functions
  #' @inherit stress seealso
