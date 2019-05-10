@@ -83,7 +83,7 @@
       return(rn_weights)
     }
     constr = cbind(alpha, q)
-    new_weights <- apply(constr, 1, .rn_VaR, y = x_data[, k])
+    new_weights <- apply(X = constr, MARGIN = 1, FUN = .rn_VaR, y = x_data[, k])
     if(is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1 : ncol(x_data), sep = "")
     names(new_weights) <- paste("stress", 1 : max_length)
     specs <- data.frame("type" = rep("VaR", length.out = max_length), "k" = rep(k, length.out = max_length), constr, stringsAsFactors = FALSE)
