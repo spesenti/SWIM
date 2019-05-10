@@ -39,7 +39,7 @@ get.weights <- function(x){
   m <- nrow(specs)
   new_weights <- matrix(0, nrow = nrow(x_data), ncol = m)
   for(i in 1 : m){
-    if(specs$type[i] %in% c("user", "moments"))
+    if(specs$type[i] %in% c("user", "moment"))
     new_weights[, i] <- x$new_weights[, i]
     else {
     k <- specs$k[i]
@@ -59,7 +59,7 @@ get.weightsfun <- function(x){
   if(!is.SWIM(x)) stop("object is not of class 'SWIM'")
   specs <- get.specs(x)
   typeCol <- which((specs$type != "user") & (specs$type != "moment"))
-  if(length(typeCol) != length(specs$type)) warning("type 'user' and 'moments' are ignored. Use get.weights() instead.")    
+  if(length(typeCol) != length(specs$type)) warning("type 'user' and 'moment' are ignored. Use get.weights() instead.")    
   return(x$new_weights[as.vector(typeCol)])
 }
 
@@ -69,7 +69,7 @@ get.specs <- function(x){
 }
   
  
-# method of the merge generic: merges two SWIM objects if they have (at minimum) one equal colum in x.
+# method of the merge generic: merges two SWIM objects if they are based on the same data.
 
 # x     SWIM object
 # y     SWIM object
@@ -78,7 +78,7 @@ merge.SWIM <- function(x, y){
  if(!is.SWIM(x) | !is.SWIM(y)) stop("'x' and 'y' are not of class SWIM.")
  if(!identical(get.data(x), get.data(y))) stop("'x' and 'y' are not based on the same data")
  require(plyr, quietly = TRUE)
- new_weights <- c(get.weights(x), get.weights(y))
+ new_weights <- c(get.weightsfun(x), get.weightsfun(y))
  specs <- rbind.fill(get.specs(x), get.specs(y))
  m <- length(specs$type)
  rownames(specs) <- names(new_weights) <- paste("stress", 1 : m)

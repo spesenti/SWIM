@@ -9,7 +9,7 @@
  #' @param s          Numeric, vector - constraints: new ES at level alpha
  #' @param s_ratio    Numeric, vector, ratio of stressed ES to base ES, \eqn{s_ratio = s / ES}.
 
- #' @inherit stress_VaR seealso
+ #' @inherit stress seealso
  
  #' @export
  #' 
@@ -34,19 +34,19 @@
 ## The realisations X stem from continuously distributed random variables
 
 stress_VaR_ES <- function(x, alpha, q_ratio = NULL, s_ratio = NULL, q = NULL, s = NULL, k = 1){
-  
-  if(is.data.frame(x) | is.vector(x)) x <- as.matrix(x)  
+  if(is.SWIM(x)) x_data <- get.data(x) else x_data <- as.matrix(x)
+  if(anyNA(x_data)) warning("'x' contains NA")
   if(any(alpha <= 0) || any(alpha >= 1)) stop("invalid 'alpha' argument")
   if(!is.null(q) && !is.null(q_ratio)) stop("Only provide q or q_ratio")
   if(!is.null(s) && !is.null(s_ratio)) stop("Only provide s or s_ratio")
   if(is.null(q) && is.null(q_ratio)) stop("no 'q' or 'q_ratio' defined")
   if(is.null(s) && is.null(s_ratio)) stop("no 's' or 's_ratio' defined")
   
-  n <- length(x[, k])
+  n <- length(x_data[, k])
   max_length <- max(length(alpha), length(q), length(q_ratio), length(s), length(s_ratio))
   
   ## VaR and ES of the input; type = 1 is the exact inverse of ecdf
-  VaR <- quantile(x[, k], alpha, names = FALSE, type = 1)
+  VaR <- quantile(x_data[, k], alpha, names = FALSE, type = 1)
   if(is.null(q)){
     if(!is.numeric(q_ratio)) stop("invalid 'q_ratio' argument")
     if(any(VaR == 0)) warning("VaR is 0, define 'q' instead if 'q_ratio'.")
@@ -55,13 +55,12 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL, s_ratio = NULL, q = NULL, s 
   }else{
     if(!is.numeric(q)) stop("invalid 'q' argument")
     if(length(alpha) > 1 && length(q) > 1 && length(alpha) != length(q)) stop("arguments 'alpha' and 'q' must have length one or equal length")
-    q <- rep(q, length.out = max_length)
-  }
-  
+    q <- rep(q, length.out = max_length)  
+  }  
   VaR_matrix <- matrix(rep(VaR, each = n), ncol = length(VaR))
-  ES <- colMeans((x[, k] - VaR_matrix) * (x[, k] > VaR_matrix)) / (1 - alpha) + VaR
+  ES <- colMeans((x_data[, k] - VaR_matrix) * (x_data[, k] > VaR_matrix)) / (1 - alpha) + VaR
   
-  if(is.null(s)){
+  if(is.null(s)){ 
     if(!is.numeric(s_ratio)) stop("invalid 's_ratio' argument")
     if(any(ES == 0)) warning("ES is 0, define 's' instead if 's_ratio'.")
     if(length(alpha) > 1 && length(s_ratio) > 1 && length(alpha) != length(s_ratio)) stop("arguments 'alpha' and 's_ratio' must have length one or equal length")
@@ -74,28 +73,28 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL, s_ratio = NULL, q = NULL, s 
   alpha <- rep(alpha, length.out = max_length)
   
   ## check if the following constraints are fulfilled
-  ## 1) Var < q, 2) q < s, 3) s < ess sup X, 4) E( X | X >= q ) < s
-  ecdfx <- ecdf(x[, k])
+  ## 1) Var < q, 2) q < s, 3) s < ess sup x, 4) E( x | x >= q ) < s
+  ecdfx <- ecdf(x_data[, k])
   if(any(VaR > q)) print("VaR > q, quantile constraint is interpreted as probability constraint.")
   if(any(q > s)) stop("All q need to be smaller than s.")
   if(any(ecdfx(VaR) == ecdfx(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
-  if(any(ecdfx(q) < ecdfx(s))) stop("There are not enough data points, specifically, there is none between q and s.")
-  if(any(s >= max(x[, k])) || any(s <= min(x[, k]))) stop("all 's' need to be smaller than the largest data point and bigger than the smallest data point.")
+  if(any(ecdfx(q) > ecdfx(s))) stop("There are not enough data points, specifically, there is none between q and s.")
+  if(any(s >= max(x_data[, k])) || any(s <= min(x_data[, k]))) stop("all 's' need to be smaller than the largest data point and bigger than the smallest data point.") 
   
   q_matrix <- matrix(rep(q, each = n), ncol = max_length)
-  if(any(colMeans(x[, k] * (x[, k] > q_matrix)) > s * (1 - ecdfx(q)))) stop("Expectation of X|X > q needs to be smaller than the s.")
+  if(any(colMeans(x_data[, k] * (x_data[, k] > q_matrix)) > s * (1 - ecdfx(q)))) stop("Expectation of X|X > q, needs to be smaller than the s.")
   
   # the temporary function 
   rn_VaR_ES_temp <- function(y, constraints){
-    x_q <- 1 * (x[, k] >= constraints[2])
+    x_q <- 1 * (x_data[, k] >= constraints[2])
     ## function to calculate theta
     theta_sol <- function(theta){
-      mean((x[, k] - constraints[3]) * exp(theta * (x[, k] - constraints[2])) * x_q)
+      mean((x_data[, k] - constraints[3]) * exp(theta * (x_data[, k] - constraints[2])) * x_q)
     }
     theta <- uniroot(theta_sol, lower = 0, upper = 10^-20, tol = 10^-30, extendInt = "upX")$root
     prob_q <- mean(y < constraints[2])
     ## check existence of solution
-    e <- mean(exp(theta * (x[, k] - constraints[2])) * (x[, k] >= constraints[2]))
+    e <- mean(exp(theta * (x_data[, k] - constraints[2])) * (x_data[, k] >= constraints[2]))
     if(!all(constraints[1] * e <= prob_q * (1 - constraints[1]))){
       print("Weights are not unique.")}
     rn_weights <- function(z){(constraints[1] / prob_q) * (z < constraints[2]) + (1 - constraints[1]) / e * exp(theta * (z - constraints[2])) * (z >= constraints[2])}
@@ -103,10 +102,12 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL, s_ratio = NULL, q = NULL, s 
   }
   
   constr <- cbind(alpha, q, s)
-  new_weights <- apply(X = constr, FUN = rn_VaR_ES_temp, MARGIN = 1, y = x[, k])
+  new_weights <- apply(X = constr, FUN = rn_VaR_ES_temp, MARGIN = 1, y = x_data[, k])
+  if(is.null(colnames(x_data))) colnames(x_data) <-  paste("X", as.character(1 : dim(x_data)[2]), sep = "")
   names(new_weights) <- paste(rep("stress", max_length), 1:max_length)
-  rownames(constr) <- paste(rep("stress", max_length), 1:max_length)
-  specs <- list( type = "VaR ES", "k" = k, "constr" = constr)
-  my_list <- SWIM("x" = x, "new_weights" = new_weights, "specs" = specs)
+  specs <- data.frame("type" = rep("VaR ES", length.out = max_length), "k" = rep(k, length.out = max_length), constr, stringsAsFactors = FALSE)
+  rownames(specs) <- paste(rep("stress", max_length), 1 : max_length)
+  my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "specs" = specs)
+  if(is.SWIM(x)) my_list <- merge(x, my_list)
   return(my_list)
 }
