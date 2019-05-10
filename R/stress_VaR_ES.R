@@ -9,7 +9,7 @@
  #' @param s          Numeric, vector - constraints: new ES at level alpha
  #' @param s_ratio    Numeric, vector, ratio of stressed ES to base ES, \eqn{s_ratio = s / ES}.
 
- #' @inherit stress_VaR seealso
+ #' @inherit stress seealso
  
  #' @export
  #' 
