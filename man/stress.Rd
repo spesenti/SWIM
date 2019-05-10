@@ -22,3 +22,6 @@ Provides the scenario weights such that a random variable
    
 stress_VaR, stress_VaR_ES, stress_prob
 }
+\seealso{
+\code{\link{stress}}, \code{\link{stress_VaR_ES}} for stressing the VaR and ES jointly, \code{\link{stress_moment}} for stressing moments, \code{\link{stress_prob}} for stressing intervals and \code{\link{stress_user}} for user defined weights.
+}

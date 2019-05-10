@@ -33,7 +33,7 @@
 #   #'   \insertCite{Pesenti2019}{SWIM}
  #' 
  #' @family stress functions
- #' @seealso \code{\link{stress}}, \code{\link{stress_VaR_ES}} for stressing the VaR and ES jointly, \code{\link{stress_moment}} for stressing moments, \code{\link{stress_prob}} for stressing intervals and \code{\link{stress_user}} for user defined weights.
+ #' @inherit stress seealso
 
  ## OUTPUT:  SWIM object with
  ## x              vector, matrix, data frame - realisations of a random variable
