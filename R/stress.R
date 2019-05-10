@@ -5,8 +5,6 @@
 #'    has minimal Kullback-Leibler divergence to the baseline random
 #'    variable.
 #'    
-#'    testing 
-#'    
 #' stress_VaR, stress_VaR_ES, stress_prob
 
 #' @param type    The type of stress. A choice of "VaR", "VaR ES", "prob", "user", "moments"
