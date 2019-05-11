@@ -17,21 +17,47 @@ are interpreted to correspond to random variables.}
 \item{q_ratio}{Numeric vector, the ratio of the stressed VaR to the
 original VaR, \eqn{q_ratio =  q /  VaR}.}
 
-\item{s_ratio}{Numeric, vector, ratio of stressed ES to base ES, \eqn{s_ratio = s / ES}.}
+\item{s_ratio}{Numeric, vector, ratio of stressed ES to base ES,
+\eqn{s_ratio = s / ES}.}
 
 \item{q}{Numeric vector, the stressed VaR at level \code{alpha}.}
 
-\item{s}{Numeric, vector - constraints: new ES at level alpha}
+\item{s}{Numeric, vector - constraints: new ES at level alpha.}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 (default = 1).}
 }
+\value{
+A \code{\link{SWIM}} object containing:
+    \itemize{
+      \item \code{x}, the data;
+      \item \code{new_weights}, a list of functions, that applied to
+      the \code{k}th colum of \code{x} generate the vectors of the
+      new weights;
+      \item \code{specs}, the specification of what has been
+      stressed.
+      The \code{specs} is a data.frame consisting of \code{type},
+      \code{k}, \code{alpha}, \code{q} and \code{s}. Each row 
+      correponds to a differentstress, see  \code{\link{SWIM}} object
+      for details.
+    }
+}
 \description{
-This function solves the optimisation problem: Given a random variable
-  and a constraint on its VaR and ES, it provides the distribution of 
-  the random variable with is closest to the input wrt the Kullback-Leibler
-  divergence and fulfils the constraints.
+Provides scenario weights such that the random variable
+   under the new scenraio weights fulfils the constraint on the VaR and
+   ES has minimal Kullback-Leibler divergence to the baseline random
+   variable.
+}
+\details{
+The new weights are 
+    If q, s are vectors, they have to be of the same length.
+    If q is a vector and s numeric, the stress s is used for all q's. Similarly for s vector and q numeric.
+    If alpha and q or s are vectors, they have to be of the same length.
 }
 \seealso{
-\code{\link{stress}}, \code{\link{stress_VaR_ES}} for stressing the VaR and ES jointly, \code{\link{stress_moment}} for stressing moments, \code{\link{stress_prob}} for stressing intervals and \code{\link{stress_user}} for user defined weights.
+Other stress functions: \code{\link{stress_VaR}},
+  \code{\link{stress_mean_sd}}, \code{\link{stress_mean}},
+  \code{\link{stress_moment}}, \code{\link{stress_prob}},
+  \code{\link{stress_user}}, \code{\link{stress}}
 }
+\concept{stress functions}

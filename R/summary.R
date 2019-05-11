@@ -1,9 +1,24 @@
-# Method for summary of a SWIM object
-
-# x         object
-# base      logical, TRUE calculates summary with new_weights == 1
-# xCol   integer vector, columns of x$x, (default = "all")  
-# wCol   integer vector, columns of new_weights, (default = "all")
+#' Summarizing a SWIM object
+#' 
+#' This funcion is a \code{\link[utils]{methods}} for a class 
+#'     \code{SWIM} object.
+#'     
+#' @inheritParams stress_VaR
+#' @param xCol    Integer vector, columns of \code{x} for which the summary
+#'                should be returned, (\code{default = "all"}) 
+#' @param wCol    Integer vector, columns of \code{new_weights} for which
+#'                the summary should be returned, (\code{default = "all"})  
+#' @param base    Logical, if \code{TRUE} the summary of baseline is
+#'                returned.
+#' @details  
+#' 
+#' @return A list... 
+#' 
+#' @author Silvana M. Pesenti 
+#' 
+#' @seealso summary
+#' @export
+#' 
 
 summary.SWIM <- function(x, xCol = "all", wCol = "all", base = FALSE){
   if (!is.SWIM(x)) stop("Wrong object")

@@ -1,31 +1,41 @@
- ## DESCRIPTION:
- ## This function solves the optimisation problem: Given a random variable
- ## and a disjoint probabiltiy constraints, it provides the distribution of the random variable
- ## with is closest to the input wrt the Kullback-Leibler divergence and which fulfils the constraints.
-
-
- ## INPUT:
- ## x              vector, matrix, data frame - realisations of a random variable or SWIM object
- ##                By detfault, the first row of x is stressed
- ## k              numeric - column of x that are stressed (default = 1)
- ## prob           numeric, vector - probabilties of the intervals
- ## upper          numeric, vector - right endpoints of intervals
- ## lower          numeric, vector - left endpoints of intervals
- 
- ## If alpha and q or q_perc are vectors, they have to be of the same length. 
-
- ## OUTPUT: SWIM object with
- ## x              vector, matrix, data frame - realisations of a random variable
- ## new_weights    function - function that provides the weights if applied to the kth column of x
- ## k              numeric - column of x that are stressed (default = 1)
- ## prob           numeric, vector - probabilties of the intervals
- ## upper          numeric, vector - ordered right endpoints of intervals
- ## lower          numeric, vector - ordered left endpoints of intervals
-
- ## If upper is not provided, the intervals are consequitive and prob is cumulativeiin the input only!!!
-
- ## ASSUMPTIONS:
- ## The data stem from continuously distributed random variables
+#' Stressing Value-at-Risk
+#' 
+#' Provides scenario weights such that the random variable
+#'    under the new scenraio weights fulfils the constraints on the 
+#'    probability sets and has minimal Kullback-Leibler divergence to 
+#'    the baseline random variable.
+#'    
+#' @inheritParams stress_VaR 
+#' @param lower   Numeric vector, left endpoints of the intervals 
+#'                (default = NULL).
+#' @param upper   Numeric vector, right endpoints of the intervals.
+#' @param prob    Numeric vector, stressed probabilties corresponding 
+#'                the intervals defined through \code{lower} and 
+#'                \code{upper}.
+#'      
+#' @details If alpha and q or q_perc are vectors, they have to be of the
+#'     same length. \cr
+#'     If upper is not provided, the intervals are consequitive and prob is
+#'     cumulativeiin the input only
+#' 
+#' @return A \code{\link{SWIM}} object containing:
+#'     \itemize{
+#'       \item \code{x}, the data;
+#'       \item \code{new_weights}, a list of functions, that applied to the
+#'     \code{k}th colum of \code{x} generate the vectors of the new
+#'     weights;
+#'     \item \code{specs}, the specification of what has been
+#'     stressed.
+#'     The \code{specs} is a data.frame consisting of \code{type}, \code{k},
+#'     \code{lower}, \code{upper} and \code{prob}. Each row correponds to a different 
+#'     stress, see  \code{\link{SWIM}} object for details.
+#'     }
+#'     
+#' @author Silvana M. Pesenti 
+#' 
+#' @family stress functions 
+#' @export
+#' 
 
   stress_prob <- function(x, prob, upper, lower= NULL, k = 1){
    if (is.SWIM(x)) x_data <- get.data(x) else x_data <- as.matrix(x)

@@ -4,8 +4,7 @@
  #'    under the new scenraio weights fulfils the constraint on the VaR and
  #'    has minimal Kullback-Leibler divergence to the baseline random
  #'    variable.
-
-
+ #'    
  #' @param x       A SWIM object or a vector, matrix or data frame 
  #'     containing realisations of random variables. Colums of \code{x} 
  #'     are interpreted to correspond to random variables.
@@ -15,31 +14,25 @@
  #' @param q       Numeric vector, the stressed VaR at level \code{alpha}.
  #' @param q_ratio Numeric vector, the ratio of the stressed VaR to the
  #'      original VaR, \eqn{q_ratio =  q /  VaR}.
-
- #' @note If alpha and q or q_ratio are vectors, they have to be of the same length. 
- 
- #' @details The new weights are 
+ #'      
+ #' @details If alpha and q or q_ratio are vectors, they have to be of the same length. 
  #' 
- #' @return A \code{\link{SWIM}} object containing \code{x}, the data; \code{new_weights}, a list of functions, that applied to the \code{k}th component of \code{x} generate the vectors of the new weights; and \code{specs}, the specification of what has been stressed.
- #'   The \code{specs} is a data.frame consisting of \code{type}, \code{k} \code{alpha} and \code{q}. Each row correponds to a different stress, see  \code{\link{SWIM}} object for details.
- #'       
- #'  
- #'    
- #' 
+ #' @return A \code{\link{SWIM}} object containing:
+ #'     \itemize{
+ #'       \item \code{x}, the data;
+ #'       \item \code{new_weights}, a list of functions, that applied to the
+ #'     \code{k}th colum of \code{x} generate the vectors of the new
+ #'     weights;
+ #'     \item \code{specs}, the specification of what has been
+ #'     stressed.
+ #'     The \code{specs} is a data.frame consisting of \code{type}, \code{k}
+ #'     \code{alpha} and \code{q}. Each row correponds to a different 
+ #'     stress, see  \code{\link{SWIM}} object for details.
+ #'     }
+ #'     
  #' @author Silvana M. Pesenti 
  #' 
- #' 
- #' @family stress functions
- #' @inherit stress seealso
-
- ## OUTPUT:  SWIM object with
- ## x              vector, matrix, data frame - realisations of a random variable
- ## new_weights    function - function that provides the weights if applied to the kth column of x
- ## k              numeric - column of x that are stressed (default = 1)
- ## alpha          numeric, vector - VaR level
- ## q              numeric, vector - constraints: new VaR at level alpha
-
-
+ #' @family stress functions 
  #' @export
  #' 
   stress_VaR <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1){

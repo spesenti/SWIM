@@ -5,16 +5,17 @@
 #'    has minimal Kullback-Leibler divergence to the baseline random
 #'    variable.
 #'    
-#' stress_VaR, stress_VaR_ES, stress_prob
 
 #' @param type    The type of stress. A choice of "VaR", "VaR ES", "prob", "user", "moments"
 #' @param ...     Arguments to be passed depending on \code{type}.
 #' @return        A SWIM object.
 #' 
-#' @seealso \code{\link{stress}}, \code{\link{stress_VaR_ES}} for stressing the VaR and ES jointly, \code{\link{stress_moment}} for stressing moments, \code{\link{stress_prob}} for stressing intervals and \code{\link{stress_user}} for user defined weights.
+#' @note \code{\link{stress}}, \code{\link{stress_VaR_ES}} for stressing the VaR and ES jointly, \code{\link{stress_moment}} for stressing moments, \code{\link{stress_prob}} for stressing intervals and \code{\link{stress_user}} for user defined weights.
+#' 
+#' @author Silvana M. Pesenti 
+#' @family stress functions
 #' 
 #' @export
-#' 
 #' 
 #' @importFrom    Rdpack reprompt
 #' 

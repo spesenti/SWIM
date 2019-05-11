@@ -19,9 +19,17 @@ Provides the scenario weights such that a random variable
    under the new scenraio weights fulfils probabilistic constraints and
    has minimal Kullback-Leibler divergence to the baseline random
    variable.
-   
-stress_VaR, stress_VaR_ES, stress_prob
 }
-\seealso{
+\note{
 \code{\link{stress}}, \code{\link{stress_VaR_ES}} for stressing the VaR and ES jointly, \code{\link{stress_moment}} for stressing moments, \code{\link{stress_prob}} for stressing intervals and \code{\link{stress_user}} for user defined weights.
 }
+\seealso{
+Other stress functions: \code{\link{stress_VaR_ES}},
+  \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},
+  \code{\link{stress_mean}}, \code{\link{stress_moment}},
+  \code{\link{stress_prob}}, \code{\link{stress_user}}
+}
+\author{
+Silvana M. Pesenti
+}
+\concept{stress functions}

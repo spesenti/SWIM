@@ -1,11 +1,36 @@
-# x matrix, vector or data.frame
-# function, or list of functions
-# k vector or list of vectors indicating which columns of X each function in f operates
-# m vector of values of same length as f containing the new moments of f(x); must be in the range of f(x)
-# the function calculates the solution wrt theta of the set of equations
-# EQ[f(x)]=E[f(x)exp(theta * f(x))]=m
+#' Stressing moments
+#'
+#' Provides scenario weights such that the random variable
+#'    under the new scenraio weights fulfils the moment constraints and
+#'    has minimal Kullback-Leibler divergence to the baseline random
+#'    variable.
 
-# ... additional arguments to be passed to nleqslv
+#' @inheritParams   stress_VaR
+#' @param  k        A vector or list of vectors indicating which columns of
+#'                  \code{x} each function in \code{f} operates on.
+#' @param f         A function, or list of functions.
+#' @param m         Vector of values, same length as \code{f}, containing
+#'                  the new moments of \code{f(x)}. Must be in the range of
+#'                  \code{f(x)}.
+#' @param ...       Additional arguments to be passed to 
+#'                  \code{\link[nleqslv]{nleqslv}}.
+#' 
+#' @details Calcualtes the solution wrt theta of the set of equations
+# EQ[f(x)]=E[f(x)exp(theta * f(x))]=m.
+#' 
+#' @return A \code{\link{SWIM}} object containing:
+#'     \itemize{
+#'       \item \code{x}, the data;
+#'       \item \code{new_weights}, a list of functions, that applied to
+#'       the \code{k}th colums of \code{x} generate the vectors of the
+#'       new weights;
+#'       \item \code{specs}, the specification of what has been
+#'       stressed.
+#'       The \code{specs} is a data.frame consisting of ???
+#'     }
+#'     
+#' @family stress functions 
+#' @export
 
 stress_moment <- function(x, f, k, m, ...){
   if (is.SWIM(x)) x_data <- get.data(x) else x_data <- as.matrix(x)
@@ -36,18 +61,67 @@ stress_moment <- function(x, f, k, m, ...){
   return(my_list)
   }
 
+#' Stressing means
+#'
+#' Provides scenario weights such that the random variable
+#'    under the new scenraio weights fulfils the mean constraints and
+#'    has minimal Kullback-Leibler divergence to the baseline random
+#'    variable.
+#'    
+#' @inheritParams   stress_moment
+#' @param new_means Numeric vector, same length as \code{k}, 
+#'                  containing the stressed means. 
+#' @param k         Numeric vector, the
+#'                  column of \code{x} that are stressed.
+#' @details 
+#' 
+#' @return A \code{\link{SWIM}} object containing:
+#'     \itemize{
+#'       \item \code{x}, the data;
+#'       \item \code{new_weights}, a list of functions, that applied to
+#'       the \code{k}th colum of \code{x} generate the vectors of the
+#'       new weights;
+#'       \item \code{specs}, the specification of what has been
+#'       stressed.
+#'       The \code{specs} is a data.frame consisting of ???
+#'     }
+#'     
+#' @family stress functions 
+#' @export
 
-# x matrix, vector or data.frame
-# k vector indicating which columns of x should be stressed
-# m vector of stressed means of same length as k
-# must be in the range of x
-# ... additional arguments to be passed to nleqslv
 stress_mean <- function(x, k, new_means, ...)
 {
   means <- rep(list(function(x)x), length(k))
   res <- stress_moment(x, means, k, new_means, ...)
   return(res)
 }
+
+#' Stressing mean and standard deviation
+#'
+#' Provides scenario weights such that the random variable
+#'    under the new scenraio weights fulfils the mean and standard
+#'    deviation constraints and has minimal Kullback-Leibler divergence 
+#'    to the baseline random variable.
+#'    
+#' @inheritParams   stress_mean
+#' @param new_sd    Numeric vector, same length as \code{k}, 
+#'                  containing the stressed standard deviations. 
+#' 
+#' @details 
+#' 
+#' @return A \code{\link{SWIM}} object containing:
+#'     \itemize{
+#'       \item \code{x}, the data;
+#'       \item \code{new_weights}, a list of functions, that applied to
+#'       the \code{k}th colum of \code{x} generate the vectors of the
+#'       new weights;
+#'       \item \code{specs}, the specification of what has been
+#'       stressed.
+#'       The \code{specs} is a data.frame consisting of ???
+#'     }
+#'     
+#' @family stress functions 
+#' @export new_sd 
 
 
 # k, new_means, new_sd have to be the same length
