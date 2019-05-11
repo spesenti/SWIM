@@ -20,13 +20,12 @@
 #' 
 #' 
 #' 
-stress <- function(type = c("VaR", "VaR ES", "prob", "user"), ...){
-
-  if(type == "VaR") SWIM <- stress_VaR(...)
-  if(type == "VaR ES") SWIM <- stress_VaR_ES(...)
-  if(type == "prob") SWIM <- stress_prob(...)
-  if(type == "user") SWIM <- stress_user(...)
-  if(type == "moments") SWIM <- stress_moments(...)
-  return(SWIM)
-}
+  stress <- function(type = c("VaR", "VaR ES", "prob", "user"), ...){
+   if (type == "VaR") SWIM <- stress_VaR(...)
+   if (type == "VaR ES") SWIM <- stress_VaR_ES(...)
+   if (type == "prob") SWIM <- stress_prob(...)
+   if (type == "user") SWIM <- stress_user(...)
+   if (type == "moments") SWIM <- stress_moments(...)
+   return(SWIM)
+  }
 

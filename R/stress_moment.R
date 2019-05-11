@@ -8,23 +8,22 @@
 # ... additional arguments to be passed to nleqslv
 
 stress_moment <- function(x, f, k, m, ...){
-  if(is.SWIM(x)) x_data <- get.data(x) else x_data <- as.matrix(x)
+  if (is.SWIM(x)) x_data <- get.data(x) else x_data <- as.matrix(x)
   # check if x is not a vector, matrix or data frame?
-  if(anyNA(x_data)) warning("'x' contains NA")
-  if(is.function(f)) f <- as.list(f)
-  if(!all(sapply(f, is.function))) stop("'f' must be a list of functions")
-  if(is.numeric(k)) k <- as.list(k)
-  if(!all(sapply(k, is.numeric))) stop("'k' must be a list of numeric vectors")
-  if(!is.numeric(m)) stop("'m' must be numeric")
-  if((length(m) != length(f)) || (length(m) != length(k)) || (length(f) != length(k))) stop("objects 'f', 'k' and 'm' must have the same length")
+  if (anyNA(x_data)) warning("x contains NA")
+  if (is.function(f)) f <- as.list(f)
+  if (!all(sapply(f, is.function))) stop("f must be a list of functions")
+  if (is.numeric(k)) k <- as.list(k)
+  if (!all(sapply(k, is.numeric))) stop("k must be a list of numeric vectors")
+  if (!is.numeric(m)) stop("m must be numeric")
+  if ((length(m) != length(f)) || (length(m) != length(k)) || (length(f) != length(k))) stop("Objects f, k and m must have the same length.")
   z <- matrix(0, ncol = length(f), nrow = nrow(x_data))
-  for(i in 1 : length(f))
-  {
+  for (i in 1:length(f)){
     z[, i] <- apply(x_data[, k[[i]], drop = FALSE], 1, f[[i]])
   }
   min.fz <- apply(z, 2, min)
   max.fz <- apply(z, 2, max)
-  if (any(m < min.fz) || any(m > max.fz)) stop("values in 'm' must be in the range of f(x)")
+  if (any(m < min.fz) || any(m > max.fz)) stop("Values in m must be in the range of f(x).")
   z <- cbind(1, z)
   moments <- function(x)colMeans(z * as.vector(exp(z %*% x))) - c(1, m)
   require(nleqslv, quietly = TRUE)
