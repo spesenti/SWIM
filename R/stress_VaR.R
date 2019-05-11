@@ -44,24 +44,24 @@
  #' 
   stress_VaR <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1){
    if (is.SWIM(x)) x_data <- get.data(x) else x_data <- as.matrix(x)
-   if (anyNA(x_data)) warning("'x' contains NA")
-   if (any(alpha <= 0) || any(alpha >= 1)) stop("invalid 'alpha' argument")
-   if (!is.null(q) && !is.null(q_ratio)) stop("only provide 'q' or 'q_ratio'")
-   if (is.null(q) && is.null(q_ratio)) stop("no stress defined")
+   if (anyNA(x_data)) warning("x contains NA")
+   if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
+   if (!is.null(q) && !is.null(q_ratio)) stop("Only provide q or q_ratio")
+   if (is.null(q) && is.null(q_ratio)) stop("No stress defined")
 
    ## x_data[, k] component of x_data that is stressed
    n <- length(x_data[, k])
    VaR <- quantile(x_data[, k], alpha, names = FALSE, type = 1)
 
    if(is.null(q)){
-      if (!is.numeric(q_ratio)) stop("invalid 'q_ratio' argument")
-      if (any(VaR == 0)) warning("VaR is 0, define 'q' instead of 'q_ratio'")
-      if (length(alpha) > 1 && length(q_ratio) > 1 && length(alpha) != length(q_perc)) stop("arguments 'alpha' and 'q_ratio' must have length one or equal length")
+      if (!is.numeric(q_ratio)) stop("Invalid q_ratio argument")
+      if (any(VaR == 0)) warning("VaR is 0, define q instead of q_ratio.")
+      if (length(alpha) > 1 && length(q_ratio) > 1 && length(alpha) != length(q_perc)) stop("Arguments alpha and q_ratio must have length one or equal length.")
       max_length <- max(length(q_ratio), length(alpha))
       q <- q_ratio * VaR
    } else {
-      if (!is.numeric(q)) stop("invalid 'q' argument")
-      if (length(alpha) > 1 && length(q) > 1 && length(alpha) != length(q)) stop("arguments 'alpha' and 'q' must have length one or equal length")
+      if (!is.numeric(q)) stop("Invalid q argument")
+      if (length(alpha) > 1 && length(q) > 1 && length(alpha) != length(q)) stop("Arguments alpha and q must have length one or equal length.")
       max_length <- max(length(q), length(alpha))
    }  
    q <- rep(q, length.out = max_length)  
@@ -70,7 +70,7 @@
    ## check if VaR < q < ess sup (x_data)
    if (any(VaR > q)) print("VaR > q, quantile constraint interpreted as probability constraint.")
    if (any(q > VaR & ecdf(x_data[, k])(VaR) == ecdf(x_data[, k])(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
-   if (any(q >= max(x_data[, k])) || any(q <= min(x_data[, k]))) stop("all 'q' need to be smaller than the largest data point and bigger than the smallest data point.") 
+   if (any(q >= max(x_data[, k])) || any(q <= min(x_data[, k]))) stop("All q need to be smaller than the largest and larger than the smallest data point.") 
 
     constr <- cbind(alpha, q)
     new_weights <- apply(X = constr, MARGIN = 1, FUN = .rn_VaR, y = x_data[, k])
