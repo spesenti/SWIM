@@ -81,7 +81,7 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   if (any(q > s)) stop("All q need to be smaller than s.")
   if (any(ecdfx(VaR) == ecdfx(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
   if (any(ecdfx(q) > ecdfx(s))) stop("There are not enough data points, specifically, there is none between q and s.")
-  if (any(s >= max(x_data[, k])) || any(s <= min(x_data[, k]))) stop("all s need to be smaller than the largest and bigger than the smallest data point.") 
+  if (any(s >= max(x_data[, k])) || any(s <= min(x_data[, k]))) stop("all s need to be smaller than the largest and larger than the smallest data point.") 
   
   q_matrix <- matrix(rep(q, each = n), ncol = max_length)
   if (any(colMeans(x_data[, k] * (x_data[, k] > q_matrix)) > s * (1 - ecdfx(q)))) stop("Expectation of X|X > q, needs to be smaller than the s.")
