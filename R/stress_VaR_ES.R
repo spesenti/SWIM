@@ -112,8 +112,7 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
     prob_q <- mean(y < .q)
     # check existence of solution
     e <- mean(exp(theta * (y - .q)) * (y >= .q))
-    if (!all(.alpha * e <= prob_q * (1 - .alpha))){
-      print("Weights are not unique.")}
+    if (!all(.alpha * e <= prob_q * (1 - .alpha))) print("Weights are not unique.")
     
     rn_weights <- function(z){(.alpha / prob_q) * (z < .q) + (1 - .alpha) / e * exp(theta * (z - .q)) * (z >= .q)}
   return(rn_weights)
