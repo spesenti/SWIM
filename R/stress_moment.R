@@ -121,7 +121,7 @@ stress_mean <- function(x, k, new_means, ...)
 #'     }
 #'     
 #' @family stress functions 
-#' @export new_sd 
+#' @export 
 
 
 # k, new_means, new_sd have to be the same length
