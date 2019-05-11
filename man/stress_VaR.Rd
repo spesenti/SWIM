@@ -22,8 +22,18 @@ original VaR, \eqn{q_ratio =  q /  VaR}.}
 (default = 1).}
 }
 \value{
-A \code{\link{SWIM}} object containing \code{x}, the data; \code{new_weights}, a list of functions, that applied to the \code{k}th component of \code{x} generate the vectors of the new weights; and \code{specs}, the specification of what has been stressed.
-  The \code{specs} is a data.frame consisting of \code{type}, \code{k} \code{alpha} and \code{q}. Each row correponds to a different stress, see  \code{\link{SWIM}} object for details.
+A \code{\link{SWIM}} object containing:
+    \itemize{
+      \item \code{x}, the data;
+      \item \code{new_weights}, a list of functions, that applied to the
+    \code{k}th colum of \code{x} generate the vectors of the new
+    weights;
+    \item \code{specs}, the specification of what has been
+    stressed.
+    The \code{specs} is a data.frame consisting of \code{type}, \code{k}
+    \code{alpha} and \code{q}. Each row correponds to a different 
+    stress, see  \code{\link{SWIM}} object for details.
+    }
 }
 \description{
 Provides scenario weights such that the random variable
@@ -32,13 +42,13 @@ Provides scenario weights such that the random variable
    variable.
 }
 \details{
-The new weights are
-}
-\note{
 If alpha and q or q_ratio are vectors, they have to be of the same length.
 }
 \seealso{
-\code{\link{stress}}, \code{\link{stress_VaR_ES}} for stressing the VaR and ES jointly, \code{\link{stress_moment}} for stressing moments, \code{\link{stress_prob}} for stressing intervals and \code{\link{stress_user}} for user defined weights.
+Other stress functions: \code{\link{stress_VaR_ES}},
+  \code{\link{stress_mean_sd}}, \code{\link{stress_mean}},
+  \code{\link{stress_moment}}, \code{\link{stress_prob}},
+  \code{\link{stress_user}}, \code{\link{stress}}
 }
 \author{
 Silvana M. Pesenti

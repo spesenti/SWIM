@@ -1,9 +1,35 @@
-## User defined stress
-
-## INPUTS: 
-## x            vector, matrix, data frame - realisations of a random or SWIM object
-## new_weights  numeric, matrix, data frame - weights. If new_weights has dim bigger than 2, every colum is considered a vector of weights that form 1 stress. new_weights are normalised to 1.
-## k            numeric - column of x that are stressed (default = 1)
+#' User defined stress
+#'
+#' Returns a \code{SWIM} object with scenario weights defined by the user.
+#'    
+#' @inheritParams stress_VaR
+#' @param new_weights     A vector, matrix or data frame containing weights.
+#'     Colums of \code{new_weights} are interpreted to correspond to random
+#'     variables. OR\cr 
+#'     A list of function, that applied to the \code{k}th colum of \code{x} 
+#'     generate the vecotrs of the new weights. \cr
+#'     \code{new_weights} are normalised to 1.
+#'  
+#' @details The new weights are 
+#'     If q, s are vectors, they have to be of the same length.
+#'     If q is a vector and s numeric, the stress s is used for all q's. Similarly for s vector and q numeric.
+#'     If alpha and q or s are vectors, they have to be of the same length.
+#' 
+#' @return A \code{\link{SWIM}} object containing:
+#'     \itemize{
+#'       \item \code{x}, the data;
+#'       \item \code{new_weights}, a list of functions, that applied to
+#'       the \code{k}th component of \code{x} generate the vectors of the
+#'       new weights;
+#'       \item \code{specs}, the specification of what has been
+#'       stressed.
+#'       The \code{specs} is a data.frame consisting of \code{type},
+#'       \code{k} and \code{constr = user}. Each row correponds to a 
+#'       differentstress, see  \code{\link{SWIM}} object for details.
+#'     }
+#'     
+#' @family stress functions 
+#' @export 
 
 stress_user <- function(x, new_weights, k = 1){
   if (is.SWIM(x)) x_data <- get.data(x) else x_data <- as.matrix(x)
