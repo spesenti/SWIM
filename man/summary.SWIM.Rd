@@ -21,7 +21,7 @@ the summary should be returned, (\code{default = "all"})}
 returned.}
 }
 \value{
-A list
+A list...
 }
 \description{
 This funcion is a \code{\link[utils]{methods}} for a class 
