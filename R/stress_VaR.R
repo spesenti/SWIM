@@ -70,7 +70,7 @@
    ## check if VaR < q < ess sup (x_data)
    if (any(VaR > q)) print("VaR > q, quantile constraint interpreted as probability constraint.")
    if (any(q > VaR & ecdf(x_data[, k])(VaR) == ecdf(x_data[, k])(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
-   if (any(q >= max(x_data[, k])) || any(q <= min(x_data[, k]))) stop("all q need to be smaller than the largest data point and bigger than the smallest data point.") 
+   if (any(q >= max(x_data[, k])) || any(q <= min(x_data[, k]))) stop("all 'q' need to be smaller than the largest data point and bigger than the smallest data point.") 
 
     constr <- cbind(alpha, q)
     new_weights <- apply(X = constr, MARGIN = 1, FUN = .rn_VaR, y = x_data[, k])

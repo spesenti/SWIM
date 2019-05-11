@@ -26,7 +26,7 @@ A \code{\link{SWIM}} object containing \code{x}, the data; \code{new_weights}, a
   The \code{specs} is a data.frame consisting of \code{type}, \code{k} \code{alpha} and \code{q}. Each row correponds to a different stress, see  \code{\link{SWIM}} object for details.
 }
 \description{
-Provides the scenario weights such that the random variable
+Provides scenario weights such that the random variable
    under the new scenraio weights fulfils the constraint on the VaR and
    has minimal Kullback-Leibler divergence to the baseline random
    variable.
