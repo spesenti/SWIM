@@ -27,7 +27,7 @@ For realisations of a random variable \code{X} and a
  
     The \code{SWIM} package is based on the \emph{reverse 
     sensitivity framework} developed in 
-    \link{https://doi.org/10.1016/j.ejor.2018.10.003}. Specifically, 
+    \url{https://doi.org/10.1016/j.ejor.2018.10.003}. Specifically, 
     for a random variable \code{X} with proababiltiy measure \code{P},
     the algorithm solves 
     \deqn{argmin D(P | Q) s.t. constraints on the distribution

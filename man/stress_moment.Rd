@@ -17,8 +17,8 @@ are interpreted to correspond to random variables.}
 \code{x} each function in \code{f} operates on.}
 
 \item{m}{Vector of values, same length as \code{f}, containing
-the new moments of \code{f(x)}. Must be in the range of
-\code{f(x)}.}
+the stressed moments of \code{f(x)}. Must be in the
+range of \code{f(x)}.}
 
 \item{...}{Additional arguments to be passed to 
 \code{\link[nleqslv]{nleqslv}}.}
