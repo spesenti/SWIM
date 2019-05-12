@@ -14,9 +14,14 @@ are interpreted to correspond to random variables.}
 \item{alpha}{Numeric vector, the levels of the stressed VaR.}
 
 \item{q_ratio}{Numeric vector, the ratio of the stressed VaR to the
-original VaR, \eqn{q_ratio =  q /  VaR}.}
+original VaR, \eqn{q_ratio =  q /  VaR}.\cr
+If \code{alpha} and \code{q_ratio} are vectors, they 
+must have the same length.}
 
-\item{q}{Numeric vector, the stressed VaR at level \code{alpha}.}
+\item{q}{Numeric vector, the stressed VaR at level 
+\code{alpha}.\cr
+If \code{alpha} and \code{q} are vectors, they must 
+have the same length.}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 (default = 1).}
@@ -32,17 +37,23 @@ A \code{SWIM} object containing:
     stressed.
     The \code{specs} is a data.frame consisting of \code{type}, \code{k}
     \code{alpha} and \code{q}. Each row correponds to a different 
-    stress, see \code{\link{SWIM}} object for details.
+    stress, see \code{\link{SWIM}} for details.
     }
 }
 \description{
 Provides scenario weights such that the random variable
-   under the new scenraio weights fulfils the constraint on the VaR and
+   under the scenraio weights fulfils the constraint on the VaR and
    has minimal Kullback-Leibler divergence to the baseline random
    variable.
 }
 \details{
-If alpha and q or q_ratio are vectors, they have to be of the same length.
+If \code{alpha} is a vector and \code{q}, respective 
+   \code{q_ratio}, numeric, the stressed VaR's at level \code{alpha} 
+   are all equal to \code{q}. 
+   
+   If \code{alpha} is numeric and \code{q}, respective 
+   \code{q_ratio}, vectors, the stressed VaR's at level \code{alpha}
+   are equal to \code{q}.
 }
 \seealso{
 Other stress functions: \code{\link{SWIM}},

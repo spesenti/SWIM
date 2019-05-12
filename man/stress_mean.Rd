@@ -30,7 +30,7 @@ A \code{SWIM} object containing:
       \item \code{specs}, the specification of what has been
       stressed.
       The \code{specs} is a data.frame consisting of ???\cr
-      , see \code{\link{SWIM}} object for details.
+      , see \code{\link{SWIM}} for details.
     }
 }
 \description{

@@ -7,16 +7,19 @@
 stress(type = c("VaR", "VaR ES", "prob", "user"), ...)
 }
 \arguments{
-\item{type}{The type of stress. A choice of "VaR", "VaR ES", "prob", "user", "moments"}
+\item{type}{The type of stress. A choice of "VaR", "VaR ES", 
+"prob", "user", "moments", "mean", "mean sd".}
 
-\item{...}{Arguments to be passed depending on \code{type}.}
+\item{...}{Arguments to be passed depending on the choice of
+\code{type}.}
 }
 \value{
-A SWIM object.
+An object of class \code{SWIM}, see \code{\link{SWIM}} 
+    for more details.
 }
 \description{
 Provides the scenario weights such that a random variable
-   under the new scenraio weights fulfils probabilistic constraints and
+   under the scenraio weights fulfils probabilistic constraints and
    has minimal Kullback-Leibler divergence to the baseline random
    variable.
 }

@@ -34,20 +34,18 @@ A \code{SWIM} object containing:
     stressed.
     The \code{specs} is a data.frame consisting of \code{type}, \code{k},
     \code{lower}, \code{upper} and \code{prob}. Each row correponds to a different 
-    stress, see \code{\link{SWIM}} object for details.
+    stress, see \code{\link{SWIM}} for details.
     }
 }
 \description{
 Provides scenario weights such that the random variable
-   under the new scenraio weights fulfils the constraints on the 
+   under the scenraio weights fulfils the constraints on the 
    probability sets and has minimal Kullback-Leibler divergence to 
    the baseline random variable.
 }
 \details{
-If alpha and q or q_perc are vectors, they have to be of the
-    same length. \cr
-    If upper is not provided, the intervals are consequitive and prob is
-    cumulativeiin the input only
+If \code{upper = NULL}, the intervals are consequitive and 
+    \code{prob} cummulative.
 }
 \seealso{
 Other stress functions: \code{\link{SWIM}},

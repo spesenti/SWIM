@@ -1,7 +1,7 @@
  #' Stressing Value-at-Risk
  #' 
  #' Provides scenario weights such that the random variable
- #'    under the new scenraio weights fulfils the constraint on the VaR and
+ #'    under the scenraio weights fulfils the constraint on the VaR and
  #'    has minimal Kullback-Leibler divergence to the baseline random
  #'    variable.
  #'    
@@ -11,11 +11,24 @@
  #' @param k       Numeric, the column of \code{x} that is stressed
  #'     (default = 1).
  #' @param alpha   Numeric vector, the levels of the stressed VaR.
- #' @param q       Numeric vector, the stressed VaR at level \code{alpha}.
+ #' @param q       Numeric vector, the stressed VaR at level 
+ #'                \code{alpha}.\cr
+ #'                If \code{alpha} and \code{q} are vectors, they must 
+ #'                have the same length. 
  #' @param q_ratio Numeric vector, the ratio of the stressed VaR to the
- #'      original VaR, \eqn{q_ratio =  q /  VaR}.
+ #'                original VaR, \eqn{q_ratio =  q /  VaR}.\cr
+ #'                If \code{alpha} and \code{q_ratio} are vectors, they 
+ #'                must have the same length. 
  #'      
- #' @details If alpha and q or q_ratio are vectors, they have to be of the same length. 
+ #' @details If \code{alpha} is a vector and \code{q}, respective 
+ #'    \code{q_ratio}, numeric, the stressed VaR's at level \code{alpha} 
+ #'    are all equal to \code{q}. 
+ #'    
+ #'    If \code{alpha} is numeric and \code{q}, respective 
+ #'    \code{q_ratio}, vectors, the stressed VaR's at level \code{alpha}
+ #'    are equal to \code{q}.
+ #'    
+ #'    
  #' 
  #' @return A \code{SWIM} object containing:
  #'     \itemize{
@@ -27,7 +40,7 @@
  #'     stressed.
  #'     The \code{specs} is a data.frame consisting of \code{type}, \code{k}
  #'     \code{alpha} and \code{q}. Each row correponds to a different 
- #'     stress, see \code{\link{SWIM}} object for details.
+ #'     stress, see \code{\link{SWIM}} for details.
  #'     }
  #'     
  #' @author Silvana M. Pesenti 

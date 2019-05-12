@@ -1,7 +1,7 @@
 #' Stressing moments
 #'
 #' Provides scenario weights such that the random variable
-#'    under the new scenraio weights fulfils the moment constraints and
+#'    under the scenraio weights fulfils the moment constraints and
 #'    has minimal Kullback-Leibler divergence to the baseline random
 #'    variable.
 
@@ -10,8 +10,8 @@
 #'                  \code{x} each function in \code{f} operates on.
 #' @param f         A function, or list of functions.
 #' @param m         Vector of values, same length as \code{f}, containing
-#'                  the new moments of \code{f(x)}. Must be in the range of
-#'                  \code{f(x)}.
+#'                  the stressed moments of \code{f(x)}. Must be in the
+#'                  range of \code{f(x)}.
 #' @param ...       Additional arguments to be passed to 
 #'                  \code{\link[nleqslv]{nleqslv}}.
 #' 
@@ -27,7 +27,7 @@
 #'       \item \code{specs}, the specification of what has been
 #'       stressed.
 #'       The \code{specs} is a data.frame consisting of ???\cr
-#'       , see \code{\link{SWIM}} object for details.
+#'       , see \code{\link{SWIM}} for details.
 #'     }
 #'     
 #' @family stress functions 
@@ -57,7 +57,7 @@ stress_moment <- function(x, f, k, m, ...){
   if (sol$termcd != 1) stop(paste("nleqslv could not find a solution and terminated with code ", sol$termcd))
   new_weights <- function(w)as.vector(exp(c(1, w) %*% sol$x))
   constr <- list(f, m)
-  specs <- list(type = "moments", "k" = k, "constr" = constr)
+  specs <- list(type = "moment", "k" = k, "constr" = constr)
   my_list <- SWIM("x" = x, "new_weights" = new_weights, "specs" = specs)
   return(my_list)
   }
@@ -85,7 +85,7 @@ stress_moment <- function(x, f, k, m, ...){
 #'       \item \code{specs}, the specification of what has been
 #'       stressed.
 #'       The \code{specs} is a data.frame consisting of ???\cr
-#'       , see \code{\link{SWIM}} object for details.
+#'       , see \code{\link{SWIM}} for details.
 #'     }
 #'     
 #' @family stress functions 
@@ -120,7 +120,7 @@ stress_mean <- function(x, k, new_means, ...)
 #'       \item \code{specs}, the specification of what has been
 #'       stressed.
 #'       The \code{specs} is a data.frame consisting of ???\cr
-#'       , see \code{\link{SWIM}} object for details.
+#'       , see \code{\link{SWIM}} for details.
 #'     }
 #'     
 #' @family stress functions 

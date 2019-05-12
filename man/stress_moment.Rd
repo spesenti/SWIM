@@ -33,12 +33,12 @@ A \code{SWIM} object containing:
       \item \code{specs}, the specification of what has been
       stressed.
       The \code{specs} is a data.frame consisting of ???\cr
-      , see \code{\link{SWIM}} object for details.
+      , see \code{\link{SWIM}} for details.
     }
 }
 \description{
 Provides scenario weights such that the random variable
-   under the new scenraio weights fulfils the moment constraints and
+   under the scenraio weights fulfils the moment constraints and
    has minimal Kullback-Leibler divergence to the baseline random
    variable.
 }

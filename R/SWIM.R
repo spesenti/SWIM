@@ -6,11 +6,23 @@
  #'    and has minimal Kullback-Leibler divergence to the baseline random
  #'    variable.
  #' 
- #' @details The \code{SWIM} package is based on the \emph{reverse 
+ #' @details For realisations of a random variable \code{X} and a 
+ #'     (probabilstic) stress on \code{X}, the \code{SWIM}
+ #'     package provides the scenario weights, such that \code{X} under
+ #'     the scenario weights fulfils the stress and has minimal 
+ #'     Kullback-Leibler divergence to \code{X}.
+ #'     
+ #'     For a model \code{Y = g(X)} with input vector 
+ #'     \code{X = (X1,\dots,Xn)}, a stress can be defined on an input
+ #'     or the output \code{Y}. The resulting scenario weights apply to
+ #'     the entire model \code{Y = g(X)}, providing a stressed model 
+ #'     including its probability distribution. 
+ #'  
+ #'     The \code{SWIM} package is based on the \emph{reverse 
  #'     sensitivity framework} developed in 
- #'     \link{https://doi.org/10.1016/j.ejor.2018.10.003}. For a random
- #'     variable \code{X} with proababiltiy measure \code{P}, the algorithm
- #'     solves the optimisation problem 
+ #'     \link{https://doi.org/10.1016/j.ejor.2018.10.003}. Specifically, 
+ #'     for a random variable \code{X} with proababiltiy measure \code{P},
+ #'     the algorithm solves 
  #'     \deqn{argmin D(P | Q) s.t. constraints on the distribution
  #'     of X under Q.}
  #'     

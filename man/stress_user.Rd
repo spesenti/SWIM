@@ -32,7 +32,7 @@ A \code{SWIM} object containing:
       stressed.
       The \code{specs} is a data.frame consisting of \code{type},
       \code{k} and \code{constr = user}. Each row correponds to a 
-      differentstress, see \code{\link{SWIM}} object for details.
+      differentstress, see \code{\link{SWIM}} for details.
     }
 }
 \description{
