@@ -9,7 +9,7 @@
 #' @param lower   Numeric vector, left endpoints of the intervals 
 #'                (default = NULL).
 #' @param upper   Numeric vector, right endpoints of the intervals.
-#' @param prob    Numeric vector, stressed probabilties corresponding 
+#' @param prob    Numeric vector, stressed probabilties corresponding to
 #'                the intervals defined through \code{lower} and 
 #'                \code{upper}.
 #'      
@@ -18,17 +18,17 @@
 #'     If upper is not provided, the intervals are consequitive and prob is
 #'     cumulativeiin the input only
 #' 
-#' @return A \code{\link{SWIM}} object containing:
+#' @return A \code{SWIM} object containing:
 #'     \itemize{
 #'       \item \code{x}, the data;
 #'       \item \code{new_weights}, a list of functions, that applied to the
-#'     \code{k}th colum of \code{x} generate the vectors of the new
+#'     \code{k}th colum of \code{x} generate the vectors of scenario
 #'     weights;
 #'     \item \code{specs}, the specification of what has been
 #'     stressed.
 #'     The \code{specs} is a data.frame consisting of \code{type}, \code{k},
 #'     \code{lower}, \code{upper} and \code{prob}. Each row correponds to a different 
-#'     stress, see  \code{\link{SWIM}} object for details.
+#'     stress, see \code{\link{SWIM}} object for details.
 #'     }
 #'     
 #' @author Silvana M. Pesenti 

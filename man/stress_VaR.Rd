@@ -22,17 +22,17 @@ original VaR, \eqn{q_ratio =  q /  VaR}.}
 (default = 1).}
 }
 \value{
-A \code{\link{SWIM}} object containing:
+A \code{SWIM} object containing:
     \itemize{
       \item \code{x}, the data;
       \item \code{new_weights}, a list of functions, that applied to the
-    \code{k}th colum of \code{x} generate the vectors of the new
+    \code{k}th colum of \code{x} generate the vectors of scenario
     weights;
-    \item \code{specs}, the specification of what has been
+     \item \code{specs}, the specification of what has been
     stressed.
     The \code{specs} is a data.frame consisting of \code{type}, \code{k}
     \code{alpha} and \code{q}. Each row correponds to a different 
-    stress, see  \code{\link{SWIM}} object for details.
+    stress, see \code{\link{SWIM}} object for details.
     }
 }
 \description{

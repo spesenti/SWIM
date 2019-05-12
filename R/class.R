@@ -1,6 +1,4 @@
- ## DESCRIPTION: class SWIM with some methods
-
- ## This generates a object of class "SWIM"
+ # Defines the class "SWIM"
   SWIM <- function(x = "x", new_weights = "new_weights", 
                        specs = c(type = "type", k = "k", constr = "constr"     )){
    mymodel <- list(
@@ -20,16 +18,43 @@
    return(mymodel)
   }
 
+  
   is.SWIM <- function(x) inherits(x, "SWIM")
 
- # get.data provides data of a SWIM object  
+ #' Extracting data from an object of class \code{SWIM}. 
+ #'
+ #' Extracting data, \code{x}, from an object of class \code{SWIM}. 
+ #' 
+ #' @param x         A \code{SWIM} object.
+ #' @inheritParams   summary.SWIM
+ #'  
+ #' @return A data.frame containing the realisations of the
+ #'         random variables on which the object of class \code{SWIM}    
+ #'         is based on.
+ #' @author Silvana M. Pesenti 
+ #'
+ #' @export
+
   get.data <- function(x, xCol = "all"){
    if (!is.SWIM(x)) stop("Object not of class SWIM")
    if (xCol == "all") xCol = 1:ncol(x$x) else if (!(xCol %in% 1:ncol(x$x))) stop("invalid 'xCol' argument")
    return(as.matrix(x$x[, xCol]))
   }
 
-# get.weights returns a matrix of weights of a SWIM object
+ #' Extracting weights from an object of class \code{SWIM}. 
+ #'
+ #' Extracting weights, \code{new_weights}, from an object of 
+ #'     class \code{SWIM}. 
+ #' 
+ #' @inheritParams get.data
+ #'  
+ #' @return A data.frame containing the scenario weights of the object
+ #'         of class \code{SWIM}. Colums corresponds to different stresses.
+ #'         
+ #' @author Silvana M. Pesenti 
+ #'
+ #' @export
+  
   get.weights <- function(x){
    if (!is.SWIM(x)) stop("Object not of class SWIM")
    specs <- get.specs(x)
@@ -48,9 +73,23 @@
    return(new_weights)
   }
 
- # get.weightsfun returns a list of function of weights of a SWIM object 
- # SWIM object
- # a stress with type = c("user", "moment") will be ignored 
+ #' Extracting list of weights functions
+ #'
+ #' Extracting the list of functions from an object of class \code{SWIM},
+ #'     that, applied to the \code{k}th colum of \code{x}, gernerates the
+ #'     scenario weights. 
+ #' 
+ #' @note A stress with type = c("user", "moment") will be ignored. 
+ #' 
+ #' @inheritParams get.data
+ #'  
+ #' @return A data.frame containing the scenario weights of an object
+ #'         of class \code{SWIM}. Colums corresponds to different stresses.
+ #'         
+ #' @author Silvana M. Pesenti 
+ #'
+ #' @export
+ 
   get.weightsfun <- function(x){
    if (!is.SWIM(x)) stop("Object not of class SWIM")
    specs <- get.specs(x)
@@ -59,14 +98,49 @@
    return(x$new_weights[as.vector(typeCol)])
   }
 
- # get.specs provides the information about the stresses 
+ #' Extracting specification of a stress
+ #'
+ #' Extracting the specifications of an object of class \code{SWIM},
+ #'     on which the stresses are based.
+ #' 
+ #' @inheritParams get.data
+ #'  
+ #' @return A data.frame containing the specifications of an object
+ #'         of class \code{SWIM}. Rows corresponds to different stresses.
+ #'         
+ #' @author Silvana M. Pesenti 
+ #'
+ #' @export
+ 
   get.specs <- function(x){
    if (is.SWIM(x)) return(x$specs) else stop("Object not of class SWIM")
   }
-  
- # method of merge 
- # merges two SWIM objects if they are based on the same data.
- # x, y     SWIM object
+
+ #' Merge two \code{SWIM} objects
+ #'
+ #' Merge two objects of class \code{SWIM}, that are based on the same
+ #'     data \code{x}. 
+ #' 
+ #' @note A stress with type = c("user", "moment") will be ignored. 
+ #' 
+ #' @param x,y       Objects of class \code{SWIM}.
+ #'  
+ #' @return An object of class \code{SWIM} containing:
+ #'   \itemize{
+ #'     \item \code{x}, the data;
+ #'     \item \code{new_weights}, a list of functions, that applied
+ #'    to the \code{k}th colum of \code{x} generate the vectors of 
+ #'    scenario weights;
+ #'     \item \code{specs}, the specification of what has been
+ #'     stressed.
+ #'     The \code{specs} is a data.frame consisting of \code{type},
+ #'     \code{k}, and constraints depending on the \code{type} of stress,
+ #'     see \code{\link{SWIM}} object for details.
+ #'     }
+ #' 
+ #' @author Silvana M. Pesenti 
+ #'
+ #' @export
 
   merge.SWIM <- function(x, y){
   if (!is.SWIM(x) | !is.SWIM(y)) stop("x and y are not of class SWIM.")

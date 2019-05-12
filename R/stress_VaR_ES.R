@@ -15,17 +15,17 @@
  #'     If q is a vector and s numeric, the stress s is used for all q's. Similarly for s vector and q numeric.
  #'     If alpha and q or s are vectors, they have to be of the same length.
  #' 
- #' @return A \code{\link{SWIM}} object containing:
+ #' @return A \code{SWIM} object containing:
  #'     \itemize{
  #'       \item \code{x}, the data;
  #'       \item \code{new_weights}, a list of functions, that applied to
- #'       the \code{k}th colum of \code{x} generate the vectors of the
- #'       new weights;
+ #'       the \code{k}th colum of \code{x} generate the vectors of 
+ #'       scenario weights;
  #'       \item \code{specs}, the specification of what has been
  #'       stressed.
  #'       The \code{specs} is a data.frame consisting of \code{type},
  #'       \code{k}, \code{alpha}, \code{q} and \code{s}. Each row 
- #'       correponds to a differentstress, see  \code{\link{SWIM}} object
+ #'       correponds to a differentstress, see \code{\link{SWIM}} object
  #'       for details.
  #'     }
  #'     
