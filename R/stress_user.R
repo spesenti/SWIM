@@ -25,10 +25,11 @@
 #'       stressed.
 #'       The \code{specs} is a data.frame consisting of \code{type},
 #'       \code{k} and \code{constr = user}. Each row correponds to a 
-#'       differentstress, see \code{\link{SWIM}} object for details.
+#'       differentstress, see \code{\link{SWIM}} for details.
 #'     }
 #'     
 #' @family stress functions 
+#' @inherit SWIM references 
 #' @export 
 
 stress_user <- function(x, new_weights, k = 1){

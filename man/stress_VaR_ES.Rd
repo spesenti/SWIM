@@ -15,14 +15,23 @@ are interpreted to correspond to random variables.}
 \item{alpha}{Numeric vector, the levels of the stressed VaR.}
 
 \item{q_ratio}{Numeric vector, the ratio of the stressed VaR to the
-original VaR, \eqn{q_ratio =  q /  VaR}.}
+original VaR, \eqn{q_ratio =  q /  VaR}.\cr
+If \code{alpha} and \code{q_ratio} are vectors, they 
+must have the same length.}
 
 \item{s_ratio}{Numeric, vector, ratio of stressed ES to base ES,
-\eqn{s_ratio = s / ES}.}
+\eqn{s_ratio = s / ES}.
+If \code{q} and \code{s_ratio} are vectors, they must
+have the same length.}
 
-\item{q}{Numeric vector, the stressed VaR at level \code{alpha}.}
+\item{q}{Numeric vector, the stressed VaR at level 
+\code{alpha}.\cr
+If \code{alpha} and \code{q} are vectors, they must 
+have the same length.}
 
-\item{s}{Numeric, vector - constraints: new ES at level alpha.}
+\item{s}{Numeric, vector - constraints: new ES at level alpha.
+If \code{q} and \code{s} are vectors, they must have
+the same length.}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 (default = 1).}
@@ -38,26 +47,26 @@ A \code{SWIM} object containing:
       stressed.
       The \code{specs} is a data.frame consisting of \code{type},
       \code{k}, \code{alpha}, \code{q} and \code{s}. Each row 
-      correponds to a differentstress, see \code{\link{SWIM}} object
+      correponds to a differentstress, see \code{\link{SWIM}}
       for details.
     }
 }
 \description{
 Provides scenario weights such that the random variable
-   under the new scenraio weights fulfils the constraint on the VaR and
+   under the scenraio weights fulfils the constraint on the VaR and
    ES has minimal Kullback-Leibler divergence to the baseline random
    variable.
 }
 \details{
-The new weights are 
-    If q, s are vectors, they have to be of the same length.
-    If q is a vector and s numeric, the stress s is used for all q's. Similarly for s vector and q numeric.
-    If alpha and q or s are vectors, they have to be of the same length.
+If one of \code{alpha, q, s} (\code{q_ratio, s_ratio}) is 
+    a vector, the stressed VaR's and ES's at level \code{alpha} are
+    equal to \code{q} and \code{s}, respectively.
 }
 \seealso{
-Other stress functions: \code{\link{stress_VaR}},
-  \code{\link{stress_mean_sd}}, \code{\link{stress_mean}},
-  \code{\link{stress_moment}}, \code{\link{stress_prob}},
-  \code{\link{stress_user}}, \code{\link{stress}}
+Other stress functions: \code{\link{SWIM}},
+  \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},
+  \code{\link{stress_mean}}, \code{\link{stress_moment}},
+  \code{\link{stress_prob}}, \code{\link{stress_user}},
+  \code{\link{stress}}
 }
 \concept{stress functions}

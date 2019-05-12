@@ -33,7 +33,7 @@ A \code{SWIM} object containing:
       \item \code{specs}, the specification of what has been
       stressed.
       The \code{specs} is a data.frame consisting of ???\cr
-      , see \code{\link{SWIM}} object for details.
+      , see \code{\link{SWIM}} for details.
     }
 }
 \description{
@@ -46,9 +46,10 @@ Provides scenario weights such that the random variable
 
 }
 \seealso{
-Other stress functions: \code{\link{stress_VaR_ES}},
-  \code{\link{stress_VaR}}, \code{\link{stress_mean}},
-  \code{\link{stress_moment}}, \code{\link{stress_prob}},
-  \code{\link{stress_user}}, \code{\link{stress}}
+Other stress functions: \code{\link{SWIM}},
+  \code{\link{stress_VaR_ES}}, \code{\link{stress_VaR}},
+  \code{\link{stress_mean}}, \code{\link{stress_moment}},
+  \code{\link{stress_prob}}, \code{\link{stress_user}},
+  \code{\link{stress}}
 }
 \concept{stress functions}
