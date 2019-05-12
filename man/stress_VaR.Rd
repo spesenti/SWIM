@@ -45,7 +45,8 @@ Provides scenario weights such that the random variable
 If alpha and q or q_ratio are vectors, they have to be of the same length.
 }
 \seealso{
-Other stress functions: \code{\link{stress_VaR_ES}},
+Other stress functions: \code{\link{SWIM}},
+  \code{\link{stress_VaR_ES}},
   \code{\link{stress_mean_sd}}, \code{\link{stress_mean}},
   \code{\link{stress_moment}}, \code{\link{stress_prob}},
   \code{\link{stress_user}}, \code{\link{stress}}

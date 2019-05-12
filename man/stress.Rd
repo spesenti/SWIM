@@ -30,10 +30,11 @@ Provides the scenario weights such that a random variable
     \code{\link{stress_user}} for user defined scenario weights.
 }
 \seealso{
-Other stress functions: \code{\link{stress_VaR_ES}},
-  \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},
-  \code{\link{stress_mean}}, \code{\link{stress_moment}},
-  \code{\link{stress_prob}}, \code{\link{stress_user}}
+Other stress functions: \code{\link{SWIM}},
+  \code{\link{stress_VaR_ES}}, \code{\link{stress_VaR}},
+  \code{\link{stress_mean_sd}}, \code{\link{stress_mean}},
+  \code{\link{stress_moment}}, \code{\link{stress_prob}},
+  \code{\link{stress_user}}
 }
 \author{
 Silvana M. Pesenti

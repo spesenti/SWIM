@@ -7,17 +7,46 @@
 \title{SWIM: A package for Sensitivity Analysis}
 \description{
 The \code{SWIM} (Scenario Weights for Importance Measurement) package
-   provides scenario weights such that the random variable
-   under the new scenraio weights fulfils the constraint on the VaR and
-   has minimal Kullback-Leibler divergence to the baseline random
+   provides scenario weights such that a stressed random variable
+   (under the new scenraio weights) fulfils probabilistic constraints 
+   and has minimal Kullback-Leibler divergence to the baseline random
    variable.
 }
 \details{
-a;sldkfnds
+The \code{SWIM} package is based on the \emph{reverse 
+    sensitivity framework} developed in 
+    \link{https://doi.org/10.1016/j.ejor.2018.10.003}. For a random
+    variable \code{X} with proababiltiy measure \code{P}, the algorithm
+    solves the optimisation problem 
+    \deqn{argmin D(P | Q) s.t. constraints on the distribution
+    of X under Q.}
 }
+\section{Stresses}{
+
+    Implemented functions are:
+    \itemize{
+      \item \code{\link{stress}} calles one of the below functions by  
+    defining \code{type}
+      \item \code{\link{stress_VaR}} for stressing the VaR 
+    (\code{type = "VaR"})
+      \item \code{\link{stress_VaR_ES}} for stressing the VaR and 
+    ES jointly (\code{type = "VaR ES"})
+      \item \code{\link{stress_mean}} for stressing means 
+    (\code{type = "mean"})
+      \item \code{\link{stress_mean_sd}} for stressing means and
+    standard deviations (\code{type = "mean sd"})
+      \item \code{\link{stress_moment}} for stressing moments 
+    (\code{type = "moment"})
+      \item \code{\link{stress_prob}} for stressing intervals 
+    (\code{type = "prob"})
+      \item \code{\link{stress_user}} for user defined scenario weights
+    (\code{type = "user"})
+    }
+}
+
 \section{A \code{SWIM} object}{
 
-    A \code{SWIM} object contains:
+    An object of calss \code{SWIM} contains a list of:
   \itemize{
     \item \code{x}, the data;
     \item \code{new_weights}, a list of functions, that applied
@@ -46,11 +75,10 @@ a;sldkfnds
 }
 
 \seealso{
-\code{\link{stress}}, \code{\link{stress_VaR}} for stressing 
-    the VaR, \code{\link{stress_VaR_ES}} for stressing the VaR and ES
-    jointly, \code{\link{stress_mean}} for stressing means, 
-    \code{\link{stress_moment}} for stressing means and standard
-    deviations, \code{\link{stress_moment}} for stressing moments, 
-    \code{\link{stress_prob}} for stressing intervals and 
-    \code{\link{stress_user}} for user defined scenario weights.
+Other stress functions: \code{\link{stress_VaR_ES}},
+  \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},
+  \code{\link{stress_mean}}, \code{\link{stress_moment}},
+  \code{\link{stress_prob}}, \code{\link{stress_user}},
+  \code{\link{stress}}
 }
+\concept{stress functions}

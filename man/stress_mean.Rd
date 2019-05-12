@@ -43,8 +43,9 @@ Provides scenario weights such that the random variable
 
 }
 \seealso{
-Other stress functions: \code{\link{stress_VaR_ES}},
-  \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},
+Other stress functions: \code{\link{SWIM}},
+  \code{\link{stress_VaR_ES}}, \code{\link{stress_VaR}},
+  \code{\link{stress_mean_sd}},
   \code{\link{stress_moment}}, \code{\link{stress_prob}},
   \code{\link{stress_user}}, \code{\link{stress}}
 }

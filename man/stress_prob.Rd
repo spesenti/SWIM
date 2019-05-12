@@ -50,10 +50,11 @@ If alpha and q or q_perc are vectors, they have to be of the
     cumulativeiin the input only
 }
 \seealso{
-Other stress functions: \code{\link{stress_VaR_ES}},
-  \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},
-  \code{\link{stress_mean}}, \code{\link{stress_moment}},
-  \code{\link{stress_user}}, \code{\link{stress}}
+Other stress functions: \code{\link{SWIM}},
+  \code{\link{stress_VaR_ES}}, \code{\link{stress_VaR}},
+  \code{\link{stress_mean_sd}}, \code{\link{stress_mean}},
+  \code{\link{stress_moment}}, \code{\link{stress_user}},
+  \code{\link{stress}}
 }
 \author{
 Silvana M. Pesenti
