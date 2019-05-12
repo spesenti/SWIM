@@ -24,7 +24,7 @@ the new moments of \code{f(x)}. Must be in the range of
 \code{\link[nleqslv]{nleqslv}}.}
 }
 \value{
-A \code{\link{SWIM}} object containing:
+A \code{SWIM} object containing:
     \itemize{
       \item \code{x}, the data;
       \item \code{new_weights}, a list of functions, that applied to
@@ -32,7 +32,8 @@ A \code{\link{SWIM}} object containing:
       new weights;
       \item \code{specs}, the specification of what has been
       stressed.
-      The \code{specs} is a data.frame consisting of ???
+      The \code{specs} is a data.frame consisting of ???\cr
+      , see \code{\link{SWIM}} object for details.
     }
 }
 \description{

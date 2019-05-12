@@ -11,7 +11,7 @@ stress_prob(x, prob, upper, lower = NULL, k = 1)
 containing realisations of random variables. Colums of \code{x} 
 are interpreted to correspond to random variables.}
 
-\item{prob}{Numeric vector, stressed probabilties corresponding 
+\item{prob}{Numeric vector, stressed probabilties corresponding to
 the intervals defined through \code{lower} and 
 \code{upper}.}
 
@@ -24,17 +24,17 @@ the intervals defined through \code{lower} and
 (default = 1).}
 }
 \value{
-A \code{\link{SWIM}} object containing:
+A \code{SWIM} object containing:
     \itemize{
       \item \code{x}, the data;
       \item \code{new_weights}, a list of functions, that applied to the
-    \code{k}th colum of \code{x} generate the vectors of the new
+    \code{k}th colum of \code{x} generate the vectors of scenario
     weights;
     \item \code{specs}, the specification of what has been
     stressed.
     The \code{specs} is a data.frame consisting of \code{type}, \code{k},
     \code{lower}, \code{upper} and \code{prob}. Each row correponds to a different 
-    stress, see  \code{\link{SWIM}} object for details.
+    stress, see \code{\link{SWIM}} object for details.
     }
 }
 \description{

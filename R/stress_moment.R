@@ -18,7 +18,7 @@
 #' @details Calcualtes the solution wrt theta of the set of equations
 # EQ[f(x)]=E[f(x)exp(theta * f(x))]=m.
 #' 
-#' @return A \code{\link{SWIM}} object containing:
+#' @return A \code{SWIM} object containing:
 #'     \itemize{
 #'       \item \code{x}, the data;
 #'       \item \code{new_weights}, a list of functions, that applied to
@@ -26,7 +26,8 @@
 #'       new weights;
 #'       \item \code{specs}, the specification of what has been
 #'       stressed.
-#'       The \code{specs} is a data.frame consisting of ???
+#'       The \code{specs} is a data.frame consisting of ???\cr
+#'       , see \code{\link{SWIM}} object for details.
 #'     }
 #'     
 #' @family stress functions 
@@ -75,7 +76,7 @@ stress_moment <- function(x, f, k, m, ...){
 #'                  column of \code{x} that are stressed.
 #' @details 
 #' 
-#' @return A \code{\link{SWIM}} object containing:
+#' @return A \code{SWIM} object containing:
 #'     \itemize{
 #'       \item \code{x}, the data;
 #'       \item \code{new_weights}, a list of functions, that applied to
@@ -83,7 +84,8 @@ stress_moment <- function(x, f, k, m, ...){
 #'       new weights;
 #'       \item \code{specs}, the specification of what has been
 #'       stressed.
-#'       The \code{specs} is a data.frame consisting of ???
+#'       The \code{specs} is a data.frame consisting of ???\cr
+#'       , see \code{\link{SWIM}} object for details.
 #'     }
 #'     
 #' @family stress functions 
@@ -109,15 +111,16 @@ stress_mean <- function(x, k, new_means, ...)
 #' 
 #' @details 
 #' 
-#' @return A \code{\link{SWIM}} object containing:
+#' @return A \code{SWIM} object containing:
 #'     \itemize{
 #'       \item \code{x}, the data;
 #'       \item \code{new_weights}, a list of functions, that applied to
-#'       the \code{k}th colum of \code{x} generate the vectors of the
-#'       new weights;
+#'       the \code{k}th colum of \code{x} generate the vectors of 
+#'       scenario weights;
 #'       \item \code{specs}, the specification of what has been
 #'       stressed.
-#'       The \code{specs} is a data.frame consisting of ???
+#'       The \code{specs} is a data.frame consisting of ???\cr
+#'       , see \code{\link{SWIM}} object for details.
 #'     }
 #'     
 #' @family stress functions 
