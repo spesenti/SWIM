@@ -62,6 +62,9 @@ If one of \code{alpha, q, s} (\code{q_ratio, s_ratio}) is
     a vector, the stressed VaR's and ES's at level \code{alpha} are
     equal to \code{q} and \code{s}, respectively.
 }
+\references{
+\insertRef{Pesenti2019reverse}{SWIM}
+}
 \seealso{
 Other stress functions: \code{\link{SWIM}},
   \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},

@@ -44,6 +44,9 @@ The new weights are
     If q is a vector and s numeric, the stress s is used for all q's. Similarly for s vector and q numeric.
     If alpha and q or s are vectors, they have to be of the same length.
 }
+\references{
+\insertRef{Pesenti2019reverse}{SWIM}
+}
 \seealso{
 Other stress functions: \code{\link{SWIM}},
   \code{\link{stress_VaR_ES}}, \code{\link{stress_VaR}},
