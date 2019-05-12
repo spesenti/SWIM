@@ -33,6 +33,7 @@
  #'     }
  #'     
  #' @family stress functions 
+ #' @inherit SWIM references 
  #' @export
 
 stress_VaR_ES <- function(x, alpha, q_ratio = NULL, 

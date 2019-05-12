@@ -27,6 +27,7 @@ For realisations of a random variable \code{X} and a
  
     The \code{SWIM} package is based on the \emph{reverse 
     sensitivity framework} developed in 
+    \insertCite{Pesenti2019reverse}{SWIM},
     \url{https://doi.org/10.1016/j.ejor.2018.10.003}. Specifically, 
     for a random variable \code{X} with proababiltiy measure \code{P},
     the algorithm solves 
@@ -86,6 +87,9 @@ For realisations of a random variable \code{X} and a
     }
 }
 
+\references{
+\insertRef{Pesenti2019reverse}{SWIM}
+}
 \seealso{
 Other stress functions: \code{\link{stress_VaR_ES}},
   \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},

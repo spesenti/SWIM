@@ -32,6 +32,7 @@
 #' @author Silvana M. Pesenti 
 #' 
 #' @family stress functions 
+#' @inherit SWIM references 
 #' @export
 #' 
 

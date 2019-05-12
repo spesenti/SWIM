@@ -27,8 +27,6 @@
  #'    If \code{alpha} is numeric and \code{q}, respective 
  #'    \code{q_ratio}, vectors, the stressed VaR's at level \code{alpha}
  #'    are equal to \code{q}.
- #'    
- #'    
  #' 
  #' @return A \code{SWIM} object containing:
  #'     \itemize{
@@ -46,6 +44,7 @@
  #' @author Silvana M. Pesenti 
  #' 
  #' @family stress functions 
+ #' @inherit SWIM references 
  #' @export
  #' 
   stress_VaR <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1){

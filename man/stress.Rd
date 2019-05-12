@@ -32,6 +32,9 @@ Provides the scenario weights such that a random variable
     \code{\link{stress_prob}} for stressing intervals and 
     \code{\link{stress_user}} for user defined scenario weights.
 }
+\references{
+\insertRef{Pesenti2019reverse}{SWIM}
+}
 \seealso{
 Other stress functions: \code{\link{SWIM}},
   \code{\link{stress_VaR_ES}}, \code{\link{stress_VaR}},

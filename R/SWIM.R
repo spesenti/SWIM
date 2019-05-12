@@ -20,6 +20,7 @@
  #'  
  #'     The \code{SWIM} package is based on the \emph{reverse 
  #'     sensitivity framework} developed in 
+ #'     \insertCite{Pesenti2019reverse}{SWIM},
  #'     \url{https://doi.org/10.1016/j.ejor.2018.10.003}. Specifically, 
  #'     for a random variable \code{X} with proababiltiy measure \code{P},
  #'     the algorithm solves 
@@ -76,6 +77,10 @@
  #'     } 
  #'     
  #' @family stress functions
+ #'  
+ #' @references \insertRef{Pesenti2019reverse}{SWIM}
+ #'  
+ #' @importFrom    Rdpack reprompt
  #'  
  #' @docType package
  #' @name SWIM

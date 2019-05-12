@@ -11,11 +11,14 @@ Authors@R: c(
   person("Andreas", "Tsanakas", email = "A.Tsanakas.1@city.ac.uk", 
   role = c("aut"))
   )
-Description: An efficient sensitivity analysis for models based on Monte Carlo samples.
-    For a stress to an input / output, the (stressed) probabilty (meaure) scenario
-    weights RE calculated by minimising the Kullback-Leobler divergence with respect
-    to the baseline model.
+Description: An efficient sensitivity analysis for models based on 
+    Monte Carlo samples. For a stress to an input / output, the (stressed)
+    probabilty (meaure) scenario weights RE calculated by minimising 
+    the Kullback-Leobler divergence with respect to the baseline
+    model.
 Depends: R (>= 3.5.1)
+Imports: Rdpack(>= 0.7)
+RdMacros: Rdpack
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true

@@ -29,6 +29,7 @@
 #'     }
 #'     
 #' @family stress functions 
+#' @inherit SWIM references 
 #' @export 
 
 stress_user <- function(x, new_weights, k = 1){

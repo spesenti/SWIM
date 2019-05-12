@@ -31,6 +31,7 @@
 #'     }
 #'     
 #' @family stress functions 
+#' @inherit SWIM references 
 #' @export
 
 stress_moment <- function(x, f, k, m, ...){
@@ -89,6 +90,7 @@ stress_moment <- function(x, f, k, m, ...){
 #'     }
 #'     
 #' @family stress functions 
+#' @inherit SWIM references 
 #' @export
 
 stress_mean <- function(x, k, new_means, ...)
@@ -124,6 +126,7 @@ stress_mean <- function(x, k, new_means, ...)
 #'     }
 #'     
 #' @family stress functions 
+#' @inherit SWIM references 
 #' @export 
 
 
