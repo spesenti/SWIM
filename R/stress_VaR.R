@@ -20,14 +20,9 @@
  #'                If \code{alpha} and \code{q_ratio} are vectors, they 
  #'                must have the same length. 
  #'      
- #' @details If \code{alpha} is a vector and \code{q}, respective 
- #'    \code{q_ratio}, numeric, the stressed VaR's at level \code{alpha} 
- #'    are all equal to \code{q}. 
- #'    
- #'    If \code{alpha} is numeric and \code{q}, respective 
- #'    \code{q_ratio}, vectors, the stressed VaR's at level \code{alpha}
- #'    are equal to \code{q}.
- #' 
+ #' @details If one of \code{alpha, q} (\code{q_ratio}) is a vector,
+ #'    the stressed VaR's at level \code{alpha} are equal to \code{q}.
+ #'     
  #' @return A \code{SWIM} object containing:
  #'     \itemize{
  #'       \item \code{x}, the data;

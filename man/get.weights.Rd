@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{get.weights}
 \alias{get.weights}
-\title{Extracting weights from an object of class \code{SWIM}.}
+\title{Extracting weights}
 \usage{
 get.weights(x)
 }

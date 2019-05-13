@@ -12,6 +12,7 @@ get.specs(x)
 \value{
 A data.frame containing the specifications of an object
         of class \code{SWIM}. Rows corresponds to different stresses.
+        See \code{\link{SWIM}} object for details.
 }
 \description{
 Extracting the specifications of an object of class \code{SWIM},

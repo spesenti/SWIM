@@ -20,7 +20,7 @@ An object of class \code{SWIM} containing:
     stressed.
     The \code{specs} is a data.frame consisting of \code{type},
     \code{k}, and constraints depending on the \code{type} of stress,
-    see \code{\link{SWIM}} object for details.
+    see \code{\link{SWIM}} for details.
     }
 }
 \description{

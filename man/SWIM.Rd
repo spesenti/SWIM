@@ -27,19 +27,20 @@ For realisations of a random variable \code{X} and a
  
     The \code{SWIM} package is based on the \emph{reverse 
     sensitivity framework} developed in 
-    \insertCite{Pesenti2019reverse}{SWIM},
-    \url{https://doi.org/10.1016/j.ejor.2018.10.003}. Specifically, 
+    \insertCite{Pesenti2019reverse}{SWIM}. Specifically, 
     for a random variable \code{X} with proababiltiy measure \code{P},
     the algorithm solves 
     \deqn{argmin D(P | Q) s.t. constraints on the distribution
-    of X under Q.}
+    of X under Q,}
+    where \code{D(P | Q)} is the Kullback-Leibler divergence between
+    \code{P} and \code{Q}.
 }
 \section{Stresses}{
 
     Implemented functions are:
     \itemize{
-      \item \code{\link{stress}} calles one of the below functions by  
-    defining \code{type}
+      \item \code{\link{stress}} calles one of the functions below by  
+    using \code{type}
       \item \code{\link{stress_VaR}} for stressing the VaR 
     (\code{type = "VaR"})
       \item \code{\link{stress_VaR_ES}} for stressing the VaR and 
@@ -68,13 +69,13 @@ For realisations of a random variable \code{X} and a
     \item \code{specs}, the specification of what has been
   stressed.
   The \code{specs} is a data.frame consisting of \code{type},
-  \code{k}, and constraints depending on the \code{type} of stress.
+  \code{k}, and constraints depending on the \code{type} of stress:
     \itemize{
       \item \code{type = "VaR"}: \code{alpha}, the level of the 
-    stressed VaR; \code{q} the stressed VaR at level \code{alpha}.
+    stressed VaR; \code{q}, the stressed VaR at level \code{alpha}.
       \item \code{type = "VaR ES"}: \code{alpha}, the level of the 
-    stressed VaR; \code{q} the stressed VaR at level \code{alpha};
-    \code{s} the stressed ES at level \code{alpha}.
+    stressed VaR; \code{q}, the stressed VaR at level \code{alpha};
+    \code{s}, the stressed ES at level \code{alpha}.
       \item \code{type = "prob"}: \code{lower}, the left endpoints of
     the intervals; \code{upper}, the right endpoints of the intervals;
     \code{prob}, stressed probabilties corresponding to the intervals

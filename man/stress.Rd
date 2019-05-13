@@ -7,11 +7,10 @@
 stress(type = c("VaR", "VaR ES", "prob", "user"), ...)
 }
 \arguments{
-\item{type}{The type of stress. A choice of "VaR", "VaR ES", 
+\item{type}{Type of stress, one of "VaR", "VaR ES", 
 "prob", "user", "moment", "mean", "mean sd".}
 
-\item{...}{Arguments to be passed depending on the choice of
-\code{type}.}
+\item{...}{Arguments to be passed depending on \code{type}.}
 }
 \value{
 An object of class \code{SWIM}, see \code{\link{SWIM}} 
@@ -22,15 +21,6 @@ Provides the scenario weights such that a random variable
    under the scenraio weights fulfils probabilistic constraints and
    has minimal Kullback-Leibler divergence to the baseline random
    variable.
-}
-\note{
-\code{\link{stress}}, \code{\link{stress_VaR}} for stressing 
-    the VaR, \code{\link{stress_VaR_ES}} for stressing the VaR and ES
-    jointly, \code{\link{stress_mean}} for stressing means, 
-    \code{\link{stress_moment}} for stressing means and standard
-    deviations, \code{\link{stress_moment}} for stressing moments, 
-    \code{\link{stress_prob}} for stressing intervals and 
-    \code{\link{stress_user}} for user defined scenario weights.
 }
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}

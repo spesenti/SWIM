@@ -10,8 +10,9 @@ get.weightsfun(x)
 \item{x}{A \code{SWIM} object.}
 }
 \value{
-A data.frame containing the scenario weights of an object
-        of class \code{SWIM}. Colums corresponds to different stresses.
+A list containing the functions, that, applied to the 
+    \code{k}the colum of \code{X}, generate the scenario weights 
+    of an object of class \code{SWIM}.
 }
 \description{
 Extracting the list of functions from an object of class \code{SWIM},
