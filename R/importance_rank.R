@@ -1,3 +1,5 @@
+#' importance rank
+#' @export
 # Function to calculate ranking of a SWIM object input
 
 # x         object

@@ -1,3 +1,6 @@
+#' plots empirical distribution
+#' @export
+
 # plots the empirical distribution function of one vector under different stresses
 
 # x         SWIM object

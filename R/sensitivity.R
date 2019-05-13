@@ -1,3 +1,7 @@
+
+#' Sensitivity
+#' @export
+#' 
 # Function to calculate sensitivity measures of a SWIM object
 
 # x         object
