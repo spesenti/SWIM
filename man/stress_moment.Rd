@@ -45,6 +45,9 @@ Provides scenario weights such that the random variable
 \details{
 Calcualtes the solution wrt theta of the set of equations
 }
+\references{
+\insertRef{Pesenti2019reverse}{SWIM}
+}
 \seealso{
 Other stress functions: \code{\link{SWIM}},
   \code{\link{stress_VaR_ES}}, \code{\link{stress_VaR}},

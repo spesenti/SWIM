@@ -1,4 +1,6 @@
-# This function plots the rank
+#' plots sensitivity
+#' @export
+#  This function plots the rank
 # Input: 
 # x         object
 # xCol      integer vector, columns of x$x (default = "all")  

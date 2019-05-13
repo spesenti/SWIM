@@ -1,3 +1,6 @@
+#'plots histogram
+#'@export
+#'
 # plots the histogram of one vector under different stresses
 
 # x         SWIM object

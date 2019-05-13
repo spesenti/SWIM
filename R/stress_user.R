@@ -10,11 +10,6 @@
 #'     generate the vecotrs of the new weights. \cr
 #'     \code{new_weights} are normalised to 1.
 #'  
-#' @details The new weights are 
-#'     If q, s are vectors, they have to be of the same length.
-#'     If q is a vector and s numeric, the stress s is used for all q's. Similarly for s vector and q numeric.
-#'     If alpha and q or s are vectors, they have to be of the same length.
-#' 
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
 #'       \item \code{x}, the data;

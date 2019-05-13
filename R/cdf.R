@@ -1,3 +1,5 @@
+#' empirical distribution function
+#' @export
 # function calculating the distorted empirical distribution function
 # Note that the ecdf is not a generic, so we cannot define a method.
 

@@ -21,7 +21,7 @@
   
   is.SWIM <- function(x) inherits(x, "SWIM")
 
- #' Extracting data from an object of class \code{SWIM}. 
+ #' Extracting data 
  #'
  #' Extracting data, \code{x}, from an object of class \code{SWIM}. 
  #' 
@@ -41,7 +41,7 @@
    return(as.matrix(x$x[, xCol]))
   }
 
- #' Extracting weights from an object of class \code{SWIM}. 
+ #' Extracting weights 
  #'
  #' Extracting weights, \code{new_weights}, from an object of 
  #'     class \code{SWIM}. 
@@ -83,8 +83,9 @@
  #' 
  #' @inheritParams get.data
  #'  
- #' @return A data.frame containing the scenario weights of an object
- #'         of class \code{SWIM}. Colums corresponds to different stresses.
+ #' @return A list containing the functions, that, applied to the 
+ #'     \code{k}the colum of \code{X}, generate the scenario weights 
+ #'     of an object of class \code{SWIM}.
  #'         
  #' @author Silvana M. Pesenti 
  #'
@@ -107,6 +108,7 @@
  #'  
  #' @return A data.frame containing the specifications of an object
  #'         of class \code{SWIM}. Rows corresponds to different stresses.
+ #'         See \code{\link{SWIM}} object for details.
  #'         
  #' @author Silvana M. Pesenti 
  #'
@@ -135,7 +137,7 @@
  #'     stressed.
  #'     The \code{specs} is a data.frame consisting of \code{type},
  #'     \code{k}, and constraints depending on the \code{type} of stress,
- #'     see \code{\link{SWIM}} object for details.
+ #'     see \code{\link{SWIM}} for details.
  #'     }
  #' 
  #' @author Silvana M. Pesenti 

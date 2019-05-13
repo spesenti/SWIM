@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{get.data}
 \alias{get.data}
-\title{Extracting data from an object of class \code{SWIM}.}
+\title{Extracting data}
 \usage{
 get.data(x, xCol = "all")
 }

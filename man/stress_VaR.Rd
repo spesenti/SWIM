@@ -47,13 +47,8 @@ Provides scenario weights such that the random variable
    variable.
 }
 \details{
-If \code{alpha} is a vector and \code{q}, respective 
-   \code{q_ratio}, numeric, the stressed VaR's at level \code{alpha} 
-   are all equal to \code{q}. 
-   
-   If \code{alpha} is numeric and \code{q}, respective 
-   \code{q_ratio}, vectors, the stressed VaR's at level \code{alpha}
-   are equal to \code{q}.
+If one of \code{alpha, q} (\code{q_ratio}) is a vector,
+   the stressed VaR's at level \code{alpha} are equal to \code{q}.
 }
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}

@@ -47,6 +47,9 @@ Provides scenario weights such that the random variable
 If \code{upper = NULL}, the intervals are consequitive and 
     \code{prob} cummulative.
 }
+\references{
+\insertRef{Pesenti2019reverse}{SWIM}
+}
 \seealso{
 Other stress functions: \code{\link{SWIM}},
   \code{\link{stress_VaR_ES}}, \code{\link{stress_VaR}},

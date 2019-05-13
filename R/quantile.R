@@ -1,5 +1,5 @@
-# method reporting stressed quantiles
-
+#' Stressed quantiles 
+#' @export
 # x         object
 # xCol   integer, vector, columns of x$x, (default = "all")  
 # wCol   integer, columns of new_weights, (default = 1)
@@ -19,8 +19,8 @@
    } 
    x_data <- as.matrix(get.data(x)[ , xCol])
 
-   require(Hmisc, quietly = TRUE)
-   quantile_w <- as.matrix(apply(X = as.matrix(x_data), MARGIN = 2, FUN = wtd.quantile, weights = new_weights, probs = p, type = type))
+ # help function
+   quantile_w <- as.matrix(apply(X = as.matrix(x_data), MARGIN = 2, FUN = Hmisc::wtd.quantile, weights = new_weights, probs = p, type = type))
    if (length(p) == 1 && length(cname) > 1) quantile_w <- matrix(quantile_w, nrow = 1)
    colnames(quantile_w) <- cname
    rownames(quantile_w) <- paste(p * 100, "%", sep = "")
