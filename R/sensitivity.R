@@ -1,14 +1,26 @@
-
-#' Sensitivity
+#' Sensitivity measures of a \code{SWIM} object
+#' 
+#' Provides different sensitivity measures of an object of class 
+#'     \code{SWIM}.
+#' 
+#' @inheritParams summary.SWIM
+#' @param type   Character, one of \code{"Gamma", "Kolmogorov", 
+#'               "Wasserstein", "all"}). Note, the Kolmogorov distance 
+#'               is the same for all x
+#' @param f      List of functions, same length as \code{xCol}. If 
+#'               provided, the sensitivity measures of the transformed
+#'               data of the \code{SWIM} object is returned
+#'               (\code{default = NULL}).
+#' 
+#' @details 
+#' 
+#' @return A data.frame containting the sensitivity measures of the 
+#'     data and the stressed data of the \code{SWIM} object.The last 
+#'     rows display the \code{stress} and the \code{type} of the 
+#'     sensitivity measure. 
+#' 
 #' @export
 #' 
-# Function to calculate sensitivity measures of a SWIM object
-
-# x         object
-# xCol      integer vector, columns of x$x (default = "all")  
-# wCol      integer vector, columns of new_weights, (default = "all")
-# type      character vector, type = c("Gamma", "Kolmogorov", "Wasserstein", "all"). The Kolmogorov distance is the same for all x
-# f         list of functions, calcualted the sensitivity of the transformed input vector. List needs to have the same length as xCol. 
 
   sensitivity <- function(x, xCol = "all", wCol = "all", type = c("Gamma",      "Kolmogorov", "Wasserstein", "all"), f = NULL){
    if (!is.SWIM(x)) stop("Wrong object")

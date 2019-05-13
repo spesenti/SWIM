@@ -147,9 +147,8 @@
   merge.SWIM <- function(x, y){
   if (!is.SWIM(x) | !is.SWIM(y)) stop("x and y are not of class SWIM.")
   if (!identical(get.data(x), get.data(y))) stop("x and y are not based on the same data")
-  require(plyr, quietly = TRUE)
   new_weights <- c(get.weightsfun(x), get.weightsfun(y))
-  specs <- rbind.fill(get.specs(x), get.specs(y))
+  specs <- plyr::rbind.fill(get.specs(x), get.specs(y))
   m <- length(specs$type)
   rownames(specs) <- names(new_weights) <- paste("stress", 1:m)
   xy <- SWIM("x" = get.data(x), "new_weights" = new_weights, "specs" = specs)

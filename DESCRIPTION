@@ -17,7 +17,13 @@ Description: An efficient sensitivity analysis for models based on
     the Kullback-Leobler divergence with respect to the baseline
     model.
 Depends: R (>= 3.5.1)
-Imports: Rdpack(>= 0.7), Hmisc(>= 4.2)
+Imports: 
+    Rdpack (>= 0.7),
+    Hmisc,
+    nleqslv,
+    reshape,
+    plyr,
+    ggplot2
 RdMacros: Rdpack
 License: What license is it under?
 Encoding: UTF-8

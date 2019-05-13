@@ -7,8 +7,8 @@
 stress(type = c("VaR", "VaR ES", "prob", "user"), ...)
 }
 \arguments{
-\item{type}{Type of stress, one of "VaR", "VaR ES", 
-"prob", "user", "moment", "mean", "mean sd".}
+\item{type}{Charactor, the type of stress, one of \code{"VaR", 
+"VaR ES", "prob", "user", "moment", "mean", "mean sd"}.}
 
 \item{...}{Arguments to be passed depending on \code{type}.}
 }

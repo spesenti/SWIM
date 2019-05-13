@@ -2,11 +2,39 @@
 % Please edit documentation in R/sensitivity.R
 \name{sensitivity}
 \alias{sensitivity}
-\title{Sensitivity}
+\title{Sensitivity measures of a \code{SWIM} object}
 \usage{
 sensitivity(x, xCol = "all", wCol = "all", type = c("Gamma",
   "Kolmogorov", "Wasserstein", "all"), f = NULL)
 }
+\arguments{
+\item{x}{A \code{SWIM} object.}
+
+\item{xCol}{Integer vector, columns of \code{x} for which the summary
+should be returned, (\code{default = "all"})}
+
+\item{wCol}{Integer vector, columns of \code{new_weights} for which
+the summary should be returned, (\code{default = "all"})}
+
+\item{type}{Character, one of \code{"Gamma", "Kolmogorov", 
+"Wasserstein", "all"}). Note, the Kolmogorov distance 
+is the same for all x}
+
+\item{f}{List of functions, same length as \code{xCol}. If 
+provided, the sensitivity measures of the transformed
+data of the \code{SWIM} object is returned
+(\code{default = NULL}).}
+}
+\value{
+A data.frame containting the sensitivity measures of the 
+    data and the stressed data of the \code{SWIM} object.The last 
+    rows display the \code{stress} and the \code{type} of the 
+    sensitivity measure.
+}
 \description{
-Sensitivity
+Provides different sensitivity measures of an object of class 
+    \code{SWIM}.
+}
+\details{
+
 }

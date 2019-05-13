@@ -5,8 +5,8 @@
  #'    has minimal Kullback-Leibler divergence to the baseline random
  #'    variable.
  #'    
- #' @param type    Type of stress, one of "VaR", "VaR ES", 
- #'                "prob", "user", "moment", "mean", "mean sd".
+ #' @param type    Charactor, the type of stress, one of \code{"VaR", 
+ #'                "VaR ES", "prob", "user", "moment", "mean", "mean sd"}.
  #' @param ...     Arguments to be passed depending on \code{type}.
  #'                
  #' @return An object of class \code{SWIM}, see \code{\link{SWIM}} 
