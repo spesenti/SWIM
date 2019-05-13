@@ -23,17 +23,15 @@
     hist_data <- cbind(hist_data, rep(1, length(x_data)))
     names(hist_data) <- c(paste("X", xCol, sep = ""), paste("stress", wCol, sep = " "), "base")
    }
-   require(reshape, quietly = TRUE)
-   require(ggplot2, quietly = TRUE)
-   hist_data <- melt(hist_data, id.var = paste("X", xCol, sep = ""), variable_name = "stress")
+   hist_data <- reshape::melt(hist_data, id.var = paste("X", xCol, sep = ""), variable_name = "stress")
 
    if (displ == TRUE){
    if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 
-   ggplot(hist_data, aes(x = hist_data[,1], w = value, stat(density))) +
-     geom_freqpoly(binwidth = 0.2, aes(color = factor(stress))) +
-     labs(x = paste("X", xCol, sep = ""), y = "histogram") +
-     xlim(x_limits) +
-     theme(legend.title = element_blank(), legend.key = element_blank(), legend.text = element_text(size = 10))
+   ggplot2::ggplot(hist_data, aes(x = hist_data[,1], w = value, stat(density))) +
+    ggplot2::geom_freqpoly(binwidth = 0.2, aes(color = factor(stress))) +
+    ggplot2::labs(x = paste("X", xCol, sep = ""), y = "histogram") +
+    ggplot2::xlim(x_limits) +
+    ggplot2::theme(legend.title = element_blank(), legend.key = element_blank(), legend.text = element_text(size = 10))
    } else {
    return(hist_data)
    }

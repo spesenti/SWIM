@@ -1,14 +1,46 @@
-
-#' Sensitivity
+#' Sensitivity measures of a \code{SWIM} object
+#' 
+#' Provides sensitivity measures of an object of class \code{SWIM}.
+#'      
+#' @inheritParams summary.SWIM
+#' @param type   Character, one of \code{"Gamma", "Kolmogorov", 
+#'               "Wasserstein", "all"}.
+#' @param f      List of functions, same length as \code{xCol}. If 
+#'               provided, the sensitivity measures of the transformed
+#'               data of the \code{SWIM} object is returned
+#'               (\code{default = NULL}).
+#' 
+#' @details Sensitivity measures, comparint the data and the stressed 
+#'     data of the \code{SWIM} object are calculated. 
+#'     
+#'     \code{"Gamma"}, the \emph{Reverse Sensitivity Measure}, defined 
+#'     for a random variable \code{X} and scenario weights \code{w} by     
+#'     \deqn{"Gamma" = ( E(X * w) - E(X) ) / normalised,}
+#'     where the normalisation is such that \code{|"Gamma"| <= 1}, see
+#'     \insertCite{Pesenti2019reverse}{SWIM}. Loosely speaking the 
+#'     Reverse Sensitivity Measure is the normalised difference between
+#'     the first moments of the stressed and the baseline distribution
+#'     of \code{X}, suitably normalised.
+#'     
+#'     \code{"Kolmogorov"}, the Kolmogorov distance, defined for 
+#'     distribution functions \code{F, G} by 
+#'     \deqn{sup |F(x) - G(x)|.}
+#'     Note that the Kolmogorov distance of one stress is the same for 
+#'     all inputs. Should be used to compare different stresses.   
+#'     
+#'     \code{"Wasserstein"}, the Wasserstein distance of order 1, defined
+#'     for two distribution functions \code{F, G} by 
+#'     \deqn{\int | F(x) - G(x)| dx.} 
+#' 
+#' @return A data.frame containting the sensitivity measures of the 
+#'     data and the stressed data of the \code{SWIM} object.The last 
+#'     two rows display the \code{stress} and the \code{type} of the 
+#'     sensitivity measure. 
+#'     
+#' @references \insertRef{Pesenti2019reverse}{SWIM}
+#'  
 #' @export
 #' 
-# Function to calculate sensitivity measures of a SWIM object
-
-# x         object
-# xCol      integer vector, columns of x$x (default = "all")  
-# wCol      integer vector, columns of new_weights, (default = "all")
-# type      character vector, type = c("Gamma", "Kolmogorov", "Wasserstein", "all"). The Kolmogorov distance is the same for all x
-# f         list of functions, calcualted the sensitivity of the transformed input vector. List needs to have the same length as xCol. 
 
   sensitivity <- function(x, xCol = "all", wCol = "all", type = c("Gamma",      "Kolmogorov", "Wasserstein", "all"), f = NULL){
    if (!is.SWIM(x)) stop("Wrong object")

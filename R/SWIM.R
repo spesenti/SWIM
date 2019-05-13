@@ -81,7 +81,7 @@
  #'  
  #' @references \insertRef{Pesenti2019reverse}{SWIM}
  #'  
- #' @importFrom    Rdpack reprompt
+ #' @importFrom  Rdpack reprompt
  #'  
  #' @docType package
  #' @name SWIM

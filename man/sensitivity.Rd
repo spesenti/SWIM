@@ -2,11 +2,60 @@
 % Please edit documentation in R/sensitivity.R
 \name{sensitivity}
 \alias{sensitivity}
-\title{Sensitivity}
+\title{Sensitivity measures of a \code{SWIM} object}
 \usage{
 sensitivity(x, xCol = "all", wCol = "all", type = c("Gamma",
   "Kolmogorov", "Wasserstein", "all"), f = NULL)
 }
+\arguments{
+\item{x}{A \code{SWIM} object.}
+
+\item{xCol}{Integer vector, columns of \code{x} for which the summary
+should be returned, (\code{default = "all"})}
+
+\item{wCol}{Integer vector, columns of \code{new_weights} for which
+the summary should be returned, (\code{default = "all"})}
+
+\item{type}{Character, one of \code{"Gamma", "Kolmogorov", 
+"Wasserstein", "all"}.}
+
+\item{f}{List of functions, same length as \code{xCol}. If 
+provided, the sensitivity measures of the transformed
+data of the \code{SWIM} object is returned
+(\code{default = NULL}).}
+}
+\value{
+A data.frame containting the sensitivity measures of the 
+    data and the stressed data of the \code{SWIM} object.The last 
+    two rows display the \code{stress} and the \code{type} of the 
+    sensitivity measure.
+}
 \description{
-Sensitivity
+Provides sensitivity measures of an object of class \code{SWIM}.
+}
+\details{
+Sensitivity measures, comparint the data and the stressed 
+    data of the \code{SWIM} object are calculated. 
+    
+    \code{"Gamma"}, the \emph{Reverse Sensitivity Measure}, defined 
+    for a random variable \code{X} and scenario weights \code{w} by     
+    \deqn{"Gamma" = ( E(X * w) - E(X) ) / normalised,}
+    where the normalisation is such that \code{|"Gamma"| <= 1}, see
+    \insertCite{Pesenti2019reverse}{SWIM}. Loosely speaking the 
+    Reverse Sensitivity Measure is the normalised difference between
+    the first moments of the stressed and the baseline distribution
+    of \code{X}, suitably normalised.
+    
+    \code{"Kolmogorov"}, the Kolmogorov distance, defined for 
+    distribution functions \code{F, G} by 
+    \deqn{sup |F(x) - G(x)|.}
+    Note that the Kolmogorov distance of one stress is the same for 
+    all inputs. Should be used to compare different stresses.   
+    
+    \code{"Wasserstein"}, the Wasserstein distance of order 1, defined
+    for two distribution functions \code{F, G} by 
+    \deqn{\int | F(x) - G(x)| dx.}
+}
+\references{
+\insertRef{Pesenti2019reverse}{SWIM}
 }

@@ -1,22 +1,34 @@
 #' Summarizing a SWIM object
 #' 
-#' This funcion is a \code{\link[utils]{methods}} for a class 
-#'     \code{SWIM} object.
+#' This funcion is a \code{\link[utils]{methods}} for an object of class 
+#'     \code{SWIM}.
 #'     
-#' @inheritParams stress_VaR
+#' @inheritParams get.data
 #' @param xCol    Integer vector, columns of \code{x} for which the summary
 #'                should be returned, (\code{default = "all"}) 
 #' @param wCol    Integer vector, columns of \code{new_weights} for which
 #'                the summary should be returned, (\code{default = "all"})  
-#' @param base    Logical, if \code{TRUE} the summary of baseline is
-#'                returned.
+#' @param base    Logical, if \code{TRUE} the summary of the baseline is
+#'                returned (\code{default = FALSE}).
 #' @details  
 #' 
-#' @return A list... 
+#' @return \code{summary.SWIM} returns a list where each components
+#'     correponds to a different stress. Every component contains the
+#'     summary statistics of the colums of the data of the \code{SWIM}
+#'     object, including:
+#'     \tabular{ll}{
+#'       \code{mean}        \cr
+#'       \code{sd}          \cr
+#'       \code{skewness}    \cr
+#'       \code{ex kurtosis} \cr
+#'       \code{1Qrt}        \cr
+#'       \code{Median}      \cr
+#'       \code{3Qrt}        \cr
+#'     } 
 #' 
 #' @author Silvana M. Pesenti 
 #' 
-#' @seealso summary
+#' @seealso \code{\link{summary}}, \code{\link{SWIM}}
 #' @export
 #' 
 
@@ -49,7 +61,7 @@ summary.SWIM <- function(x, xCol = "all", wCol = "all", base = FALSE){
    .temp <- function(y, w) apply(X = y, FUN = .moments, MARGIN = 2, w = w)
    moments_W <- .temp(x_data, new_weights)
    colnames(moments_W) <- cname
-   rownames(moments_W) <- c("mean", "SD", "skewness", "ex kurtosis",  paste("quartile", c("25%", "50%", "75%")))
+   rownames(moments_W) <- c("mean", "sd", "skewness", "ex kurtosis", "1Qrt", "Median", "3Qrt")
    return(data.frame(moments_W))
   } 
 
@@ -58,13 +70,12 @@ summary.SWIM <- function(x, xCol = "all", wCol = "all", base = FALSE){
  # w   numeric vector of weights
 
   .moments <- function(x, w){
-   require(Hmisc, quietly = TRUE)
    n <- length(as.vector(x))
    mean_w <- weighted.mean(x = x, w = w)
    sd_w <- sqrt(mean(w * (x - mean_w)^2)) * n / (n-1)
    skew_w <- mean(w * (x - mean_w)^3) / (sd_w^3) * n^2 / ((n-1) * (n-2))
    ex_kurt_w <- mean(w * (x - mean_w)^4) / (sd_w^4) - 3
-   quartile_w <- as.matrix(wtd.quantile(x, weights = w, probs = c(0.25, 0.5, 0.75)))
+   quartile_w <- as.matrix(Hmisc::wtd.quantile(x, weights = w, probs = c(0.25, 0.5, 0.75)))
    moments_w <- rbind(mean_w, sd_w, skew_w, ex_kurt_w, quartile_w)
    return(moments_w)
   }

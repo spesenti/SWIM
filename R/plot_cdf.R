@@ -23,17 +23,15 @@
     plot_data <- cbind(plot_data, rep(1, length(x_data)))
     names(plot_data) <- c(paste("X", xCol, sep = ""), paste("stress", wCol, sep = " "), "base")
    }
-   require(reshape, quietly = TRUE)
-   require(ggplot2, quietly = TRUE)
-   plot_data <- melt(plot_data, id.var = paste("X", xCol, sep = ""), variable_name = "stress")
+   plot_data <- reshape::melt(plot_data, id.var = paste("X", xCol, sep = ""), variable_name = "stress")
     
    if (displ == TRUE){
     if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 
-    ggplot(plot_data, aes(x = plot_data[,1], w = value)) +
-      stat_ecdf(aes(color = factor(stress)), n = n) +
-      labs(x = paste("X", xCol, sep = ""), y = "ecdf") +
-      xlim(x_limits) +
-      theme(legend.title = element_blank(), legend.key = element_blank(), legend.text = element_text(size = 10))
+    ggplot2::ggplot(plot_data, aes(x = plot_data[,1], w = value)) +
+      ggplot2::stat_ecdf(aes(color = factor(stress)), n = n) +
+      ggplot2::labs(x = paste("X", xCol, sep = ""), y = "ecdf") +
+      ggplot2::xlim(x_limits) +
+      ggplot2::theme(legend.title = element_blank(), legend.key = element_blank(), legend.text = element_text(size = 10))
    } else {
     return(plot_data)
    }

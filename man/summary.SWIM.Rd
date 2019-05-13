@@ -7,9 +7,7 @@
 \method{summary}{SWIM}(x, xCol = "all", wCol = "all", base = FALSE)
 }
 \arguments{
-\item{x}{A SWIM object or a vector, matrix or data frame 
-containing realisations of random variables. Colums of \code{x} 
-are interpreted to correspond to random variables.}
+\item{x}{A \code{SWIM} object.}
 
 \item{xCol}{Integer vector, columns of \code{x} for which the summary
 should be returned, (\code{default = "all"})}
@@ -17,21 +15,33 @@ should be returned, (\code{default = "all"})}
 \item{wCol}{Integer vector, columns of \code{new_weights} for which
 the summary should be returned, (\code{default = "all"})}
 
-\item{base}{Logical, if \code{TRUE} the summary of baseline is
-returned.}
+\item{base}{Logical, if \code{TRUE} the summary of the baseline is
+returned (\code{default = FALSE}).}
 }
 \value{
-A list...
+\code{summary.SWIM} returns a list where each components
+    correponds to a different stress. Every component contains the
+    summary statistics of the colums of the data of the \code{SWIM}
+    object, including:
+    \tabular{ll}{
+      \code{mean}        \cr
+      \code{sd}          \cr
+      \code{skewness}    \cr
+      \code{ex kurtosis} \cr
+      \code{1Qrt}        \cr
+      \code{Median}      \cr
+      \code{3Qrt}        \cr
+    }
 }
 \description{
-This funcion is a \code{\link[utils]{methods}} for a class 
-    \code{SWIM} object.
+This funcion is a \code{\link[utils]{methods}} for an object of class 
+    \code{SWIM}.
 }
 \details{
 
 }
 \seealso{
-summary
+\code{\link{summary}}, \code{\link{SWIM}}
 }
 \author{
 Silvana M. Pesenti
