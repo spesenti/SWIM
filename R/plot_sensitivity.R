@@ -20,7 +20,7 @@
      ggplot2::ggplot(sens, ggplot2::aes(x = X_all, y = value)) +
       ggplot2::geom_point(ggplot2::aes(color = factor(stress), shape = type)) +
       ggplot2::labs(x = "", y = "sensitivites") +
-      ggplot2::theme(legend.title = element_blank(), legend.key = element_blank(), legend.text = element_text(size = 10))
+      ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
    } else {
     return(sens)
    }
