@@ -27,11 +27,11 @@
     
    if (displ == TRUE){
     if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 
-    ggplot2::ggplot(plot_data, aes(x = plot_data[,1], w = value)) +
-      ggplot2::stat_ecdf(aes(color = factor(stress)), n = n) +
+    ggplot2::ggplot(plot_data, ggplot2::aes(x = plot_data[,1], w = value)) +
+      ggplot2::stat_ecdf(ggplot2::aes(color = factor(stress)), n = n) +
       ggplot2::labs(x = paste("X", xCol, sep = ""), y = "ecdf") +
       ggplot2::xlim(x_limits) +
-      ggplot2::theme(legend.title = element_blank(), legend.key = element_blank(), legend.text = element_text(size = 10))
+      ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
    } else {
     return(plot_data)
    }
