@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_cdf.R
 \name{plot_cdf}
 \alias{plot_cdf}
-\title{Plotting the Empirical Distribution Functions}
+\title{Plotting the Empirical Distribution Functions of a Stressed Model}
 \usage{
 plot_cdf(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
   x_limits, displ = TRUE)

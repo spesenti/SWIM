@@ -1,4 +1,4 @@
-#' Plotting the Empirical Distribution Functions
+#' Plotting the Empirical Distribution Functions of a Stressed Model
 #' 
 #' Plotting of the empirical distribution function of a stressed model.
 #'  
