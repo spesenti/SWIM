@@ -2,7 +2,7 @@
 % Please edit documentation in R/stress_moment.R
 \name{stress_moment}
 \alias{stress_moment}
-\title{Stressing moments}
+\title{Stressing Moments}
 \usage{
 stress_moment(x, f, k, m, ...)
 }

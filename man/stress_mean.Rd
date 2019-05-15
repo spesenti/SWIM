@@ -2,7 +2,7 @@
 % Please edit documentation in R/stress_moment.R
 \name{stress_mean}
 \alias{stress_mean}
-\title{Stressing means}
+\title{Stressing Means}
 \usage{
 stress_mean(x, k, new_means, ...)
 }

@@ -1,4 +1,4 @@
-#' Stressing Value-at-Risk
+#' Stressing Intervals
 #' 
 #' Provides scenario weights such that the random variable
 #'    under the scenraio weights fulfils the constraints on the 

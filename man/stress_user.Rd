@@ -2,7 +2,7 @@
 % Please edit documentation in R/stress_user.R
 \name{stress_user}
 \alias{stress_user}
-\title{User defined stress}
+\title{User Defined Stress}
 \usage{
 stress_user(x, new_weights, k = 1)
 }

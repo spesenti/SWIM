@@ -74,7 +74,7 @@
    return(new_weights)
   }
 
- #' Extracting list of weights functions
+ #' Extracting List of Weights Functions
  #'
  #' Extracting the list of functions from an \code{object} of class 
  #'     \code{SWIM}, that, applied to the \code{k}th colum of \code{x},
@@ -100,7 +100,7 @@
    return(object$new_weights[as.vector(typeCol)])
   }
 
- #' Extracting specification of a stress
+ #' Extracting Specification of a Stress
  #'
  #' Extracting the specifications of an \code{object} of class \code{SWIM},
  #'     on which the stresses are based.
@@ -119,7 +119,7 @@
    if (is.SWIM(object)) return(object$specs) else stop("Object not of class SWIM")
   }
 
- #' Merge two \code{SWIM} objects
+ #' Merge two \code{SWIM} Objects
  #'
  #' Merge two objects of class \code{SWIM}, that are based on the same
  #'     data. 

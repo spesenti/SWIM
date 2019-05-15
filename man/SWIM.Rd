@@ -4,7 +4,7 @@
 \name{SWIM}
 \alias{SWIM}
 \alias{SWIM-package}
-\title{SWIM: A package for Sensitivity Analysis}
+\title{SWIM: A Package for Sensitivity Analysis}
 \description{
 The \code{SWIM} (Scenario Weights for Importance Measurement) package
    provides scenario weights such that a stressed random variable

@@ -2,10 +2,10 @@
 % Please edit documentation in R/cdf.R
 \name{cdf}
 \alias{cdf}
-\title{empirical distribution function}
+\title{Stressed Empirical Distribution Function}
 \usage{
 cdf(object, xCol = 1, wCol = 1)
 }
 \description{
-empirical distribution function
+Stressed Empirical Distribution Function
 }

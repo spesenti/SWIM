@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.R
 \name{summary.SWIM}
 \alias{summary.SWIM}
-\title{Summarizing a SWIM object}
+\title{Summarizing a \code{SWIM} Object}
 \usage{
 \method{summary}{SWIM}(object, xCol = "all", wCol = "all",
   base = FALSE)

@@ -2,11 +2,11 @@
 % Please edit documentation in R/plot_hist.R
 \name{plot_hist}
 \alias{plot_hist}
-\title{plots histogram}
+\title{Plot Histograms}
 \usage{
 plot_hist(object, xCol = 1, wCol = "all", base = FALSE, x_limits,
   displ = TRUE)
 }
 \description{
-plots histogram
+Plot Histograms
 }

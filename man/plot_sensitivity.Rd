@@ -2,11 +2,11 @@
 % Please edit documentation in R/plot_sensitivity.R
 \name{plot_sensitivity}
 \alias{plot_sensitivity}
-\title{plots sensitivity}
+\title{Plots Sensitivity Measures}
 \usage{
 plot_sensitivity(object, xCol = "all", wCol = "all",
   type = c("Gamma", "Wasserstein", "all"), f = NULL, displ = TRUE)
 }
 \description{
-plots sensitivity
+Plots Sensitivity Measures
 }

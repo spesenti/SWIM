@@ -1,4 +1,4 @@
- #' Stressing random variables 
+ #' Stressing Random Variables 
  #' 
  #' Provides the scenario weights such that a random variable
  #'    under the scenraio weights fulfils probabilistic constraints and

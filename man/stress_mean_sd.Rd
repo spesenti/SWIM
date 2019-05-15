@@ -2,7 +2,7 @@
 % Please edit documentation in R/stress_moment.R
 \name{stress_mean_sd}
 \alias{stress_mean_sd}
-\title{Stressing mean and standard deviation}
+\title{Stressing Mean and Standard Deviation}
 \usage{
 stress_mean_sd(x, k, new_means, new_sd, ...)
 }

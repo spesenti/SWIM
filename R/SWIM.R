@@ -1,4 +1,4 @@
- #' SWIM: A package for Sensitivity Analysis  
+ #' SWIM: A Package for Sensitivity Analysis  
  #'
  #' The \code{SWIM} (Scenario Weights for Importance Measurement) package
  #'    provides scenario weights such that a stressed random variable

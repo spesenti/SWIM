@@ -2,11 +2,11 @@
 % Please edit documentation in R/importance_rank.R
 \name{importance_rank}
 \alias{importance_rank}
-\title{importance rank}
+\title{Importance Rank of Random Variables}
 \usage{
 importance_rank(object, xCol = "all", wCol = "all", type = c("Gamma",
   "Wasserstein", "all"), f = NULL)
 }
 \description{
-importance rank
+Importance Rank of Random Variables
 }

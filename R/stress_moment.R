@@ -1,4 +1,4 @@
-#' Stressing moments
+#' Stressing Moments
 #'
 #' Provides scenario weights such that the random variable
 #'    under the scenraio weights fulfils the moment constraints and
@@ -62,7 +62,7 @@ stress_moment <- function(x, f, k, m, ...){
   return(my_list)
   }
 
-#' Stressing means
+#' Stressing Means
 #'
 #' Provides scenario weights such that the random variable
 #'    under the new scenraio weights fulfils the mean constraints and
@@ -99,7 +99,7 @@ stress_mean <- function(x, k, new_means, ...)
   return(res)
 }
 
-#' Stressing mean and standard deviation
+#' Stressing Mean and Standard Deviation
 #'
 #' Provides scenario weights such that the random variable
 #'    under the new scenraio weights fulfils the mean and standard

@@ -1,4 +1,4 @@
-#'plots histogram
+#' Plot Histograms
 #'@export
 #'
 # plots the histogram of one vector under different stresses

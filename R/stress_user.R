@@ -1,4 +1,4 @@
-#' User defined stress
+#' User Defined Stress
 #'
 #' Returns a \code{SWIM} object with scenario weights defined by the user.
 #'    

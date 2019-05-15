@@ -2,7 +2,7 @@
 % Please edit documentation in R/stress.R
 \name{stress}
 \alias{stress}
-\title{Stressing random variables}
+\title{Stressing Random Variables}
 \usage{
 stress(type = c("VaR", "VaR ES", "prob", "user"), ...)
 }

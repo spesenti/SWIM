@@ -2,7 +2,7 @@
 % Please edit documentation in R/sensitivity.R
 \name{sensitivity}
 \alias{sensitivity}
-\title{Sensitivity measures of a \code{SWIM} object}
+\title{Sensitivity Measures of a \code{SWIM} Object}
 \usage{
 sensitivity(object, xCol = "all", wCol = "all", type = c("Gamma",
   "Kolmogorov", "Wasserstein", "all"), f = NULL)

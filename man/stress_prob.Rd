@@ -2,7 +2,7 @@
 % Please edit documentation in R/stress_prob.R
 \name{stress_prob}
 \alias{stress_prob}
-\title{Stressing Value-at-Risk}
+\title{Stressing Intervals}
 \usage{
 stress_prob(x, prob, upper, lower = NULL, k = 1)
 }
