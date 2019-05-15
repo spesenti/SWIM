@@ -7,45 +7,50 @@
 stress_prob(x, prob, upper, lower = NULL, k = 1)
 }
 \arguments{
-\item{x}{A SWIM object or a vector, matrix or data frame 
-containing realisations of random variables. Colums of \code{x} 
-are interpreted to correspond to random variables.}
+\item{x}{A vector, matrix or data frame 
+containing realisations of random variables. Columns of \code{x} 
+correspond to random variables; OR\cr
+A \code{SWIM} object, where \code{x} corresponds to the 
+underlying data of the \code{SWIM} object.}
 
-\item{prob}{Numeric vector, stressed probabilties corresponding to
+\item{prob}{Numeric vector, stressed probabilities corresponding to
 the intervals defined through \code{lower} and 
 \code{upper}.}
 
 \item{upper}{Numeric vector, right endpoints of the intervals.}
 
-\item{lower}{Numeric vector, left endpoints of the intervals 
-(default = NULL).}
+\item{lower}{Numeric vector, left endpoints of the intervals.}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
-(default = 1).}
+\code{(default = 1)}.}
 }
 \value{
 A \code{SWIM} object containing:
     \itemize{
       \item \code{x}, the data;
       \item \code{new_weights}, a list of functions, that applied to the
-    \code{k}th colum of \code{x} generate the vectors of scenario
+    \code{k}th column of \code{x} generate the vectors of scenario
     weights;
     \item \code{specs}, the specification of what has been
     stressed.
-    The \code{specs} is a data.frame consisting of \code{type}, \code{k},
-    \code{lower}, \code{upper} and \code{prob}. Each row correponds to a different 
-    stress, see \code{\link{SWIM}} for details.
+    \code{specs} is a data.frame consisting of \code{type}, \code{k},
+    \code{lower}, \code{upper} and \code{prob}. Each row corresponds to a different 
+    stress.
     }
+    See \code{\link{SWIM}} for details.
 }
 \description{
-Provides scenario weights such that the random variable
-   under the scenraio weights fulfils the constraints on the 
-   probability sets and has minimal Kullback-Leibler divergence to 
-   the baseline random variable.
+Provides weights on simulated scenarios from a stochastic
+    model, such that a stressed model component fulfils constraints 
+    on probability sets. Scenario weights are selected by 
+    constrained minimisation of the relative entropy to the 
+    baseline model.
 }
 \details{
-If \code{upper = NULL}, the intervals are consequitive and 
-    \code{prob} cummulative.
+If \code{upper = NULL}, the intervals are consecutive and 
+    \code{prob} cumulative.\cr
+    The intervals defined through \code{lower} and \code{upper} must
+    be disjoint.
 }
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}

@@ -4,23 +4,26 @@
 \alias{stress}
 \title{Stressing Random Variables}
 \usage{
-stress(type = c("VaR", "VaR ES", "prob", "user"), ...)
+stress(type = c("VaR", "VaR ES", "mean", "mean sd", "moment", "prob",
+  "user"), ...)
 }
 \arguments{
-\item{type}{Charactor, the type of stress, one of \code{"VaR", 
-"VaR ES", "prob", "user", "moment", "mean", "mean sd"}.}
+\item{type}{Character, the type of stress, one of \code{"VaR", 
+"VaR ES", "mean", "mean sd", "moment", "prob", "user"}.}
 
-\item{...}{Arguments to be passed depending on \code{type}.}
+\item{...}{Arguments to be passed on, depending \code{type}.}
 }
 \value{
 An object of class \code{SWIM}, see \code{\link{SWIM}} 
-    for more details.
+    for details.
 }
 \description{
-Provides the scenario weights such that a random variable
-   under the scenraio weights fulfils probabilistic constraints and
-   has minimal Kullback-Leibler divergence to the baseline random
-   variable.
+Provides weights on simulated scenarios from a stochastic
+    model, such that stressed random variables fulfil given 
+    probabilistic constraints (e.g. specified values for risk 
+    measures), under the new scenario weights. Scenario weights are 
+    selected by constrained minimisation of the relative entropy to the
+    baseline model.
 }
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}

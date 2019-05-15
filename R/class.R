@@ -60,7 +60,7 @@
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    specs <- get.specs(object)
    x_data <- get.data(object)
-   m <- nrow(specs)
+   m <- length(specs$type)
    new_weights <- matrix(0, nrow = nrow(x_data), ncol = m)
    for(i in 1:m){
     if (specs$type[i] %in% c("user", "moment")) {

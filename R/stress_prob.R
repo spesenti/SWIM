@@ -1,33 +1,36 @@
 #' Stressing Intervals
 #' 
-#' Provides scenario weights such that the random variable
-#'    under the scenraio weights fulfils the constraints on the 
-#'    probability sets and has minimal Kullback-Leibler divergence to 
-#'    the baseline random variable.
+#' Provides weights on simulated scenarios from a stochastic
+#'     model, such that a stressed model component fulfils constraints 
+#'     on probability sets. Scenario weights are selected by 
+#'     constrained minimisation of the relative entropy to the 
+#'     baseline model.
 #'    
 #' @inheritParams stress_VaR 
-#' @param lower   Numeric vector, left endpoints of the intervals 
-#'                (default = NULL).
+#' @param lower   Numeric vector, left endpoints of the intervals. 
 #' @param upper   Numeric vector, right endpoints of the intervals.
-#' @param prob    Numeric vector, stressed probabilties corresponding to
+#' @param prob    Numeric vector, stressed probabilities corresponding to
 #'                the intervals defined through \code{lower} and 
 #'                \code{upper}.
 #'      
-#' @details If \code{upper = NULL}, the intervals are consequitive and 
-#'     \code{prob} cummulative.
+#' @details If \code{upper = NULL}, the intervals are consecutive and 
+#'     \code{prob} cumulative.\cr
+#'     The intervals defined through \code{lower} and \code{upper} must
+#'     be disjoint. 
 #' 
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
 #'       \item \code{x}, the data;
 #'       \item \code{new_weights}, a list of functions, that applied to the
-#'     \code{k}th colum of \code{x} generate the vectors of scenario
+#'     \code{k}th column of \code{x} generate the vectors of scenario
 #'     weights;
 #'     \item \code{specs}, the specification of what has been
 #'     stressed.
-#'     The \code{specs} is a data.frame consisting of \code{type}, \code{k},
-#'     \code{lower}, \code{upper} and \code{prob}. Each row correponds to a different 
-#'     stress, see \code{\link{SWIM}} for details.
+#'     \code{specs} is a data.frame consisting of \code{type}, \code{k},
+#'     \code{lower}, \code{upper} and \code{prob}. Each row corresponds to a different 
+#'     stress.
 #'     }
+#'     See \code{\link{SWIM}} for details.
 #'     
 #' @author Silvana M. Pesenti 
 #' 
