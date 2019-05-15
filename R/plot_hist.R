@@ -1,15 +1,27 @@
-#' Plot Histograms
+#' Plotting Histograms of a Stressed Model
+#' 
+#' Plots the histogram of a stressed model for different stresses.
+#' 
+#' @inheritParams  plot_cdf
+#' 
+#' @return If \code{displ = TRUE}, a histogram of the stressed model 
+#'     for different stresses.
+#'     
+#'     If \code{displ = FALSE}, a data.frame for customised plotting with 
+#'     \code{ggplot}. The data.frame contains: the column, \code{xCol}, 
+#'     of the data of the stressed model, \code{stress} (the stresses)
+#'     and \code{value} (the values). \cr 
+#'     Denote by \code{result} the return of the function call, then
+#'     \code{ggplot} can be called via: 
+#'     \deqn{ggplot(result, aes(x = result[,1], w = value, stat(density)))}
+#'     \deqn{ + geom_freqpoly(binwidth = 0.2, aes(color = factor(stress))).}
+#'      
+#' @seealso See \code{\link{cdf}}, \code{\link{plot_cdf}} for 
+#'     values, plotting, respectively, of the empirical distribution 
+#'     function of a stressed model and \code{\link{quantile_stressed}} 
+#'     for sample quantiles of a stressed model.
+#'      
 #'@export
-#'
-# plots the histogram of one vector under different stresses
-
-# object         SWIM object
-# xCol      integer, colum of x
-# wCol      integer, vector, colum of new_weights that are plotted 
-# base      logical, if base = TRUE, original ecdf is plotted
-# x_limits  xlim from the ggplot package
-# disp      logical, If TRUE, the plot is displayed, if FALSE the data for plotting is returned. 
-# displ = FALSE: returns a data frame with the first colum the original data To plot a weighted histogram use weight option in ggplot: ggplot(df, aes(x = df, w = value, stat(density))). 
 
   plot_hist <- function(object, xCol = 1, wCol = "all", base = FALSE, x_limits, displ = TRUE){
    if (!is.SWIM(object)) stop("Object not of class SWIM")

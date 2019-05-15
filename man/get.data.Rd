@@ -2,25 +2,30 @@
 % Please edit documentation in R/class.R
 \name{get.data}
 \alias{get.data}
-\title{Extracting Data}
+\title{Extracting Data of a Stressed Model}
 \usage{
 get.data(object, xCol = "all")
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Integer vector, columns of \code{x}, that data of the 
-\code{object}, for which the summary should be returned,
-(\code{default = "all"})}
+\item{xCol}{Vector, the columns of the underlying data 
+of the \code{object} (\code{default = "all"}).}
 }
 \value{
 A data.frame containing the realisations of the
-        random variables on which the object of class \code{SWIM}    
-        is based on.
+        random variables (stochastic model) on which the 
+        object of class \code{SWIM} is based.
 }
 \description{
-Extracting data, \code{x}, from an \code{object} of class \code{SWIM}.
+Extracting the data, realisations of the stochastic model, from 
+    an object of class \code{SWIM}.
+}
+\seealso{
+Other extracting functions: \code{\link{get.specs}},
+  \code{\link{get.weightsfun}}, \code{\link{get.weights}}
 }
 \author{
 Silvana M. Pesenti
 }
+\concept{extracting functions}

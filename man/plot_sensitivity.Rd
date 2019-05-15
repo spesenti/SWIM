@@ -2,11 +2,51 @@
 % Please edit documentation in R/plot_sensitivity.R
 \name{plot_sensitivity}
 \alias{plot_sensitivity}
-\title{Plots Sensitivity Measures}
+\title{Plotting Sensitivities of a Stressed Model}
 \usage{
 plot_sensitivity(object, xCol = "all", wCol = "all",
   type = c("Gamma", "Wasserstein", "all"), f = NULL, displ = TRUE)
 }
+\arguments{
+\item{object}{A \code{SWIM} object.}
+
+\item{xCol}{Vector, the columns of the underlying data 
+of the \code{object} (\code{default = "all"}).}
+
+\item{wCol}{Vector, the columns of the scenario weights 
+of the \code{object} (\code{default = "all"}).}
+
+\item{type}{Character, one of \code{"Gamma", "Wasserstein", "all"}.}
+
+\item{f}{List of functions with the same length as \code{xCol}.
+If provided, the transformed data, \code{f(x)},
+is considered.}
+
+\item{displ}{Logical, if \code{TRUE} the plot is displayed, 
+otherwise the data.frame for customised plotting with 
+\code{ggplot} is returned (\code{default = TRUE}).}
+}
+\value{
+If \code{displ = TRUE}, a plot displaying the sensitivity
+    measures of the stressed model. 
+    
+    If \code{displ = FALSE}, a data.frame containing the values 
+    of the sensitivity measures of the stressed model. The data.frame
+    contains the columns: \code{stress} (the stresses), \code{type} (the types of sensitivity), \code{X_all} (the random variables), \code{value} (the values of the sensitivities). \cr 
+    Denote by \code{result} the return of the function call, then \code{ggplot} can be called via: 
+    \deqn{ggplot(result, aes(x = X_all, y = value))}
+    \deqn{ + geom_point(aes(color = factor(stress), shape = type)).}
+}
 \description{
-Plots Sensitivity Measures
+Plotting of the sensitivity measures of a stressed model.
+}
+\details{
+For the definition of the sensitivity 
+    measures (\code{type}), see \code{\link{sensitivity}}.
+}
+\seealso{
+See \code{\link{sensitivity}} for the values of the 
+    sensitivity measures of a stressed model and    
+    \code{\link{importance_rank}} for ranking of random
+    variables according to their sensitivities.
 }

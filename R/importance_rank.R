@@ -1,12 +1,26 @@
-#' Importance Rank of Random Variables
+#' Importance Ranking for a Stressed Model
+#' 
+#' Provides the importance ranks of random variables  
+#'     of a stressed model for different sensitivity measures. 
+#'     
+#' @inheritParams sensitivity
+#' @param type    Character, one of \code{"Gamma", "Wasserstein", "all"}.
+#' 
+#' @details For the definition of the sensitivity 
+#'     measures (\code{type}), see \code{\link{sensitivity}}.
+#'     
+#' @return A data.frame containing the importance ranks of the 
+#'     stressed model for different sensitivity measures. Rows correspond 
+#'     to different random variables. The last two rows specify the 
+#'     \code{stress} and \code{type} of the sensitivity measure on 
+#'     which the ranking is calculated.
+#' 
+#' @seealso See \code{\link{sensitivity}} for the values of the 
+#'     sensitivity measures, \code{\link{plot_sensitivity}} for plotting 
+#'     sensitivity measures and \code{\link{summary}} for a 
+#'     summary statistic of a stressed model.     
+#' 
 #' @export
-# Function to calculate ranking of a SWIM object input
-
-# object         object
-# xCol      integer vector, columns of x$x (default = "all")  
-# wCol      integer vector, columns of new_weights, (default = "all")
-# type      character vector, c("Gamma", "Wasserstein", "all"). The Kolmogorov distance is the same for all inputs.
-# f         list of functions, calcualted the sensitivity of the transformed input vector. List needs to have the same length as xCol. 
 
   importance_rank <- function(object, xCol = "all", wCol = "all", 
     type = c("Gamma", "Wasserstein", "all"), f = NULL){

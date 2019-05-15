@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{get.weights}
 \alias{get.weights}
-\title{Extracting Weights}
+\title{Extracting Scenario Weights of a Stressed Model}
 \usage{
 get.weights(object)
 }
@@ -10,14 +10,19 @@ get.weights(object)
 \item{object}{A \code{SWIM} object.}
 }
 \value{
-A data.frame containing the scenario weights, \code{new_weights} 
-        of the object of class \code{SWIM}. Colums corresponds to 
-        different stresses.
+A data.frame containing the scenario weights of the object 
+        of class \code{SWIM}. Columns corresponds to different 
+        stresses.
 }
 \description{
-Extracting weights, \code{new_weights}, from an \code{object} of 
+Extracting the scenario weights from an object of 
     class \code{SWIM}.
+}
+\seealso{
+Other extracting functions: \code{\link{get.data}},
+  \code{\link{get.specs}}, \code{\link{get.weightsfun}}
 }
 \author{
 Silvana M. Pesenti
 }
+\concept{extracting functions}

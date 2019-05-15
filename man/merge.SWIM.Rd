@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{merge.SWIM}
 \alias{merge.SWIM}
-\title{Merge two \code{SWIM} Objects}
+\title{Merging Two Stressed Models}
 \usage{
 \method{merge}{SWIM}(object1, object2)
 }
@@ -14,21 +14,23 @@ An object of class \code{SWIM} containing:
   \itemize{
     \item \code{x}, the data;
     \item \code{new_weights}, a list of functions, that applied
-   to the \code{k}th colum of \code{x} generate the vectors of 
+   to the \code{k}th column of \code{x} generate the vectors of 
    scenario weights;
     \item \code{specs}, the specification of what has been
     stressed.
-    The \code{specs} is a data.frame consisting of \code{type},
+    \code{specs} is a data.frame consisting of \code{type},
     \code{k}, and constraints depending on the \code{type} of stress,
     see \code{\link{SWIM}} for details.
-    }
+  }
 }
 \description{
-Merge two objects of class \code{SWIM}, that are based on the same
-    data.
+This function is a \code{method} for an object of class 
+    \code{SWIM}.
 }
-\note{
-A stress with type = c("user", "moment") will be ignored.
+\details{
+Merges two objects of class \code{SWIM}, that 
+    are based on the same data. \cr 
+    Stresses with \code{type = c("user", "moment")} are ignored.
 }
 \author{
 Silvana M. Pesenti

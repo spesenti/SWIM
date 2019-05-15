@@ -1,31 +1,28 @@
-#' Summarizing a \code{SWIM} Object
+#' Summarising Stressed Models
 #' 
-#' This funcion is a \code{\link[utils]{methods}} for an object of class 
+#' This function is a \code{\link[utils]{methods}} for an object of class 
 #'     \code{SWIM}.
 #'     
 #' @inheritParams get.data
-#' @param xCol    Integer vector, columns of \code{x}, that data of the 
-#'                \code{object}, for which the summary should be returned,
-#'                (\code{default = "all"}) 
-#' @param wCol    Integer vector, columns of \code{new_weights}, the weights 
-#'                of the \code{objects}, for which the summary should be 
-#'                returned, (\code{default = "all"})  
-#' @param base    Logical, if \code{TRUE} the summary of the baseline is
-#'                returned (\code{default = FALSE}).
-#' @details  
-#' 
-#' @return \code{summary.SWIM} returns a list where each components
-#'     correponds to a different stress. Every component contains the
-#'     summary statistics of the colums of the data \code{x} of the 
-#'     \code{SWIM} object, including:
+#' @param xCol    Vector, the columns of the underlying data 
+#'                of the \code{object} (\code{default = "all"}). 
+#' @param wCol    Vector, the columns of the scenario weights 
+#'                of the \code{object} (\code{default = "all"}).
+#' @param base    Logical, if \code{TRUE} the baseline is also
+#'                returned (\code{default = "FALSE"}).
+#'                
+#' @return \code{summary.SWIM} returns a list with components
+#'     corresponding to different stresses. Components contain a
+#'     summary statistic of each column of the data of the 
+#'     \code{SWIM} object:
 #'     \tabular{ll}{
 #'       \code{mean}        \cr
 #'       \code{sd}          \cr
 #'       \code{skewness}    \cr
 #'       \code{ex kurtosis} \cr
-#'       \code{1st Qu.}        \cr
+#'       \code{1st Qu.}     \cr
 #'       \code{Median}      \cr
-#'       \code{3rd Qu.}        \cr
+#'       \code{3rd Qu.}     \cr
 #'     } 
 #' 
 #' @author Silvana M. Pesenti 
