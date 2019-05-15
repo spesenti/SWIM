@@ -89,7 +89,7 @@
  #'     }
  #'   } 
  #'     
- #' @family stress functions
+ #' @family stress functions 
  #'  
  #' @references \insertRef{Pesenti2019reverse}{SWIM}
  #'  

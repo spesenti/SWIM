@@ -21,16 +21,19 @@
   
   is.SWIM <- function(object) inherits(object, "SWIM")
 
- #' Extracting Data 
+ #' Extracting Data of a Stressed Model
  #'
- #' Extracting data, \code{x}, from an \code{object} of class \code{SWIM}. 
+ #' Extracting the data, realisations of the stochastic model, from 
+ #'     an object of class \code{SWIM}. 
  #' 
  #' @param object    A \code{SWIM} object.
  #' @inheritParams   summary.SWIM
  #'  
  #' @return A data.frame containing the realisations of the
- #'         random variables on which the object of class \code{SWIM}    
- #'         is based on.
+ #'         random variables (stochastic model) on which the 
+ #'         object of class \code{SWIM} is based.    
+ #'         
+ #' @family extracting functions         
  #' @author Silvana M. Pesenti 
  #'
  #' @export
@@ -41,19 +44,19 @@
    return(as.matrix(object$x[, xCol]))
   }
 
- #' Extracting Weights 
+ #' Extracting Scenario Weights of a Stressed Model
  #'
- #' Extracting weights, \code{new_weights}, from an \code{object} of 
+ #' Extracting the scenario weights from an object of 
  #'     class \code{SWIM}. 
  #' 
  #' @inheritParams get.data
  #'  
- #' @return A data.frame containing the scenario weights, \code{new_weights} 
- #'         of the object of class \code{SWIM}. Colums corresponds to 
- #'         different stresses.
+ #' @return A data.frame containing the scenario weights of the object 
+ #'         of class \code{SWIM}. Columns corresponds to different 
+ #'         stresses.
  #'         
  #' @author Silvana M. Pesenti 
- #'
+ #' @family extracting functions
  #' @export
   
   get.weights <- function(object){
@@ -74,22 +77,22 @@
    return(new_weights)
   }
 
- #' Extracting List of Weights Functions
+ #' Extracting Weight Functions of a Stressed Model
  #'
- #' Extracting the list of functions from an \code{object} of class 
- #'     \code{SWIM}, that, applied to the \code{k}th colum of \code{x},
- #'     gernerates the scenario weights. 
+ #' Extracting the list of functions from an object of class 
+ #'     \code{SWIM}, that, when applied to the \code{k}th column of 
+ #'     \code{x}, generates the scenario weights. 
  #'      
- #' @note A stress with type = c("user", "moment") will be ignored. 
+ #' @note Stress with \code{type = c("user", "moment")} will be ignored. 
  #' 
  #' @inheritParams get.data
  #'  
- #' @return A list containing the functions, that, applied to the 
- #'     \code{k}the colum of \code{X}, generate the scenario weights 
+ #' @return A list containing the functions, that, when applied to the 
+ #'     \code{k}th column of \code{X}, generate the scenario weights 
  #'     of the \code{object} of class \code{SWIM}.
  #'         
  #' @author Silvana M. Pesenti 
- #'
+ #' @family extracting functions
  #' @export
  
   get.weightsfun <- function(object){
@@ -100,31 +103,33 @@
    return(object$new_weights[as.vector(typeCol)])
   }
 
- #' Extracting Specification of a Stress
+ #' Extracting Information of a Stressed Model
  #'
- #' Extracting the specifications of an \code{object} of class \code{SWIM},
- #'     on which the stresses are based.
+ #' Extracting the specifications of the stresses of an object 
+ #' of class \code{SWIM},
  #' 
  #' @inheritParams get.data
  #'  
- #' @return A data.frame containing the specifications of an \code{object}
+ #' @return A data.frame containing the specifications of the \code{object}
  #'         of class \code{SWIM}. Rows corresponds to different stresses.
- #'         See \code{\link{SWIM}} object for details.
+ #'         See \code{\link{SWIM}} for details.
  #'         
  #' @author Silvana M. Pesenti 
- #'
+ #' @family extracting functions
  #' @export
  
   get.specs <- function(object){
    if (is.SWIM(object)) return(object$specs) else stop("Object not of class SWIM")
   }
 
- #' Merge two \code{SWIM} Objects
+ #' Merging Two Stressed Models
  #'
- #' Merge two objects of class \code{SWIM}, that are based on the same
- #'     data. 
- #' 
- #' @note A stress with type = c("user", "moment") will be ignored. 
+ #' This function is a \code{method} for an object of class 
+ #'     \code{SWIM}.
+ #'     
+ #' @details Merges two objects of class \code{SWIM}, that 
+ #'     are based on the same data. \cr 
+ #'     Stresses with \code{type = c("user", "moment")} are ignored. 
  #' 
  #' @param object1,object2       Objects of class \code{SWIM}.
  #'  
@@ -132,14 +137,15 @@
  #'   \itemize{
  #'     \item \code{x}, the data;
  #'     \item \code{new_weights}, a list of functions, that applied
- #'    to the \code{k}th colum of \code{x} generate the vectors of 
+ #'    to the \code{k}th column of \code{x} generate the vectors of 
  #'    scenario weights;
  #'     \item \code{specs}, the specification of what has been
  #'     stressed.
- #'     The \code{specs} is a data.frame consisting of \code{type},
+ #'     \code{specs} is a data.frame consisting of \code{type},
  #'     \code{k}, and constraints depending on the \code{type} of stress,
  #'     see \code{\link{SWIM}} for details.
- #'     }
+ #'   }
+ #'   
  #' 
  #' @author Silvana M. Pesenti 
  #'

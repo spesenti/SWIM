@@ -1,15 +1,35 @@
-#' Plot Empirical Distribution Functions
+#' Plotting the Empirical Distribution Functions
+#' 
+#' Plotting of the empirical distribution function of a stressed model.
+#'  
+#' @inheritParams  sensitivity
+#' @inheritParams  plot_sensitivity
+#' @inheritParams  summary.SWIM
+#' @param xCol     Numeric, the column of the underlying data 
+#'                 of the \code{object} (\code{default = 1}). 
+#' @param n        Integer, the number of points used to plot 
+#'                 \code{stat_ecdf} in \code{ggplot} (default = 500).
+#' @param x_limits Vector, the limits of the x-axis of the plot, the 
+#'                 value for the \code{xlim} function in \code{ggplot}.
+#                 
+#' @return If \code{displ = TRUE}, a plot displaying the empirical
+#'     distribution function of the stressed model for different stresses.
+#'     
+#'     If \code{displ = FALSE}, a data.frame containing the estimates of 
+#'     the empirical distribution function of the stressed model. The 
+#'     data.frame contains: the column, \code{xCol}, of the data of the
+#'     stressed model, \code{stress} (the stresses) and \code{value} 
+#'     (the values). \cr 
+#'     Denote by \code{result} the return of the function call, then
+#'     \code{ggplot} can be called via: 
+#'     \deqn{ggplot(result, aes(x = result[,1], w = value))}
+#'     \deqn{ + stat_ecdf(aes(color = factor(stress)), n = n).}
+#'      
+#' @seealso See \code{\link{cdf}} for the empirical distribution function 
+#'     of a stressed model and \code{\link{quantile_stressed}} for
+#'     sample quantiles of a stressed model.
+#'     
 #' @export
-
-# plots the empirical distribution function of one vector under different stresses
-
-# object         SWIM object
-# xCol      integer, colum of x
-# wCol      integer, vector, colum of new_weights that are plotted 
-# base      logical, if base = TRUE, original ecdf is plotted
-# n         integer, number of points used to plot of stat_ecdf in ggplot (default = 500)
-# disp      logical, If TRUE, the plot is displayed, if FALSE the data for plotting is returned. 
-# displ = TRUE: returns a data frame with the first colum the original data To plot a weighted histogram use weight option in ggplot: ggplot(df, aes(x = df, w = value, stat(density))). 
 
   plot_cdf <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500, x_limits, displ = TRUE){
    if (!is.SWIM(object)) stop("Object not of class SWIM")

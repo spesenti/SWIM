@@ -2,11 +2,44 @@
 % Please edit documentation in R/importance_rank.R
 \name{importance_rank}
 \alias{importance_rank}
-\title{Importance Rank of Random Variables}
+\title{Importance Ranking for a Stressed Model}
 \usage{
 importance_rank(object, xCol = "all", wCol = "all", type = c("Gamma",
   "Wasserstein", "all"), f = NULL)
 }
+\arguments{
+\item{object}{A \code{SWIM} object.}
+
+\item{xCol}{Vector, the columns of the underlying data 
+of the \code{object} (\code{default = "all"}).}
+
+\item{wCol}{Vector, the columns of the scenario weights 
+of the \code{object} (\code{default = "all"}).}
+
+\item{type}{Character, one of \code{"Gamma", "Wasserstein", "all"}.}
+
+\item{f}{List of functions with the same length as \code{xCol}.
+If provided, the transformed data, \code{f(x)},
+is considered.}
+}
+\value{
+A data.frame containing the importance ranks of the 
+    stressed model for different sensitivity measures. Rows correspond 
+    to different random variables. The last two rows specify the 
+    \code{stress} and \code{type} of the sensitivity measure on 
+    which the ranking is calculated.
+}
 \description{
-Importance Rank of Random Variables
+Provides the importance ranks of random variables  
+    of a stressed model for different sensitivity measures.
+}
+\details{
+For the definition of the sensitivity 
+    measures (\code{type}), see \code{\link{sensitivity}}.
+}
+\seealso{
+See \code{\link{sensitivity}} for the values of the 
+    sensitivity measures, \code{\link{plot_sensitivity}} for plotting 
+    sensitivity measures and \code{\link{summary}} for a 
+    summary statistic of a stressed model.
 }

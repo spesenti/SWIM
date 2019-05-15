@@ -1,14 +1,32 @@
-#' Plots Sensitivity Measures
+#' Plotting Sensitivities of a Stressed Model
+#'
+#' Plotting of the sensitivity measures of a stressed model.
+#'  
+#' @inheritParams sensitivity
+#' @param type    Character, one of \code{"Gamma", "Wasserstein", "all"}.
+#' @param displ   Logical, if \code{TRUE} the plot is displayed, 
+#'                otherwise the data.frame for customised plotting with 
+#'                \code{ggplot} is returned (\code{default = TRUE}). 
+#'                
+#' @details For the definition of the sensitivity 
+#'     measures (\code{type}), see \code{\link{sensitivity}}.
+#'                
+#' @return If \code{displ = TRUE}, a plot displaying the sensitivity
+#'     measures of the stressed model. 
+#'     
+#'     If \code{displ = FALSE}, a data.frame containing the values 
+#'     of the sensitivity measures of the stressed model. The data.frame
+#'     contains the columns: \code{stress} (the stresses), \code{type} (the types of sensitivity), \code{X_all} (the random variables), \code{value} (the values of the sensitivities). \cr 
+#'     Denote by \code{result} the return of the function call, then \code{ggplot} can be called via: 
+#'     \deqn{ggplot(result, aes(x = X_all, y = value))}
+#'     \deqn{ + geom_point(aes(color = factor(stress), shape = type)).}
+#'      
+#' @seealso See \code{\link{sensitivity}} for the values of the 
+#'     sensitivity measures of a stressed model and    
+#'     \code{\link{importance_rank}} for ranking of random
+#'     variables according to their sensitivities.  
+#'     
 #' @export
-#  This function plots the rank
-# Input: 
-# object         object
-# xCol      integer vector, columns of x$x (default = "all")  
-# wCol      integer vector, columns of new_weights, (default = "all")
-# type      character vector, c("Gamma", "Wasserstein", "all"). The Kolmogorov distance is the same for all inputs. (default = "Gamma")
-# f         list of functions, calcualted the sensitivity of the transformed input vector. List needs to have the same length as xCol. 
-# displ      logical, If TRUE, the plot is displayed, if FALSE the data for plotting is returned. 
-
 
   plot_sensitivity <- function(object, xCol = "all", wCol = "all", type = c("Gamma", "Wasserstein", "all"), f = NULL, displ = TRUE){
    if (!is.SWIM(object)) stop("Object not of class SWIM")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.R
 \name{summary.SWIM}
 \alias{summary.SWIM}
-\title{Summarizing a \code{SWIM} Object}
+\title{Summarising Stressed Models}
 \usage{
 \method{summary}{SWIM}(object, xCol = "all", wCol = "all",
   base = FALSE)
@@ -10,38 +10,33 @@
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Integer vector, columns of \code{x}, that data of the 
-\code{object}, for which the summary should be returned,
-(\code{default = "all"})}
+\item{xCol}{Vector, the columns of the underlying data 
+of the \code{object} (\code{default = "all"}).}
 
-\item{wCol}{Integer vector, columns of \code{new_weights}, the weights 
-of the \code{objects}, for which the summary should be 
-returned, (\code{default = "all"})}
+\item{wCol}{Vector, the columns of the scenario weights 
+of the \code{object} (\code{default = "all"}).}
 
-\item{base}{Logical, if \code{TRUE} the summary of the baseline is
-returned (\code{default = FALSE}).}
+\item{base}{Logical, if \code{TRUE} the baseline is also
+returned (\code{default = "FALSE"}).}
 }
 \value{
-\code{summary.SWIM} returns a list where each components
-    correponds to a different stress. Every component contains the
-    summary statistics of the colums of the data \code{x} of the 
-    \code{SWIM} object, including:
+\code{summary.SWIM} returns a list with components
+    corresponding to different stresses. Components contain a
+    summary statistic of each column of the data of the 
+    \code{SWIM} object:
     \tabular{ll}{
       \code{mean}        \cr
       \code{sd}          \cr
       \code{skewness}    \cr
       \code{ex kurtosis} \cr
-      \code{1st Qu.}        \cr
+      \code{1st Qu.}     \cr
       \code{Median}      \cr
-      \code{3rd Qu.}        \cr
+      \code{3rd Qu.}     \cr
     }
 }
 \description{
-This funcion is a \code{\link[utils]{methods}} for an object of class 
+This function is a \code{\link[utils]{methods}} for an object of class 
     \code{SWIM}.
-}
-\details{
-
 }
 \seealso{
 \code{\link{summary}}, \code{\link{SWIM}}

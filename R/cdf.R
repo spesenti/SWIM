@@ -1,13 +1,25 @@
-#' Stressed Empirical Distribution Function
+#' Empirical Distribution Function of a Stressed Model
+#' 
+#' Provides the empirical distribution function of a stressed model. 
+#' 
+#' @inheritParams sensitivity 
+#' @param xCol    Numeric, the column of the underlying data 
+#'                of the \code{object} (\code{default = 1}). 
+#' @param wCol    Numeric, the column of the scenario weights 
+#'                of the \code{object} (\code{default = 1}).
+#' 
+#' @return The empirical distribution function (a function) of 
+#'     the \code{xCol} component of the stressed model with weights 
+#'     \code{wCol}. The empirical distribution function can be 
+#'     evaluated at a vector. 
+#' 
+#' @author Silvana M. Pesenti 
+#' 
+#' @seealso See \code{\link{plot_cdf}} for plotting the empirical 
+#'     distribution function of the stressed model and 
+#'     \code{\link{quantile_stressed}} for sample quantiles of 
+#'     a stressed model. 
 #' @export
-# function calculating the distorted empirical distribution function
-# Note that the ecdf is not a generic, so we cannot define a method.
-
-# object      SWIM object
-# xCol   integer numeric, which colum the ecdf is to be calcuated, (default = 1).
-# wCol   integer numeric, column of new_weights, (default = 1)
-
-# the ecdf returns the empirical distribution function that can be evaluated on a vector. 
 
   cdf <- function(object, xCol = 1, wCol = 1){
    if (!is.SWIM(object)) stop("Object not of class 'SWIM'")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{get.specs}
 \alias{get.specs}
-\title{Extracting Specification of a Stress}
+\title{Extracting Information of a Stressed Model}
 \usage{
 get.specs(object)
 }
@@ -10,14 +10,19 @@ get.specs(object)
 \item{object}{A \code{SWIM} object.}
 }
 \value{
-A data.frame containing the specifications of an \code{object}
+A data.frame containing the specifications of the \code{object}
         of class \code{SWIM}. Rows corresponds to different stresses.
-        See \code{\link{SWIM}} object for details.
+        See \code{\link{SWIM}} for details.
 }
 \description{
-Extracting the specifications of an \code{object} of class \code{SWIM},
-    on which the stresses are based.
+Extracting the specifications of the stresses of an object 
+of class \code{SWIM},
+}
+\seealso{
+Other extracting functions: \code{\link{get.data}},
+  \code{\link{get.weightsfun}}, \code{\link{get.weights}}
 }
 \author{
 Silvana M. Pesenti
 }
+\concept{extracting functions}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{get.weightsfun}
 \alias{get.weightsfun}
-\title{Extracting List of Weights Functions}
+\title{Extracting Weight Functions of a Stressed Model}
 \usage{
 get.weightsfun(object)
 }
@@ -10,18 +10,23 @@ get.weightsfun(object)
 \item{object}{A \code{SWIM} object.}
 }
 \value{
-A list containing the functions, that, applied to the 
-    \code{k}the colum of \code{X}, generate the scenario weights 
+A list containing the functions, that, when applied to the 
+    \code{k}th column of \code{X}, generate the scenario weights 
     of the \code{object} of class \code{SWIM}.
 }
 \description{
-Extracting the list of functions from an \code{object} of class 
-    \code{SWIM}, that, applied to the \code{k}th colum of \code{x},
-    gernerates the scenario weights.
+Extracting the list of functions from an object of class 
+    \code{SWIM}, that, when applied to the \code{k}th column of 
+    \code{x}, generates the scenario weights.
 }
 \note{
-A stress with type = c("user", "moment") will be ignored.
+Stress with \code{type = c("user", "moment")} will be ignored.
+}
+\seealso{
+Other extracting functions: \code{\link{get.data}},
+  \code{\link{get.specs}}, \code{\link{get.weights}}
 }
 \author{
 Silvana M. Pesenti
 }
+\concept{extracting functions}
