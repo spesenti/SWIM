@@ -4,16 +4,19 @@
 \alias{summary.SWIM}
 \title{Summarizing a SWIM object}
 \usage{
-\method{summary}{SWIM}(x, xCol = "all", wCol = "all", base = FALSE)
+\method{summary}{SWIM}(object, xCol = "all", wCol = "all",
+  base = FALSE)
 }
 \arguments{
-\item{x}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Integer vector, columns of \code{x} for which the summary
-should be returned, (\code{default = "all"})}
+\item{xCol}{Integer vector, columns of \code{x}, that data of the 
+\code{object}, for which the summary should be returned,
+(\code{default = "all"})}
 
-\item{wCol}{Integer vector, columns of \code{new_weights} for which
-the summary should be returned, (\code{default = "all"})}
+\item{wCol}{Integer vector, columns of \code{new_weights}, the weights 
+of the \code{objects}, for which the summary should be 
+returned, (\code{default = "all"})}
 
 \item{base}{Logical, if \code{TRUE} the summary of the baseline is
 returned (\code{default = FALSE}).}
@@ -21,16 +24,16 @@ returned (\code{default = FALSE}).}
 \value{
 \code{summary.SWIM} returns a list where each components
     correponds to a different stress. Every component contains the
-    summary statistics of the colums of the data of the \code{SWIM}
-    object, including:
+    summary statistics of the colums of the data \code{x} of the 
+    \code{SWIM} object, including:
     \tabular{ll}{
       \code{mean}        \cr
       \code{sd}          \cr
       \code{skewness}    \cr
       \code{ex kurtosis} \cr
-      \code{1Qrt}        \cr
+      \code{1st Qu.}        \cr
       \code{Median}      \cr
-      \code{3Qrt}        \cr
+      \code{3rd Qu.}        \cr
     }
 }
 \description{

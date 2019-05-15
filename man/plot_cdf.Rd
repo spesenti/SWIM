@@ -4,7 +4,7 @@
 \alias{plot_cdf}
 \title{plots empirical distribution}
 \usage{
-plot_cdf(x, xCol = 1, wCol = "all", base = FALSE, n = 500,
+plot_cdf(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
   x_limits, displ = TRUE)
 }
 \description{

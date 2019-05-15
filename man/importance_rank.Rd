@@ -4,7 +4,7 @@
 \alias{importance_rank}
 \title{importance rank}
 \usage{
-importance_rank(x, xCol = "all", wCol = "all", type = c("Gamma",
+importance_rank(object, xCol = "all", wCol = "all", type = c("Gamma",
   "Wasserstein", "all"), f = NULL)
 }
 \description{

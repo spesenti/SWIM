@@ -4,26 +4,28 @@
 #'     \code{SWIM}.
 #'     
 #' @inheritParams get.data
-#' @param xCol    Integer vector, columns of \code{x} for which the summary
-#'                should be returned, (\code{default = "all"}) 
-#' @param wCol    Integer vector, columns of \code{new_weights} for which
-#'                the summary should be returned, (\code{default = "all"})  
+#' @param xCol    Integer vector, columns of \code{x}, that data of the 
+#'                \code{object}, for which the summary should be returned,
+#'                (\code{default = "all"}) 
+#' @param wCol    Integer vector, columns of \code{new_weights}, the weights 
+#'                of the \code{objects}, for which the summary should be 
+#'                returned, (\code{default = "all"})  
 #' @param base    Logical, if \code{TRUE} the summary of the baseline is
 #'                returned (\code{default = FALSE}).
 #' @details  
 #' 
 #' @return \code{summary.SWIM} returns a list where each components
 #'     correponds to a different stress. Every component contains the
-#'     summary statistics of the colums of the data of the \code{SWIM}
-#'     object, including:
+#'     summary statistics of the colums of the data \code{x} of the 
+#'     \code{SWIM} object, including:
 #'     \tabular{ll}{
 #'       \code{mean}        \cr
 #'       \code{sd}          \cr
 #'       \code{skewness}    \cr
 #'       \code{ex kurtosis} \cr
-#'       \code{1Qrt}        \cr
+#'       \code{1st Qu.}        \cr
 #'       \code{Median}      \cr
-#'       \code{3Qrt}        \cr
+#'       \code{3rd Qu.}        \cr
 #'     } 
 #' 
 #' @author Silvana M. Pesenti 
@@ -32,18 +34,18 @@
 #' @export
 #' 
 
-summary.SWIM <- function(x, xCol = "all", wCol = "all", base = FALSE){
-  if (!is.SWIM(x)) stop("Wrong object")
-  if (anyNA(x$x)) warning("x contains NA")
-  if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get.data(x))
-  if (is.null(colnames(get.data(x)))){
+summary.SWIM <- function(object, xCol = "all", wCol = "all", base = FALSE){
+  if (!is.SWIM(object)) stop("Wrong object")
+  if (anyNA(object$x)) warning("x contains NA")
+  if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get.data(object))
+  if (is.null(colnames(get.data(object)))){
     cname <-  paste("X", as.character(xCol), sep = "")
   } else {
-    cname <- colnames(get.data(x))[xCol]
+    cname <- colnames(get.data(object))[xCol]
   } 
-  x_data <- as.matrix(get.data(x)[, xCol])
-  if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(x))
-  new_weights <- get.weights(x)[ ,wCol]  
+  x_data <- as.matrix(get.data(object)[, xCol])
+  if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(object))
+  new_weights <- get.weights(object)[ ,wCol]  
 
   summary_w <- apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .summary, x_data = x_data, cname = cname, base = base)
 
@@ -61,7 +63,7 @@ summary.SWIM <- function(x, xCol = "all", wCol = "all", base = FALSE){
    .temp <- function(y, w) apply(X = y, FUN = .moments, MARGIN = 2, w = w)
    moments_W <- .temp(x_data, new_weights)
    colnames(moments_W) <- cname
-   rownames(moments_W) <- c("mean", "sd", "skewness", "ex kurtosis", "1Qrt", "Median", "3Qrt")
+   rownames(moments_W) <- c("mean", "sd", "skewness", "ex kurtosis", "1st Qu.", "Median", "3rd Qu.")
    return(data.frame(moments_W))
   } 
 

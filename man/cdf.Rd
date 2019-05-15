@@ -4,7 +4,7 @@
 \alias{cdf}
 \title{empirical distribution function}
 \usage{
-cdf(x, xCol = 1, wCol = 1)
+cdf(object, xCol = 1, wCol = 1)
 }
 \description{
 empirical distribution function

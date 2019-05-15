@@ -4,17 +4,19 @@
 \alias{sensitivity}
 \title{Sensitivity measures of a \code{SWIM} object}
 \usage{
-sensitivity(x, xCol = "all", wCol = "all", type = c("Gamma",
+sensitivity(object, xCol = "all", wCol = "all", type = c("Gamma",
   "Kolmogorov", "Wasserstein", "all"), f = NULL)
 }
 \arguments{
-\item{x}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Integer vector, columns of \code{x} for which the summary
-should be returned, (\code{default = "all"})}
+\item{xCol}{Integer vector, columns of \code{x}, that data of the 
+\code{object}, for which the summary should be returned,
+(\code{default = "all"})}
 
-\item{wCol}{Integer vector, columns of \code{new_weights} for which
-the summary should be returned, (\code{default = "all"})}
+\item{wCol}{Integer vector, columns of \code{new_weights}, the weights 
+of the \code{objects}, for which the summary should be 
+returned, (\code{default = "all"})}
 
 \item{type}{Character, one of \code{"Gamma", "Kolmogorov", 
 "Wasserstein", "all"}.}
@@ -34,7 +36,7 @@ A data.frame containting the sensitivity measures of the
 Provides sensitivity measures of an object of class \code{SWIM}.
 }
 \details{
-Sensitivity measures, comparint the data and the stressed 
+Sensitivity measures, comparing the data and the stressed 
     data of the \code{SWIM} object are calculated. 
     
     \code{"Gamma"}, the \emph{Reverse Sensitivity Measure}, defined 

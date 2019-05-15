@@ -19,13 +19,13 @@
   }
 
   
-  is.SWIM <- function(x) inherits(x, "SWIM")
+  is.SWIM <- function(object) inherits(object, "SWIM")
 
- #' Extracting data 
+ #' Extracting Data 
  #'
- #' Extracting data, \code{x}, from an object of class \code{SWIM}. 
+ #' Extracting data, \code{x}, from an \code{object} of class \code{SWIM}. 
  #' 
- #' @param x         A \code{SWIM} object.
+ #' @param object    A \code{SWIM} object.
  #' @inheritParams   summary.SWIM
  #'  
  #' @return A data.frame containing the realisations of the
@@ -35,38 +35,39 @@
  #'
  #' @export
 
-  get.data <- function(x, xCol = "all"){
-   if (!is.SWIM(x)) stop("Object not of class SWIM")
-   if (xCol == "all") xCol = 1:ncol(x$x) else if (!(xCol %in% 1:ncol(x$x))) stop("invalid 'xCol' argument")
-   return(as.matrix(x$x[, xCol]))
+  get.data <- function(object, xCol = "all"){
+   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   if (xCol == "all") xCol = 1:ncol(object$x) else if (!(xCol %in% 1:ncol(object$x))) stop("invalid 'xCol' argument")
+   return(as.matrix(object$x[, xCol]))
   }
 
- #' Extracting weights 
+ #' Extracting Weights 
  #'
- #' Extracting weights, \code{new_weights}, from an object of 
+ #' Extracting weights, \code{new_weights}, from an \code{object} of 
  #'     class \code{SWIM}. 
  #' 
  #' @inheritParams get.data
  #'  
- #' @return A data.frame containing the scenario weights of the object
- #'         of class \code{SWIM}. Colums corresponds to different stresses.
+ #' @return A data.frame containing the scenario weights, \code{new_weights} 
+ #'         of the object of class \code{SWIM}. Colums corresponds to 
+ #'         different stresses.
  #'         
  #' @author Silvana M. Pesenti 
  #'
  #' @export
   
-  get.weights <- function(x){
-   if (!is.SWIM(x)) stop("Object not of class SWIM")
-   specs <- get.specs(x)
-   x_data <- get.data(x)
+  get.weights <- function(object){
+   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   specs <- get.specs(object)
+   x_data <- get.data(object)
    m <- nrow(specs)
    new_weights <- matrix(0, nrow = nrow(x_data), ncol = m)
    for(i in 1:m){
     if (specs$type[i] %in% c("user", "moment")) {
-     new_weights[, i] <- x$new_weights[, i]
+     new_weights[, i] <- object$new_weights[, i]
     } else {
      k <- specs$k[i]
-     new_weights[, i] <- x$new_weights[[i]](x_data[, k])
+     new_weights[, i] <- object$new_weights[[i]](x_data[, k])
     }
    }
    colnames(new_weights) <- paste("stress", 1:m)
@@ -75,38 +76,38 @@
 
  #' Extracting list of weights functions
  #'
- #' Extracting the list of functions from an object of class \code{SWIM},
- #'     that, applied to the \code{k}th colum of \code{x}, gernerates the
- #'     scenario weights. 
- #' 
+ #' Extracting the list of functions from an \code{object} of class 
+ #'     \code{SWIM}, that, applied to the \code{k}th colum of \code{x},
+ #'     gernerates the scenario weights. 
+ #'      
  #' @note A stress with type = c("user", "moment") will be ignored. 
  #' 
  #' @inheritParams get.data
  #'  
  #' @return A list containing the functions, that, applied to the 
  #'     \code{k}the colum of \code{X}, generate the scenario weights 
- #'     of an object of class \code{SWIM}.
+ #'     of the \code{object} of class \code{SWIM}.
  #'         
  #' @author Silvana M. Pesenti 
  #'
  #' @export
  
-  get.weightsfun <- function(x){
-   if (!is.SWIM(x)) stop("Object not of class SWIM")
-   specs <- get.specs(x)
+  get.weightsfun <- function(object){
+   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   specs <- get.specs(object)
    typeCol <- which((specs$type != "user") & (specs$type != "moment"))
    if (length(typeCol) != length(specs$type)) warning("type user and moment are ignored. Use get.weights() instead.")    
-   return(x$new_weights[as.vector(typeCol)])
+   return(object$new_weights[as.vector(typeCol)])
   }
 
  #' Extracting specification of a stress
  #'
- #' Extracting the specifications of an object of class \code{SWIM},
+ #' Extracting the specifications of an \code{object} of class \code{SWIM},
  #'     on which the stresses are based.
  #' 
  #' @inheritParams get.data
  #'  
- #' @return A data.frame containing the specifications of an object
+ #' @return A data.frame containing the specifications of an \code{object}
  #'         of class \code{SWIM}. Rows corresponds to different stresses.
  #'         See \code{\link{SWIM}} object for details.
  #'         
@@ -114,18 +115,18 @@
  #'
  #' @export
  
-  get.specs <- function(x){
-   if (is.SWIM(x)) return(x$specs) else stop("Object not of class SWIM")
+  get.specs <- function(object){
+   if (is.SWIM(object)) return(object$specs) else stop("Object not of class SWIM")
   }
 
  #' Merge two \code{SWIM} objects
  #'
  #' Merge two objects of class \code{SWIM}, that are based on the same
- #'     data \code{x}. 
+ #'     data. 
  #' 
  #' @note A stress with type = c("user", "moment") will be ignored. 
  #' 
- #' @param x,y       Objects of class \code{SWIM}.
+ #' @param object1,object2       Objects of class \code{SWIM}.
  #'  
  #' @return An object of class \code{SWIM} containing:
  #'   \itemize{
@@ -144,13 +145,13 @@
  #'
  #' @export
 
-  merge.SWIM <- function(x, y){
-  if (!is.SWIM(x) | !is.SWIM(y)) stop("x and y are not of class SWIM.")
-  if (!identical(get.data(x), get.data(y))) stop("x and y are not based on the same data")
-  new_weights <- c(get.weightsfun(x), get.weightsfun(y))
-  specs <- plyr::rbind.fill(get.specs(x), get.specs(y))
+  merge.SWIM <- function(object1, object2){
+  if (!is.SWIM(object1) | !is.SWIM(object2)) stop("object1 and object2 are not of class SWIM.")
+  if (!identical(get.data(object1), get.data(object2))) stop("object1 and object2 are not based on the same data")
+  new_weights <- c(get.weightsfun(object1), get.weightsfun(object2))
+  specs <- plyr::rbind.fill(get.specs(object1), get.specs(object2))
   m <- length(specs$type)
   rownames(specs) <- names(new_weights) <- paste("stress", 1:m)
-  xy <- SWIM("x" = get.data(x), "new_weights" = new_weights, "specs" = specs)
+  xy <- SWIM("x" = get.data(object1), "new_weights" = new_weights, "specs" = specs)
   return(xy)
   }

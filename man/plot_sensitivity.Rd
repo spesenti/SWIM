@@ -4,8 +4,8 @@
 \alias{plot_sensitivity}
 \title{plots sensitivity}
 \usage{
-plot_sensitivity(x, xCol = "all", wCol = "all", type = c("Gamma",
-  "Wasserstein", "all"), f = NULL, displ = TRUE)
+plot_sensitivity(object, xCol = "all", wCol = "all",
+  type = c("Gamma", "Wasserstein", "all"), f = NULL, displ = TRUE)
 }
 \description{
 plots sensitivity

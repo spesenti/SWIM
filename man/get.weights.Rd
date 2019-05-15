@@ -2,19 +2,20 @@
 % Please edit documentation in R/class.R
 \name{get.weights}
 \alias{get.weights}
-\title{Extracting weights}
+\title{Extracting Weights}
 \usage{
-get.weights(x)
+get.weights(object)
 }
 \arguments{
-\item{x}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} object.}
 }
 \value{
-A data.frame containing the scenario weights of the object
-        of class \code{SWIM}. Colums corresponds to different stresses.
+A data.frame containing the scenario weights, \code{new_weights} 
+        of the object of class \code{SWIM}. Colums corresponds to 
+        different stresses.
 }
 \description{
-Extracting weights, \code{new_weights}, from an object of 
+Extracting weights, \code{new_weights}, from an \code{object} of 
     class \code{SWIM}.
 }
 \author{
