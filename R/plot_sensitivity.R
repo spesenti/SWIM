@@ -2,7 +2,7 @@
 #' @export
 #  This function plots the rank
 # Input: 
-# x         object
+# object         object
 # xCol      integer vector, columns of x$x (default = "all")  
 # wCol      integer vector, columns of new_weights, (default = "all")
 # type      character vector, c("Gamma", "Wasserstein", "all"). The Kolmogorov distance is the same for all inputs. (default = "Gamma")
@@ -10,11 +10,11 @@
 # displ      logical, If TRUE, the plot is displayed, if FALSE the data for plotting is returned. 
 
 
-  plot_sensitivity <- function(x, xCol = "all", wCol = "all", type = c("Gamma", "Wasserstein", "all"), f = NULL, displ = TRUE){
-   if (!is.SWIM(x)) stop("Object not of class SWIM")
-   if (anyNA(x$x)) warning("x contains NA")
+  plot_sensitivity <- function(object, xCol = "all", wCol = "all", type = c("Gamma", "Wasserstein", "all"), f = NULL, displ = TRUE){
+   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   if (anyNA(object$x)) warning("x contains NA")
    if (missing(type)) type <- "all"
-   sens <- sensitivity(x, xCol = xCol, wCol = wCol, type = type, f)
+   sens <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f)
    sens <- reshape::melt(sens, id.var = c("stress", "type"), variable_name = "X_all")
    if (displ == TRUE){
      ggplot2::ggplot(sens, ggplot2::aes(x = X_all, y = value)) +

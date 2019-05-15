@@ -4,20 +4,20 @@
 \alias{get.weightsfun}
 \title{Extracting list of weights functions}
 \usage{
-get.weightsfun(x)
+get.weightsfun(object)
 }
 \arguments{
-\item{x}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} object.}
 }
 \value{
 A list containing the functions, that, applied to the 
     \code{k}the colum of \code{X}, generate the scenario weights 
-    of an object of class \code{SWIM}.
+    of the \code{object} of class \code{SWIM}.
 }
 \description{
-Extracting the list of functions from an object of class \code{SWIM},
-    that, applied to the \code{k}th colum of \code{x}, gernerates the
-    scenario weights.
+Extracting the list of functions from an \code{object} of class 
+    \code{SWIM}, that, applied to the \code{k}th colum of \code{x},
+    gernerates the scenario weights.
 }
 \note{
 A stress with type = c("user", "moment") will be ignored.

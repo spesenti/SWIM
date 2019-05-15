@@ -4,7 +4,7 @@
 \alias{plot_hist}
 \title{plots histogram}
 \usage{
-plot_hist(x, xCol = 1, wCol = "all", base = FALSE, x_limits,
+plot_hist(object, xCol = 1, wCol = "all", base = FALSE, x_limits,
   displ = TRUE)
 }
 \description{

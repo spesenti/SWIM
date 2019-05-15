@@ -4,10 +4,10 @@
 \alias{merge.SWIM}
 \title{Merge two \code{SWIM} objects}
 \usage{
-\method{merge}{SWIM}(x, y)
+\method{merge}{SWIM}(object1, object2)
 }
 \arguments{
-\item{x, y}{Objects of class \code{SWIM}.}
+\item{object1, object2}{Objects of class \code{SWIM}.}
 }
 \value{
 An object of class \code{SWIM} containing:
@@ -25,7 +25,7 @@ An object of class \code{SWIM} containing:
 }
 \description{
 Merge two objects of class \code{SWIM}, that are based on the same
-    data \code{x}.
+    data.
 }
 \note{
 A stress with type = c("user", "moment") will be ignored.

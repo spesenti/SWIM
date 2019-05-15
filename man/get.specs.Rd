@@ -4,18 +4,18 @@
 \alias{get.specs}
 \title{Extracting specification of a stress}
 \usage{
-get.specs(x)
+get.specs(object)
 }
 \arguments{
-\item{x}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} object.}
 }
 \value{
-A data.frame containing the specifications of an object
+A data.frame containing the specifications of an \code{object}
         of class \code{SWIM}. Rows corresponds to different stresses.
         See \code{\link{SWIM}} object for details.
 }
 \description{
-Extracting the specifications of an object of class \code{SWIM},
+Extracting the specifications of an \code{object} of class \code{SWIM},
     on which the stresses are based.
 }
 \author{

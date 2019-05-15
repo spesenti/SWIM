@@ -3,7 +3,7 @@
 #'
 # plots the histogram of one vector under different stresses
 
-# x         SWIM object
+# object         SWIM object
 # xCol      integer, colum of x
 # wCol      integer, vector, colum of new_weights that are plotted 
 # base      logical, if base = TRUE, original ecdf is plotted
@@ -11,13 +11,13 @@
 # disp      logical, If TRUE, the plot is displayed, if FALSE the data for plotting is returned. 
 # displ = FALSE: returns a data frame with the first colum the original data To plot a weighted histogram use weight option in ggplot: ggplot(df, aes(x = df, w = value, stat(density))). 
 
-  plot_hist <- function(x, xCol = 1, wCol = "all", base = FALSE, x_limits, displ = TRUE){
-   if (!is.SWIM(x)) stop("Object not of class SWIM")
-   if (anyNA(x$x)) warning("x contains NA")
-   x_data <- get.data(x)[ , xCol]
-   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(x))
+  plot_hist <- function(object, xCol = 1, wCol = "all", base = FALSE, x_limits, displ = TRUE){
+   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   if (anyNA(object$x)) warning("x contains NA")
+   x_data <- get.data(object)[ , xCol]
+   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(object))
   
-   hist_data <- data.frame(x_data, get.weights(x)[ , wCol])
+   hist_data <- data.frame(x_data, get.weights(object)[ , wCol])
    names(hist_data) <- c(paste("X", xCol, sep = ""), paste("stress", wCol, sep = " "))
    if (base == TRUE){
     hist_data <- cbind(hist_data, rep(1, length(x_data)))

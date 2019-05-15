@@ -2,15 +2,16 @@
 % Please edit documentation in R/class.R
 \name{get.data}
 \alias{get.data}
-\title{Extracting data}
+\title{Extracting Data}
 \usage{
-get.data(x, xCol = "all")
+get.data(object, xCol = "all")
 }
 \arguments{
-\item{x}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Integer vector, columns of \code{x} for which the summary
-should be returned, (\code{default = "all"})}
+\item{xCol}{Integer vector, columns of \code{x}, that data of the 
+\code{object}, for which the summary should be returned,
+(\code{default = "all"})}
 }
 \value{
 A data.frame containing the realisations of the
@@ -18,7 +19,7 @@ A data.frame containing the realisations of the
         is based on.
 }
 \description{
-Extracting data, \code{x}, from an object of class \code{SWIM}.
+Extracting data, \code{x}, from an \code{object} of class \code{SWIM}.
 }
 \author{
 Silvana M. Pesenti

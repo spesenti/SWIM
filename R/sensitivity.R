@@ -3,14 +3,14 @@
 #' Provides sensitivity measures of an object of class \code{SWIM}.
 #'      
 #' @inheritParams summary.SWIM
-#' @param type   Character, one of \code{"Gamma", "Kolmogorov", 
-#'               "Wasserstein", "all"}.
-#' @param f      List of functions, same length as \code{xCol}. If 
-#'               provided, the sensitivity measures of the transformed
-#'               data of the \code{SWIM} object is returned
-#'               (\code{default = NULL}).
+#' @param type    Character, one of \code{"Gamma", "Kolmogorov", 
+#'                "Wasserstein", "all"}.
+#' @param f       List of functions, same length as \code{xCol}. If 
+#'                provided, the sensitivity measures of the transformed
+#'                data of the \code{SWIM} object is returned
+#'                (\code{default = NULL}).
 #' 
-#' @details Sensitivity measures, comparint the data and the stressed 
+#' @details Sensitivity measures, comparing the data and the stressed 
 #'     data of the \code{SWIM} object are calculated. 
 #'     
 #'     \code{"Gamma"}, the \emph{Reverse Sensitivity Measure}, defined 
@@ -42,25 +42,25 @@
 #' @export
 #' 
 
-  sensitivity <- function(x, xCol = "all", wCol = "all", type = c("Gamma",      "Kolmogorov", "Wasserstein", "all"), f = NULL){
-   if (!is.SWIM(x)) stop("Wrong object")
-   if (anyNA(x$x)) warning("x contains NA")
+  sensitivity <- function(object, xCol = "all", wCol = "all", type = c("Gamma",      "Kolmogorov", "Wasserstein", "all"), f = NULL){
+   if (!is.SWIM(object)) stop("Wrong object")
+   if (anyNA(object$x)) warning("x contains NA")
    if (missing(type)) type <- "all"
-   if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get.data(x))
-   if (is.null(colnames(get.data(x)))){
+   if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get.data(object))
+   if (is.null(colnames(get.data(object)))){
     cname <-  paste("X", as.character(xCol), sep = "")
    } else {
-    cname <- colnames(get.data(x))[xCol]
+    cname <- colnames(get.data(object))[xCol]
    } 
-   x_data <- get.data(x)[ , xCol]
+   x_data <- get.data(object)[ , xCol]
    if (!is.null(f)){
     for(i in 1:length(xCol)){
       x_data[, i] <- sapply(x_data[, i], f[[i]])
     }
    }
   
-   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(x))
-   new_weights <- get.weights(x)[ , wCol]  
+   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(object))
+   new_weights <- get.weights(object)[ , wCol]  
    sens_w <- setNames(data.frame(matrix(ncol = length(xCol) + 2, nrow = 0)), c(cname, "stress", "type"))
    if (type == "Gamma" || type == "all"){
     sens_gamma_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .gamma, z = z)

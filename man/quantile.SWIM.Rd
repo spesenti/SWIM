@@ -2,11 +2,11 @@
 % Please edit documentation in R/quantile.R
 \name{quantile.SWIM}
 \alias{quantile.SWIM}
-\title{Stressed quantiles}
+\title{Stressed Sample Quantiles}
 \usage{
-\method{quantile}{SWIM}(x, p, xCol = "all", wCol = 1, type = c("i/n",
-  "(i-1)/(n-1)", "i/(n+1)", "quantile"))
+\method{quantile}{SWIM}(object, p, xCol = "all", wCol = 1,
+  type = c("i/n", "(i-1)/(n-1)", "i/(n+1)", "quantile"))
 }
 \description{
-Stressed quantiles
+Stressed Sample Quantiles
 }
