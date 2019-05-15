@@ -15,10 +15,10 @@ The \code{SWIM} package provides scenario weights for realisations
 The \code{SWIM} (Scenario Weights for Importance Measurement)
     package provides weights on simulated scenarios from a stochastic
     model, such that stressed random variables fulfil given 
-    probabilistic constraints (e.g. specified values for risk measures),
-    under the new scenario weights. Scenario weights are selected by
-    constrained minimisation of the relative entropy to the baseline
-    model.
+    probabilistic constraints (e.g. specified values for risk 
+    measures), under the new scenario weights. Scenario weights are 
+    selected by constrained minimisation of the relative entropy to the
+    baseline model.
 
     The \code{SWIM} package is based on the \emph{reverse sensitivity
     framework} developed by \insertCite{Pesenti2019reverse}{SWIM}. 
@@ -85,7 +85,8 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
       \item \code{type = "VaR"}: \code{alpha}, the level of the 
     stressed VaR; \code{q}, the stressed VaR at level \code{alpha}.
       \item \code{type = "VaR ES"}: \code{alpha}, the level of the 
-    stressed VaR and ES; \code{q}, the stressed VaR at level \code{alpha};
+    stressed VaR and ES; \code{q}, the stressed VaR at level 
+    \code{alpha};
     \code{s}, the stressed ES at level \code{alpha}.
       \item \code{type = "prob"}: \code{lower}, the left endpoints of
     the intervals; \code{upper}, the right endpoints of the intervals;
@@ -96,7 +97,7 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
       \item \code{type = "mean"}:
       \item \code{type = "mean sd"}:
     }
-    }
+  }
 }
 
 \references{
