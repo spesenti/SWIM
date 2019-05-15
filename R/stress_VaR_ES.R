@@ -1,16 +1,18 @@
  #' Stressing Value-at-Risk and Expected Shortfall
  #'
- #' Provides scenario weights such that the random variable
- #'    under the scenraio weights fulfils the constraint on the VaR and
- #'    ES has minimal Kullback-Leibler divergence to the baseline random
- #'    variable.
-
+ #' Provides weights on simulated scenarios from a stochastic
+ #'     model, such that a stressed model component fulfils a 
+ #'     constraint on its VaR and ES. Scenario weights are selected by 
+ #'     constrained minimisation of the relative entropy to the 
+ #'     baseline model.
+ #'     
  #' @inheritParams    stress_VaR
- #' @param s          Numeric, vector - constraints: new ES at level alpha.
+ #' @param s          Numeric, vector, the stressed ES at level 
+ #'                   \code{alpha}.\cr
  #'                   If \code{q} and \code{s} are vectors, they must have
  #'                   the same length.
- #' @param s_ratio    Numeric, vector, ratio of stressed ES to base ES,
- #'                   \eqn{s_ratio = s / ES}.
+ #' @param s_ratio    Numeric, vector, the ratio of the stressed ES to 
+ #'                   the baseline ES, \eqn{s_ratio = s / ES}.\cr
  #'                   If \code{q} and \code{s_ratio} are vectors, they must
  #'                   have the same length.
  #' 
@@ -22,15 +24,15 @@
  #'     \itemize{
  #'       \item \code{x}, the data;
  #'       \item \code{new_weights}, a list of functions, that applied to
- #'       the \code{k}th colum of \code{x} generate the vectors of 
+ #'       the \code{k}th column of \code{x} generate the vectors of 
  #'       scenario weights;
  #'       \item \code{specs}, the specification of what has been
  #'       stressed.
- #'       The \code{specs} is a data.frame consisting of \code{type},
+ #'       \code{specs} is a data.frame consisting of \code{type},
  #'       \code{k}, \code{alpha}, \code{q} and \code{s}. Each row 
- #'       correponds to a differentstress, see \code{\link{SWIM}}
- #'       for details.
+ #'       corresponds to a different stress.
  #'     }
+ #'     See \code{\link{SWIM}} for details.
  #'     
  #' @family stress functions 
  #' @inherit SWIM references 

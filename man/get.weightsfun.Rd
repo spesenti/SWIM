@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{get.weightsfun}
 \alias{get.weightsfun}
-\title{Extracting list of weights functions}
+\title{Extracting List of Weights Functions}
 \usage{
 get.weightsfun(object)
 }

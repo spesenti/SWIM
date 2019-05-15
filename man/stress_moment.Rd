@@ -2,21 +2,25 @@
 % Please edit documentation in R/stress_moment.R
 \name{stress_moment}
 \alias{stress_moment}
-\title{Stressing moments}
+\title{Stressing Moments}
 \usage{
 stress_moment(x, f, k, m, ...)
 }
 \arguments{
-\item{x}{A SWIM object or a vector, matrix or data frame 
-containing realisations of random variables. Colums of \code{x} 
-are interpreted to correspond to random variables.}
+\item{x}{A vector, matrix or data frame 
+containing realisations of random variables. Columns of \code{x} 
+correspond to random variables; OR\cr
+A \code{SWIM} object, where \code{x} corresponds to the 
+underlying data of the \code{SWIM} object.}
 
-\item{f}{A function, or list of functions.}
+\item{f}{A function, or list of functions, that applied to 
+\code{x}, constitute the moment constraints.}
 
-\item{k}{A vector or list of vectors indicating which columns of
+\item{k}{A vector or list of vectors, same length as \code{f},
+indicating which columns of
 \code{x} each function in \code{f} operates on.}
 
-\item{m}{Vector of values, same length as \code{f}, containing
+\item{m}{Numeric vector, same length as \code{f}, containing
 the stressed moments of \code{f(x)}. Must be in the
 range of \code{f(x)}.}
 
@@ -28,27 +32,42 @@ A \code{SWIM} object containing:
     \itemize{
       \item \code{x}, the data;
       \item \code{new_weights}, a list of functions, that applied to
-      the \code{k}th colums of \code{x} generate the vectors of the
+      the \code{k}th columns of \code{x} generate the vectors of the
       new weights;
       \item \code{specs}, the specification of what has been
       stressed.
-      The \code{specs} is a data.frame consisting of ???\cr
-      , see \code{\link{SWIM}} for details.
+      \code{specs} is a data.frame consisting of ???
     }
+    See \code{\link{SWIM}} for details.
 }
 \description{
-Provides scenario weights such that the random variable
-   under the scenraio weights fulfils the moment constraints and
-   has minimal Kullback-Leibler divergence to the baseline random
-   variable.
+Provides weights on simulated scenarios from a stochastic
+    model, such that the stressed model fulfils the 
+    moment constraints. Scenario weights are selected by 
+    constrained minimisation of the relative entropy to the 
+    baseline model.
 }
 \details{
-Calcualtes the solution wrt theta of the set of equations
+The moment constraints are given by \code{E^Q( f(x) ) = m}, 
+    where \code{E^Q} denotes the expectation under the stressed 
+    model.\cr
+    If \code{f} is a function of multiple variables, \code{k}
+    corresponds to the input variables to \code{f}. Thus,
+    the length of \code{k} must be equal to the number of input
+    variables to \code{f}.
+
+    The function solves the set of equations with respect to theta,
+    using \code{\link[nleqslv]{nleqslv}}:
+    \deqn{E^Q( f(x) ) = E( f(x) * exp(theta * f(x)) ) = m.}
 }
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}
 }
 \seealso{
+See \code{\link{stress_mean}} for stressing means and 
+    \code{\link{stress_mean_sd}} for stressing mean and standard 
+    deviation jointly.
+
 Other stress functions: \code{\link{SWIM}},
   \code{\link{stress_VaR_ES}}, \code{\link{stress_VaR}},
   \code{\link{stress_mean_sd}}, \code{\link{stress_mean}},

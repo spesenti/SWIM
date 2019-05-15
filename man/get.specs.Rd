@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{get.specs}
 \alias{get.specs}
-\title{Extracting specification of a stress}
+\title{Extracting Specification of a Stress}
 \usage{
 get.specs(object)
 }

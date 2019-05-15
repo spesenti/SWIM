@@ -1,4 +1,4 @@
-#' empirical distribution function
+#' Stressed Empirical Distribution Function
 #' @export
 # function calculating the distorted empirical distribution function
 # Note that the ecdf is not a generic, so we cannot define a method.

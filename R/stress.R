@@ -1,16 +1,18 @@
- #' Stressing random variables 
+ #' Stressing Random Variables 
  #' 
- #' Provides the scenario weights such that a random variable
- #'    under the scenraio weights fulfils probabilistic constraints and
- #'    has minimal Kullback-Leibler divergence to the baseline random
- #'    variable.
+ #' Provides weights on simulated scenarios from a stochastic
+ #'     model, such that stressed random variables fulfil given 
+ #'     probabilistic constraints (e.g. specified values for risk 
+ #'     measures), under the new scenario weights. Scenario weights are 
+ #'     selected by constrained minimisation of the relative entropy to the
+ #'     baseline model. 
  #'    
- #' @param type    Charactor, the type of stress, one of \code{"VaR", 
- #'                "VaR ES", "prob", "user", "moment", "mean", "mean sd"}.
- #' @param ...     Arguments to be passed depending on \code{type}.
+ #' @param type    Character, the type of stress, one of \code{"VaR", 
+ #'     "VaR ES", "mean", "mean sd", "moment", "prob", "user"}.
+ #' @param ...     Arguments to be passed on, depending \code{type}.
  #'                
  #' @return An object of class \code{SWIM}, see \code{\link{SWIM}} 
- #'     for more details.
+ #'     for details.
  #' 
  #' @author Silvana M. Pesenti 
  #' @family stress functions
@@ -20,11 +22,14 @@
  #' @export
  #' 
   
-  stress <- function(type = c("VaR", "VaR ES", "prob", "user"), ...){
+  stress <- function(type = c("VaR", "VaR ES", "mean", 
+     "mean sd", "moment", "prob", "user"), ...){
    if (type == "VaR") SWIM <- stress_VaR(...)
    if (type == "VaR ES") SWIM <- stress_VaR_ES(...)
+   if (type == "mean") SWIM <- stress_mean(...)
+   if (type == "mean sd") SWIM <- stress_mean_sd(...)
+   if (type == "moment") SWIM <- stress_moment(...)
    if (type == "prob") SWIM <- stress_prob(...)
    if (type == "user") SWIM <- stress_user(...)
-   if (type == "moment") SWIM <- stress_moment(...)
    return(SWIM)
   }

@@ -2,17 +2,19 @@
 % Please edit documentation in R/stress_moment.R
 \name{stress_mean_sd}
 \alias{stress_mean_sd}
-\title{Stressing mean and standard deviation}
+\title{Stressing Mean and Standard Deviation}
 \usage{
 stress_mean_sd(x, k, new_means, new_sd, ...)
 }
 \arguments{
-\item{x}{A SWIM object or a vector, matrix or data frame 
-containing realisations of random variables. Colums of \code{x} 
-are interpreted to correspond to random variables.}
+\item{x}{A vector, matrix or data frame 
+containing realisations of random variables. Columns of \code{x} 
+correspond to random variables; OR\cr
+A \code{SWIM} object, where \code{x} corresponds to the 
+underlying data of the \code{SWIM} object.}
 
-\item{k}{Numeric vector, the
-column of \code{x} that are stressed.}
+\item{k}{Numeric vector, the columns of \code{x} that
+are stressed.}
 
 \item{new_means}{Numeric vector, same length as \code{k}, 
 containing the stressed means.}
@@ -28,22 +30,30 @@ A \code{SWIM} object containing:
     \itemize{
       \item \code{x}, the data;
       \item \code{new_weights}, a list of functions, that applied to
-      the \code{k}th colum of \code{x} generate the vectors of 
+      the \code{k}th column of \code{x} generate the vectors of 
       scenario weights;
       \item \code{specs}, the specification of what has been
       stressed.
-      The \code{specs} is a data.frame consisting of ???\cr
-      , see \code{\link{SWIM}} for details.
+      \code{specs} is a data.frame consisting of ???
     }
+    See \code{\link{SWIM}} for details.
 }
 \description{
-Provides scenario weights such that the random variable
-   under the new scenraio weights fulfils the mean and standard
-   deviation constraints and has minimal Kullback-Leibler divergence 
-   to the baseline random variable.
+Provides weights on simulated scenarios from a stochastic
+    model, such that the stressed model fulfils the 
+    mean and standard deviation constraints. Scenario weights 
+    are selected by constrained minimisation of the relative 
+    entropy to the baseline model.
 }
 \details{
-
+The function \code{stress_mean_sd} is a wrapper for the 
+    function \code{stress_moment}. See \code{\link{stress_moment}} 
+    for details on the algorithm and for the additional arguments 
+    to \code{...}.
+    
+    For only stressing means, see \code{\link{stress_mean}}, 
+    for stressing standard deviations without the mean or 
+    other moments, see \code{\link{stress_moments}}.
 }
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}

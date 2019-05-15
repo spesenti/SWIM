@@ -1,22 +1,25 @@
  #' Stressing Value-at-Risk
  #' 
- #' Provides scenario weights such that the random variable
- #'    under the scenraio weights fulfils the constraint on the VaR and
- #'    has minimal Kullback-Leibler divergence to the baseline random
- #'    variable.
+ #' Provides weights on simulated scenarios from a stochastic
+ #'     model, such that a stressed model component fulfils a 
+ #'     constraint on its VaR. Scenario weights are selected by 
+ #'     constrained minimisation of the relative entropy to the 
+ #'     baseline model.
  #'    
- #' @param x       A SWIM object or a vector, matrix or data frame 
- #'     containing realisations of random variables. Colums of \code{x} 
- #'     are interpreted to correspond to random variables.
+ #' @param x       A vector, matrix or data frame 
+ #'     containing realisations of random variables. Columns of \code{x} 
+ #'     correspond to random variables; OR\cr
+ #'     A \code{SWIM} object, where \code{x} corresponds to the 
+ #'     underlying data of the \code{SWIM} object.
  #' @param k       Numeric, the column of \code{x} that is stressed
- #'     (default = 1).
+ #'     \code{(default = 1)}.
  #' @param alpha   Numeric vector, the levels of the stressed VaR.
  #' @param q       Numeric vector, the stressed VaR at level 
  #'                \code{alpha}.\cr
  #'                If \code{alpha} and \code{q} are vectors, they must 
  #'                have the same length. 
  #' @param q_ratio Numeric vector, the ratio of the stressed VaR to the
- #'                original VaR, \eqn{q_ratio =  q /  VaR}.\cr
+ #'                baseline VaR, \eqn{q_ratio =  q /  VaR}.\cr
  #'                If \code{alpha} and \code{q_ratio} are vectors, they 
  #'                must have the same length. 
  #'      
@@ -27,15 +30,15 @@
  #'     \itemize{
  #'       \item \code{x}, the data;
  #'       \item \code{new_weights}, a list of functions, that applied to the
- #'     \code{k}th colum of \code{x} generate the vectors of scenario
+ #'     \code{k}th column of \code{x} generate the vectors of scenario
  #'     weights;
  #'      \item \code{specs}, the specification of what has been
  #'     stressed.
- #'     The \code{specs} is a data.frame consisting of \code{type}, \code{k}
- #'     \code{alpha} and \code{q}. Each row correponds to a different 
- #'     stress, see \code{\link{SWIM}} for details.
+ #'     \code{specs} is a data.frame consisting of \code{type}, \code{k}
+ #'     \code{alpha} and \code{q}. Each row corresponds to a different 
+ #'     stress.
  #'     }
- #'     
+ #'     See \code{\link{SWIM}} for details.
  #' @author Silvana M. Pesenti 
  #' 
  #' @family stress functions 

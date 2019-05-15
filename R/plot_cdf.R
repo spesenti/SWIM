@@ -1,4 +1,4 @@
-#' plots empirical distribution
+#' Plot Empirical Distribution Functions
 #' @export
 
 # plots the empirical distribution function of one vector under different stresses

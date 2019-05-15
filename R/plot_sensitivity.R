@@ -1,4 +1,4 @@
-#' plots sensitivity
+#' Plots Sensitivity Measures
 #' @export
 #  This function plots the rank
 # Input: 

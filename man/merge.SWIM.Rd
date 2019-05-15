@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{merge.SWIM}
 \alias{merge.SWIM}
-\title{Merge two \code{SWIM} objects}
+\title{Merge two \code{SWIM} Objects}
 \usage{
 \method{merge}{SWIM}(object1, object2)
 }

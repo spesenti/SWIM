@@ -1,4 +1,4 @@
-#' Sensitivity measures of a \code{SWIM} object
+#' Sensitivity Measures of a \code{SWIM} Object
 #' 
 #' Provides sensitivity measures of an object of class \code{SWIM}.
 #'      

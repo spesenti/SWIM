@@ -1,4 +1,4 @@
-#' Summarizing a SWIM object
+#' Summarizing a \code{SWIM} Object
 #' 
 #' This funcion is a \code{\link[utils]{methods}} for an object of class 
 #'     \code{SWIM}.

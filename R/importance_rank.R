@@ -1,4 +1,4 @@
-#' importance rank
+#' Importance Rank of Random Variables
 #' @export
 # Function to calculate ranking of a SWIM object input
 

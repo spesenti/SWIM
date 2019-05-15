@@ -2,38 +2,42 @@
 % Please edit documentation in R/stress_user.R
 \name{stress_user}
 \alias{stress_user}
-\title{User defined stress}
+\title{User Defined Stress}
 \usage{
 stress_user(x, new_weights, k = 1)
 }
 \arguments{
-\item{x}{A SWIM object or a vector, matrix or data frame 
-containing realisations of random variables. Colums of \code{x} 
-are interpreted to correspond to random variables.}
+\item{x}{A vector, matrix or data frame 
+containing realisations of random variables. Columns of \code{x} 
+correspond to random variables; OR\cr
+A \code{SWIM} object, where \code{x} corresponds to the 
+underlying data of the \code{SWIM} object.}
 
-\item{new_weights}{A vector, matrix or data frame containing weights.
-Colums of \code{new_weights} are interpreted to correspond to random
-variables. OR\cr 
-A list of function, that applied to the \code{k}th colum of \code{x} 
-generate the vecotrs of the new weights. \cr
-\code{new_weights} are normalised to 1.}
+\item{new_weights}{A vector, matrix or data frame containing scenario
+weights. Columns of \code{new_weights} correspond to different
+stresses; OR\cr 
+A list of functions, that applied to the \code{k}th column of 
+\code{x} generate the vectors of the new weights. \cr
+\code{new_weights} will be normalised to 1.}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
-(default = 1).}
+\code{(default = 1)}.}
 }
 \value{
 A \code{SWIM} object containing:
     \itemize{
       \item \code{x}, the data;
-      \item \code{new_weights}, a list of functions, that applied to
-      the \code{k}th component of \code{x} generate the vectors of
-      scenario weights;
+      \item \code{new_weights}, a data frame containing scenario
+      weights; OR \cr
+      a list of functions, that applied to the \code{k}th component 
+      of \code{x} generate the vectors of scenario weights;
       \item \code{specs}, the specification of what has been
       stressed.
-      The \code{specs} is a data.frame consisting of \code{type},
-      \code{k} and \code{constr = user}. Each row correponds to a 
-      differentstress, see \code{\link{SWIM}} for details.
+      \code{specs} is a data.frame consisting of \code{type},
+      \code{k} and \code{constr = user}. Each row corresponds to a 
+      different stress.
     }
+    See \code{\link{SWIM}} for details.
 }
 \description{
 Returns a \code{SWIM} object with scenario weights defined by the user.
