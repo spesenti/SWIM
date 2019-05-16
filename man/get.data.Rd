@@ -2,9 +2,18 @@
 % Please edit documentation in R/class.R
 \name{get.data}
 \alias{get.data}
-\title{Extracting Data of a Stressed Model}
+\alias{get.weights}
+\alias{get.weightsfun}
+\alias{get.specs}
+\title{Extracting from a Stressed Model}
 \usage{
 get.data(object, xCol = "all")
+
+get.weights(object)
+
+get.weightsfun(object)
+
+get.specs(object)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
@@ -13,19 +22,42 @@ get.data(object, xCol = "all")
 of the \code{object} (\code{default = "all"}).}
 }
 \value{
-A data.frame containing the realisations of the
-        random variables (stochastic model) on which the 
-        object of class \code{SWIM} is based.
+\code{get.data}: A data.frame containing the realisations of 
+        the stochastic model on which the \code{object} is based.
+
+\code{get.weights:} A data.frame containing the scenario 
+    weights of the \code{object}. Columns corresponds 
+    to different stresses.
+
+\code{get.weightsfun}: A list containing the functions, that, 
+    when applied to the \code{k}th column of the data, generate the 
+    scenario weights of the \code{object}.\cr
+    Stresses with \code{type = c("user", "moment")} will be ignored.
+
+\code{get.specs}: A data.frame containing the specifications 
+        of the \code{object}. Rows corresponds to different stresses.
+        See \code{\link{SWIM}} for details.
 }
 \description{
-Extracting the data, realisations of the stochastic model, from 
-    an object of class \code{SWIM}.
+Extracting the data (realisations of the stochastic model), the 
+    scenario weights, the functions generating the scenario weights, 
+    or the specifications of the stress from an object of class 
+    \code{SWIM}.
 }
+\section{Functions}{
+\itemize{
+\item \code{get.data}: extracting data.
+
+\item \code{get.weights}: extracting scenario weights.
+
+\item \code{get.weightsfun}: extracting weight functions.
+
+\item \code{get.specs}: extracting information of the stress.
+}}
+
 \seealso{
-Other extracting functions: \code{\link{get.specs}},
-  \code{\link{get.weightsfun}}, \code{\link{get.weights}}
+\code{\link{SWIM}}
 }
 \author{
 Silvana M. Pesenti
 }
-\concept{extracting functions}

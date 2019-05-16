@@ -21,21 +21,23 @@
   
   is.SWIM <- function(object) inherits(object, "SWIM")
 
- #' Extracting Data of a Stressed Model
+ #' Extracting from a Stressed Model
  #'
- #' Extracting the data, realisations of the stochastic model, from 
- #'     an object of class \code{SWIM}. 
+ #' Extracting the data (realisations of the stochastic model), the 
+ #'     scenario weights, the functions generating the scenario weights, 
+ #'     or the specifications of the stress from an object of class 
+ #'     \code{SWIM}. 
  #' 
  #' @param object    A \code{SWIM} object.
  #' @inheritParams   summary.SWIM
  #'  
- #' @return A data.frame containing the realisations of the
- #'         random variables (stochastic model) on which the 
- #'         object of class \code{SWIM} is based.    
- #'         
- #' @family extracting functions         
- #' @author Silvana M. Pesenti 
+ #' @return \code{get.data}: A data.frame containing the realisations of 
+ #'         the stochastic model on which the \code{object} is based.    
  #'
+ #' @seealso \code{\link{SWIM}}
+ #'                  
+ #' @author Silvana M. Pesenti 
+ #' @describeIn get.data extracting data.
  #' @export
 
   get.data <- function(object, xCol = "all"){
@@ -44,21 +46,14 @@
    return(as.matrix(object$x[, xCol]))
   }
 
- #' Extracting Scenario Weights of a Stressed Model
+ #' @describeIn get.data extracting scenario weights. 
  #'
- #' Extracting the scenario weights from an object of 
- #'     class \code{SWIM}. 
- #' 
- #' @inheritParams get.data
- #'  
- #' @return A data.frame containing the scenario weights of the object 
- #'         of class \code{SWIM}. Columns corresponds to different 
- #'         stresses.
+ #' @return \code{get.weights:} A data.frame containing the scenario 
+ #'     weights of the \code{object}. Columns corresponds 
+ #'     to different stresses.
  #'         
- #' @author Silvana M. Pesenti 
- #' @family extracting functions
  #' @export
-  
+
   get.weights <- function(object){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    specs <- get.specs(object)
@@ -77,24 +72,15 @@
    return(new_weights)
   }
 
- #' Extracting Weight Functions of a Stressed Model
+ #' @describeIn get.data extracting weight functions.
  #'
- #' Extracting the list of functions from an object of class 
- #'     \code{SWIM}, that, when applied to the \code{k}th column of 
- #'     \code{x}, generates the scenario weights. 
- #'      
- #' @note Stress with \code{type = c("user", "moment")} will be ignored. 
- #' 
- #' @inheritParams get.data
- #'  
- #' @return A list containing the functions, that, when applied to the 
- #'     \code{k}th column of \code{X}, generate the scenario weights 
- #'     of the \code{object} of class \code{SWIM}.
+ #' @return \code{get.weightsfun}: A list containing the functions, that, 
+ #'     when applied to the \code{k}th column of the data, generate the 
+ #'     scenario weights of the \code{object}.\cr
+ #'     Stresses with \code{type = c("user", "moment")} will be ignored.
  #'         
- #' @author Silvana M. Pesenti 
- #' @family extracting functions
  #' @export
- 
+
   get.weightsfun <- function(object){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    specs <- get.specs(object)
@@ -103,21 +89,13 @@
    return(object$new_weights[as.vector(typeCol)])
   }
 
- #' Extracting Information of a Stressed Model
+ #' @describeIn get.data extracting information of the stress.
  #'
- #' Extracting the specifications of the stresses of an object 
- #' of class \code{SWIM},
- #' 
- #' @inheritParams get.data
- #'  
- #' @return A data.frame containing the specifications of the \code{object}
- #'         of class \code{SWIM}. Rows corresponds to different stresses.
+ #' @return \code{get.specs}: A data.frame containing the specifications 
+ #'         of the \code{object}. Rows corresponds to different stresses.
  #'         See \code{\link{SWIM}} for details.
- #'         
- #' @author Silvana M. Pesenti 
- #' @family extracting functions
  #' @export
- 
+
   get.specs <- function(object){
    if (is.SWIM(object)) return(object$specs) else stop("Object not of class SWIM")
   }
@@ -145,7 +123,6 @@
  #'     \code{k}, and constraints depending on the \code{type} of stress,
  #'     see \code{\link{SWIM}} for details.
  #'   }
- #'   
  #' 
  #' @author Silvana M. Pesenti 
  #'

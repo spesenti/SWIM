@@ -92,7 +92,12 @@
  #' @family stress functions 
  #'  
  #' @references \insertRef{Pesenti2019reverse}{SWIM}
- #'  
+ #' @seealso See \code{\link{get.data}} for extracting the data, 
+ #'     \code{x}; \code{\link{get.weights}} for extracting the scenario 
+ #'     weights, \code{new_weights}; \code{\link{get.weightsfun}} for
+ #'     extracting the functions generating the scenario weights; and 
+ #'     \code{\link{get.specs}} for extracting the specifications of 
+ #'     the stress on an object of class \code{SWIM}.
  #' @importFrom  Rdpack reprompt
  #'  
  #' @docType package
