@@ -60,6 +60,40 @@ The moment constraints are given by \code{E^Q( f(x) ) = m},
     using \code{\link[nleqslv]{nleqslv}}:
     \deqn{E^Q( f(x) ) = E( f(x) * exp(theta * f(x)) ) = m.}
 }
+\examples{
+set.seed(0)
+x <- data.frame(cbind(
+  "normal" = rnorm(1000), 
+  "gamma" = rgamma(1000, shape = 2), 
+  "beta" = rbeta(1000, shape1 = 2, shape2 = 2)))
+## stressing means
+res1 <- stress(type = "mean", x = x, k = 1 : 3, 
+  new_means = c(1, 1, 0.75))
+## calling stress_mean directly
+res2 <- stress_mean(x = x, k = 1 : 3, 
+  new_means = c(1, 1, 0.75))
+
+## stressing mean and sd of column 1
+res3 <- stress(type = "mean sd", x = x, k = 1, new_means = 0.1, 
+  new_sd = 1.1, method = "Newton", 
+  control = list(maxit = 1000, ftol = 1E-15))
+## calling stress_mean_sd directly 
+res4 <- stress_mean_sd(x = x, k = 1, new_means = 0.1, 
+  new_sd = 1.1, method = "Newton", 
+  control = list(maxit = 1000, ftol = 1E-15))
+
+## stressing covariance of column 1,2 while leaving the means unchanged
+res5 <- stress_moment(x = x, 
+  f = list(function(x)x, function(x)x, function(x)x[1] * x[2]), 
+  k = list(1, 2, c(1, 2)), m = c(0, 2, 0.5), 
+  method = "Newton", control = list(maxit = 1000, ftol = 1E-10))
+  
+## stressing jointly the VaR of column 1,3  
+res6 <- stress_moment(x = x, 
+  f = list(function(x)(x > 1.5), function(x)(x > 0.9)), 
+  k = c(1, 3), m = c(0.9, 0.9))
+     
+}
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}
 }

@@ -25,6 +25,15 @@
 #'     }
 #'     See \code{\link{SWIM}} for details.
 #'     
+#' @examples      
+#' set.seed(0)
+#' x <- as.data.frame(cbind(
+#'   "normal" = rnorm(1000), 
+#'   "gamma" = rgamma(1000, shape = 2)))
+#' res1 <- stress(type = "user", x = x, new_weights = function(x)x^2)
+#'   alpha = 0.9, q_ratio = 1.05)
+#'   
+#'     
 #' @family stress functions 
 #' @inherit SWIM references 
 #' @export 
@@ -36,7 +45,7 @@ stress_user <- function(x, new_weights, k = 1){
   
   if (is.data.frame(new_weights) | is.vector(new_weights)) new_weights <- as.matrix(new_weights)
   if (is.function(new_weights)) new_weights <- as.list(new_weights)
-  if (is.list(new_weights)) new_weights <- sapply(new_weights, function(f)f(x[, k]))
+  if (is.list(new_weights)) new_weights <- sapply(new_weights, function(s)s(x_data[, k]))
 
   if (any(new_weights < 0)) stop("Invalid new_weights argument")
   new_weights <- t(t(new_weights) / colMeans(new_weights))

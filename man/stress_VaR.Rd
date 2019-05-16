@@ -54,6 +54,20 @@ Provides weights on simulated scenarios from a stochastic
 If one of \code{alpha, q} (\code{q_ratio}) is a vector,
    the stressed VaR's at level \code{alpha} are equal to \code{q}.
 }
+\examples{
+set.seed(0)
+x <- as.data.frame(cbind(
+  "normal" = rnorm(1000), 
+  "gamma" = rgamma(1000, shape = 2)))
+res1 <- stress(type = "VaR", x = x, 
+  alpha = 0.9, q_ratio = 1.05)
+  
+## calling stress_VaR directly
+## stressing "gamma" 
+res2 <- stress_VaR(x = x, alpha = 0.9, 
+  q_ratio = c(1.03, 1.05), k = 2)
+   
+}
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}
 }

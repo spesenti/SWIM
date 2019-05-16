@@ -33,7 +33,20 @@
  #'       corresponds to a different stress.
  #'     }
  #'     See \code{\link{SWIM}} for details.
- #'     
+ #' 
+ #' @examples 
+ #' set.seed(0)
+ #' x <- as.data.frame(cbind(
+ #'   "normal" = rnorm(1000), 
+ #'   "gamma" = rgamma(1000, shape = 2)))
+ #' res1 <- stress(type = "VaR ES", x = x, 
+ #'   alpha = c(0.9, 0.95), q_ratio = 1.05, s_ratio = 1.08)
+ #'   
+ #' ## calling stress_VaR_ES directly   
+ #' ## stressing "gamma"
+ #' res2 <- stress_VaR_ES(x = x, alpha = 0.9, 
+ #'   q_ratio = 1.03, s_ratio = c(1.05, 1.08), k = 2)
+ #'             
  #' @family stress functions 
  #' @inherit SWIM references 
  #' @export

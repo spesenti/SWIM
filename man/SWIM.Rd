@@ -104,6 +104,13 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
 \insertRef{Pesenti2019reverse}{SWIM}
 }
 \seealso{
+See \code{\link{get.data}} for extracting the data, 
+    \code{x}; \code{\link{get.weights}} for extracting the scenario 
+    weights, \code{new_weights}; \code{\link{get.weightsfun}} for
+    extracting the functions generating the scenario weights; and 
+    \code{\link{get.specs}} for extracting the specifications of 
+    the stress on an object of class \code{SWIM}.
+
 Other stress functions: \code{\link{stress_VaR_ES}},
   \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},
   \code{\link{stress_mean}}, \code{\link{stress_moment}},

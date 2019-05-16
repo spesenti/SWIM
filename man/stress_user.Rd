@@ -42,6 +42,17 @@ A \code{SWIM} object containing:
 \description{
 Returns a \code{SWIM} object with scenario weights defined by the user.
 }
+\examples{
+     
+set.seed(0)
+x <- as.data.frame(cbind(
+  "normal" = rnorm(1000), 
+  "gamma" = rgamma(1000, shape = 2)))
+res1 <- stress(type = "user", x = x, new_weights = function(x)x^2)
+  alpha = 0.9, q_ratio = 1.05)
+  
+    
+}
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}
 }

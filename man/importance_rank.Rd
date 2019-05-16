@@ -37,6 +37,22 @@ Provides the importance ranks of random variables
 For the definition of the sensitivity 
     measures (\code{type}), see \code{\link{sensitivity}}.
 }
+\examples{
+     
+## example with a stress on VaR
+set.seed(0)
+x <- as.data.frame(cbind(
+  "log-normal" = rlnorm(1000), 
+  "gamma" = rgamma(1000, shape = 2)))
+res1 <- stress(type = "VaR", x = x, 
+  alpha = c(0.9, 0.95), q_ratio = 1.05)
+  
+importance_rank(res1, wCol = 1:2, type = "Gamma") 
+## sensitivity of log-transformed data 
+importance_rank(res1, wCol = 1, type = "Wasserstein", 
+  f = list(function(x)log(x), function(x)log(x))) 
+  
+}
 \seealso{
 See \code{\link{sensitivity}} for the values of the 
     sensitivity measures, \code{\link{plot_sensitivity}} for plotting 

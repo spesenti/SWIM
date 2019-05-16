@@ -16,11 +16,12 @@ of the \code{object} (\code{default = 1}).}
 \item{wCol}{Vector, the columns of the scenario weights 
 of the \code{object} (\code{default = "all"}).}
 
-\item{base}{Logical, if \code{TRUE} the baseline is also
+\item{base}{Logical, if \code{TRUE} the baseline is
 returned (\code{default = "FALSE"}).}
 
 \item{n}{Integer, the number of points used to plot 
-\code{stat_ecdf} in \code{ggplot} (default = 500).}
+\code{stat_ecdf} in \code{ggplot} (\code{default 
+= 500}).}
 
 \item{x_limits}{Vector, the limits of the x-axis of the plot, the 
 value for the \code{xlim} function in \code{ggplot}.}
@@ -31,20 +32,33 @@ otherwise the data.frame for customised plotting with
 }
 \value{
 If \code{displ = TRUE}, a plot displaying the empirical
-    distribution function of the stressed model for different stresses.
+    distribution function of the stochastic model under the 
+    scenario weights.
     
-    If \code{displ = FALSE}, a data.frame containing the estimates of 
-    the empirical distribution function of the stressed model. The 
-    data.frame contains: the column, \code{xCol}, of the data of the
-    stressed model, \code{stress} (the stresses) and \code{value} 
-    (the values). \cr 
+    If \code{displ = FALSE}, a data.frame for customised plotting with 
+    \code{ggplot}. The data.frame contains the columns: the column, 
+    \code{xCol}, of the data of the stressed model, 
+    \code{stress} (the stresses) and \code{value} (the values). \cr 
     Denote by \code{result} the return of the function call, then
     \code{ggplot} can be called via: 
-    \deqn{ggplot(result, aes(x = result[,1], w = value))}
+    \deqn{ggplot(result, aes(x = result[ ,1], w = value))}
     \deqn{ + stat_ecdf(aes(color = factor(stress)), n = n).}
 }
 \description{
-Plotting of the empirical distribution function of a stressed model.
+Plots the empirical distribution function of a stochastic model
+    under the scenario weights.
+}
+\examples{
+     
+## example with a stress on VaR
+set.seed(0)
+x <- as.data.frame(cbind(
+  "normal" = rnorm(1000), 
+  "gamma" = rgamma(1000, shape = 2)))
+res1 <- stress(type = "VaR", x = x, 
+  alpha = c(0.9, 0.95), q_ratio = 1.05)
+plot_cdf(res1, xCol = 1, wCol = 1:2, base = TRUE)
+     
 }
 \seealso{
 See \code{\link{cdf}} for the empirical distribution function 

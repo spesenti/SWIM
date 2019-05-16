@@ -41,6 +41,20 @@
 #'     The last two rows specify the  
 #'     \code{stress} and \code{type} of the sensitivity measure.
 #'      
+#' @examples      
+#' ## example with a stress on VaR
+#' set.seed(0)
+#' x <- as.data.frame(cbind(
+#'   "log-normal" = rlnorm(1000), 
+#'   "gamma" = rgamma(1000, shape = 2)))
+#' res1 <- stress(type = "VaR", x = x, 
+#'   alpha = c(0.9, 0.95), q_ratio = 1.05)
+#'   
+#' sensitivity(res1, wCol = 1, type = "all") 
+#' ## sensitivity of log-transformed data 
+#' sensitivity(res1, wCol = 1, type = "all", 
+#'   f = list(function(x)log(x), function(x)log(x))) 
+#'      
 #' @seealso See \code{\link{importance_rank}} for ranking of random
 #'     variables according to their sensitivities,  
 #'     \code{\link{plot_sensitivity}} for plotting 
@@ -52,7 +66,7 @@
 #' @export
 #' 
 
-  sensitivity <- function(object, xCol = "all", wCol = "all", type = c("Gamma",      "Kolmogorov", "Wasserstein", "all"), f = NULL){
+  sensitivity <- function(object, xCol = "all", wCol = "all", type = c("Gamma", "Kolmogorov", "Wasserstein", "all"), f = NULL){
    if (!is.SWIM(object)) stop("Wrong object")
    if (anyNA(object$x)) warning("x contains NA")
    if (missing(type)) type <- "all"

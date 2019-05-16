@@ -34,6 +34,18 @@
 #'     
 #' @author Silvana M. Pesenti 
 #' 
+#' @examples 
+#' set.seed(0)
+#' x <- rnorm(1000)
+#' ## consecutive intervals
+#' res1 <- stress(type = "prob", x = x, 
+#'   prob = 0.008, upper = -2.4)
+#' 
+#' ## calling stress_prob directly
+#' ## multiple intervals
+#' res2 <- stress_prob(x = x, prob = c(0.008, 0.06), 
+#'   upper = c(-2.4, -1.6), lower = c(min(x), -2))
+#' 
 #' @family stress functions 
 #' @inherit SWIM references 
 #' @export
@@ -81,4 +93,3 @@
     interval <- cbind(apply(cbind(.lower, .upper), MARGIN = 1, FUN = int, z = y), 1 - rowSums(apply(cbind(.lower, .upper), MARGIN = 1, FUN = int, z = y)))
   return(interval)
   }  
-  

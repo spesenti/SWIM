@@ -10,7 +10,7 @@ quantile_stressed(object, probs = seq(0, 1, 0.25), xCol = "all",
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{probs}{Numeric vector of probabilities with values 
+\item{probs}{Vector of probabilities with values 
 in \code{[0,1]} (\code{default = (0, 0.25, 
 0.5, 0.75, 1)}).}
 
@@ -21,25 +21,45 @@ of the \code{object} (\code{default = "all"}).}
 of the \code{object} (\code{default = 1}).}
 
 \item{type}{Character, one of \code{"quantile","(i-1)/(n-1)",
-"i/(n+1)","i/n"}, see details below.}
+"i/(n+1)","i/n"}, with \code{default  = "quantile"}. 
+See details below.}
 }
 \value{
-Returns estimates of distribution quantiles for 
-    scenario weight \code{wCol} at the probabilities in \code{probs}.
+Returns a matrix with estimates of the distribution quantiles
+    at the probabilities, \code{probs}, under the scenario weights 
+    \code{wCol}.
 }
 \description{
-Provides the sample quantiles of a stressed model.
+Provides sample quantiles of a stochastic model corresponding 
+    to probabilities under the scenario weights.
 }
 \details{
 
 
-The \code{type} corresponds to the algorithm for calcualting
-    the estimate of the sample quantile. \code{"quantile"} 
-    corresponds to the same interpolation as 
+\code{type} defines the choice of algorithm used for 
+    calculating the estimate of the sample quantiles.  
+    \code{"quantile"} corresponds to the interpolation used in  
     \code{\link[stats]{quantile}}. 
-    \code{"(i-1)/(n-1)", "i/(n+1)", "i/n"} are the inverse of the empirical distribution function, using, respectively, \code{(wt - 1)/T, wt/(T+1), wt/T}, where \code{wt} is the cumulative weight and \code{T} is the total weight (usually total sample size). See 
-    \code{\link[Hmisc]{wtd.quantile}} on which the function
+    \code{"(i-1)/(n-1)", "i/(n+1)", "i/n"} are the inverse of the
+    empirical distribution function, using, respectively, 
+    \code{(wt - 1)/T, wt/(T+1), wt/T}, where \code{wt} is the 
+    cumulative weight and \code{T} the total weight (usually total 
+    sample size). See \code{\link[Hmisc]{wtd.quantile}} 
+    for further details on \code{type}, on which
     \code{quantile_stressed} is based.
+}
+\examples{
+     
+## example with a stress on VaR
+set.seed(0)
+x <- as.data.frame(cbind(
+  "normal" = rnorm(1000), 
+  "gamma" = rgamma(1000, shape = 2)))
+res1 <- stress(type = "VaR", x = x, 
+  alpha = c(0.9, 0.95), q_ratio = 1.05)
+## stressed sample quantiles  
+quantile_stressed(res1, probs = seq(0.9, 0.99, 0.01), wCol = 2)    
+    
 }
 \seealso{
 See \code{\link[Hmisc]{wtd.quantile}} on which the function

@@ -16,7 +16,7 @@ of the \code{object} (\code{default = "all"}).}
 \item{wCol}{Vector, the columns of the scenario weights 
 of the \code{object} (\code{default = "all"}).}
 
-\item{base}{Logical, if \code{TRUE} the baseline is also
+\item{base}{Logical, if \code{TRUE} the baseline is
 returned (\code{default = "FALSE"}).}
 }
 \value{
@@ -36,7 +36,21 @@ returned (\code{default = "FALSE"}).}
 }
 \description{
 This function is a \code{\link[utils]{methods}} for an object of class 
-    \code{SWIM}.
+    \code{SWIM}. Provides a summary statistic of the stochastic model 
+    under the scenario weights.
+}
+\examples{
+     
+## continuing example in stress_VaR
+set.seed(0)
+x <- as.data.frame(cbind(
+  "normal" = rnorm(1000), 
+  "gamma" = rgamma(1000, shape = 2)))
+res1 <- stress(type = "VaR", x = x, 
+  alpha = 0.9, q_ratio = 1.05)
+  
+summary(res1, xCol = "normal", base = TRUE) 
+
 }
 \seealso{
 \code{\link{summary}}, \code{\link{SWIM}}

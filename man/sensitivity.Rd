@@ -60,6 +60,22 @@ Provides sensitivity measures that compare the stressed and
       \deqn{Wasserstein = \int | F(x) - G(x)| dx.} 
     }
 }
+\examples{
+     
+## example with a stress on VaR
+set.seed(0)
+x <- as.data.frame(cbind(
+  "log-normal" = rlnorm(1000), 
+  "gamma" = rgamma(1000, shape = 2)))
+res1 <- stress(type = "VaR", x = x, 
+  alpha = c(0.9, 0.95), q_ratio = 1.05)
+  
+sensitivity(res1, wCol = 1, type = "all") 
+## sensitivity of log-transformed data 
+sensitivity(res1, wCol = 1, type = "all", 
+  f = list(function(x)log(x), function(x)log(x))) 
+     
+}
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}
 }

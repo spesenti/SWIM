@@ -55,6 +55,10 @@ The function \code{stress_mean_sd} is a wrapper for the
     for stressing standard deviations without the mean or 
     other moments, see \code{\link{stress_moments}}.
 }
+\examples{
+See examples in stress_moments.     
+          
+}
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}
 }

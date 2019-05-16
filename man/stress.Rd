@@ -25,6 +25,15 @@ Provides weights on simulated scenarios from a stochastic
     selected by constrained minimisation of the relative entropy to the
     baseline model.
 }
+\examples{
+set.seed(0)
+x <- as.data.frame(cbind(
+  "normal" = rnorm(1000), 
+  "gamma" = rgamma(1000, shape = 2)))
+res <- stress(type = "VaR", x = x, 
+  alpha = 0.9, q_ratio = 1.05)
+
+}
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}
 }

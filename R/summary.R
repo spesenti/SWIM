@@ -1,14 +1,15 @@
 #' Summarising Stressed Models
 #' 
 #' This function is a \code{\link[utils]{methods}} for an object of class 
-#'     \code{SWIM}.
+#'     \code{SWIM}. Provides a summary statistic of the stochastic model 
+#'     under the scenario weights. 
 #'     
 #' @inheritParams get.data
 #' @param xCol    Vector, the columns of the underlying data 
 #'                of the \code{object} (\code{default = "all"}). 
 #' @param wCol    Vector, the columns of the scenario weights 
 #'                of the \code{object} (\code{default = "all"}).
-#' @param base    Logical, if \code{TRUE} the baseline is also
+#' @param base    Logical, if \code{TRUE} the baseline is
 #'                returned (\code{default = "FALSE"}).
 #'                
 #' @return \code{summary.SWIM} returns a list with components
@@ -24,6 +25,17 @@
 #'       \code{Median}      \cr
 #'       \code{3rd Qu.}     \cr
 #'     } 
+#'     
+#' @examples      
+#' ## continuing example in stress_VaR
+#' set.seed(0)
+#' x <- as.data.frame(cbind(
+#'   "normal" = rnorm(1000), 
+#'   "gamma" = rgamma(1000, shape = 2)))
+#' res1 <- stress(type = "VaR", x = x, 
+#'   alpha = 0.9, q_ratio = 1.05)
+#'   
+#' summary(res1, xCol = "normal", base = TRUE) 
 #' 
 #' @author Silvana M. Pesenti 
 #' 
