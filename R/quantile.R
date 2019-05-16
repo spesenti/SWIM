@@ -1,28 +1,35 @@
 #' Sample Quantiles of a Stressed Model
 #' 
-#' Provides the sample quantiles of a stressed model. 
+#' Provides sample quantiles of a stochastic model corresponding 
+#'     to probabilities under the scenario weights.
 #'   
 #' @details 
 #' 
 #' @inheritParams sensitivity 
-#' @param probs   Numeric vector of probabilities with values 
+#' @param probs   Vector of probabilities with values 
 #'                in \code{[0,1]} (\code{default = (0, 0.25, 
 #'                0.5, 0.75, 1)}).
 #' @param wCol    Numeric, the column of the scenario weights 
 #'                of the \code{object} (\code{default = 1}).
 #' @param type    Character, one of \code{"quantile","(i-1)/(n-1)",
-#'                "i/(n+1)","i/n"}, see details below.
+#'                "i/(n+1)","i/n"}, with \code{default  = "quantile"}. 
+#'                See details below. 
 #' 
-#' @details The \code{type} corresponds to the algorithm for calcualting
-#'     the estimate of the sample quantile. \code{"quantile"} 
-#'     corresponds to the same interpolation as 
+#' @details \code{type} defines the choice of algorithm used for 
+#'     calculating the estimate of the sample quantiles.  
+#'     \code{"quantile"} corresponds to the interpolation used in  
 #'     \code{\link[stats]{quantile}}. 
-#'     \code{"(i-1)/(n-1)", "i/(n+1)", "i/n"} are the inverse of the empirical distribution function, using, respectively, \code{(wt - 1)/T, wt/(T+1), wt/T}, where \code{wt} is the cumulative weight and \code{T} is the total weight (usually total sample size). See 
-#'     \code{\link[Hmisc]{wtd.quantile}} on which the function
+#'     \code{"(i-1)/(n-1)", "i/(n+1)", "i/n"} are the inverse of the
+#'     empirical distribution function, using, respectively, 
+#'     \code{(wt - 1)/T, wt/(T+1), wt/T}, where \code{wt} is the 
+#'     cumulative weight and \code{T} the total weight (usually total 
+#'     sample size). See \code{\link[Hmisc]{wtd.quantile}} 
+#'     for further details on \code{type}, on which
 #'     \code{quantile_stressed} is based.
-#'                                
-#' @return Returns estimates of distribution quantiles for 
-#'     scenario weight \code{wCol} at the probabilities in \code{probs}. 
+#'     
+#' @return Returns a matrix with estimates of the distribution quantiles
+#'     at the probabilities, \code{probs}, under the scenario weights 
+#'     \code{wCol}. 
 #' 
 #'                 
 #' @seealso See \code{\link[Hmisc]{wtd.quantile}} on which the function

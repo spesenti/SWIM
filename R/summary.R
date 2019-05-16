@@ -1,14 +1,15 @@
 #' Summarising Stressed Models
 #' 
 #' This function is a \code{\link[utils]{methods}} for an object of class 
-#'     \code{SWIM}.
+#'     \code{SWIM}. Provides a summary statistic of the stochastic model 
+#'     under the scenario weights. 
 #'     
 #' @inheritParams get.data
 #' @param xCol    Vector, the columns of the underlying data 
 #'                of the \code{object} (\code{default = "all"}). 
 #' @param wCol    Vector, the columns of the scenario weights 
 #'                of the \code{object} (\code{default = "all"}).
-#' @param base    Logical, if \code{TRUE} the baseline is also
+#' @param base    Logical, if \code{TRUE} the baseline is
 #'                returned (\code{default = "FALSE"}).
 #'                
 #' @return \code{summary.SWIM} returns a list with components

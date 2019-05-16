@@ -16,7 +16,7 @@ of the \code{object} (\code{default = "all"}).}
 \item{wCol}{Vector, the columns of the scenario weights 
 of the \code{object} (\code{default = "all"}).}
 
-\item{base}{Logical, if \code{TRUE} the baseline is also
+\item{base}{Logical, if \code{TRUE} the baseline is
 returned (\code{default = "FALSE"}).}
 }
 \value{
@@ -36,7 +36,8 @@ returned (\code{default = "FALSE"}).}
 }
 \description{
 This function is a \code{\link[utils]{methods}} for an object of class 
-    \code{SWIM}.
+    \code{SWIM}. Provides a summary statistic of the stochastic model 
+    under the scenario weights.
 }
 \seealso{
 \code{\link{summary}}, \code{\link{SWIM}}

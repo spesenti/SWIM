@@ -1,6 +1,7 @@
 #' Plotting the Empirical Distribution Functions of a Stressed Model
 #' 
-#' Plotting of the empirical distribution function of a stressed model.
+#' Plots the empirical distribution function of a stochastic model
+#'     under the scenario weights.
 #'  
 #' @inheritParams  sensitivity
 #' @inheritParams  plot_sensitivity
@@ -13,16 +14,16 @@
 #'                 value for the \code{xlim} function in \code{ggplot}.
 #                 
 #' @return If \code{displ = TRUE}, a plot displaying the empirical
-#'     distribution function of the stressed model for different stresses.
+#'     distribution function of the stochastic model under the 
+#'     scenario weights.
 #'     
-#'     If \code{displ = FALSE}, a data.frame containing the estimates of 
-#'     the empirical distribution function of the stressed model. The 
-#'     data.frame contains: the column, \code{xCol}, of the data of the
-#'     stressed model, \code{stress} (the stresses) and \code{value} 
-#'     (the values). \cr 
+#'     If \code{displ = FALSE}, a data.frame for customised plotting with 
+#'     \code{ggplot}. The data.frame contains the columns: the column, 
+#'     \code{xCol}, of the data of the stressed model, 
+#'     \code{stress} (the stresses) and \code{value} (the values). \cr 
 #'     Denote by \code{result} the return of the function call, then
 #'     \code{ggplot} can be called via: 
-#'     \deqn{ggplot(result, aes(x = result[,1], w = value))}
+#'     \deqn{ggplot(result, aes(x = result[ ,1], w = value))}
 #'     \deqn{ + stat_ecdf(aes(color = factor(stress)), n = n).}
 #'      
 #' @seealso See \code{\link{cdf}} for the empirical distribution function 

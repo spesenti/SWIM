@@ -1,25 +1,27 @@
 #' Plotting Histograms of a Stressed Model
 #' 
-#' Plots the histogram of a stressed model for different stresses.
+#' Plots the histogram of a stochastic model
+#'     under the scenario weights.
 #' 
 #' @inheritParams  plot_cdf
 #' 
-#' @return If \code{displ = TRUE}, a histogram of the stressed model 
-#'     for different stresses.
+#' @return If \code{displ = TRUE}, a histogram of the stochastic model 
+#'     under the scenario weights.
 #'     
 #'     If \code{displ = FALSE}, a data.frame for customised plotting with 
-#'     \code{ggplot}. The data.frame contains: the column, \code{xCol}, 
-#'     of the data of the stressed model, \code{stress} (the stresses)
-#'     and \code{value} (the values). \cr 
+#'     \code{ggplot}. The data.frame contains the columns: the column, 
+#'     \code{xCol}, of the data of the stressed model, \code{stress} 
+#'     (the stresses) and \code{value} (the values). \cr 
 #'     Denote by \code{result} the return of the function call, then
 #'     \code{ggplot} can be called via: 
-#'     \deqn{ggplot(result, aes(x = result[,1], w = value, stat(density)))}
+#'     \deqn{ggplot(result, aes(x = result[ ,1], w = value, stat(density)))}
 #'     \deqn{ + geom_freqpoly(binwidth = 0.2, aes(color = factor(stress))).}
 #'      
-#' @seealso See \code{\link{cdf}}, \code{\link{plot_cdf}} for 
-#'     values, plotting, respectively, of the empirical distribution 
-#'     function of a stressed model and \code{\link{quantile_stressed}} 
-#'     for sample quantiles of a stressed model.
+#' @seealso See \code{\link{cdf}} and \code{\link{plot_cdf}} for 
+#'     values and plotting of the empirical distribution 
+#'     function of a stressed model, respectively, and 
+#'     \code{\link{quantile_stressed}} for sample quantiles of 
+#'     a stressed model.
 #'      
 #'@export
 

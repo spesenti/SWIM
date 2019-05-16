@@ -28,17 +28,21 @@ otherwise the data.frame for customised plotting with
 }
 \value{
 If \code{displ = TRUE}, a plot displaying the sensitivity
-    measures of the stressed model. 
+    measures of the stochastic model under the scenario weights.
     
-    If \code{displ = FALSE}, a data.frame containing the values 
-    of the sensitivity measures of the stressed model. The data.frame
-    contains the columns: \code{stress} (the stresses), \code{type} (the types of sensitivity), \code{X_all} (the random variables), \code{value} (the values of the sensitivities). \cr 
-    Denote by \code{result} the return of the function call, then \code{ggplot} can be called via: 
+    If \code{displ = FALSE}, a data.frame for customised plotting with 
+    \code{ggplot}. The data.frame
+    contains the columns: \code{stress} (the stresses), \code{type} 
+    (the types of sensitivity), \code{X_all} (the random variables),
+    \code{value} (the values of the sensitivities). \cr 
+    Denote by \code{result} the return of the function call, then
+    \code{ggplot} can be called via: 
     \deqn{ggplot(result, aes(x = X_all, y = value))}
     \deqn{ + geom_point(aes(color = factor(stress), shape = type)).}
 }
 \description{
-Plotting of the sensitivity measures of a stressed model.
+Plots the sensitivity measures of a stochastic model
+    under the scenario weights.
 }
 \details{
 For the definition of the sensitivity 
