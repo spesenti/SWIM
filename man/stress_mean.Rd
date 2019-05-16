@@ -48,6 +48,10 @@ The function \code{stress_mean} is a wrapper for the
     for details on the algorithm and for the additional arguments 
     to \code{...}.
 }
+\examples{
+See examples in stress_moments.     
+    
+}
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}
 }

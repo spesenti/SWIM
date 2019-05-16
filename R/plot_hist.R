@@ -20,7 +20,17 @@
 #'     \code{ggplot} can be called via: 
 #'     \deqn{ggplot(result, aes(x = result[ ,1], w = value, stat(density)))}
 #'     \deqn{ + geom_freqpoly(binwidth = 0.2, aes(color = factor(stress))).}
-#'      
+#'  
+#' @examples      
+#' ## example with a stress on VaR
+#' set.seed(0)
+#' x <- as.data.frame(cbind(
+#'   "normal" = rnorm(1000), 
+#'   "gamma" = rgamma(1000, shape = 2)))
+#' res1 <- stress(type = "VaR", x = x, 
+#'   alpha = c(0.9, 0.95), q_ratio = 1.05)
+#' plot_hist(res1, xCol = 1, wCol = 1:2, base = TRUE, binwidth = 0.3)
+#'                  
 #' @seealso See \code{\link{cdf}} and \code{\link{plot_cdf}} for 
 #'     values and plotting of the empirical distribution 
 #'     function of a stressed model, respectively, and 

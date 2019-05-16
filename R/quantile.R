@@ -37,6 +37,17 @@
 #'     See \code{cdf} for the empifical distribution function of 
 #'     a stressed model.
 #'     
+#' @examples      
+#' ## example with a stress on VaR
+#' set.seed(0)
+#' x <- as.data.frame(cbind(
+#'   "normal" = rnorm(1000), 
+#'   "gamma" = rgamma(1000, shape = 2)))
+#' res1 <- stress(type = "VaR", x = x, 
+#'   alpha = c(0.9, 0.95), q_ratio = 1.05)
+#' ## stressed sample quantiles  
+#' quantile_stressed(res1, probs = seq(0.9, 0.99, 0.01), wCol = 2)    
+#'     
 #' @export
 
   quantile_stressed <- function(object, probs = seq(0, 1, 0.25), xCol = "all", wCol = 1, type = c("quantile","(i-1)/(n-1)","i/(n+1)","i/n")){

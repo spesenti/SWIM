@@ -48,6 +48,18 @@ If \code{displ = TRUE}, a histogram of the stochastic model
 Plots the histogram of a stochastic model
     under the scenario weights.
 }
+\examples{
+     
+## example with a stress on VaR
+set.seed(0)
+x <- as.data.frame(cbind(
+  "normal" = rnorm(1000), 
+  "gamma" = rgamma(1000, shape = 2)))
+res1 <- stress(type = "VaR", x = x, 
+  alpha = c(0.9, 0.95), q_ratio = 1.05)
+plot_hist(res1, xCol = 1, wCol = 1:2, base = TRUE, binwidth = 0.3)
+                 
+}
 \seealso{
 See \code{\link{cdf}} and \code{\link{plot_cdf}} for 
     values and plotting of the empirical distribution 

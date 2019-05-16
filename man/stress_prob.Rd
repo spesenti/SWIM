@@ -52,6 +52,19 @@ If \code{upper = NULL}, the intervals are consecutive and
     The intervals defined through \code{lower} and \code{upper} must
     be disjoint.
 }
+\examples{
+set.seed(0)
+x <- rnorm(1000)
+## consecutive intervals
+res1 <- stress(type = "prob", x = x, 
+  prob = 0.008, upper = -2.4)
+
+## calling stress_prob directly
+## multiple intervals
+res2 <- stress_prob(x = x, prob = c(0.008, 0.06), 
+  upper = c(-2.4, -1.6), lower = c(min(x), -2))
+
+}
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}
 }

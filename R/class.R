@@ -52,6 +52,22 @@
  #'     weights of the \code{object}. Columns corresponds 
  #'     to different stresses.
  #'         
+ #' @examples 
+ #' ## continuing example in stress_VaR
+ #' set.seed(0)
+ #' x <- as.data.frame(cbind(
+ #'   "normal" = rnorm(1000), 
+ #'   "gamma" = rgamma(1000, shape = 2)))
+ #' res1 <- stress(type = "VaR", x = x, 
+ #'   alpha = 0.9, q_ratio = 1.05)
+ #'   
+ #' ## returning the underlying data
+ #' all(get.data(res1) == x)
+ #' ## the scenario weights
+ #' get.weights(res1)
+ #' get.weightsfun(res1)
+ #' get.specs(res1)
+ #'                             
  #' @export
 
   get.weights <- function(object){

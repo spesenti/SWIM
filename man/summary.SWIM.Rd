@@ -39,6 +39,19 @@ This function is a \code{\link[utils]{methods}} for an object of class
     \code{SWIM}. Provides a summary statistic of the stochastic model 
     under the scenario weights.
 }
+\examples{
+     
+## continuing example in stress_VaR
+set.seed(0)
+x <- as.data.frame(cbind(
+  "normal" = rnorm(1000), 
+  "gamma" = rgamma(1000, shape = 2)))
+res1 <- stress(type = "VaR", x = x, 
+  alpha = 0.9, q_ratio = 1.05)
+  
+summary(res1, xCol = "normal", base = TRUE) 
+
+}
 \seealso{
 \code{\link{summary}}, \code{\link{SWIM}}
 }

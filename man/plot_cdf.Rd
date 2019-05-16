@@ -48,6 +48,18 @@ If \code{displ = TRUE}, a plot displaying the empirical
 Plots the empirical distribution function of a stochastic model
     under the scenario weights.
 }
+\examples{
+     
+## example with a stress on VaR
+set.seed(0)
+x <- as.data.frame(cbind(
+  "normal" = rnorm(1000), 
+  "gamma" = rgamma(1000, shape = 2)))
+res1 <- stress(type = "VaR", x = x, 
+  alpha = c(0.9, 0.95), q_ratio = 1.05)
+plot_cdf(res1, xCol = 1, wCol = 1:2, base = TRUE)
+     
+}
 \seealso{
 See \code{\link{cdf}} for the empirical distribution function 
     of a stressed model and \code{\link{quantile_stressed}} for

@@ -14,9 +14,16 @@
  #' @return An object of class \code{SWIM}, see \code{\link{SWIM}} 
  #'     for details.
  #' 
+ #' @examples 
+ #' set.seed(0)
+ #' x <- as.data.frame(cbind(
+ #'   "normal" = rnorm(1000), 
+ #'   "gamma" = rgamma(1000, shape = 2)))
+ #' res <- stress(type = "VaR", x = x, 
+ #'   alpha = 0.9, q_ratio = 1.05)
+ #' 
  #' @author Silvana M. Pesenti 
  #' @family stress functions
- #' 
  #' @inherit SWIM references 
  #' 
  #' @export
