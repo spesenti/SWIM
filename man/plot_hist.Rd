@@ -5,7 +5,7 @@
 \title{Plotting Histograms of a Stressed Model}
 \usage{
 plot_hist(object, xCol = 1, wCol = "all", base = FALSE, x_limits,
-  displ = TRUE)
+  displ = TRUE, binwidth)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
@@ -25,6 +25,11 @@ value for the \code{xlim} function in \code{ggplot}.}
 \item{displ}{Logical, if \code{TRUE} the plot is displayed, 
 otherwise the data.frame for customised plotting with 
 \code{ggplot} is returned (\code{default = TRUE}).}
+
+\item{binwidth}{Numeric, the width of the bins used to plot 
+the histogram, the \code{binwidth} in the 
+\code{geom_freqpoly} function  in \code{ggplot} 
+(\code{default = 0.2}).}
 }
 \value{
 If \code{displ = TRUE}, a histogram of the stochastic model 

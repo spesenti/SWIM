@@ -4,6 +4,10 @@
 #'     under the scenario weights.
 #' 
 #' @inheritParams  plot_cdf
+#' @param binwidth Numeric, the width of the bins used to plot 
+#'                 the histogram, the \code{binwidth} in the 
+#'                 \code{geom_freqpoly} function  in \code{ggplot} 
+#'                 (\code{default = 0.2}).   
 #' 
 #' @return If \code{displ = TRUE}, a histogram of the stochastic model 
 #'     under the scenario weights.
@@ -25,9 +29,10 @@
 #'      
 #'@export
 
-  plot_hist <- function(object, xCol = 1, wCol = "all", base = FALSE, x_limits, displ = TRUE){
+  plot_hist <- function(object, xCol = 1, wCol = "all", base = FALSE, x_limits, displ = TRUE, binwidth){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    if (anyNA(object$x)) warning("x contains NA")
+   if(missing(binwidth)) binwidth <- 0.2 
    x_data <- get.data(object)[ , xCol]
    if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(object))
   
@@ -42,7 +47,7 @@
    if (displ == TRUE){
    if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 
    ggplot2::ggplot(hist_data, ggplot2::aes(x = hist_data[,1], w = value, stat(density))) +
-    ggplot2::geom_freqpoly(binwidth = 0.2, ggplot2::aes(color = factor(stress))) +
+    ggplot2::geom_freqpoly(binwidth = binwidth, ggplot2::aes(color = factor(stress))) +
     ggplot2::labs(x = paste("X", xCol, sep = ""), y = "histogram") +
     ggplot2::xlim(x_limits) +
     ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))

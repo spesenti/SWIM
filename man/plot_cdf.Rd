@@ -20,7 +20,8 @@ of the \code{object} (\code{default = "all"}).}
 returned (\code{default = "FALSE"}).}
 
 \item{n}{Integer, the number of points used to plot 
-\code{stat_ecdf} in \code{ggplot} (default = 500).}
+\code{stat_ecdf} in \code{ggplot} (\code{default 
+= 500}).}
 
 \item{x_limits}{Vector, the limits of the x-axis of the plot, the 
 value for the \code{xlim} function in \code{ggplot}.}
