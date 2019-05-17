@@ -76,7 +76,9 @@
    new_weights <- list(function(y) .rn_prob(y, constraints = cbind(lower, upper)) %*% as.matrix(prob_new / prob_old))
    if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
     
-   constr = cbind(lower, upper, prob)
+   constr = cbind(t(lower), t(upper), t(prob))
+   max_length <- length(lower)
+   colnames(constr) <- c(rep("lower", length.out = max_length), rep("upper", length.out = max_length), rep("prob", length.out = max_length))
    names(new_weights) <- paste("stress", 1)
    specs <- data.frame("type" = "prob", "k" = k, constr, stringsAsFactors = FALSE)
    rownames(specs) <- paste("stress", 1)
