@@ -6,7 +6,7 @@
 #' @inheritParams  sensitivity
 #' @inheritParams  plot_sensitivity
 #' @inheritParams  summary.SWIM
-#' @param xCol     Numeric, the column of the underlying data 
+#' @param xCol     Numeric or character, (name of) the column of the underlying data 
 #'                 of the \code{object} (\code{default = 1}). 
 #' @param n        Integer, the number of points used to plot 
 #'                 \code{stat_ecdf} in \code{ggplot} (\code{default 
@@ -47,21 +47,21 @@
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    if (anyNA(object$x)) warning("x contains NA")
    x_data <- get.data(object)[, xCol]
+   if(is.character(xCol)) x_name <- xCol
+   if(is.null(colnames(get.data(object)))) x_name <- paste("X", xCol, sep = "") else if(!is.character(xCol)) x_name <- colnames(get.data(object))[xCol]
    if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(object))
-    
    plot_data <- data.frame(x_data, get.weights(object)[ , wCol])
-   names(plot_data) <- c(paste("X", xCol, sep = ""), paste("stress", wCol, sep = " "))
+   names(plot_data)[1] <- x_name
    if (base == TRUE){
-    plot_data <- cbind(plot_data, rep(1, length(x_data)))
-    names(plot_data) <- c(paste("X", xCol, sep = ""), paste("stress", wCol, sep = " "), "base")
+    plot_data <- cbind(plot_data, base = rep(1, length(x_data)))
    }
-   plot_data <- reshape::melt(plot_data, id.var = paste("X", xCol, sep = ""), variable_name = "stress")
+   plot_data <- reshape::melt(plot_data, id.var = x_name, variable_name = "stress")
     
    if (displ == TRUE){
     if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 
     ggplot2::ggplot(plot_data, ggplot2::aes(x = plot_data[,1], w = value)) +
       ggplot2::stat_ecdf(ggplot2::aes(color = factor(stress)), n = n) +
-      ggplot2::labs(x = paste("X", xCol, sep = ""), y = "ecdf") +
+      ggplot2::labs(x = x_name, y = "ecdf") +
       ggplot2::xlim(x_limits) +
       ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
    } else {

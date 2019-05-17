@@ -3,7 +3,7 @@
 #' Provides the empirical distribution function of a stressed model. 
 #' 
 #' @inheritParams sensitivity 
-#' @param xCol    Numeric, the column of the underlying data 
+#' @param xCol    Numeric or character, (name of) the column of the underlying data 
 #'                of the \code{object} (\code{default = 1}). 
 #' @param wCol    Numeric, the column of the scenario weights 
 #'                of the \code{object} (\code{default = 1}).

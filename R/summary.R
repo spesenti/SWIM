@@ -5,7 +5,8 @@
 #'     under the scenario weights. 
 #'     
 #' @inheritParams get.data
-#' @param xCol    Vector, the columns of the underlying data 
+#' @param xCol    Numeric or character vector, (names of ) the columns of 
+#'                the underlying data 
 #'                of the \code{object} (\code{default = "all"}). 
 #' @param wCol    Vector, the columns of the scenario weights 
 #'                of the \code{object} (\code{default = "all"}).
@@ -49,9 +50,11 @@ summary.SWIM <- function(object, xCol = "all", wCol = "all", base = FALSE){
   if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get.data(object))
   if (is.null(colnames(get.data(object)))){
     cname <-  paste("X", as.character(xCol), sep = "")
-  } else {
+  } else if (!is.character(xCol)){
     cname <- colnames(get.data(object))[xCol]
-  } 
+  } else {
+    cname <- xCol
+  }
   x_data <- as.matrix(get.data(object)[, xCol])
   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(object))
   new_weights <- get.weights(object)[ ,wCol]  

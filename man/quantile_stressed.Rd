@@ -14,7 +14,8 @@ quantile_stressed(object, probs = seq(0, 1, 0.25), xCol = "all",
 in \code{[0,1]} (\code{default = (0, 0.25, 
 0.5, 0.75, 1)}).}
 
-\item{xCol}{Vector, the columns of the underlying data 
+\item{xCol}{Numeric or character vector, (names of ) the columns of 
+the underlying data 
 of the \code{object} (\code{default = "all"}).}
 
 \item{wCol}{Numeric, the column of the scenario weights 

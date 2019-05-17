@@ -5,18 +5,20 @@
 \title{Plotting Sensitivities of a Stressed Model}
 \usage{
 plot_sensitivity(object, xCol = "all", wCol = "all",
-  type = c("Gamma", "Wasserstein", "all"), f = NULL, displ = TRUE)
+  type = c("Gamma", "Wasserstein"), f = NULL, displ = TRUE)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Vector, the columns of the underlying data 
+\item{xCol}{Numeric or character vector, (names of ) the columns of 
+the underlying data 
 of the \code{object} (\code{default = "all"}).}
 
 \item{wCol}{Vector, the columns of the scenario weights 
 of the \code{object} (\code{default = "all"}).}
 
-\item{type}{Character, one of \code{"Gamma", "Wasserstein", "all"}.}
+\item{type}{Character, one of \code{"Gamma", "Wasserstein"} 
+(\code{default = "Gamma"}).}
 
 \item{f}{List of functions with the same length as \code{xCol}.
 If provided, the transformed data, \code{f(x)},

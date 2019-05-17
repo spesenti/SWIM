@@ -58,9 +58,11 @@
    if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get.data(object))
    if (is.null(colnames(get.data(object)))){
     cname <-  paste("X", as.character(xCol), sep = "")
-   } else {
+   } else if (!is.character(xCol)){
     cname <- colnames(get.data(object))[xCol]
-   } 
+   } else {
+    cname <- xCol   
+   }
    x_data <- as.matrix(get.data(object)[ , xCol])
 
    quantile_w <- as.matrix(apply(X = as.matrix(x_data), MARGIN = 2, FUN = Hmisc::wtd.quantile, weights = new_weights, probs = probs, type = type))
