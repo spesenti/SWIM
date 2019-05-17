@@ -6,7 +6,7 @@
 #' @inheritParams  sensitivity
 #' @inheritParams  plot_sensitivity
 #' @inheritParams  summary.SWIM
-#' @param xCol     Numeric, the column of the underlying data 
+#' @param xCol     Numeric or character, (name of) the column of the underlying data 
 #'                 of the \code{object} (\code{default = 1}). 
 #' @param n        Integer, the number of points used to plot 
 #'                 \code{stat_ecdf} in \code{ggplot} (\code{default 
@@ -47,7 +47,8 @@
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    if (anyNA(object$x)) warning("x contains NA")
    x_data <- get.data(object)[, xCol]
-   if(is.null(colnames(get.data(object))[xCol])) x_name <- paste("X", xCol, sep = "") else x_name <- colnames(get.data(object))[xCol]
+   if(is.character(xCol)) x_name <- xCol
+   if(is.null(colnames(get.data(object)))) x_name <- paste("X", xCol, sep = "") else if(!is.character(xCol)) x_name <- colnames(get.data(object))[xCol]
    if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(object))
    plot_data <- data.frame(x_data, get.weights(object)[ , wCol])
    names(plot_data)[1] <- x_name

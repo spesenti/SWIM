@@ -10,7 +10,7 @@ plot_cdf(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric, the column of the underlying data 
+\item{xCol}{Numeric or character, (name of) the column of the underlying data 
 of the \code{object} (\code{default = 1}).}
 
 \item{wCol}{Vector, the columns of the scenario weights 
