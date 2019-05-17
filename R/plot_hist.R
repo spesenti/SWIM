@@ -47,18 +47,19 @@
    if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(object))
   
    hist_data <- data.frame(x_data, get.weights(object)[ , wCol])
-   names(hist_data) <- c(paste("X", xCol, sep = ""), paste("stress", wCol, sep = " "))
+   if(is.character(xCol)) x_name <- xCol
+   if(is.null(colnames(get.data(object)))) x_name <- paste("X", xCol, sep = "") else if(!is.character(xCol)) x_name <- colnames(get.data(object))[xCol]
+   names(hist_data) <- c(x_name, paste("stress", wCol, sep = " "))
    if (base == TRUE){
     hist_data <- cbind(hist_data, rep(1, length(x_data)))
-    names(hist_data) <- c(paste("X", xCol, sep = ""), paste("stress", wCol, sep = " "), "base")
    }
-   hist_data <- reshape::melt(hist_data, id.var = paste("X", xCol, sep = ""), variable_name = "stress")
+   hist_data <- reshape::melt(hist_data, id.var = x_name, variable_name = "stress")
 
    if (displ == TRUE){
    if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 
    ggplot2::ggplot(hist_data, ggplot2::aes(x = hist_data[,1], w = value, stat(density))) +
     ggplot2::geom_freqpoly(binwidth = binwidth, ggplot2::aes(color = factor(stress))) +
-    ggplot2::labs(x = paste("X", xCol, sep = ""), y = "histogram") +
+    ggplot2::labs(x = x_name, y = "histogram") +
     ggplot2::xlim(x_limits) +
     ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
    } else {
