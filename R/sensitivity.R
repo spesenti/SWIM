@@ -71,9 +71,10 @@
    if (anyNA(object$x)) warning("x contains NA")
    if (missing(type)) type <- "all"
    if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get.data(object))
+   if(is.character(xCol) && xCol != "all") cname <- xCol
    if (is.null(colnames(get.data(object)))){
     cname <-  paste("X", as.character(xCol), sep = "")
-   } else {
+   } else if (!is.character(xCol)){
     cname <- colnames(get.data(object))[xCol]
    } 
    x_data <- get.data(object)[ , xCol]
