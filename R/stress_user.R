@@ -31,8 +31,6 @@
 #'   "normal" = rnorm(1000), 
 #'   "gamma" = rgamma(1000, shape = 2)))
 #' res1 <- stress(type = "user", x = x, new_weights = function(x)x^2)
-#'   alpha = 0.9, q_ratio = 1.05)
-#'   
 #'     
 #' @family stress functions 
 #' @inherit SWIM references 

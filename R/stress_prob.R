@@ -76,7 +76,9 @@
    new_weights <- list(function(y) .rn_prob(y, constraints = cbind(lower, upper)) %*% as.matrix(prob_new / prob_old))
    if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
     
-   constr = cbind(lower, upper, prob)
+   constr = cbind(t(lower), t(upper), t(prob))
+   max_length <- length(lower)
+   colnames(constr) <- c(rep("lower", length.out = max_length), rep("upper", length.out = max_length), rep("prob", length.out = max_length))
    names(new_weights) <- paste("stress", 1)
    specs <- data.frame("type" = "prob", "k" = k, constr, stringsAsFactors = FALSE)
    rownames(specs) <- paste("stress", 1)
@@ -86,10 +88,8 @@
   }
 
   .rn_prob <- function(y, constraints){
-    .lower <- constraints[1]
-    .upper <- constraints[2]
     # indicator function 1_{ a < x_data <= b}
     int <- function(limits, z) (limits[1] < z) * (z <= limits[2]) 
-    interval <- cbind(apply(cbind(.lower, .upper), MARGIN = 1, FUN = int, z = y), 1 - rowSums(apply(cbind(.lower, .upper), MARGIN = 1, FUN = int, z = y)))
+    interval <- cbind(apply(constraints, MARGIN = 1, FUN = int, z = y), 1 - rowSums(apply(constraints, MARGIN = 1, FUN = int, z = y)))
   return(interval)
   }  

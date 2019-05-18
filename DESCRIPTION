@@ -2,9 +2,9 @@ Package: SWIM
 Title: Scenario Weights for Importance Measurement
 Version: 0.0.0.9000
 Authors@R: c(
-  person("Silvana M.", "Pesenti", email = "a@gmail.com", 
+  person("Silvana M.", "Pesenti", email = "pesenti@utstat.toronto.edu", 
   role = c("aut", "cre")), 
-  person("Alberto", "Bettini", email = "a@gmail.com", 
+  person("Alberto", "Bettini", email = "albertobettini@live.it", 
   role = c("aut")), 
   person("Pietro", "Millossovich", email = "Pietro.Millossovich.1@city.ac.uk", 
   role = c("aut")), 
