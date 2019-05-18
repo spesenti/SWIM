@@ -92,10 +92,10 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
     the intervals; \code{upper}, the right endpoints of the intervals;
     \code{prob}, stressed probabilities corresponding to the intervals
     defined through \code{lower} and \code{upper}.
-      \item \code{type = "user"}: \code{constr = user}.  
-      \item \code{type = "moment"}:
-      \item \code{type = "mean"}:
-      \item \code{type = "mean sd"}:
+      \item \code{type = "user"}: no additional argument.  
+      \item \code{type = "moment"}: .
+      \item \code{type = "mean"}: .
+      \item \code{type = "mean sd"}: .
     }
   }
 }

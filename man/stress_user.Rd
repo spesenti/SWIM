@@ -34,8 +34,7 @@ A \code{SWIM} object containing:
       \item \code{specs}, the specification of what has been
       stressed.
       \code{specs} is a data.frame consisting of \code{type},
-      \code{k} and \code{constr = user}. Each row corresponds to a 
-      different stress.
+      and \code{k}. Each row corresponds to a different stress.
     }
     See \code{\link{SWIM}} for details.
 }

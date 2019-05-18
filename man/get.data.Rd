@@ -33,7 +33,8 @@ of the \code{object} (\code{default = "all"}).}
 \code{get.weightsfun}: A list containing the functions, that, 
     when applied to the \code{k}th column of the data, generate the 
     scenario weights of the \code{object}.\cr
-    Stresses with \code{type = c("user", "moment")} will be ignored.
+    Use \code{\link{get.weights}} if the \code{SWIM} object only contains 
+    scenario weights and not a list of functions.
 
 \code{get.specs}: A data.frame containing the specifications 
         of the \code{object}. Rows corresponds to different stresses.

@@ -77,7 +77,7 @@
    m <- length(specs$type)
    new_weights <- matrix(0, nrow = nrow(x_data), ncol = m)
    for(i in 1:m){
-    if (specs$type[i] %in% c("user", "moment")) {
+    if (!is.function(object$new_weights[[i]])) {
      new_weights[, i] <- object$new_weights[, i]
     } else {
      k <- specs$k[i]
@@ -93,16 +93,17 @@
  #' @return \code{get.weightsfun}: A list containing the functions, that, 
  #'     when applied to the \code{k}th column of the data, generate the 
  #'     scenario weights of the \code{object}.\cr
- #'     Stresses with \code{type = c("user", "moment")} will be ignored.
+ #'     Use \code{\link{get.weights}} if the \code{SWIM} object only contains 
+ #'     scenario weights and not a list of functions.
  #'         
  #' @export
 
   get.weightsfun <- function(object){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    specs <- get.specs(object)
-   typeCol <- which((specs$type != "user") & (specs$type != "moment"))
-   if (length(typeCol) != length(specs$type)) warning("type user and moment are ignored. Use get.weights() instead.")    
-   return(object$new_weights[as.vector(typeCol)])
+   if (!is.function(object$new_weights[[1]]))
+      stop("New_weights is not a function, use get.weights() instead.") 
+   return(object$new_weights)
   }
 
  #' @describeIn get.data extracting information of the stress.
