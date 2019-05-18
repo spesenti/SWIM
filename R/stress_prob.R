@@ -88,10 +88,8 @@
   }
 
   .rn_prob <- function(y, constraints){
-    .lower <- constraints[1]
-    .upper <- constraints[2]
     # indicator function 1_{ a < x_data <= b}
     int <- function(limits, z) (limits[1] < z) * (z <= limits[2]) 
-    interval <- cbind(apply(cbind(.lower, .upper), MARGIN = 1, FUN = int, z = y), 1 - rowSums(apply(cbind(.lower, .upper), MARGIN = 1, FUN = int, z = y)))
+    interval <- cbind(apply(constraints, MARGIN = 1, FUN = int, z = y), 1 - rowSums(apply(constraints, MARGIN = 1, FUN = int, z = y)))
   return(interval)
   }  
