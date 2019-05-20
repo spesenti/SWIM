@@ -59,8 +59,8 @@
     
    if (displ == TRUE){
     if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 
-    ggplot2::ggplot(plot_data, ggplot2::aes(x = plot_data[,1], w = value)) +
-      ggplot2::stat_ecdf(ggplot2::aes(color = factor(stress)), n = n) +
+    ggplot2::ggplot(plot_data, ggplot2::aes(x = plot_data[,1], weight = value)) +
+      stat_ecdf(ggplot2::aes(color = factor(stress)), n = n) +
       ggplot2::labs(x = x_name, y = "ecdf") +
       ggplot2::xlim(x_limits) +
       ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))

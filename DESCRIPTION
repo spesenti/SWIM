@@ -23,7 +23,8 @@ Imports:
     nleqslv,
     reshape,
     plyr,
-    ggplot2
+    ggplot2,
+    spatstat
 RdMacros: Rdpack
 License: What license is it under?
 Encoding: UTF-8
