@@ -5,9 +5,11 @@
 #' @inheritParams stress_VaR
 #' @param new_weights     A vector, matrix or data frame containing scenario
 #'     weights. Columns of \code{new_weights} correspond to different
-#'     stresses; OR\cr 
-#'     A list of functions, that applied to the \code{k}th column of 
-#'     \code{x} generate the vectors of the new weights. \cr
+#'     stresses. \cr
+#'     \code{new_weights} will be normalised to 1.
+#' @param new_weightsfun  A list of functions, that applied to the \code{k}th column
+#'     of \code{x} generate the vectors of the scenario weights. Each function 
+#'     correspond to a stress. \cf
 #'     \code{new_weights} will be normalised to 1.
 #'  
 #' @return A \code{SWIM} object containing:
@@ -35,31 +37,32 @@
 #' @inherit SWIM references 
 #' @export 
 
-stress_user <- function(x, new_weights, k = 1){
+stress_user <- function(x, new_weights = NULL, new_weightsfun = NULL, k = 1){
   if (is.SWIM(x)) x_data <- get.data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (is.null(colnames(x_data))) colnames(x_data) <- paste("X", 1:ncol(x_data), sep = "")
   
-  if (is.data.frame(new_weights) | is.vector(new_weights)) {
-    new_weights <- as.matrix(new_weights)
-    new_weights <- t(t(new_weights) / colMeans(new_weights))
-    max_length <- ncol(new_weights)
-    colnames(new_weights) <- paste("stress", 1:max_length)
-    if (any(new_weights < 0)) stop("Invalid new_weights argument")
-  } else if (is.function(new_weights)) {
-   new_weights <- list(new_weights)
-   new_weights_values <- sapply(new_weights, function(s) s(x_data[, k]))
-   max_length <- length(new_weights)
-   if (any(new_weights_values < 0)) stop("Invalid new_weights argument")
-   for(i in 1:length(new_weights)){
-       new_weights[[i]] <- function(x) new_weights(x) / mean(new_weights(x))
-       names(new_weights)[i] <- paste("stress", i)
+  if (!is.null(new_weights)) {
+    nweights <- as.matrix(new_weights)
+    nweights <- t(t(nweights) / colMeans(nweights))
+    max_length <- ncol(nweights)
+    colnames(nweights) <- paste("stress", 1:max_length)
+    if (any(nweights < 0)) stop("Invalid new_weights argument")
+  } else if (!is.null(new_weightsfun)) {
+   if (!is.list(new_weightsfun)) new_weightsfun <- list(new_weightsfun) 
+   nweights_values <- sapply(new_weightsfun, function(s) s(x_data[, k]))
+   max_length <- length(new_weightsfun)
+   if (any(nweights_values < 0)) stop("Invalid new_weights argument")
+   nweights <- list()
+   for(i in 1:length(new_weightsfun)){
+       nweights[[i]] <- function(x) new_weightsfun[[i]](x) / mean(new_weightsfun[[i]](x))
+       names(nweights)[i] <- paste("stress", i)
      }
   }
 
   specs <- data.frame("type" = rep("user", length.out = max_length), "k" = rep(k, length.out = max_length), stringsAsFactors = FALSE)
   rownames(specs) <- paste("stress", 1:max_length)
-  my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "specs" = specs)
+  my_list <- SWIM("x" = x_data, "new_weights" = nweights, "specs" = specs)
   if (is.SWIM(x)) my_list <- merge(x, my_list)
   return(my_list)
   }

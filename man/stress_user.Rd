@@ -4,7 +4,7 @@
 \alias{stress_user}
 \title{User Defined Stress}
 \usage{
-stress_user(x, new_weights, k = 1)
+stress_user(x, new_weights = NULL, new_weightsfun = NULL, k = 1)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame 
@@ -15,9 +15,12 @@ underlying data of the \code{SWIM} object.}
 
 \item{new_weights}{A vector, matrix or data frame containing scenario
 weights. Columns of \code{new_weights} correspond to different
-stresses; OR\cr 
-A list of functions, that applied to the \code{k}th column of 
-\code{x} generate the vectors of the new weights. \cr
+stresses. \cr
+\code{new_weights} will be normalised to 1.}
+
+\item{new_weightsfun}{A list of functions, that applied to the \code{k}th column
+of \code{x} generate the vectors of the scenario weights. Each function 
+correspond to a stress. \cf
 \code{new_weights} will be normalised to 1.}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
