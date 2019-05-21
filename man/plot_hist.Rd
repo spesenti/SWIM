@@ -39,10 +39,10 @@ If \code{displ = TRUE}, a histogram of the stochastic model
     \code{ggplot}. The data.frame contains the columns: the column, 
     \code{xCol}, of the data of the stressed model, \code{stress} 
     (the stresses) and \code{value} (the values). \cr 
-    Denote by \code{result} the return of the function call, then
+    Denote by \code{res} the return of the function call, then
     \code{ggplot} can be called via: 
-    \deqn{ggplot(result, aes(x = result[ ,1], w = value, stat(density)))}
-    \deqn{ + geom_freqpoly(binwidth = 0.2, aes(color = factor(stress))).}
+    \deqn{ggplot(res, aes(x = res[ ,1]))}
+    \deqn{ + geom_histogram(weight = value, aes(color = factor(stress))).}
 }
 \description{
 Plots the histogram of a stochastic model
@@ -53,11 +53,11 @@ Plots the histogram of a stochastic model
 ## example with a stress on VaR
 set.seed(0)
 x <- as.data.frame(cbind(
-  "normal" = rnorm(1000), 
-  "gamma" = rgamma(1000, shape = 2)))
+  "normal" = rnorm(10^5), 
+  "gamma" = rgamma(10^5, shape = 2)))
 res1 <- stress(type = "VaR", x = x, 
   alpha = c(0.9, 0.95), q_ratio = 1.05)
-plot_hist(res1, xCol = 1, wCol = 1:2, base = TRUE, binwidth = 0.3)
+plot_hist(res1, xCol = 1, wCol = 1:2, base = TRUE, binwidth = 0.1)
                  
 }
 \seealso{

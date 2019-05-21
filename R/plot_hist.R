@@ -16,20 +16,20 @@
 #'     \code{ggplot}. The data.frame contains the columns: the column, 
 #'     \code{xCol}, of the data of the stressed model, \code{stress} 
 #'     (the stresses) and \code{value} (the values). \cr 
-#'     Denote by \code{result} the return of the function call, then
+#'     Denote by \code{res} the return of the function call, then
 #'     \code{ggplot} can be called via: 
-#'     \deqn{ggplot(result, aes(x = result[ ,1], w = value, stat(density)))}
-#'     \deqn{ + geom_freqpoly(binwidth = 0.2, aes(color = factor(stress))).}
+#'     \deqn{ggplot(res, aes(x = res[ ,1]))}
+#'     \deqn{ + geom_histogram(weight = value, aes(color = factor(stress))).}
 #'  
 #' @examples      
 #' ## example with a stress on VaR
 #' set.seed(0)
 #' x <- as.data.frame(cbind(
-#'   "normal" = rnorm(1000), 
-#'   "gamma" = rgamma(1000, shape = 2)))
+#'   "normal" = rnorm(10^5), 
+#'   "gamma" = rgamma(10^5, shape = 2)))
 #' res1 <- stress(type = "VaR", x = x, 
 #'   alpha = c(0.9, 0.95), q_ratio = 1.05)
-#' plot_hist(res1, xCol = 1, wCol = 1:2, base = TRUE, binwidth = 0.3)
+#' plot_hist(res1, xCol = 1, wCol = 1:2, base = TRUE, binwidth = 0.1)
 #'                  
 #' @seealso See \code{\link{cdf}} and \code{\link{plot_cdf}} for 
 #'     values and plotting of the empirical distribution 
@@ -51,14 +51,14 @@
    if(is.null(colnames(get.data(object)))) x_name <- paste("X", xCol, sep = "") else if(!is.character(xCol)) x_name <- colnames(get.data(object))[xCol]
    names(hist_data) <- c(x_name, paste("stress", wCol, sep = " "))
    if (base == TRUE){
-    hist_data <- cbind(hist_data, rep(1, length(x_data)))
+    hist_data <- cbind(hist_data, "base" = rep(1, length(x_data)))
    }
    hist_data <- reshape::melt(hist_data, id.var = x_name, variable_name = "stress")
 
    if (displ == TRUE){
    if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 
-   ggplot2::ggplot(hist_data, ggplot2::aes(x = hist_data[,1], w = value, stat(density))) +
-    ggplot2::geom_freqpoly(binwidth = binwidth, ggplot2::aes(color = factor(stress))) +
+   ggplot2::ggplot(hist_data, ggplot2::aes(x = hist_data[,1])) +
+   ggplot2::geom_histogram(binwidth = binwidth, ggplot2::aes(color = factor(stress), weight = value, fill = factor(stress))) +
     ggplot2::labs(x = x_name, y = "histogram") +
     ggplot2::xlim(x_limits) +
     ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))

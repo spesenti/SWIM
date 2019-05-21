@@ -22,17 +22,26 @@
 #'     \code{ggplot}. The data.frame contains the columns: the column, 
 #'     \code{xCol}, of the data of the stressed model, 
 #'     \code{stress} (the stresses) and \code{value} (the values). \cr 
-#'     Denote by \code{result} the return of the function call, then
+#'     Denote by \code{res} the return of the function call, then
 #'     \code{ggplot} can be called via: 
-#'     \deqn{ggplot(result, aes(x = result[ ,1], w = value))}
+#'     \deqn{ggplot(res, aes(x = res[ ,1], w = value))}
 #'     \deqn{ + stat_ecdf(aes(color = factor(stress)), n = n).}
+#'     Note that the ggplot2 default of \code{stat_ecdf} does not
+#'     take \code{weight} as an aestetic. We use the workaround 
+#'     by Nicolas Woloszko, see Note below.
+#'      
+#' @note This function is based on the ggplot \code{stat_ecdf}
+#'     function. However, the code{stat_ecdf} does not allow for 
+#'     specifying \code{weights}, thus the function is based on 
+#'     the workaround by Nicolas Woloszko, see 
+#'     \link{https://github.com/NicolasWoloszko/stat_ecdf_weighted}.
 #'      
 #' @examples      
 #' ## example with a stress on VaR
 #' set.seed(0)
 #' x <- as.data.frame(cbind(
-#'   "normal" = rnorm(1000), 
-#'   "gamma" = rgamma(1000, shape = 2)))
+#'   "normal" = rnorm(10^5), 
+#'   "gamma" = rgamma(10^5, shape = 2)))
 #' res1 <- stress(type = "VaR", x = x, 
 #'   alpha = c(0.9, 0.95), q_ratio = 1.05)
 #' plot_cdf(res1, xCol = 1, wCol = 1:2, base = TRUE)
@@ -59,8 +68,8 @@
     
    if (displ == TRUE){
     if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 
-    ggplot2::ggplot(plot_data, ggplot2::aes(x = plot_data[,1], w = value)) +
-      ggplot2::stat_ecdf(ggplot2::aes(color = factor(stress)), n = n) +
+    ggplot2::ggplot(plot_data, ggplot2::aes(x = plot_data[,1], weight = value)) +
+      stat_ecdf(ggplot2::aes(color = factor(stress)), n = n) +
       ggplot2::labs(x = x_name, y = "ecdf") +
       ggplot2::xlim(x_limits) +
       ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
@@ -68,3 +77,4 @@
     return(plot_data)
    }
   }
+  
