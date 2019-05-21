@@ -39,22 +39,32 @@ If \code{displ = TRUE}, a plot displaying the empirical
     \code{ggplot}. The data.frame contains the columns: the column, 
     \code{xCol}, of the data of the stressed model, 
     \code{stress} (the stresses) and \code{value} (the values). \cr 
-    Denote by \code{result} the return of the function call, then
+    Denote by \code{res} the return of the function call, then
     \code{ggplot} can be called via: 
-    \deqn{ggplot(result, aes(x = result[ ,1], w = value))}
+    \deqn{ggplot(res, aes(x = res[ ,1], w = value))}
     \deqn{ + stat_ecdf(aes(color = factor(stress)), n = n).}
+    Note that the ggplot2 default of \code{stat_ecdf} does not
+    take \code{weight} as an aestetic. We use the workaround 
+    by Nicolas Woloszko, see Note below.
 }
 \description{
 Plots the empirical distribution function of a stochastic model
     under the scenario weights.
+}
+\note{
+This function is based on the ggplot \code{stat_ecdf}
+    function. However, the code{stat_ecdf} does not allow for 
+    specifying \code{weights}, thus the function is based on 
+    the workaround by Nicolas Woloszko, see 
+    \link{https://github.com/NicolasWoloszko/stat_ecdf_weighted}.
 }
 \examples{
      
 ## example with a stress on VaR
 set.seed(0)
 x <- as.data.frame(cbind(
-  "normal" = rnorm(1000), 
-  "gamma" = rgamma(1000, shape = 2)))
+  "normal" = rnorm(10^5), 
+  "gamma" = rgamma(10^5, shape = 2)))
 res1 <- stress(type = "VaR", x = x, 
   alpha = c(0.9, 0.95), q_ratio = 1.05)
 plot_cdf(res1, xCol = 1, wCol = 1:2, base = TRUE)
