@@ -72,7 +72,7 @@
    if(is.null(q)){
       if (!is.numeric(q_ratio)) stop("Invalid q_ratio argument")
       if (any(VaR == 0)) warning("VaR is 0, define q instead of q_ratio.")
-      if (length(alpha) > 1 && length(q_ratio) > 1 && length(alpha) != length(q_perc)) stop("Arguments alpha and q_ratio must have length one or equal length.")
+      if (length(alpha) > 1 && length(q_ratio) > 1 && length(alpha) != length(q_ratio)) stop("Arguments alpha and q_ratio must have length one or equal length.")
       max_length <- max(length(q_ratio), length(alpha))
       q <- q_ratio * VaR
    } else {
