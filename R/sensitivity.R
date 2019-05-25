@@ -57,24 +57,24 @@
 #' sensitivity(res1, wCol = 1, type = "all", 
 #'   f = list(function(x)log(x), function(x)log(x))) 
 #'   
-#' ## Consider the portfolio Y = X1 + X2 + X3 + X4 + X5, where 
-#' ## (X1, X2, X3, X4, X5) are correlated normally distributed
-#' ## with equal mean and different standard deviations.
+#' ## Consider the portfolio Y = X1 + X2 + X3 + X4 + X5,  
+#' ## where (X1, X2, X3, X4, X5) are correlated normally 
+#' ## distributed with equal mean and different standard deviations.
 #' 
 #' set.seed(0)
 #' SD <- round(runif(5, 30, 80))
 #' Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
 #' x <- rmvnorm(10^5, 
 #'    mean =  rep(100, 5), 
-#'    sigma = (SD %*% t(SD))*Corr) 
+#'    sigma = (SD %*% t(SD)) * Corr) 
 #' data <- data.frame(rowSums(x), x)
 #' names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
 #' rev.stress <- stress(type = "VaR", x = data, 
-#'    alpha = c(0.75,0.9), q_ratio = 1.1, k=1)
+#'    alpha = c(0.75, 0.9), q_ratio = 1.1, k = 1)
 #' 
 #' sensitivity(rev.stress, type = "all") 
 #' plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma")     
-#' importance_rank(rev.stress,  xCol = 2:6, wCol=1, type = "Gamma")
+#' importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
 #'      
 #' @seealso See \code{\link{importance_rank}} for ranking of random
 #'     variables according to their sensitivities,  
