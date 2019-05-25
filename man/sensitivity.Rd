@@ -27,9 +27,9 @@ are considered.}
 }
 \value{
 A data.frame containing the sensitivity measures of the 
-    stressed model. Rows correspond to different random variables.  
-    The last two rows specify the  
-    \code{stress} and \code{type} of the sensitivity measure.
+    stressed model with rows corresponding to different random   
+    variables. The first two rows specify the \code{stress} and
+    \code{type} of the sensitivity measure.
 }
 \description{
 Provides different sensitivity measures that compare the stressed 
