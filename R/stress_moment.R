@@ -175,7 +175,7 @@ stress_mean <- function(x, k, new_means, ...)
 #'     
 #'     For only stressing means, see \code{\link{stress_mean}}, 
 #'     for stressing standard deviations without the mean or 
-#'     other moments, see \code{\link{stress_moments}}.
+#'     other moments, see \code{\link{stress_moment}}.
 #'     
 #' 
 #' @return A \code{SWIM} object containing:

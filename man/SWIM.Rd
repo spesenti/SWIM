@@ -22,7 +22,7 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
 
     The \code{SWIM} package is based on the \emph{reverse sensitivity
     framework} developed by \insertCite{Pesenti2019reverse}{SWIM}. 
-    Consider the random vector \code{\strong{X} = (X1,...,Xn)}. Let P
+    Consider the random vector \code{X = (X1,...,Xn)}. Let P
     represent the probability measure under which all simulated
     scenarios have the same probability. Then, for a random variable
     \code{Xi}, the package solves:
@@ -34,7 +34,7 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
     derivative \code{dQ / dP}. The weighting generates a model for 
     which the joint distribution of \code{(X1,...,Xn)} is stressed.
     
-    Different elements of \code{\strong{X}} can be understood as 
+    Different elements of \code{X} can be understood as 
     inputs or outputs of a model. For example, consider a model 
     \code{Y = g(Z)} with input vector \code{Z = (Z1,...,Z(n-1))}.  
     One can then identify \code{X1 = Y} and \code{X1 = Z1,...,Xn  

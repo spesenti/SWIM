@@ -126,7 +126,8 @@
  #'     are based on the same data. \cr 
  #'     Stresses with \code{type = c("user", "moment")} are ignored. 
  #' 
- #' @param object1,object2       Objects of class \code{SWIM}.
+ #' @param object1,object2    Objects of class \code{SWIM}.
+ #' @param ...                Arguments to be passed on.
  #'  
  #' @return An object of class \code{SWIM} containing:
  #'   \itemize{
@@ -145,7 +146,7 @@
  #'
  #' @export
 
-  merge.SWIM <- function(object1, object2){
+  merge.SWIM <- function(object1, object2, ...){
   if (!is.SWIM(object1) | !is.SWIM(object2)) stop("object1 and object2 are not of class SWIM.")
   if (!identical(get.data(object1), get.data(object2))) stop("object1 and object2 are not based on the same data")
   new_weights <- c(get.weightsfun(object1), get.weightsfun(object2))
