@@ -70,7 +70,7 @@
    if (is.null(lower)) lower <- c(min(x_data[,k]), upper[1:length(upper) - 1])
    
    # probabilty that P(a < x_data <= b) for constraints = (a,b)
-   prob_old <- ecdf(x_data[,k])(upper) - ecdf(x_data[,k])(lower)
+   prob_old <- stats::ecdf(x_data[,k])(upper) - stats::ecdf(x_data[,k])(lower)
    prob_old <- c(prob_old, 1 - sum(prob_old))
 
    new_weights <- list(function(y) .rn_prob(y, constraints = cbind(lower, upper)) %*% as.matrix(prob_new / prob_old))

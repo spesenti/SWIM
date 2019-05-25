@@ -86,7 +86,10 @@ sensitivity(res1, wCol = 1, type = "all",
 set.seed(0)
 SD <- round(runif(5, 30, 80))
 Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
-x <- rmvnorm(10^5, 
+if (!requireNamespace("mvtnorm", quietly = TRUE))
+   stop("Package \\"mvtnorm\\" needed for this function 
+   to work. Please install it.")
+x <- mvtnorm::rmvnorm(10^5, 
    mean =  rep(100, 5), 
    sigma = (SD \%*\% t(SD)) * Corr) 
 data <- data.frame(rowSums(x), x)

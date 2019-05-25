@@ -126,8 +126,8 @@
  #'     are based on the same data. \cr 
  #'     Stresses with \code{type = c("user", "moment")} are ignored. 
  #' 
- #' @param object1,object2    Objects of class \code{SWIM}.
- #' @param ...                Arguments to be passed on.
+ #' @param x,y    Objects of class \code{SWIM}.
+ #' @param ...    Additional arguments to be passed on.
  #'  
  #' @return An object of class \code{SWIM} containing:
  #'   \itemize{
@@ -146,13 +146,13 @@
  #'
  #' @export
 
-  merge.SWIM <- function(object1, object2, ...){
-  if (!is.SWIM(object1) | !is.SWIM(object2)) stop("object1 and object2 are not of class SWIM.")
-  if (!identical(get.data(object1), get.data(object2))) stop("object1 and object2 are not based on the same data")
-  new_weights <- c(get.weightsfun(object1), get.weightsfun(object2))
-  specs <- plyr::rbind.fill(get.specs(object1), get.specs(object2))
+  merge.SWIM <- function(x, y, ...){
+  if (!is.SWIM(x) | !is.SWIM(y)) stop("x and y are not of class SWIM.")
+  if (!identical(get.data(x), get.data(y))) stop("x and y are not based on the same data")
+  new_weights <- c(get.weightsfun(x), get.weightsfun(y))
+  specs <- plyr::rbind.fill(get.specs(x), get.specs(y))
   m <- length(specs$type)
   rownames(specs) <- names(new_weights) <- paste("stress", 1:m)
-  xy <- SWIM("x" = get.data(object1), "new_weights" = new_weights, "specs" = specs)
+  xy <- SWIM("x" = get.data(x), "new_weights" = new_weights, "specs" = specs)
   return(xy)
   }

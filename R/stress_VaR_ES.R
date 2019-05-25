@@ -66,7 +66,7 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   max_length <- max(length(alpha), length(q), length(q_ratio), length(s), length(s_ratio))
   
   # type = 1 in quantile is the exact inverse of ecdf
-  VaR <- quantile(x_data[, k], alpha, names = FALSE, type = 1)
+  VaR <- stats::quantile(x_data[, k], alpha, names = FALSE, type = 1)
   if (is.null(q)){
     if (!is.numeric(q_ratio)) stop("Invalid q_ratio argument")
     if (any(VaR == 0)) warning("VaR is 0, define q instead if q_ratio.")
@@ -94,7 +94,7 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   
   ## check if the following constraints are fulfilled
   ## 1) Var < q, 2) q < s, 3) s < ess sup x, 4) E( x | x >= q ) < s
-  ecdfx <- ecdf(x_data[, k])
+  ecdfx <- stats::ecdf(x_data[, k])
   if (any(VaR > q)) print("VaR > q, quantile constraint is interpreted as probability constraint.")
   if (any(q > s)) stop("All q need to be smaller than s.")
   if (any(ecdfx(VaR) == ecdfx(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
@@ -126,7 +126,7 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
       mean((y - .s) * exp(theta * (y - .q)) * x_q)
     }
     
-    theta <- uniroot(theta_sol, lower = 0, upper = 10^-20, tol = 10^-30, extendInt = "upX")$root
+    theta <- stats::uniroot(theta_sol, lower = 0, upper = 10^-20, tol = 10^-30, extendInt = "upX")$root
     prob_q <- mean(y < .q)
     e <- mean(exp(theta * (y - .q)) * (y >= .q))
     rn_weights <- function(z){(.alpha / prob_q) * (z < .q) + (1 - .alpha) / e * exp(theta * (z - .q)) * (z >= .q)}

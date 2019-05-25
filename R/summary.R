@@ -5,6 +5,7 @@
 #'     stressed using the scenario weights. 
 #'     
 #' @inheritParams get.data
+#' @param ...     Additional arguments to be passed on. 
 #' @param xCol    Numeric or character vector; (names of) the columns of 
 #'                the underlying data 
 #'                of the \code{object} (\code{default = "all"}). 
@@ -45,7 +46,7 @@
 #' @export
 #' 
 
-summary.SWIM <- function(object, xCol = "all", wCol = "all", base = FALSE){
+summary.SWIM <- function(object, ..., xCol = "all", wCol = "all", base = FALSE){
   if (!is.SWIM(object)) stop("Wrong object")
   if (anyNA(object$x)) warning("x contains NA")
   if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get.data(object))
@@ -86,7 +87,7 @@ summary.SWIM <- function(object, xCol = "all", wCol = "all", base = FALSE){
 
   .moments <- function(x, w){
    n <- length(as.vector(x))
-   mean_w <- weighted.mean(x = x, w = w)
+   mean_w <- stats::weighted.mean(x = x, w = w)
    sd_w <- sqrt(mean(w * (x - mean_w)^2)) * n / (n-1)
    skew_w <- mean(w * (x - mean_w)^3) / (sd_w^3) * n^2 / ((n-1) * (n-2))
    ex_kurt_w <- mean(w * (x - mean_w)^4) / (sd_w^4) - 3

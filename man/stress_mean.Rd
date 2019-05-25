@@ -49,7 +49,7 @@ The function \code{stress_mean} is a wrapper for the
     to \code{...}.
 }
 \examples{
-See examples in stress_moments.     
+## See examples in \\code{\\link{stress_moment}}.     
     
 }
 \references{

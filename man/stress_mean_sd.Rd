@@ -56,7 +56,7 @@ The function \code{stress_mean_sd} is a wrapper for the
     other moments, see \code{\link{stress_moment}}.
 }
 \examples{
-See examples in stress_moments.     
+## See examples in \\code{\\link{stress_moment}}.     
           
 }
 \references{

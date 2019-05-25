@@ -142,7 +142,8 @@ stress_moment <- function(x, f, k, m, ...){
 #'     }
 #'     See \code{\link{SWIM}} for details.
 #'     
-#' @examples See examples in stress_moments.     
+#' @examples 
+#' ## See examples in \code{\link{stress_moment}}.     
 #'     
 #' @family stress functions 
 #' @inherit SWIM references 
@@ -190,7 +191,8 @@ stress_mean <- function(x, k, new_means, ...)
 #'     }
 #'     See \code{\link{SWIM}} for details.
 #'  
-#' @examples See examples in stress_moments.     
+#' @examples 
+#' ## See examples in \code{\link{stress_moment}}.     
 #'           
 #' @family stress functions 
 #' @inherit SWIM references 

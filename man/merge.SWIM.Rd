@@ -4,12 +4,12 @@
 \alias{merge.SWIM}
 \title{Merging Two Stressed Models}
 \usage{
-\method{merge}{SWIM}(object1, object2, ...)
+\method{merge}{SWIM}(x, y, ...)
 }
 \arguments{
-\item{object1, object2}{Objects of class \code{SWIM}.}
+\item{x, y}{Objects of class \code{SWIM}.}
 
-\item{...}{Arguments to be passed on.}
+\item{...}{Additional arguments to be passed on.}
 }
 \value{
 An object of class \code{SWIM} containing:

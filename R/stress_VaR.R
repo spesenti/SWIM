@@ -67,7 +67,7 @@
 
    ## x_data[, k] component of x_data that is stressed
    n <- length(x_data[, k])
-   VaR <- quantile(x_data[, k], alpha, names = FALSE, type = 1)
+   VaR <- stats::quantile(x_data[, k], alpha, names = FALSE, type = 1)
 
    if(is.null(q)){
       if (!is.numeric(q_ratio)) stop("Invalid q_ratio argument")
@@ -85,7 +85,7 @@
 
    ## check if VaR < q < ess sup (x_data)
    if (any(VaR > q)) print("VaR > q, quantile constraint interpreted as probability constraint.")
-   if (any(q > VaR & ecdf(x_data[, k])(VaR) == ecdf(x_data[, k])(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
+   if (any(q > VaR & stats::ecdf(x_data[, k])(VaR) == stats::ecdf(x_data[, k])(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
    if (any(q >= max(x_data[, k])) || any(q <= min(x_data[, k]))) stop("All q need to be smaller than the largest and larger than the smallest data point.") 
 
     constr <- cbind(alpha, q)

@@ -64,7 +64,10 @@
 #' set.seed(0)
 #' SD <- round(runif(5, 30, 80))
 #' Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
-#' x <- rmvnorm(10^5, 
+#' if (!requireNamespace("mvtnorm", quietly = TRUE))
+#'    stop("Package \"mvtnorm\" needed for this function 
+#'    to work. Please install it.")
+#' x <- mvtnorm::rmvnorm(10^5, 
 #'    mean =  rep(100, 5), 
 #'    sigma = (SD %*% t(SD)) * Corr) 
 #' data <- data.frame(rowSums(x), x)
@@ -107,7 +110,7 @@
   
    if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(object))
    new_weights <- get.weights(object)[ , wCol]  
-   sens_w <- setNames(data.frame(matrix(ncol = length(xCol) + 2, nrow = 0)), c("stress", "type", cname))
+   sens_w <- stats::setNames(data.frame(matrix(ncol = length(xCol) + 2, nrow = 0)), c("stress", "type", cname))
    if (type == "Gamma" || type == "all"){
     sens_gamma_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .gamma, z = z)
     sens_gw <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_gamma_w)
@@ -143,10 +146,10 @@
    w <- as.numeric(w)
    w_comm <- sort(w)[rank(z, ties.method = "first")]
    w_counter <- sort(w, decreasing = TRUE)[rank(z, ties.method = "first")]
-   if (cov(z, w) >= 0){
-    gamma_sens <- cov(z, w) / cov(z, w_comm)
+   if (stats::cov(z, w) >= 0){
+    gamma_sens <- stats::cov(z, w) / stats::cov(z, w_comm)
    } else {
-    gamma_sens <- - cov(z, w) / cov(z, w_counter)
+    gamma_sens <- - stats::cov(z, w) / stats::cov(z, w_counter)
    }
    return(gamma_sens)
   }
