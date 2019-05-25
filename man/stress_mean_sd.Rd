@@ -53,10 +53,10 @@ The function \code{stress_mean_sd} is a wrapper for the
     
     For only stressing means, see \code{\link{stress_mean}}, 
     for stressing standard deviations without the mean or 
-    other moments, see \code{\link{stress_moments}}.
+    other moments, see \code{\link{stress_moment}}.
 }
 \examples{
-See examples in stress_moments.     
+## See examples in \\code{\\link{stress_moment}}.     
           
 }
 \references{

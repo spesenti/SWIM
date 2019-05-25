@@ -9,7 +9,7 @@
 #'     \code{new_weights} will be normalised to 1.
 #' @param new_weightsfun  A list of functions, that applied to the \code{k}th column
 #'     of \code{x} generate the vectors of the scenario weights. Each function 
-#'     correspond to a stress. \cf
+#'     correspond to a stress. \cr
 #'     \code{new_weights} will be normalised to 1.
 #'  
 #' @return A \code{SWIM} object containing:

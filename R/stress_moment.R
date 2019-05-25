@@ -142,7 +142,8 @@ stress_moment <- function(x, f, k, m, ...){
 #'     }
 #'     See \code{\link{SWIM}} for details.
 #'     
-#' @examples See examples in stress_moments.     
+#' @examples 
+#' ## See examples in \code{\link{stress_moment}}.     
 #'     
 #' @family stress functions 
 #' @inherit SWIM references 
@@ -175,7 +176,7 @@ stress_mean <- function(x, k, new_means, ...)
 #'     
 #'     For only stressing means, see \code{\link{stress_mean}}, 
 #'     for stressing standard deviations without the mean or 
-#'     other moments, see \code{\link{stress_moments}}.
+#'     other moments, see \code{\link{stress_moment}}.
 #'     
 #' 
 #' @return A \code{SWIM} object containing:
@@ -190,7 +191,8 @@ stress_mean <- function(x, k, new_means, ...)
 #'     }
 #'     See \code{\link{SWIM}} for details.
 #'  
-#' @examples See examples in stress_moments.     
+#' @examples 
+#' ## See examples in \code{\link{stress_moment}}.     
 #'           
 #' @family stress functions 
 #' @inherit SWIM references 

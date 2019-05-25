@@ -1,3 +1,11 @@
+# This function is copied one-to-one from Nicolas Woloszko on github 
+#     \url{https://github.com/NicolasWoloszko/stat_ecdf_weighted}.
+# 
+# The stat_ecdf function in the ggplot2 package does not allow to 
+#     specify \code{weights}. However, we want to exploit the 
+#     ggplot package to plot weighted ecdf's. Thus, we incorporate 
+#     the workaround by Nicolas Woloszko, see 
+#     \url{https://github.com/NicolasWoloszko/stat_ecdf_weighted}.
 
 stat_ecdf <- function(mapping = NULL, data = NULL,
   geom = "step", position = "identity",

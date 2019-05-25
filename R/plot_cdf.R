@@ -31,10 +31,10 @@
 #'     by Nicolas Woloszko, see Note below.
 #'      
 #' @note This function is based on the ggplot \code{stat_ecdf}
-#'     function. However, the code{stat_ecdf} does not allow for 
+#'     function. However, the \code{stat_ecdf} does not allow for 
 #'     specifying \code{weights}, thus the function is based on 
 #'     the workaround by Nicolas Woloszko, see 
-#'     \link{https://github.com/NicolasWoloszko/stat_ecdf_weighted}.
+#'     \url{https://github.com/NicolasWoloszko/stat_ecdf_weighted}.
 #'      
 #' @examples      
 #' ## example with a stress on VaR

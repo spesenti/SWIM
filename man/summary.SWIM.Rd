@@ -4,11 +4,13 @@
 \alias{summary.SWIM}
 \title{Summarising Stressed Models}
 \usage{
-\method{summary}{SWIM}(object, xCol = "all", wCol = "all",
+\method{summary}{SWIM}(object, ..., xCol = "all", wCol = "all",
   base = FALSE)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
+
+\item{...}{Additional arguments to be passed on.}
 
 \item{xCol}{Numeric or character vector; (names of) the columns of 
 the underlying data 
