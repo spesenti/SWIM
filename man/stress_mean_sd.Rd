@@ -63,10 +63,9 @@ See examples in stress_moments.
 \insertRef{Pesenti2019reverse}{SWIM}
 }
 \seealso{
-Other stress functions: \code{\link{SWIM}},
-  \code{\link{stress_VaR_ES}}, \code{\link{stress_VaR}},
-  \code{\link{stress_mean}}, \code{\link{stress_moment}},
-  \code{\link{stress_prob}}, \code{\link{stress_user}},
-  \code{\link{stress}}
+Other stress functions: \code{\link{stress_VaR_ES}},
+  \code{\link{stress_VaR}}, \code{\link{stress_mean}},
+  \code{\link{stress_moment}}, \code{\link{stress_prob}},
+  \code{\link{stress_user}}, \code{\link{stress}}
 }
 \concept{stress functions}

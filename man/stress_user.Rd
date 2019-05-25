@@ -57,10 +57,9 @@ res1 <- stress(type = "user", x = x, new_weights = function(x)x^2)
 \insertRef{Pesenti2019reverse}{SWIM}
 }
 \seealso{
-Other stress functions: \code{\link{SWIM}},
-  \code{\link{stress_VaR_ES}}, \code{\link{stress_VaR}},
-  \code{\link{stress_mean_sd}}, \code{\link{stress_mean}},
-  \code{\link{stress_moment}}, \code{\link{stress_prob}},
-  \code{\link{stress}}
+Other stress functions: \code{\link{stress_VaR_ES}},
+  \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},
+  \code{\link{stress_mean}}, \code{\link{stress_moment}},
+  \code{\link{stress_prob}}, \code{\link{stress}}
 }
 \concept{stress functions}

@@ -89,8 +89,6 @@
  #'     }
  #'   } 
  #'     
- #' @family stress functions 
- #'  
  #' @references \insertRef{Pesenti2019reverse}{SWIM}
  #' @seealso See \code{\link{get.data}} for extracting the data, 
  #'     \code{x}; \code{\link{get.weights}} for extracting the scenario 

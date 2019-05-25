@@ -1,6 +1,6 @@
 #' Importance Ranking for a Stressed Model
 #' 
-#' Provides the importance ranks of random variables  
+#' Provides the importance ranks of the components (random variables) 
 #'     of a stressed model for different sensitivity measures. 
 #'     
 #' @inheritParams sensitivity
@@ -10,7 +10,8 @@
 #'     measures (\code{type}), see \code{\link{sensitivity}}.
 #'     
 #' @return A data.frame containing the importance ranks of the 
-#'     stressed model for different sensitivity measures. Rows correspond 
+#'     stressed model for different sensitivity measures. Small values 
+#'     correspond to large sensitivities. Differnt rows correspond 
 #'     to different random variables. The last two rows specify the 
 #'     \code{stress} and \code{type} of the sensitivity measure on 
 #'     which the ranking is calculated.
@@ -44,7 +45,7 @@
   
    sens_w <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f = f)
    if (length(sens_w) < 4) stop("Only one input provided.")
-   rank_w <- t(apply(X = sens_w[ , 1:(length(sens_w) - 2)], MARGIN = 1, FUN = function(z) rank(z, ties.method = "min")))
+   rank_w <- t(apply(X = sens_w[ , 1:(length(sens_w) - 2)], MARGIN = 1, FUN = function(z) rank(-z, ties.method = "min")))
    rank_w <- cbind(rank_w, sens_w[ , (length(sens_w) - 1):length(sens_w)])
     
    if (is.character(type) && type == "all") rank_w <- rank_w[-which(rank_w[,"type"] == "Kolmogorov"), ]
