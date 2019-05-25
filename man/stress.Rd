@@ -8,17 +8,17 @@ stress(type = c("VaR", "VaR ES", "mean", "mean sd", "moment", "prob",
   "user"), ...)
 }
 \arguments{
-\item{type}{Character, the type of stress, one of \code{"VaR", 
+\item{type}{Type of stress, one of \code{"VaR", 
 "VaR ES", "mean", "mean sd", "moment", "prob", "user"}.}
 
-\item{...}{Arguments to be passed on, depending \code{type}.}
+\item{...}{Arguments to be passed on, depending on \code{type}.}
 }
 \value{
 An object of class \code{SWIM}, see \code{\link{SWIM}} 
     for details.
 }
 \description{
-Provides weights on simulated scenarios from a stochastic
+Provides weights on simulated scenarios from a baseline stochastic
     model, such that stressed random variables fulfil given 
     probabilistic constraints (e.g. specified values for risk 
     measures), under the new scenario weights. Scenario weights are 
@@ -32,17 +32,17 @@ x <- as.data.frame(cbind(
   "gamma" = rgamma(1000, shape = 2)))
 res <- stress(type = "VaR", x = x, 
   alpha = 0.9, q_ratio = 1.05)
+summary(res)   
 
 }
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}
 }
 \seealso{
-Other stress functions: \code{\link{SWIM}},
-  \code{\link{stress_VaR_ES}}, \code{\link{stress_VaR}},
-  \code{\link{stress_mean_sd}}, \code{\link{stress_mean}},
-  \code{\link{stress_moment}}, \code{\link{stress_prob}},
-  \code{\link{stress_user}}
+Other stress functions: \code{\link{stress_VaR_ES}},
+  \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},
+  \code{\link{stress_mean}}, \code{\link{stress_moment}},
+  \code{\link{stress_prob}}, \code{\link{stress_user}}
 }
 \author{
 Silvana M. Pesenti

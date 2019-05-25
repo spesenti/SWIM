@@ -10,15 +10,16 @@
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character vector, (names of ) the columns of 
+\item{xCol}{Numeric or character vector; (names of) the columns of 
 the underlying data 
 of the \code{object} (\code{default = "all"}).}
 
-\item{wCol}{Vector, the columns of the scenario weights 
-of the \code{object} (\code{default = "all"}).}
+\item{wCol}{Vector; the columns of the scenario weights 
+of the \code{object} corresponding to different 
+stresses (\code{default = "all"}).}
 
-\item{base}{Logical, if \code{TRUE} the baseline is
-returned (\code{default = "FALSE"}).}
+\item{base}{Logical; if \code{TRUE}, statistics under the baseline 
+are also returned (\code{default = "FALSE"}).}
 }
 \value{
 \code{summary.SWIM} returns a list with components
@@ -37,8 +38,8 @@ returned (\code{default = "FALSE"}).}
 }
 \description{
 This function is a \code{\link[utils]{methods}} for an object of class 
-    \code{SWIM}. Provides a summary statistic of the stochastic model 
-    under the scenario weights.
+    \code{SWIM}. Provides summary statistics of the stochastic model, 
+    stressed using the scenario weights.
 }
 \examples{
      

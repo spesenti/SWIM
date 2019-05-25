@@ -1,7 +1,7 @@
 #' Plotting Sensitivities of a Stressed Model
 #'
-#' Plots the sensitivity measures of a stochastic model
-#'     under the scenario weights.
+#' Plots the sensitivity measures for components (random variables) 
+#'     of a stochastic model under the scenario weights.
 #'  
 #' @inheritParams sensitivity
 #' @param type    Character, one of \code{"Gamma", "Wasserstein"} 

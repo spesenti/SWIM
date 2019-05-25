@@ -69,11 +69,10 @@ res2 <- stress_prob(x = x, prob = c(0.008, 0.06),
 \insertRef{Pesenti2019reverse}{SWIM}
 }
 \seealso{
-Other stress functions: \code{\link{SWIM}},
-  \code{\link{stress_VaR_ES}}, \code{\link{stress_VaR}},
-  \code{\link{stress_mean_sd}}, \code{\link{stress_mean}},
-  \code{\link{stress_moment}}, \code{\link{stress_user}},
-  \code{\link{stress}}
+Other stress functions: \code{\link{stress_VaR_ES}},
+  \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},
+  \code{\link{stress_mean}}, \code{\link{stress_moment}},
+  \code{\link{stress_user}}, \code{\link{stress}}
 }
 \author{
 Silvana M. Pesenti

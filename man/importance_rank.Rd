@@ -10,18 +10,19 @@ importance_rank(object, xCol = "all", wCol = "all", type = c("Gamma",
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character vector, (names of ) the columns of 
+\item{xCol}{Numeric or character vector; (names of) the columns of 
 the underlying data 
 of the \code{object} (\code{default = "all"}).}
 
-\item{wCol}{Vector, the columns of the scenario weights 
-of the \code{object} (\code{default = "all"}).}
+\item{wCol}{Vector; the columns of the scenario weights 
+of the \code{object} corresponding to different 
+stresses (\code{default = "all"}).}
 
 \item{type}{Character, one of \code{"Gamma", "Wasserstein", "all"}.}
 
 \item{f}{List of functions with the same length as \code{xCol}.
 If provided, the transformed data, \code{f(x)},
-is considered.}
+are considered.}
 }
 \value{
 A data.frame containing the importance ranks of the 
@@ -32,7 +33,7 @@ A data.frame containing the importance ranks of the
     which the ranking is calculated.
 }
 \description{
-Provides the importance ranks of random variables  
+Provides the importance ranks of the components (random variables) 
     of a stressed model for different sensitivity measures.
 }
 \details{

@@ -85,7 +85,7 @@
 
 stress_moment <- function(x, f, k, m, ...){
   if (is.SWIM(x)) x_data <- get.data(x) else x_data <- as.matrix(x)
-  # check if x is not a vector, matrix or data frame?
+  # check if x is not a vector, matrix or data.frame.
   if (anyNA(x_data)) warning("x contains NA")
   if (is.function(f)) f <- as.list(f)
   if (!all(sapply(f, is.function))) stop("f must be a list of functions")

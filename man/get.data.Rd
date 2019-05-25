@@ -18,7 +18,7 @@ get.specs(object)
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character vector, (names of ) the columns of 
+\item{xCol}{Numeric or character vector; (names of) the columns of 
 the underlying data 
 of the \code{object} (\code{default = "all"}).}
 }

@@ -1,6 +1,6 @@
 #' Importance Ranking for a Stressed Model
 #' 
-#' Provides the importance ranks of random variables  
+#' Provides the importance ranks of the components (random variables) 
 #'     of a stressed model for different sensitivity measures. 
 #'     
 #' @inheritParams sensitivity

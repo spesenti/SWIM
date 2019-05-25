@@ -10,19 +10,20 @@ sensitivity(object, xCol = "all", wCol = "all", type = c("Gamma",
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character vector, (names of ) the columns of 
+\item{xCol}{Numeric or character vector; (names of) the columns of 
 the underlying data 
 of the \code{object} (\code{default = "all"}).}
 
-\item{wCol}{Vector, the columns of the scenario weights 
-of the \code{object} (\code{default = "all"}).}
+\item{wCol}{Vector; the columns of the scenario weights 
+of the \code{object} corresponding to different 
+stresses (\code{default = "all"}).}
 
-\item{type}{Character, one of \code{"Gamma", "Kolmogorov", 
+\item{type}{Character; one of \code{"Gamma", "Kolmogorov", 
 "Wasserstein", "all"}.}
 
 \item{f}{List of functions with the same length as \code{xCol}.
 If provided, the transformed data, \code{f(x)},
-is considered.}
+are considered.}
 }
 \value{
 A data.frame containing the sensitivity measures of the 
@@ -40,20 +41,22 @@ Provides sensitivity measures that compare the stressed and
     \enumerate{
     \item 
       \code{Gamma}, the \emph{Reverse Sensitivity Measure}, defined 
-      for a random variable \code{X} and scenario weights \code{w} by 
-      \deqn{Gamma = ( E(X * w) - E(X) ) / normalised,}
-      where the normalisation is such that \code{-1 <= |"Gamma"| <= 1}, see
+      for a random variable \code{Y} and scenario weights \code{w} by 
+      \deqn{Gamma = ( E(Y * w) - E(Y) ) / c,}
+      where \code{c} is a normalisation constant such that 
+      \code{|Gamma| <= 1}, see
       \insertCite{Pesenti2019reverse}{SWIM}. Loosely speaking, the 
-      Reverse Sensitivity Measure is a (suitably normalised) difference 
+      Reverse Sensitivity Measure is the normalised difference 
       between the first moment of the stressed and the baseline 
-      distribution of \code{X}.
+      distributions of \code{Y}. 
     
     \item
       \code{Kolmogorov}, the Kolmogorov distance, defined for 
       distribution functions \code{F,G} by 
       \deqn{Kolmogorov = sup |F(x) - G(x)|.}
       Note that the Kolmogorov distance of one stress is the same for 
-      all inputs. Should be used to compare different stresses.   
+      all inputs. Should be used to compare different stresses not 
+      individual components.   
     
     \item
       \code{Wasserstein}, the Wasserstein distance of order 1, defined
@@ -103,6 +106,6 @@ importance_rank(rev.stress,  xCol = 2:6, wCol=1, type = "Gamma")
 See \code{\link{importance_rank}} for ranking of random
     variables according to their sensitivities,  
     \code{\link{plot_sensitivity}} for plotting 
-    sensitivity measures and \code{\link{summary}} for a 
-    summary statistic of a stressed model.
+    sensitivity measures and \code{\link{summary}} for 
+    summary statistics of a stressed model.
 }

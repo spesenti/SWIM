@@ -110,11 +110,4 @@ See \code{\link{get.data}} for extracting the data,
     extracting the functions generating the scenario weights; and 
     \code{\link{get.specs}} for extracting the specifications of 
     the stress on an object of class \code{SWIM}.
-
-Other stress functions: \code{\link{stress_VaR_ES}},
-  \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},
-  \code{\link{stress_mean}}, \code{\link{stress_moment}},
-  \code{\link{stress_prob}}, \code{\link{stress_user}},
-  \code{\link{stress}}
 }
-\concept{stress functions}

@@ -10,19 +10,20 @@ plot_sensitivity(object, xCol = "all", wCol = "all",
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character vector, (names of ) the columns of 
+\item{xCol}{Numeric or character vector; (names of) the columns of 
 the underlying data 
 of the \code{object} (\code{default = "all"}).}
 
-\item{wCol}{Vector, the columns of the scenario weights 
-of the \code{object} (\code{default = "all"}).}
+\item{wCol}{Vector; the columns of the scenario weights 
+of the \code{object} corresponding to different 
+stresses (\code{default = "all"}).}
 
 \item{type}{Character, one of \code{"Gamma", "Wasserstein"} 
 (\code{default = "Gamma"}).}
 
 \item{f}{List of functions with the same length as \code{xCol}.
 If provided, the transformed data, \code{f(x)},
-is considered.}
+are considered.}
 
 \item{displ}{Logical, if \code{TRUE} the plot is displayed, 
 otherwise the data.frame for customised plotting with 
@@ -43,8 +44,8 @@ If \code{displ = TRUE}, a plot displaying the sensitivity
     \deqn{ + geom_point(aes(color = factor(stress), shape = type)).}
 }
 \description{
-Plots the sensitivity measures of a stochastic model
-    under the scenario weights.
+Plots the sensitivity measures for components (random variables) 
+    of a stochastic model under the scenario weights.
 }
 \details{
 For the definition of the sensitivity 
