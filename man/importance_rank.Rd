@@ -28,7 +28,7 @@ are considered.}
 A data.frame containing the importance ranks of the 
     stressed model for different sensitivity measures. Small values 
     correspond to large sensitivities. Differnt rows correspond 
-    to different random variables. The last two rows specify the 
+    to different random variables. The first two rows specify the 
     \code{stress} and \code{type} of the sensitivity measure on 
     which the ranking is calculated.
 }

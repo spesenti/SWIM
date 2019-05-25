@@ -39,9 +39,9 @@
 #'     }
 #' 
 #' @return A data.frame containing the sensitivity measures of the 
-#'     stressed model. Rows correspond to different random variables.  
-#'     The last two rows specify the  
-#'     \code{stress} and \code{type} of the sensitivity measure.
+#'     stressed model with rows corresponding to different random   
+#'     variables. The first two rows specify the \code{stress} and
+#'     \code{type} of the sensitivity measure.
 #'      
 #' @examples      
 #' ## example with a stress on VaR
@@ -57,24 +57,24 @@
 #' sensitivity(res1, wCol = 1, type = "all", 
 #'   f = list(function(x)log(x), function(x)log(x))) 
 #'   
-#' ## Consider the portfolio Y = X1 + X2 + X3 + X4 + X5, where 
-#' ## (X1, X2, X3, X4, X5) are correlated normally distributed
-#' ## with equal mean and different standard deviations.
+#' ## Consider the portfolio Y = X1 + X2 + X3 + X4 + X5,  
+#' ## where (X1, X2, X3, X4, X5) are correlated normally 
+#' ## distributed with equal mean and different standard deviations.
 #' 
 #' set.seed(0)
 #' SD <- round(runif(5, 30, 80))
 #' Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
 #' x <- rmvnorm(10^5, 
 #'    mean =  rep(100, 5), 
-#'    sigma = (SD %*% t(SD))*Corr) 
+#'    sigma = (SD %*% t(SD)) * Corr) 
 #' data <- data.frame(rowSums(x), x)
 #' names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
 #' rev.stress <- stress(type = "VaR", x = data, 
-#'    alpha = c(0.75,0.9), q_ratio = 1.1, k=1)
+#'    alpha = c(0.75, 0.9), q_ratio = 1.1, k = 1)
 #' 
 #' sensitivity(rev.stress, type = "all") 
 #' plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma")     
-#' importance_rank(rev.stress,  xCol = 2:6, wCol=1, type = "Gamma")
+#' importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
 #'      
 #' @seealso See \code{\link{importance_rank}} for ranking of random
 #'     variables according to their sensitivities,  
@@ -107,13 +107,13 @@
   
    if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(object))
    new_weights <- get.weights(object)[ , wCol]  
-   sens_w <- setNames(data.frame(matrix(ncol = length(xCol) + 2, nrow = 0)), c(cname, "stress", "type"))
+   sens_w <- setNames(data.frame(matrix(ncol = length(xCol) + 2, nrow = 0)), c("stress", "type", cname))
    if (type == "Gamma" || type == "all"){
     sens_gamma_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .gamma, z = z)
     sens_gw <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_gamma_w)
     if (length(wCol) == 1) sens_gw <- as.matrix(t(sens_gw))
     if (length(xCol) == 1) colnames(sens_gw) <- cname
-    sens_w <- rbind(sens_w, data.frame(sens_gw, stress = paste("stress", wCol, sep = " "), type = rep("Gamma", length.out = length(wCol))))
+    sens_w <- rbind(sens_w, data.frame(stress = paste("stress", wCol, sep = " "), type = rep("Gamma", length.out = length(wCol)), sens_gw))
    }
   
    if (type == "Kolmogorov" || type == "all"){
@@ -121,7 +121,7 @@
     sens_kw <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_kolmogorov_w)
     if (length(wCol) == 1) sens_kw <- as.matrix(t(sens_kw))
     if (length(xCol) == 1) colnames(sens_kw) <- cname
-    sens_w <- rbind(sens_w, data.frame(sens_kw, stress = paste("stress", wCol, sep = " "), type = rep("Kolmogorov", length.out = length(wCol))))
+    sens_w <- rbind(sens_w, data.frame(stress = paste("stress", wCol, sep = " "), type = rep("Kolmogorov", length.out = length(wCol)), sens_kw))
    }
   
    if (type == "Wasserstein" || type == "all"){
@@ -129,7 +129,7 @@
     sens_ww <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_wasser_w)
     if (length(wCol) == 1) sens_ww <- as.matrix(t(sens_ww))
     if (length(xCol) == 1) colnames(sens_ww) <- cname
-    sens_w <- rbind(sens_w, data.frame(sens_ww, stress = paste("stress", wCol, sep = " "), type = rep("Wasserstein", length.out = length(wCol))))
+    sens_w <- rbind(sens_w, data.frame(stress = paste("stress", wCol, sep = " "), type = rep("Wasserstein", length.out = length(wCol)), sens_ww))
     }
    rownames(sens_w) <- NULL
    return(sens_w)
