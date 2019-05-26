@@ -48,7 +48,7 @@ if (!requireNamespace("mvtnorm", quietly = TRUE))
    to work. Please install it.")
 x <- mvtnorm::rmvnorm(10^5, 
    mean =  rep(100, 5), 
-   sigma = (SD %*% t(SD)) * Corr) 
+   sigma = (SD %*% t(SD)) * Corr)
 data <- data.frame(rowSums(x), x)
 names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
 rev.stress <- stress(type = "VaR", x = data, 
@@ -59,7 +59,25 @@ Summary statistics of the baseline and the stressed model can be
 obtained via
 
 ``` r
-summary(rev.stress)
+summary(rev.stress, base = TRUE)
+#> $base
+#>                        Y           X1           X2           X3
+#> mean        4.995671e+02 9.971960e+01 1.001025e+02 9.999800e+01
+#> sd          2.347882e+02 7.509175e+01 4.321323e+01 4.897528e+01
+#> skewness    9.413087e-03 5.651204e-03 1.012673e-02 6.676749e-03
+#> ex kurtosis 2.291973e-02 7.286639e-04 2.291537e-04 2.120437e-02
+#> 1st Qu.     3.414990e+02 4.905333e+01 7.107213e+01 6.709921e+01
+#> Median      4.994938e+02 9.989109e+01 1.001097e+02 1.000864e+02
+#> 3rd Qu.     6.573294e+02 1.499158e+02 1.291574e+02 1.327933e+02
+#>                       X4            X5
+#> mean        9.976048e+01  99.986505887
+#> sd          5.905022e+01  75.260750718
+#> skewness    2.754239e-03   0.006504508
+#> ex kurtosis 3.095137e-02  -0.009494181
+#> 1st Qu.     6.014504e+01  49.341442478
+#> Median      9.975391e+01  99.843463264
+#> 3rd Qu.     1.393594e+02 151.044259284
+#> 
 #> $`stress 1`
 #>                        Y           X1           X2           X3
 #> mean        533.36520478 108.36772309 104.68278212 105.26961033
@@ -97,26 +115,36 @@ summary(rev.stress)
 #> 3rd Qu.     145.76720810 159.31728093
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+Sensitivity measures allow to assess the importance of the input
+components.
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+sensitivity(rev.stress, type = "all")
+#>     stress        type            Y           X1           X2           X3
+#> 1 stress 1       Gamma 1.0000000000 0.7996194290 0.7361314472 0.7468647948
+#> 2 stress 2       Gamma 1.0000000000 0.8030965565 0.7369764204 0.7503054191
+#> 3 stress 1  Kolmogorov 0.0003846520 0.0003846520 0.0003846520 0.0003846520
+#> 4 stress 2  Kolmogorov 0.0004879139 0.0004879139 0.0004879139 0.0004879139
+#> 5 stress 1 Wasserstein 0.1225813694 0.0386157515 0.0227766091 0.0251783327
+#> 6 stress 2 Wasserstein 0.2249939549 0.0715281097 0.0415352694 0.0467140148
+#>             X4           X5
+#> 1 0.7706528836 0.8076592401
+#> 2 0.7681391298 0.8042831834
+#> 3 0.0003846520 0.0003846520
+#> 4 0.0004879139 0.0004879139
+#> 5 0.0306371941 0.0390024561
+#> 6 0.0566780366 0.0719661249
+plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma") 
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date.
+<img src="man/figures/README-sensitivity-1.png" width="100%" />
 
-You can also embed plots, for example:
+The function importance\_rank returns the ranks of the input components
+according to the chosen sensitivity measure, here Gamma.
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub\!
+``` r
+importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
+#>     stress  type X1 X2 X3 X4 X5
+#> 1 stress 1 Gamma  2  5  4  3  1
+#> 2 stress 2 Gamma  2  5  4  3  1
+```

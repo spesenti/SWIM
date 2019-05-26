@@ -53,7 +53,7 @@ if (!requireNamespace("mvtnorm", quietly = TRUE))
    to work. Please install it.")
 x <- mvtnorm::rmvnorm(10^5, 
    mean =  rep(100, 5), 
-   sigma = (SD %*% t(SD)) * Corr) 
+   sigma = (SD %*% t(SD)) * Corr)
 data <- data.frame(rowSums(x), x)
 names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
 rev.stress <- stress(type = "VaR", x = data, 
@@ -63,22 +63,19 @@ rev.stress <- stress(type = "VaR", x = data,
 Summary statistics of the baseline and the stressed model can be obtained via
 
 ```{r summary}
-summary(rev.stress)
+summary(rev.stress, base = TRUE)
 ```
 
+Sensitivity measures allow to assess the importance of the input components. 
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
+```{r sensitivity}
+sensitivity(rev.stress, type = "all")
+plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma") 
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date.
+The function importance_rank returns the ranks of the input components
+according to the chosen sensitivity measure, here Gamma.
 
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
+```{r importance rank}
+importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
 ```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub!
