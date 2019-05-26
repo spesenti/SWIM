@@ -6,8 +6,8 @@
 #' @inheritParams  plot_cdf
 #' @param binwidth Numeric, the width of the bins used to plot 
 #'                 the histogram, the \code{binwidth} in the 
-#'                 \code{geom_freqpoly} function  in \code{ggplot} 
-#'                 (\code{default = 0.2}).   
+#'                 \code{geom_histogram} function  in \code{ggplot} 
+#'                 (default corresponds to 40 bins).   
 #' 
 #' @return If \code{displ = TRUE}, a histogram of the stochastic model 
 #'     under the scenario weights.
@@ -42,8 +42,8 @@
   plot_hist <- function(object, xCol = 1, wCol = "all", base = FALSE, x_limits, displ = TRUE, binwidth){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    if (anyNA(object$x)) warning("x contains NA")
-   if(missing(binwidth)) binwidth <- 0.2 
    x_data <- get.data(object)[ , xCol]
+   if(missing(binwidth)) binwidth <- (max(x_data) - min(x_data)) / 40
    if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(object))
   
    hist_data <- data.frame(x_data, get.weights(object)[ , wCol])
