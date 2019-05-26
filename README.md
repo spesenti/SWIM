@@ -93,6 +93,8 @@ summary(rev.stress, base = TRUE)
 #> 3rd Qu.     688.26 158.37 133.37 137.87 145.77 159.32
 ```
 
+### Sensitivity and importance rank of input factors.
+
 Sensitivity measures allow to assess the importance of the input
 components. Implemented sensitivity measures are the Kolmogorov, the
 Wasserstein distance and \(Gamma\). \(Gamma\), the *Reverse Sensitivity
@@ -101,7 +103,7 @@ Measure*, defined for a random variable Z and scenario weights w by
 \(Gamma = \frac{\mathbb{E}(Y * w) - \mathbb{E}(Y)}{c},\)
 
 where \(c\) is a normalisation constant such that \(|Gamma| \leq 1\),
-see \[link}{<https://doi.org/10.1016/j.ejor.2018.10.003>}. Loosely
+see \[link\]{<https://doi.org/10.1016/j.ejor.2018.10.003>}. Loosely
 speaking, the Reverse Sensitivity Measure is the normalised difference
 between the first moment of the stressed and the baseline distributions
 of Y.
@@ -127,8 +129,8 @@ plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma")
 
 <img src="man/figures/README-sensitivity-1.png" width="100%" />
 
-The function importance\_rank returns the ranks of the input components
-according to the chosen sensitivity measure, here Gamma.
+Ranking the input components according to the chosen sensitivity
+measure, in this example using \(Gamma\).
 
 ``` r
 importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
