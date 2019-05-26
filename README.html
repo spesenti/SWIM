@@ -665,58 +665,34 @@ body {
 <p>Summary statistics of the baseline and the stressed model can be obtained via the summary method.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">summary</span>(rev.stress, <span class="dt">base =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt; $base</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt;                        Y           X1           X2           X3</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt; mean        4.995671e+02 9.971960e+01 1.001025e+02 9.999800e+01</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; sd          2.347882e+02 7.509175e+01 4.321323e+01 4.897528e+01</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt; skewness    9.413087e-03 5.651204e-03 1.012673e-02 6.676749e-03</span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt; ex kurtosis 2.291973e-02 7.286639e-04 2.291537e-04 2.120437e-02</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt; 1st Qu.     3.414990e+02 4.905333e+01 7.107213e+01 6.709921e+01</span></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt; Median      4.994938e+02 9.989109e+01 1.001097e+02 1.000864e+02</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt; 3rd Qu.     6.573294e+02 1.499158e+02 1.291574e+02 1.327933e+02</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt;                       X4            X5</span></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt; mean        9.976048e+01  99.986505887</span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt; sd          5.905022e+01  75.260750718</span></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt; skewness    2.754239e-03   0.006504508</span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt; ex kurtosis 3.095137e-02  -0.009494181</span></a>
-<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt; 1st Qu.     6.014504e+01  49.341442478</span></a>
-<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt; Median      9.975391e+01  99.843463264</span></a>
-<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt; 3rd Qu.     1.393594e+02 151.044259284</span></a>
-<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co">#&gt; $`stress 1`</span></a>
-<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">#&gt;                        Y           X1           X2           X3</span></a>
-<a class="sourceLine" id="cb3-22" data-line-number="22"><span class="co">#&gt; mean        533.36520478 108.36772309 104.68278212 105.26961033</span></a>
-<a class="sourceLine" id="cb3-23" data-line-number="23"><span class="co">#&gt; sd          248.19497187  77.87664779  44.57888172  50.56529934</span></a>
-<a class="sourceLine" id="cb3-24" data-line-number="24"><span class="co">#&gt; skewness     -0.04558895  -0.02348498  -0.01219461  -0.01705958</span></a>
-<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="co">#&gt; ex kurtosis  -0.22167094  -0.10825975  -0.07713538  -0.06537690</span></a>
-<a class="sourceLine" id="cb3-26" data-line-number="26"><span class="co">#&gt; 1st Qu.     360.39775266  55.14130134  74.41277663  70.96625000</span></a>
-<a class="sourceLine" id="cb3-27" data-line-number="27"><span class="co">#&gt; Median      531.57771604 108.68355052 104.91061361 105.41896036</span></a>
-<a class="sourceLine" id="cb3-28" data-line-number="28"><span class="co">#&gt; 3rd Qu.     723.05569558 161.82081068 134.92261543 139.70171951</span></a>
-<a class="sourceLine" id="cb3-29" data-line-number="29"><span class="co">#&gt;                       X4           X5</span></a>
-<a class="sourceLine" id="cb3-30" data-line-number="30"><span class="co">#&gt; mean        106.31083139 108.73425786</span></a>
-<a class="sourceLine" id="cb3-31" data-line-number="31"><span class="co">#&gt; sd           61.09042461  78.08941029</span></a>
-<a class="sourceLine" id="cb3-32" data-line-number="32"><span class="co">#&gt; skewness     -0.02195459  -0.02524098</span></a>
-<a class="sourceLine" id="cb3-33" data-line-number="33"><span class="co">#&gt; ex kurtosis  -0.06549873  -0.12108323</span></a>
-<a class="sourceLine" id="cb3-34" data-line-number="34"><span class="co">#&gt; 1st Qu.      64.80504721  55.33221323</span></a>
-<a class="sourceLine" id="cb3-35" data-line-number="35"><span class="co">#&gt; Median      106.36340400 108.82501880</span></a>
-<a class="sourceLine" id="cb3-36" data-line-number="36"><span class="co">#&gt; 3rd Qu.     148.14389905 162.94570719</span></a>
-<a class="sourceLine" id="cb3-37" data-line-number="37"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb3-38" data-line-number="38"><span class="co">#&gt; $`stress 2`</span></a>
-<a class="sourceLine" id="cb3-39" data-line-number="39"><span class="co">#&gt;                       Y           X1           X2           X3</span></a>
-<a class="sourceLine" id="cb3-40" data-line-number="40"><span class="co">#&gt; mean        523.5505116 105.88479223 103.36187107 103.75487216</span></a>
-<a class="sourceLine" id="cb3-41" data-line-number="41"><span class="co">#&gt; sd          252.4533551  78.80033237  45.02809980  51.08702874</span></a>
-<a class="sourceLine" id="cb3-42" data-line-number="42"><span class="co">#&gt; skewness      0.1060748   0.06017829   0.05422709   0.05154481</span></a>
-<a class="sourceLine" id="cb3-43" data-line-number="43"><span class="co">#&gt; ex kurtosis  -0.1155349  -0.06556281  -0.04465029  -0.03223813</span></a>
-<a class="sourceLine" id="cb3-44" data-line-number="44"><span class="co">#&gt; 1st Qu.     350.8794256  52.01502589  72.80444977  69.04535434</span></a>
-<a class="sourceLine" id="cb3-45" data-line-number="45"><span class="co">#&gt; Median      514.8024011 104.84378999 102.89127592 103.18199039</span></a>
-<a class="sourceLine" id="cb3-46" data-line-number="46"><span class="co">#&gt; 3rd Qu.     688.2595214 158.36987599 133.37177634 137.87116212</span></a>
-<a class="sourceLine" id="cb3-47" data-line-number="47"><span class="co">#&gt;                       X4           X5</span></a>
-<a class="sourceLine" id="cb3-48" data-line-number="48"><span class="co">#&gt; mean        104.39352013 106.15545601</span></a>
-<a class="sourceLine" id="cb3-49" data-line-number="49"><span class="co">#&gt; sd           61.71412419  78.94687239</span></a>
-<a class="sourceLine" id="cb3-50" data-line-number="50"><span class="co">#&gt; skewness      0.05174033   0.05919795</span></a>
-<a class="sourceLine" id="cb3-51" data-line-number="51"><span class="co">#&gt; ex kurtosis  -0.02483972  -0.07222519</span></a>
-<a class="sourceLine" id="cb3-52" data-line-number="52"><span class="co">#&gt; 1st Qu.      62.50419349  52.29202549</span></a>
-<a class="sourceLine" id="cb3-53" data-line-number="53"><span class="co">#&gt; Median      103.45451855 104.69115882</span></a>
-<a class="sourceLine" id="cb3-54" data-line-number="54"><span class="co">#&gt; 3rd Qu.     145.76720810 159.31728093</span></a></code></pre></div>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt;                  Y     X1     X2     X3     X4     X5</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt; mean        499.57  99.72 100.10 100.00  99.76  99.99</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; sd          234.79  75.09  43.21  48.98  59.05  75.26</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt; skewness      0.01   0.01   0.01   0.01   0.00   0.01</span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt; ex kurtosis   0.02   0.00   0.00   0.02   0.03  -0.01</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt; 1st Qu.     341.50  49.05  71.07  67.10  60.15  49.34</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt; Median      499.49  99.89 100.11 100.09  99.75  99.84</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt; 3rd Qu.     657.33 149.92 129.16 132.79 139.36 151.04</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt; $`stress 1`</span></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt;                  Y     X1     X2     X3     X4     X5</span></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt; mean        533.37 108.37 104.68 105.27 106.31 108.73</span></a>
+<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt; sd          248.19  77.88  44.58  50.57  61.09  78.09</span></a>
+<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt; skewness     -0.05  -0.02  -0.01  -0.02  -0.02  -0.03</span></a>
+<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt; ex kurtosis  -0.22  -0.11  -0.08  -0.07  -0.07  -0.12</span></a>
+<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt; 1st Qu.     360.40  55.14  74.41  70.97  64.81  55.33</span></a>
+<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt; Median      531.58 108.68 104.91 105.42 106.36 108.83</span></a>
+<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co">#&gt; 3rd Qu.     723.06 161.82 134.92 139.70 148.14 162.95</span></a>
+<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb3-22" data-line-number="22"><span class="co">#&gt; $`stress 2`</span></a>
+<a class="sourceLine" id="cb3-23" data-line-number="23"><span class="co">#&gt;                  Y     X1     X2     X3     X4     X5</span></a>
+<a class="sourceLine" id="cb3-24" data-line-number="24"><span class="co">#&gt; mean        523.55 105.88 103.36 103.75 104.39 106.16</span></a>
+<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="co">#&gt; sd          252.45  78.80  45.03  51.09  61.71  78.95</span></a>
+<a class="sourceLine" id="cb3-26" data-line-number="26"><span class="co">#&gt; skewness      0.11   0.06   0.05   0.05   0.05   0.06</span></a>
+<a class="sourceLine" id="cb3-27" data-line-number="27"><span class="co">#&gt; ex kurtosis  -0.12  -0.07  -0.04  -0.03  -0.02  -0.07</span></a>
+<a class="sourceLine" id="cb3-28" data-line-number="28"><span class="co">#&gt; 1st Qu.     350.88  52.02  72.80  69.05  62.50  52.29</span></a>
+<a class="sourceLine" id="cb3-29" data-line-number="29"><span class="co">#&gt; Median      514.80 104.84 102.89 103.18 103.45 104.69</span></a>
+<a class="sourceLine" id="cb3-30" data-line-number="30"><span class="co">#&gt; 3rd Qu.     688.26 158.37 133.37 137.87 145.77 159.32</span></a></code></pre></div>
 <p>Sensitivity measures allow to assess the importance of the input components. Implemented sensitivity measures are the Kolmogorov, the Wasserstein distance and (Gamma). (Gamma), the <em>Reverse Sensitivity Measure</em>, defined for a random variable Z and scenario weights w by</p>
 <p>(Gamma = \frac{\mathbb{E}(Y * w) - \mathbb{E}(Y)}{c},)</p>
 <p>where (c) is a normalisation constant such that (|Gamma| \leq 1), see [link}{<a href="https://doi.org/10.1016/j.ejor.2018.10.003">https://doi.org/10.1016/j.ejor.2018.10.003</a>}. Loosely speaking, the Reverse Sensitivity Measure is the normalised difference between the first moment of the stressed and the baseline distributions of Y.</p>

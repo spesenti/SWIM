@@ -59,7 +59,7 @@ rev.stress <- stress(type = "VaR", x = data,
    alpha = c(0.75, 0.9), q_ratio = 1.1, k = 1)
 ```
 
-Summary statistics of the baseline and the stressed model can be obtained via the summary method. 
+Summary statistics of the baseline and the stressed model can be obtained via the summary method.  
 
 ```{r summary}
 summary(rev.stress, base = TRUE)

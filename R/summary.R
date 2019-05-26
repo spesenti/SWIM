@@ -92,7 +92,7 @@ summary.SWIM <- function(object, ..., xCol = "all", wCol = "all", base = FALSE){
    skew_w <- mean(w * (x - mean_w)^3) / (sd_w^3) * n^2 / ((n-1) * (n-2))
    ex_kurt_w <- mean(w * (x - mean_w)^4) / (sd_w^4) - 3
    quartile_w <- as.matrix(Hmisc::wtd.quantile(x, weights = w, probs = c(0.25, 0.5, 0.75)))
-   moments_w <- rbind(mean_w, sd_w, skew_w, ex_kurt_w, quartile_w)
+   moments_w <- round(rbind(mean_w, sd_w, skew_w, ex_kurt_w, quartile_w), 2)
    return(moments_w)
   }
 
