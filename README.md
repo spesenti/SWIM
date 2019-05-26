@@ -35,9 +35,9 @@ Implemented stresses are:
 
 ## Example - Stressing the VaR of a portfolio
 
-Consider a portfolio \(Y = X1 + X2 + X3 + X4 + X5\), where (X1, X2, X3,
-X4, X5) are correlated normally istributed with equal mean and different
-standard deviations.
+Consider a portfolio \(Y = X1 + X2 + X3 + X4 + X5\), where
+\((X1, X2, X3, X4, X5)\) are correlated normally istributed with equal
+mean and different standard deviations.
 
 ``` r
 set.seed(0)
