@@ -18,7 +18,7 @@ The SWIM package provides weights on simulated scenarios from a stochastic model
 
 ## Installation
 
-You can install the SWIM package from [CRAN](https://github.com/spesenti/SWIM) with:
+You can install the SWIM package from [GitHub](https://github.com/spesenti/SWIM) with:
 
 ``` r
 install.packages("spesenti/SWIM")

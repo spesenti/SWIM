@@ -13,7 +13,7 @@ baseline model.
 ## Installation
 
 You can install the SWIM package from
-[CRAN](https://github.com/spesenti/SWIM) with:
+[GitHub](https://github.com/spesenti/SWIM) with:
 
 ``` r
 install.packages("spesenti/SWIM")
