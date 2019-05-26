@@ -68,7 +68,7 @@ summary(rev.stress, base = TRUE)
 Visual display of the change of empirical distirbution functions of the portfolio loss $Y$ from the baseline to the two stressed models. 
 
 ```{r plot cdf}
-plot_cdf(object = rev.stress, xCol = 1, base = TRUE)
+plot_cdf(object = rev.stress, xCol = "Y", base = TRUE)
 ```
 
 
@@ -91,7 +91,11 @@ Ranking the input components according to the chosen sensitivity measure, in thi
 importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
 ```
 
+Visual display of the change of empirical distirbution functions of $X_1$, the portfolio component with the largest sensitivity.. 
 
+```{r plot cdf input}
+plot_cdf(object = rev.stress, xCol = "X5", base = TRUE)
+```
 
 
 
