@@ -602,11 +602,52 @@ body {
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<h1 id="swim">SWIM</h1>
-<p>The goal of SWIM is to …</p>
+<h1 id="swim---a-package-for-sensitivity-analysis">SWIM - A Package for Sensitivity Analysis</h1>
+<p>The SWIM package provides weights on simulated scenarios from a stochastic model, such that stressed random variables fulfil given probabilistic constraints (e.g. specified values for risk measures), under the new scenario weights. Scenario weights are selected by constrained minimisation of the relative entropy to the baseline model.</p>
 <h2 id="installation">Installation</h2>
-<p>You can install the released version of SWIM from <a href="https://CRAN.R-project.org">CRAN</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">&quot;SWIM&quot;</span>)</a></code></pre></div>
+<p>You can install the SWIM package from <a href="https://github.com/spesenti/SWIM">CRAN</a> with:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">&quot;spesenti/SWIM&quot;</span>)</a></code></pre></div>
+<h2 id="scope-of-the-swim-package">Scope of the SWIM package</h2>
+<p>Implemented stresses are:</p>
+<table>
+<thead>
+<tr class="header">
+<th>R function</th>
+<th>Stress</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>stress_VaR</td>
+<td>VaR risk measure, a quantile</td>
+</tr>
+<tr class="even">
+<td>stress_VaR_ES</td>
+<td>VaR and ES risk measures</td>
+</tr>
+<tr class="odd">
+<td>stress_mean</td>
+<td>means</td>
+</tr>
+<tr class="even">
+<td>stress_mean_sd</td>
+<td>means and standard deviations</td>
+</tr>
+<tr class="odd">
+<td>stress_mean_moment</td>
+<td>moments, functions of moments</td>
+</tr>
+<tr class="even">
+<td>stress_prob</td>
+<td>probabilities of intervals</td>
+</tr>
+<tr class="odd">
+<td>stress_user</td>
+<td>user defined scenario weights</td>
+</tr>
+</tbody>
+</table>
+<h2></h2>
 <h2 id="example">Example</h2>
 <p>This is a basic example which shows you how to solve a common problem:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">## basic example code</span></a></code></pre></div>

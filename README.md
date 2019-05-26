@@ -1,18 +1,38 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# SWIM
+# SWIM - A Package for Sensitivity Analysis
 
-The goal of SWIM is to …
+The SWIM package provides weights on simulated scenarios from a
+stochastic model, such that stressed random variables fulfil given
+probabilistic constraints (e.g. specified values for risk measures),
+under the new scenario weights. Scenario weights are selected by
+constrained minimisation of the relative entropy to the baseline model.
 
 ## Installation
 
-You can install the released version of SWIM from
-[CRAN](https://CRAN.R-project.org) with:
+You can install the SWIM package from
+[CRAN](https://github.com/spesenti/SWIM) with:
 
 ``` r
-install.packages("SWIM")
+install.packages("spesenti/SWIM")
 ```
+
+## Scope of the SWIM package
+
+Implemented stresses are:
+
+| R function           | Stress                        |
+| -------------------- | ----------------------------- |
+| stress\_VaR          | VaR risk measure, a quantile  |
+| stress\_VaR\_ES      | VaR and ES risk measures      |
+| stress\_mean         | means                         |
+| stress\_mean\_sd     | means and standard deviations |
+| stress\_mean\_moment | moments, functions of moments |
+| stress\_prob         | probabilities of intervals    |
+| stress\_user         | user defined scenario weights |
+
+## 
 
 ## Example
 
