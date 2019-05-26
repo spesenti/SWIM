@@ -30,7 +30,7 @@ otherwise the data.frame for customised plotting with
 \item{binwidth}{Numeric, the width of the bins used to plot 
 the histogram, the \code{binwidth} in the 
 \code{geom_freqpoly} function  in \code{ggplot} 
-(\code{default = 0.2}).}
+(default corresponds to 40 bins).}
 }
 \value{
 If \code{displ = TRUE}, a histogram of the stochastic model 
