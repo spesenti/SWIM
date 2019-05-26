@@ -93,7 +93,16 @@ summary(rev.stress, base = TRUE)
 #> 3rd Qu.     688.26 158.37 133.37 137.87 145.77 159.32
 ```
 
-### Sensitivity and importance rank of input factors.
+Visual display of the change of empirical distirbution functions of the
+portfolio loss \(Y\) from the baseline to the two stressed models.
+
+``` r
+plot_cdf(object = rev.stress, xCol = 1, base = TRUE)
+```
+
+<img src="man/figures/README-plot cdf-1.png" width="100%" />
+
+### Sensitivity and importance rank of portfolio components
 
 Sensitivity measures allow to assess the importance of the input
 components. Implemented sensitivity measures are the Kolmogorov, the
