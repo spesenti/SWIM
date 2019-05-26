@@ -1,9 +1,11 @@
  #' SWIM: A Package for Sensitivity Analysis  
  #'
- #' The \code{SWIM} package provides scenario weights for realisations 
- #'     of a stochastic model. Weights are derived by entropy minimisation,
- #'     such that the stressed model arising by weighting of the scenarios
- #'     satisfies probabilistic constraints.
+ #' The \code{SWIM} package provides weights on simulated scenarios 
+ #'     from a stochastic model,such that a stressed model components 
+ #'     (random variables) fulfil given probabilistic constraints (e.g. 
+ #'     specified values for risk measures), under the new scenario weights.
+ #'     Scenario weights are selected by constrained minimisation of the 
+ #'     relative entropy to the baseline model.
  #' 
  #' @details The \code{SWIM} (Scenario Weights for Importance Measurement)
  #'     package provides weights on simulated scenarios from a stochastic

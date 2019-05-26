@@ -12,38 +12,94 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
-# SWIM
+# SWIM - A Package for Sensitivity Analysis
 
-The goal of SWIM is to ...
+The SWIM package provides weights on simulated scenarios from a stochastic model, such that a stressed model components (random variables) fulfil given probabilistic constraints (e.g. specified values for risk measures), under the new scenario weights. Scenario weights are selected by constrained minimisation of the relative entropy to the baseline model.
 
 ## Installation
 
-You can install the released version of SWIM from [CRAN](https://CRAN.R-project.org) with:
+You can install the SWIM package from [GitHub](https://github.com/spesenti/SWIM) with:
 
 ``` r
-install.packages("SWIM")
+install.packages("spesenti/SWIM")
 ```
+## Scope of the SWIM package  
+Implemented stresses are: 
 
-## Example
+R functions          | Stress
+------------------- | -------------
+stress_VaR          | VaR risk measure, a quantile
+stress_VaR_ES       | VaR and ES risk measures
+stress_mean         | means
+stress_mean_sd      | means and standard deviations
+stress_mean_moment  | moments, functions of moments
+stress_prob         | probabilities of intervals
+stress_user         | user defined scenario weights
 
-This is a basic example which shows you how to solve a common problem:
+
+
+## Example - Stressing the VaR of a portfolio
+
+Consider a portfolio $Y = X1 + X2 + X3 + X4 + X5$, where $(X1, X2, X3, X4, X5)$ are correlated normally istributed with equal mean and different standard deviations.
+We stress the VaR (quantile) of the portfolio loss $Y$ at levels 0.75 and 0.9 with an increase of $10\%$.
 
 ```{r example}
-## basic example code
+set.seed(0)
+SD <- round(runif(5, 30, 80))
+Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
+if (!requireNamespace("mvtnorm", quietly = TRUE))
+   stop("Package \"mvtnorm\" needed for this function 
+   to work. Please install it.")
+x <- mvtnorm::rmvnorm(10^5, 
+   mean =  rep(100, 5), 
+   sigma = (SD %*% t(SD)) * Corr)
+data <- data.frame(rowSums(x), x)
+names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
+rev.stress <- stress(type = "VaR", x = data, 
+   alpha = c(0.75, 0.9), q_ratio = 1.1, k = 1)
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+Summary statistics of the baseline and the stressed model can be obtained via the summary method.  
 
-```{r cars}
-summary(cars)
+```{r summary}
+summary(rev.stress, base = TRUE)
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date.
+Visual display of the change of empirical distirbution functions of the portfolio loss $Y$ from the baseline to the two stressed models. 
 
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
+```{r plot cdf}
+plot_cdf(object = rev.stress, xCol = "Y", base = TRUE)
 ```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub!
+
+### Sensitivity and importance rank of portfolio components
+
+Sensitivity measures allow to assess the importance of the input components. Implemented sensitivity measures are the Kolmogorov, the Wasserstein distance and $Gamma$. $Gamma$, the *Reverse Sensitivity Measure*, defined for a random variable Z and scenario weights w by
+
+$Gamma = \frac{\mathbb{E}(Y * w) - \mathbb{E}(Y)}{c},$
+
+where $c$ is a normalisation constant such that $|Gamma| \leq 1$, see [link]{https://doi.org/10.1016/j.ejor.2018.10.003}. Loosely speaking, the Reverse Sensitivity Measure is the normalised difference between the first moment of the stressed and the baseline distributions of Y.
+
+```{r sensitivity}
+sensitivity(rev.stress, type = "all")
+plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma") 
+```
+
+Ranking the input components according to the chosen sensitivity measure, in this example using $Gamma$.
+
+```{r importance rank}
+importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
+```
+
+Visual display of the change of empirical distirbution functions of $X_1$, the portfolio component with the largest sensitivity.. 
+
+```{r plot cdf input}
+plot_cdf(object = rev.stress, xCol = "X5", base = TRUE)
+```
+
+
+
+
+
+
+
