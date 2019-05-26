@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 ```
 # SWIM - A Package for Sensitivity Analysis
 
-The SWIM package provides weights on simulated scenarios from a stochastic model, such that stressed random variables fulfil given probabilistic constraints (e.g. specified values for risk measures), under the new scenario weights. Scenario weights are selected by constrained minimisation of the relative entropy to the baseline model.
+The SWIM package provides weights on simulated scenarios from a stochastic model, such that a stressed model components (random variables) fulfil given probabilistic constraints (e.g. specified values for risk measures), under the new scenario weights. Scenario weights are selected by constrained minimisation of the relative entropy to the baseline model.
 
 ## Installation
 
@@ -26,7 +26,7 @@ install.packages("spesenti/SWIM")
 ## Scope of the SWIM package  
 Implemented stresses are: 
 
-R function          | Stress
+R functions          | Stress
 ------------------- | -------------
 stress_VaR          | VaR risk measure, a quantile
 stress_VaR_ES       | VaR and ES risk measures
@@ -37,15 +37,35 @@ stress_prob         | probabilities of intervals
 stress_user         | user defined scenario weights
 
 
-##
 
-## Example
+## Example - Stressing the VaR of a portfolio
 
-This is a basic example which shows you how to solve a common problem:
+Consider the portfolio Y = X1 + X2 + X3 + X4 + X5, where (X1, X2, X3, X4, X5) are correlated normally istributed with equal mean and different standard deviations.
+
+
 
 ```{r example}
-## basic example code
+set.seed(0)
+SD <- round(runif(5, 30, 80))
+Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
+if (!requireNamespace("mvtnorm", quietly = TRUE))
+   stop("Package \"mvtnorm\" needed for this function 
+   to work. Please install it.")
+x <- mvtnorm::rmvnorm(10^5, 
+   mean =  rep(100, 5), 
+   sigma = (SD %*% t(SD)) * Corr) 
+data <- data.frame(rowSums(x), x)
+names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
+rev.stress <- stress(type = "VaR", x = data, 
+   alpha = c(0.75, 0.9), q_ratio = 1.1, k = 1)
 ```
+
+Summary statistics of the baseline and the stressed model can be obtained via
+
+```{r summary}
+summary(rev.stress)
+```
+
 
 What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
 

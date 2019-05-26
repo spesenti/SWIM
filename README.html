@@ -603,7 +603,7 @@ body {
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 <h1 id="swim---a-package-for-sensitivity-analysis">SWIM - A Package for Sensitivity Analysis</h1>
-<p>The SWIM package provides weights on simulated scenarios from a stochastic model, such that stressed random variables fulfil given probabilistic constraints (e.g. specified values for risk measures), under the new scenario weights. Scenario weights are selected by constrained minimisation of the relative entropy to the baseline model.</p>
+<p>The SWIM package provides weights on simulated scenarios from a stochastic model, such that a stressed model components (random variables) fulfil given probabilistic constraints (e.g. specified values for risk measures), under the new scenario weights. Scenario weights are selected by constrained minimisation of the relative entropy to the baseline model.</p>
 <h2 id="installation">Installation</h2>
 <p>You can install the SWIM package from <a href="https://github.com/spesenti/SWIM">CRAN</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">&quot;spesenti/SWIM&quot;</span>)</a></code></pre></div>
@@ -612,7 +612,7 @@ body {
 <table>
 <thead>
 <tr class="header">
-<th>R function</th>
+<th>R functions</th>
 <th>Stress</th>
 </tr>
 </thead>
@@ -647,19 +647,67 @@ body {
 </tr>
 </tbody>
 </table>
-<h2></h2>
-<h2 id="example">Example</h2>
-<p>This is a basic example which shows you how to solve a common problem:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">## basic example code</span></a></code></pre></div>
+<h2 id="example---stressing-the-var-of-a-portfolio">Example - Stressing the VaR of a portfolio</h2>
+<p>Consider the portfolio Y = X1 + X2 + X3 + X4 + X5, where (X1, X2, X3, X4, X5) are correlated normally istributed with equal mean and different standard deviations.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">SD &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">runif</span>(<span class="dv">5</span>, <span class="dv">30</span>, <span class="dv">80</span>))</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">Corr &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rep</span>(<span class="fl">0.5</span>, <span class="dv">5</span><span class="op">^</span><span class="dv">2</span>), <span class="dt">nrow =</span> <span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">diag</span>(<span class="kw">rep</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dv">5</span>))</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="cf">if</span> (<span class="op">!</span><span class="kw">requireNamespace</span>(<span class="st">&quot;mvtnorm&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">   <span class="kw">stop</span>(<span class="st">&quot;Package </span><span class="ch">\&quot;</span><span class="st">mvtnorm</span><span class="ch">\&quot;</span><span class="st"> needed for this function </span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="st">   to work. Please install it.&quot;</span>)</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">x &lt;-<span class="st"> </span>mvtnorm<span class="op">::</span><span class="kw">rmvnorm</span>(<span class="dv">10</span><span class="op">^</span><span class="dv">5</span>, </a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">   <span class="dt">mean =</span>  <span class="kw">rep</span>(<span class="dv">100</span>, <span class="dv">5</span>), </a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">   <span class="dt">sigma =</span> (SD <span class="op">%*%</span><span class="st"> </span><span class="kw">t</span>(SD)) <span class="op">*</span><span class="st"> </span>Corr) </a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">rowSums</span>(x), x)</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="kw">names</span>(data) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Y&quot;</span>, <span class="st">&quot;X1&quot;</span>, <span class="st">&quot;X2&quot;</span>, <span class="st">&quot;X3&quot;</span>, <span class="st">&quot;X4&quot;</span>, <span class="st">&quot;X5&quot;</span>)</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">rev.stress &lt;-<span class="st"> </span><span class="kw">stress</span>(<span class="dt">type =</span> <span class="st">&quot;VaR&quot;</span>, <span class="dt">x =</span> data, </a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">   <span class="dt">alpha =</span> <span class="kw">c</span>(<span class="fl">0.75</span>, <span class="fl">0.9</span>), <span class="dt">q_ratio =</span> <span class="fl">1.1</span>, <span class="dt">k =</span> <span class="dv">1</span>)</a></code></pre></div>
+<p>Summary statistics of the baseline and the stressed model can be obtained via</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">summary</span>(rev.stress)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt; $`stress 1`</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt;                        Y           X1           X2           X3</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt; mean        533.36520478 108.36772309 104.68278212 105.26961033</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; sd          248.19497187  77.87664779  44.57888172  50.56529934</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt; skewness     -0.04558895  -0.02348498  -0.01219461  -0.01705958</span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt; ex kurtosis  -0.22167094  -0.10825975  -0.07713538  -0.06537690</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt; 1st Qu.     360.39775266  55.14130134  74.41277663  70.96625000</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt; Median      531.57771604 108.68355052 104.91061361 105.41896036</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt; 3rd Qu.     723.05569558 161.82081068 134.92261543 139.70171951</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt;                       X4           X5</span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt; mean        106.31083139 108.73425786</span></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt; sd           61.09042461  78.08941029</span></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt; skewness     -0.02195459  -0.02524098</span></a>
+<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt; ex kurtosis  -0.06549873  -0.12108323</span></a>
+<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt; 1st Qu.      64.80504721  55.33221323</span></a>
+<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt; Median      106.36340400 108.82501880</span></a>
+<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt; 3rd Qu.     148.14389905 162.94570719</span></a>
+<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co">#&gt; $`stress 2`</span></a>
+<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">#&gt;                       Y           X1           X2           X3</span></a>
+<a class="sourceLine" id="cb3-22" data-line-number="22"><span class="co">#&gt; mean        523.5505116 105.88479223 103.36187107 103.75487216</span></a>
+<a class="sourceLine" id="cb3-23" data-line-number="23"><span class="co">#&gt; sd          252.4533551  78.80033237  45.02809980  51.08702874</span></a>
+<a class="sourceLine" id="cb3-24" data-line-number="24"><span class="co">#&gt; skewness      0.1060748   0.06017829   0.05422709   0.05154481</span></a>
+<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="co">#&gt; ex kurtosis  -0.1155349  -0.06556281  -0.04465029  -0.03223813</span></a>
+<a class="sourceLine" id="cb3-26" data-line-number="26"><span class="co">#&gt; 1st Qu.     350.8794256  52.01502589  72.80444977  69.04535434</span></a>
+<a class="sourceLine" id="cb3-27" data-line-number="27"><span class="co">#&gt; Median      514.8024011 104.84378999 102.89127592 103.18199039</span></a>
+<a class="sourceLine" id="cb3-28" data-line-number="28"><span class="co">#&gt; 3rd Qu.     688.2595214 158.36987599 133.37177634 137.87116212</span></a>
+<a class="sourceLine" id="cb3-29" data-line-number="29"><span class="co">#&gt;                       X4           X5</span></a>
+<a class="sourceLine" id="cb3-30" data-line-number="30"><span class="co">#&gt; mean        104.39352013 106.15545601</span></a>
+<a class="sourceLine" id="cb3-31" data-line-number="31"><span class="co">#&gt; sd           61.71412419  78.94687239</span></a>
+<a class="sourceLine" id="cb3-32" data-line-number="32"><span class="co">#&gt; skewness      0.05174033   0.05919795</span></a>
+<a class="sourceLine" id="cb3-33" data-line-number="33"><span class="co">#&gt; ex kurtosis  -0.02483972  -0.07222519</span></a>
+<a class="sourceLine" id="cb3-34" data-line-number="34"><span class="co">#&gt; 1st Qu.      62.50419349  52.29202549</span></a>
+<a class="sourceLine" id="cb3-35" data-line-number="35"><span class="co">#&gt; Median      103.45451855 104.69115882</span></a>
+<a class="sourceLine" id="cb3-36" data-line-number="36"><span class="co">#&gt; 3rd Qu.     145.76720810 159.31728093</span></a></code></pre></div>
 <p>What is special about using <code>README.Rmd</code> instead of just <code>README.md</code>? You can include R chunks like so:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">summary</span>(cars)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt;      speed           dist       </span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt;  Min.   : 4.0   Min.   :  2.00  </span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt;  1st Qu.:12.0   1st Qu.: 26.00  </span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt;  Median :15.0   Median : 36.00  </span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt;  Mean   :15.4   Mean   : 42.98  </span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt;  3rd Qu.:19.0   3rd Qu.: 56.00  </span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt;  Max.   :25.0   Max.   :120.00</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">summary</span>(cars)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co">#&gt;      speed           dist       </span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">#&gt;  Min.   : 4.0   Min.   :  2.00  </span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt;  1st Qu.:12.0   1st Qu.: 26.00  </span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt;  Median :15.0   Median : 36.00  </span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt;  Mean   :15.4   Mean   : 42.98  </span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt;  3rd Qu.:19.0   3rd Qu.: 56.00  </span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt;  Max.   :25.0   Max.   :120.00</span></a></code></pre></div>
 <p>You’ll still need to render <code>README.Rmd</code> regularly, to keep <code>README.md</code> up-to-date.</p>
 <p>You can also embed plots, for example:</p>
 <img src="data:image/png;base64,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" width="100%" />
