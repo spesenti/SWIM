@@ -37,7 +37,8 @@ Implemented stresses are:
 
 ## Example - Stressing the VaR of a portfolio
 
-<img src="https://latex.codecogs.com/gif.latex?s=\text { sensor reading }  " />
+<img src="/cgi-bin/mimetex.cgi?
+    x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}">
 
 Consider a portfolio Y = X1 + X2 + X3 + X4 + X5, where (X1, X2, X3, X4,
 X5) are correlated normally istributed with equal mean and different
