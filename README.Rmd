@@ -75,7 +75,7 @@ plot_cdf(object = rev.stress, xCol = , base = TRUE)
 
 ### Sensitivity and importance rank of portfolio components
 
-Sensitivity measures allow to assess the importance of the input components. Implemented sensitivity measures are the Kolmogorov, the Wasserstein distance and *Gamma*. *Gamma*, the *Reverse Sensitivity Measure*, defined for model component Xi, i = 1, ...5, and scenario weights w by
+Sensitivity measures allow to assess the importance of the input components. Implemented sensitivity measures are the Kolmogorov distance, the Wasserstein distance and *Gamma*. *Gamma*, the *Reverse Sensitivity Measure*, defined for model component Xi, i = 1, ...5, and scenario weights w by
 
 *Gamma* = ( E(Xi * w) - E(Xi) / c,
 
