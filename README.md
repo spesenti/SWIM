@@ -4,11 +4,11 @@
 # SWIM - A Package for Sensitivity Analysis
 
 The SWIM package provides weights on simulated scenarios from a
-stochastic model, such that a stressed model components (random
-variables) fulfil given probabilistic constraints (e.g. specified values
-for risk measures), under the new scenario weights. Scenario weights are
-selected by constrained minimisation of the relative entropy to the
-baseline model.
+stochastic model, such that stressed model components (random variables)
+fulfil given probabilistic constraints (e.g. specified values for risk
+measures), under the new scenario weights. Scenario weights are selected
+by constrained minimisation of the relative entropy to the baseline
+model.
 
 ## Installation
 
@@ -35,8 +35,8 @@ Implemented stresses are:
 
 ## Example - Stressing the VaR of a portfolio
 
-Consider a portfolio Y = X1 + X2 + X3 + X4 + X5, where X1, X2, X3, X4,
-X5) are correlated normally istributed with equal mean and different
+Consider a portfolio Y = X1 + X2 + X3 + X4 + X5, where (X1, X2, X3, X4,
+X5) are correlated normally distributed with equal mean and different
 standard deviations. We stress the VaR (quantile) of the portfolio loss
 Y at levels 0.75 and 0.9 with an increase of 10%.
 
@@ -92,7 +92,7 @@ summary(rev.stress, base = TRUE)
 #> 3rd Qu.     688.26 158.37 133.37 137.87 145.77 159.32
 ```
 
-Visual display of the change of empirical distirbution functions of the
+Visual display of the change of empirical distribution functions of the
 portfolio loss Y from the baseline to the two stressed models.
 
 ``` r
@@ -146,7 +146,7 @@ importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
 #> 2 stress 2 Gamma  2  5  4  3  1
 ```
 
-Visual display of the change of empirical distirbution functions of
+Visual display of the change of empirical distribution functions of
 X\_1, the portfolio component with the largest sensitivity..
 
 ``` r
