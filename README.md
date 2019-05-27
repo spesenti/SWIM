@@ -37,7 +37,9 @@ Implemented stresses are:
 
 ## Example - Stressing the VaR of a portfolio
 
-Consider a portfolio \[Y = X1 + X2 + X3 + X4 + X5\], where
+<img src="https://latex.codecogs.com/gif.latex?s=\text { sensor reading }  " />
+
+Consider a portfolio \(Y = X1 + X2 + X3 + X4 + X5\), where
 \((X1, X2, X3, X4, X5)\) are correlated normally istributed with equal
 mean and different standard deviations. We stress the VaR (quantile) of
 the portfolio loss \(Y\) at levels 0.75 and 0.9 with an increase of
