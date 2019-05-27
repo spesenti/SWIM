@@ -6,7 +6,8 @@
 #' @inheritParams summary.SWIM
 #' @param type    Character; one of \code{"Gamma", "Kolmogorov", 
 #'                "Wasserstein", "all"}.
-#' @param f       List of functions with the same length as \code{xCol}.  
+#' @param f       List of functions with the same length as \code{xCol}.
+#' 
 #'                If provided, the transformed data, \code{f(x)},
 #'                are considered.
 #' 
