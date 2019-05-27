@@ -148,7 +148,7 @@ importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
 ```
 
 Visual display of the change of empirical distribution functions from
-the baseline to the two stressed models of X1, the portfolio component
+the baseline to the two stressed models of X5, the portfolio component
 with the largest sensitivity.
 
 ``` r
