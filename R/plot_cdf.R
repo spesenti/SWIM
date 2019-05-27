@@ -64,7 +64,7 @@
    if (base == TRUE){
     plot_data <- cbind(plot_data, base = rep(1, length(x_data)))
    }
-   plot_data <- reshape::melt(plot_data, id.var = x_name, variable_name = "stress")
+   plot_data <- reshape2::melt(plot_data, id.var = x_name, variable.name = "stress", value.name = "value")
     
    if (displ == TRUE){
     if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 

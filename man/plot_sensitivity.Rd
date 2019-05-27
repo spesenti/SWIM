@@ -22,8 +22,9 @@ stresses (\code{default = "all"}).}
 (\code{default = "Gamma"}).}
 
 \item{f}{List of functions with the same length as \code{xCol}.
-If provided, the transformed data, \code{f(x)},
-are considered.}
+
+               If provided, the transformed data, \code{f(x)},
+               are considered.}
 
 \item{displ}{Logical, if \code{TRUE} the plot is displayed, 
 otherwise the data.frame for customised plotting with 

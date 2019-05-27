@@ -50,7 +50,7 @@ set.seed(0)
 x <- as.data.frame(cbind(
   "normal" = rnorm(1000), 
   "gamma" = rgamma(1000, shape = 2)))
-res1 <- stress(type = "user", x = x, new_weights = function(x)x^2)
+res1 <- stress(type = "user", x = x, new_weightsfun = function(x)x^2)
     
 }
 \references{

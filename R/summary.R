@@ -5,7 +5,7 @@
 #'     stressed using the scenario weights. 
 #'     
 #' @inheritParams get.data
-#' @param ...     Additional arguments to be passed on. 
+#' @param ...     Additional arguments will be ignored. 
 #' @param xCol    Numeric or character vector; (names of) the columns of 
 #'                the underlying data 
 #'                of the \code{object} (\code{default = "all"}). 

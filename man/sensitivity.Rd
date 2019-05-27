@@ -22,8 +22,9 @@ stresses (\code{default = "all"}).}
 "Wasserstein", "all"}.}
 
 \item{f}{List of functions with the same length as \code{xCol}.
-If provided, the transformed data, \code{f(x)},
-are considered.}
+
+               If provided, the transformed data, \code{f(x)},
+               are considered.}
 }
 \value{
 A data.frame containing the sensitivity measures of the 
@@ -81,7 +82,8 @@ sensitivity(res1, wCol = 1, type = "all",
   
 ## Consider the portfolio Y = X1 + X2 + X3 + X4 + X5,  
 ## where (X1, X2, X3, X4, X5) are correlated normally 
-## distributed with equal mean and different standard deviations.
+## distributed with equal mean and different standard deviations,
+## see the README for further details.
 
 set.seed(0)
 SD <- round(runif(5, 30, 80))

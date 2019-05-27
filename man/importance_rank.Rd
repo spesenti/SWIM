@@ -21,8 +21,9 @@ stresses (\code{default = "all"}).}
 \item{type}{Character, one of \code{"Gamma", "Wasserstein", "all"}.}
 
 \item{f}{List of functions with the same length as \code{xCol}.
-If provided, the transformed data, \code{f(x)},
-are considered.}
+
+               If provided, the transformed data, \code{f(x)},
+               are considered.}
 }
 \value{
 A data.frame containing the importance ranks of the 
