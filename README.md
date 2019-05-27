@@ -97,10 +97,10 @@ Visual display of the change of empirical distirbution functions of the
 portfolio loss \(Y\) from the baseline to the two stressed models.
 
 ``` r
-plot_cdf(object = rev.stress, xCol = "Y", base = TRUE)
+plot_cdf(object = rev.stress, xCol = , base = TRUE)
 ```
 
-<img src="man/figures/README-plot cdf-1.png" width="100%" />
+<img src="man/figures/README-plot-cdf-1.png" width="100%" />
 
 ### Sensitivity and importance rank of portfolio components
 
@@ -155,4 +155,4 @@ Visual display of the change of empirical distirbution functions of
 plot_cdf(object = rev.stress, xCol = "X5", base = TRUE)
 ```
 
-<img src="man/figures/README-plot cdf input-1.png" width="100%" />
+<img src="man/figures/README-plot-cdf input-1.png" width="100%" />
