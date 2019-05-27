@@ -104,9 +104,9 @@ stress_moment <- function(x, f, k, m, ...){
   moments <- function(x)colMeans(z * as.vector(exp(z %*% x))) - c(1, m)
   sol <- nleqslv::nleqslv(rep(0, length.out = length(f) + 1), moments, ...)
   if (sol$termcd != 1) stop(paste("nleqslv could not find a solution and terminated with code ", sol$termcd))
-  new_weights <- function(w)as.vector(exp(c(1, w) %*% sol$x))
-  constr <- list(f, m)
-  specs <- list(type = "moment", "k" = k, "constr" = constr)
+# new_weights <- function(w)as.vector(exp(c(1, w) %*% sol$x))
+  new_weights <- list(function(w)as.vector(exp(z %*% sol$x)))
+  specs <- data.frame(type = "moment", "k" = NA, stringsAsFactors = FALSE)
   my_list <- SWIM("x" = x, "new_weights" = new_weights, "specs" = specs)
   return(my_list)
   }
@@ -152,10 +152,11 @@ stress_moment <- function(x, f, k, m, ...){
 stress_mean <- function(x, k, new_means, ...)
 {
   means <- rep(list(function(x)x), length(k))
-  res <- stress_moment(x, means, k, new_means, ...)
+  res <- stress_moment(x = x, f = means, k = k, m = new_means, ...)
   res$specs$type <- "mean"
   return(res)
 }
+
 
 #' Stressing Mean and Standard Deviation
 #'

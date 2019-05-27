@@ -155,4 +155,4 @@ with the largest sensitivity.
 plot_cdf(object = rev.stress, xCol = "X5", base = TRUE)
 ```
 
-<img src="man/figures/README-plot-cdf input-1.png" width="100%" />
+<img src="man/figures/README-plot-cdf-input-1.png" width="100%" />

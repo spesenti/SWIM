@@ -49,7 +49,7 @@
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    if (anyNA(object$x)) warning("x contains NA")
    sens <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f)
-   sens <- reshape::melt(sens, id.var = c("stress", "type"), variable_name = "X_all")
+   sens <- reshape2::melt(sens, id.var = c("stress", "type"), variable.name = "X_all")
    if (displ == TRUE){
      ggplot2::ggplot(sens, ggplot2::aes(x = X_all, y = value)) +
       ggplot2::geom_point(ggplot2::aes(color = factor(stress), shape = type)) +

@@ -10,7 +10,7 @@
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{...}{Additional arguments to be passed on.}
+\item{...}{Additional arguments will be ignored.}
 
 \item{xCol}{Numeric or character vector; (names of) the columns of 
 the underlying data 

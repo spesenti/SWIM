@@ -17,18 +17,18 @@ Description: An efficient sensitivity analysis for stochastic models based on
     probabilistic constraints (e.g. specified values for risk measures), 
     under the new scenario weights. Scenario weights are selected by 
     constrained minimisation of the relative entropy to the baseline model.
-Depends: R (>= 3.5.1)
+Depends: R (>= 3.5.0)
 Imports: 
     Rdpack (>= 0.7),
     Hmisc,
     nleqslv,
-    reshape,
+    reshape2,
     plyr,
     ggplot2,
     spatstat,
     stats
 RdMacros: Rdpack
-License: What license is it under?
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1

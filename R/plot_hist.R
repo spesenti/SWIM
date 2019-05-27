@@ -53,7 +53,7 @@
    if (base == TRUE){
     hist_data <- cbind(hist_data, "base" = rep(1, length(x_data)))
    }
-   hist_data <- reshape::melt(hist_data, id.var = x_name, variable_name = "stress")
+   hist_data <- reshape2::melt(hist_data, id.var = x_name, variable.name = "stress", value.name = "value")
 
    if (displ == TRUE){
    if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 

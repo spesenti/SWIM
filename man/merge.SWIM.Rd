@@ -9,7 +9,7 @@
 \arguments{
 \item{x, y}{Objects of class \code{SWIM}.}
 
-\item{...}{Additional arguments to be passed on.}
+\item{...}{Additional arguments will be ignored.}
 }
 \value{
 An object of class \code{SWIM} containing:

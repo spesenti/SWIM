@@ -127,7 +127,7 @@
  #'     Stresses with \code{type = c("user", "moment")} are ignored. 
  #' 
  #' @param x,y    Objects of class \code{SWIM}.
- #' @param ...    Additional arguments to be passed on.
+ #' @param ...    Additional arguments will be ignored.
  #'  
  #' @return An object of class \code{SWIM} containing:
  #'   \itemize{
