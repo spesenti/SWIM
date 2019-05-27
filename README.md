@@ -37,10 +37,7 @@ Implemented stresses are:
 
 ## Example - Stressing the VaR of a portfolio
 
-<img src="/cgi-bin/mimetex.cgi?
-    x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}">
-
-Consider a portfolio Y = X1 + X2 + X3 + X4 + X5, where (X1, X2, X3, X4,
+Consider a portfolio Y = X1 + X2 + X3 + X4 + X5, where X1, X2, X3, X4,
 X5) are correlated normally istributed with equal mean and different
 standard deviations. We stress the VaR (quantile) of the portfolio loss
 Y at levels 0.75 and 0.9 with an increase of 10%.
@@ -115,11 +112,10 @@ Measure*, defined for a random variable Z and scenario weights w by
 
 *Gamma* = ( E(Y \* w) - E(Y) / c,
 
-where c is a normalisation constant such that |*Gamma*| 1, see
-\[link\]{<https://doi.org/10.1016/j.ejor.2018.10.003>}. Loosely
-speaking, the Reverse Sensitivity Measure is the normalised difference
-between the first moment of the stressed and the baseline distributions
-of Y.
+where c is a normalisation constant such that |*Gamma*| \<= 1, see
+<https://doi.org/10.1016/j.ejor.2018.10.003>. Loosely speaking, the
+Reverse Sensitivity Measure is the normalised difference between the
+first moment of the stressed and the baseline distributions of Y.
 
 ``` r
 sensitivity(rev.stress, type = "all")
