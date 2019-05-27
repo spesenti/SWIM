@@ -1,5 +1,3 @@
-Silvana M. Pesenti
-June 01, 2019
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
