@@ -58,7 +58,7 @@
    if (displ == TRUE){
    if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 
    ggplot2::ggplot(hist_data, ggplot2::aes(x = hist_data[,1])) +
-   ggplot2::geom_histogram(binwidth = binwidth, ggplot2::aes(color = factor(stress), weight = value, fill = factor(stress))) +
+   ggplot2::geom_histogram(binwidth = binwidth, ggplot2::aes_(color = factor(stress), weight = ~value, fill = factor(stress))) +
     ggplot2::labs(x = x_name, y = "histogram") +
     ggplot2::xlim(x_limits) +
     ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
