@@ -147,12 +147,19 @@ importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
 #> 2 stress 2 Gamma  2  5  4  3  1
 ```
 
-Visual display of the change of empirical distribution functions from
-the baseline to the two stressed models of X5, the portfolio component
-with the largest sensitivity.
+Visual display of the change of empirical distribution functions and
+denisty from the baseline to the two stressed models of X5, the
+portfolio component with the largest sensitivity.
 
 ``` r
 plot_cdf(object = rev.stress, xCol = "X5", base = TRUE)
 ```
 
 <img src="man/figures/README-plot-cdf-input-1.png" width="100%" />
+
+``` r
+plot_hist(object = rev.stress, xCol = "X5", base = TRUE)
+#> Warning: Removed 9 rows containing missing values (geom_path).
+```
+
+<img src="man/figures/README-plot-cdf-input-2.png" width="100%" />
