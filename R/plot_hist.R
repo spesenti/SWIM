@@ -6,7 +6,7 @@
 #' @inheritParams  plot_cdf
 #' @param binwidth Numeric, the width of the bins used to plot 
 #'                 the histogram, the \code{binwidth} in the 
-#'                 \code{geom_histogram} function  in \code{ggplot} 
+#'                 \code{geom_freqpoly} function  in \code{ggplot} 
 #'                 (default corresponds to 40 bins).   
 #' 
 #' @return If \code{displ = TRUE}, a histogram of the stochastic model 
@@ -18,17 +18,15 @@
 #'     (the stresses) and \code{value} (the values). \cr 
 #'     Denote by \code{res} the return of the function call, then
 #'     \code{ggplot} can be called via: 
-#'     \deqn{ggplot(res, aes(x = res[ ,1]))}
-#'     \deqn{ + geom_histogram(weight = value, aes(color = factor(stress))).}
+#'     \deqn{ggplot(res, aes(x = res[ ,1], y = ..density.., weight = value)))}
+#'     \deqn{ + geom_freqpoly(binwidth, aes(color = factor(stress))).}
 #'  
 #' @examples      
 #' ## example with a stress on VaR
 #' set.seed(0)
-#' x <- as.data.frame(cbind(
-#'   "normal" = rnorm(10^5), 
-#'   "gamma" = rgamma(10^5, shape = 2)))
+#' x <- data.frame("normal" = rnorm(10^5))
 #' res1 <- stress(type = "VaR", x = x, 
-#'   alpha = c(0.9, 0.95), q_ratio = 1.05)
+#'   alpha = c(0.75, 0.95), q_ratio = 1.1)
 #' plot_hist(res1, xCol = 1, wCol = 1:2, base = TRUE, binwidth = 0.1)
 #'                  
 #' @seealso See \code{\link{cdf}} and \code{\link{plot_cdf}} for 
@@ -57,10 +55,10 @@
 
    if (displ == TRUE){
    if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 
-   ggplot2::ggplot(hist_data, ggplot2::aes(x = hist_data[,1])) +
-   ggplot2::geom_histogram(binwidth = binwidth, ggplot2::aes_(color = factor(stress), weight = ~value, fill = factor(stress))) +
+   ggplot2::ggplot(hist_data, ggplot2::aes(x = hist_data[, 1], y = ..density.., weight = value)) +
+      ggplot2::geom_freqpoly(binwidth = binwidth, ggplot2::aes(color = factor(stress))) +
     ggplot2::labs(x = x_name, y = "histogram") +
-    ggplot2::xlim(x_limits) +
+    ggplot2::coord_cartesian(x_limits) +
     ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
    } else {
    return(hist_data)
