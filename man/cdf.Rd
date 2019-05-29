@@ -22,7 +22,8 @@ The empirical distribution function (a function) of
     evaluated at a vector.
 }
 \description{
-Provides the empirical distribution function of a stressed model.
+Provides the empirical distribution function of a stressed 
+    model component (random variable) under the scenario weights.
 }
 \examples{
      

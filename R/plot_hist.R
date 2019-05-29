@@ -1,6 +1,6 @@
 #' Plotting Histograms of a Stressed Model
 #' 
-#' Plots the histogram of a stochastic model
+#' Plots the histogram of a stressed model component (random variable) 
 #'     under the scenario weights.
 #' 
 #' @inheritParams  plot_cdf

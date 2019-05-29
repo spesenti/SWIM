@@ -30,9 +30,10 @@ of the \code{object} (\code{default = "all"}).}
     weights of the \code{object}. Columns corresponds 
     to different stresses.
 
-\code{get.weightsfun}: A list containing the functions, that, 
-    when applied to the \code{k}th column of the data, generate the 
-    scenario weights of the \code{object}.\cr
+\code{get.weightsfun}: A list containing functions, which, 
+    when applied to a column of the data, generate the 
+    scenario weights of the \code{object}. The corresponding stressed 
+    columns can be obtained via \code{get.specs}.\cr
     Use \code{\link{get.weights}} if the \code{SWIM} object only contains 
     scenario weights and not a list of functions.
 

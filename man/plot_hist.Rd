@@ -21,7 +21,8 @@ stresses (\code{default = "all"}).}
 are also returned (\code{default = "FALSE"}).}
 
 \item{x_limits}{Vector, the limits of the x-axis of the plot, the 
-value for the \code{xlim} function in \code{ggplot}.}
+value for \code{xlim} in the \code{coord_cartesian} 
+function in \code{ggplot}.}
 
 \item{displ}{Logical, if \code{TRUE} the plot is displayed, 
 otherwise the data.frame for customised plotting with 
@@ -46,7 +47,7 @@ If \code{displ = TRUE}, a histogram of the stochastic model
     \deqn{ + geom_histogram(weight = value, aes(color = factor(stress))).}
 }
 \description{
-Plots the histogram of a stochastic model
+Plots the histogram of a stressed model component (random variable) 
     under the scenario weights.
 }
 \examples{

@@ -90,9 +90,10 @@
 
  #' @describeIn get.data extracting weight functions.
  #'
- #' @return \code{get.weightsfun}: A list containing the functions, that, 
- #'     when applied to the \code{k}th column of the data, generate the 
- #'     scenario weights of the \code{object}.\cr
+ #' @return \code{get.weightsfun}: A list containing functions, which, 
+ #'     when applied to a column of the data, generate the 
+ #'     scenario weights of the \code{object}. The corresponding stressed 
+ #'     columns can be obtained via \code{get.specs}.\cr
  #'     Use \code{\link{get.weights}} if the \code{SWIM} object only contains 
  #'     scenario weights and not a list of functions.
  #'         
@@ -132,8 +133,8 @@
  #' @return An object of class \code{SWIM} containing:
  #'   \itemize{
  #'     \item \code{x}, the data;
- #'     \item \code{new_weights}, a list of functions, that applied
- #'    to the \code{k}th column of \code{x} generate the vectors of 
+ #'     \item \code{new_weights}, a list of functions, each applied
+ #'    to a column of \code{x}, thus generating the vectors of 
  #'    scenario weights;
  #'     \item \code{specs}, the specification of what has been
  #'     stressed.
