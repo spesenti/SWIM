@@ -42,8 +42,12 @@
 
   get.data <- function(object, xCol = "all"){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
-   if (xCol == "all") xCol = 1:ncol(object$x) else if (!(xCol %in% 1:ncol(object$x))) stop("invalid 'xCol' argument")
-   return(as.matrix(object$x[, xCol]))
+   if (xCol == "all" && is.null(colnames(object$x))) xCol = 1:ncol(object$x) else xCol <- colnames(object$x)
+   if (is.numeric(xCol) && !(xCol %in% 1:ncol(object$x))) stop("invalid 'xCol' argument")
+   if (is.character(xCol) && !(xCol %in% colnames(object$x))) stop("invalid 'xCol' argument")
+   xdata <- as.matrix(object$x[, xCol])
+   colnames(xdata) <- xCol
+   return(xdata)
   }
 
  #' @describeIn get.data extracting scenario weights. 

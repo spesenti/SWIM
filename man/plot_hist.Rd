@@ -31,7 +31,7 @@ otherwise the data.frame for customised plotting with
 \item{binwidth}{Numeric, the width of the bins used to plot 
 the histogram, the \code{binwidth} in the 
 \code{geom_freqpoly} function  in \code{ggplot} 
-(default corresponds to 40 bins).}
+(default corresponds to 30 bins).}
 }
 \value{
 If \code{displ = TRUE}, a histogram of the stochastic model 
@@ -54,10 +54,10 @@ Plots the histogram of a stressed model component (random variable)
      
 ## example with a stress on VaR
 set.seed(0)
-x <- data.frame("normal" = rnorm(10^5))
+x <- data.frame("gamma" = rgamma(10^5, shape = 2))
 res1 <- stress(type = "VaR", x = x, 
   alpha = c(0.75, 0.95), q_ratio = 1.1)
-plot_hist(res1, xCol = 1, wCol = 1:2, base = TRUE, binwidth = 0.1)
+plot_hist(res1, xCol = 1, wCol = 1:2, base = TRUE, binwidth = 0.4)
                  
 }
 \seealso{
