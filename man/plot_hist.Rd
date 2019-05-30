@@ -57,7 +57,7 @@ set.seed(0)
 x <- data.frame("gamma" = rgamma(10^5, shape = 2))
 res1 <- stress(type = "VaR", x = x, 
   alpha = c(0.75, 0.95), q_ratio = 1.1)
-plot_hist(res1, xCol = 1, wCol = 1:2, base = TRUE, binwidth = 0.4)
+plot_hist(res1, xCol = "gamma", wCol = 1:2, base = TRUE, binwidth = 0.4)
                  
 }
 \seealso{
