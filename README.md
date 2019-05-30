@@ -159,7 +159,6 @@ plot_cdf(object = rev.stress, xCol = "X5", base = TRUE)
 
 ``` r
 plot_hist(object = rev.stress, xCol = "X5", base = TRUE)
-#> Warning: Removed 9 rows containing missing values (geom_path).
 ```
 
 <img src="man/figures/README-plot-cdf-input-2.png" width="100%" />
