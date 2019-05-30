@@ -5,7 +5,7 @@
 \title{Plotting the Empirical Distribution Functions of a Stressed Model}
 \usage{
 plot_cdf(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
-  x_limits, displ = TRUE)
+  x_limits, y_limits, displ = TRUE)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
@@ -25,7 +25,12 @@ are also returned (\code{default = "FALSE"}).}
 = 500}).}
 
 \item{x_limits}{Vector, the limits of the x-axis of the plot, the 
-value for the \code{xlim} function in \code{ggplot}.}
+value for \code{xlim} in the \code{coord_cartesian} 
+function in \code{ggplot}.}
+
+\item{y_limits}{Vector, the limits of the y-axis of the plot, the 
+value for \code{ylim} in the \code{coord_cartesian} 
+function in \code{ggplot}.}
 
 \item{displ}{Logical, if \code{TRUE} the plot is displayed, 
 otherwise the data.frame for customised plotting with 
@@ -45,12 +50,12 @@ If \code{displ = TRUE}, a plot displaying the empirical
     \deqn{ggplot(res, aes(x = res[ ,1], w = value))}
     \deqn{ + stat_ecdf(aes(color = factor(stress)), n = n).}
     Note that the ggplot2 default of \code{stat_ecdf} does not
-    take \code{weight} as an aestetic. We use the workaround 
+    take \code{weight} as an aesthetic. We use the workaround 
     by Nicolas Woloszko, see Note below.
 }
 \description{
-Plots the empirical distribution function of a stochastic model
-    under the scenario weights.
+Plots the empirical distribution function of a stressed model 
+    component (random variable) under the scenario weights.
 }
 \note{
 This function is based on the ggplot \code{stat_ecdf}
@@ -67,8 +72,10 @@ x <- as.data.frame(cbind(
   "normal" = rnorm(10^5), 
   "gamma" = rgamma(10^5, shape = 2)))
 res1 <- stress(type = "VaR", x = x, 
-  alpha = c(0.9, 0.95), q_ratio = 1.05)
+  alpha = c(0.75, 0.95), q_ratio = 1.15)
 plot_cdf(res1, xCol = 1, wCol = 1:2, base = TRUE)
+plot_cdf(res1, xCol = 1, wCol = 1:2, base = TRUE, 
+  x_limits = c(0, 5), y_limits = c(0.5, 1))
      
 }
 \seealso{

@@ -158,7 +158,8 @@
 
  # help function Kolmogorov distance
  # maximal difference between the corresponding ecdf
- # comparison between different stresses. All inputs from one stress have   the same Kolmogorov distance. 
+ # comparison between different stresses. All inputs from one
+ # stress have the same Kolmogorov distance. 
   .kolmogorov <- function(z, w){
    n <- length(z)
    xw_cdf <- cumsum(w[rank(sort(z))]) 

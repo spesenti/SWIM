@@ -1,7 +1,8 @@
 #' Sample Quantiles of a Stressed Model
 #' 
-#' Provides sample quantiles of a stochastic model corresponding 
-#'     to probabilities under the scenario weights.
+#' Provides sample quantiles for components (random variables) of a 
+#'     stochastic model, corresponding to distribution functions 
+#'     under the scenario weights.
 #'   
 #' @details 
 #' 
@@ -17,9 +18,9 @@
 #' 
 #' @details \code{type} defines the choice of algorithm used for 
 #'     calculating the estimate of the sample quantiles.  
-#'     \code{"quantile"} corresponds to the interpolation used in  
-#'     \code{\link[stats]{quantile}}. 
-#'     \code{"(i-1)/(n-1)", "i/(n+1)", "i/n"} are the inverse of the
+#'     \code{"quantile"} corresponds to the default interpolation used in  
+#'     \code{\link[stats]{quantile}}. Further options are 
+#'     \code{"(i-1)/(n-1)", "i/(n+1)", "i/n"} the inverse of the
 #'     empirical distribution function, using, respectively, 
 #'     \code{(wt - 1)/T, wt/(T+1), wt/T}, where \code{wt} is the 
 #'     cumulative weight and \code{T} the total weight (usually total 
@@ -34,7 +35,7 @@
 #'                 
 #' @seealso See \code{\link[Hmisc]{wtd.quantile}} on which the function
 #'     \code{quantile_stressed} is based. \cr
-#'     See \code{cdf} for the empifical distribution function of 
+#'     See \code{cdf} for the empirical distribution function of 
 #'     a stressed model.
 #'     
 #' @examples      

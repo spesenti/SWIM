@@ -1,6 +1,7 @@
 #' Empirical Distribution Function of a Stressed Model
 #' 
-#' Provides the empirical distribution function of a stressed model. 
+#' Provides the empirical distribution function of a stressed 
+#'     model component (random variable) under the scenario weights. 
 #' 
 #' @inheritParams sensitivity 
 #' @param xCol    Numeric or character, (name of) the column of the underlying data 

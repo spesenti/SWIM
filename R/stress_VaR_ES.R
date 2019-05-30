@@ -1,9 +1,10 @@
  #' Stressing Value-at-Risk and Expected Shortfall
  #'
- #' Provides weights on simulated scenarios from a stochastic
- #'     model, such that a stressed model component fulfils a 
- #'     constraint on its VaR and ES. Scenario weights are selected by 
- #'     constrained minimisation of the relative entropy to the 
+ #' Provides weights on simulated scenarios from a baseline stochastic
+ #'     model, such that a stressed model component (random variable) fulfils a 
+ #'     constraint on its Value-at-Risk (VaR) and Expected Shortfall (ES) risk 
+ #'     measures, both evaluated at a given level. Scenario weights are 
+ #'     selected by constrained minimisation of the relative entropy to the 
  #'     baseline model.
  #'     
  #' @inheritParams    stress_VaR
@@ -12,13 +13,24 @@
  #'                   If \code{q} and \code{s} are vectors, they must have
  #'                   the same length.
  #' @param s_ratio    Numeric, vector, the ratio of the stressed ES to 
- #'                   the baseline ES, \eqn{s_ratio = s / ES}.\cr
- #'                   If \code{q} and \code{s_ratio} are vectors, they must
- #'                   have the same length.
+ #'                   the baseline ES.\cr
+ #'                   If \code{q} (\code{q_ratio}) and \code{s_ratio} are vectors, 
+ #'                   they must have the same length.
  #' 
- #' @details If one of \code{alpha, q, s} (\code{q_ratio, s_ratio}) is 
- #'     a vector, the stressed VaR's and ES's at level \code{alpha} are
- #'     equal to \code{q} and \code{s}, respectively.
+ #' @details The VaR at level \code{alpha} of a random variable with 
+ #'     distribution function F is defined as its left-quantile at \code{alpha}:
+ #'     \deqn{VaR_alpha = F^{-1}(alpha).}
+ #'     
+ #'     The ES at level \code{alpha} of a random variable with distribution 
+ #'     function F is defined by:
+ #'     \deqn{ES_alpha = 1 / (1 - alpha) * int_alpha^1 VaR_u d u.}
+ #' 
+ #'     The stressed VaR and ES are the risk measures of the chosen model 
+ #'     component, subject to the calculated scenario weights. If one 
+ #'     of \code{alpha, q, s} (\code{q_ratio, s_ratio}) is 
+ #'     a vector, the stressed VaR's and ES's of the \code{k}th column of  
+ #'     \code{x}, at levels \code{alpha}, are equal to \code{q} 
+ #'     and \code{s}, respectively.
  #' 
  #' @return A \code{SWIM} object containing:
  #'     \itemize{
@@ -46,6 +58,8 @@
  #' ## stressing "gamma"
  #' res2 <- stress_VaR_ES(x = x, alpha = 0.9, 
  #'   q_ratio = 1.03, s_ratio = c(1.05, 1.08), k = 2)
+ #' get.specs(res2)
+ #' summary(res2)
  #'             
  #' @family stress functions 
  #' @inherit SWIM references 

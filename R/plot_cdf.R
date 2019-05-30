@@ -1,7 +1,7 @@
 #' Plotting the Empirical Distribution Functions of a Stressed Model
 #' 
-#' Plots the empirical distribution function of a stochastic model
-#'     under the scenario weights.
+#' Plots the empirical distribution function of a stressed model 
+#'     component (random variable) under the scenario weights.
 #'  
 #' @inheritParams  sensitivity
 #' @inheritParams  plot_sensitivity
@@ -12,7 +12,11 @@
 #'                 \code{stat_ecdf} in \code{ggplot} (\code{default 
 #'                 = 500}).
 #' @param x_limits Vector, the limits of the x-axis of the plot, the 
-#'                 value for the \code{xlim} function in \code{ggplot}.
+#'                 value for \code{xlim} in the \code{coord_cartesian} 
+#'                 function in \code{ggplot}.
+#' @param y_limits Vector, the limits of the y-axis of the plot, the 
+#'                 value for \code{ylim} in the \code{coord_cartesian} 
+#'                 function in \code{ggplot}.
 #                 
 #' @return If \code{displ = TRUE}, a plot displaying the empirical
 #'     distribution function of the stochastic model under the 
@@ -27,7 +31,7 @@
 #'     \deqn{ggplot(res, aes(x = res[ ,1], w = value))}
 #'     \deqn{ + stat_ecdf(aes(color = factor(stress)), n = n).}
 #'     Note that the ggplot2 default of \code{stat_ecdf} does not
-#'     take \code{weight} as an aestetic. We use the workaround 
+#'     take \code{weight} as an aesthetic. We use the workaround 
 #'     by Nicolas Woloszko, see Note below.
 #'      
 #' @note This function is based on the ggplot \code{stat_ecdf}
@@ -43,8 +47,10 @@
 #'   "normal" = rnorm(10^5), 
 #'   "gamma" = rgamma(10^5, shape = 2)))
 #' res1 <- stress(type = "VaR", x = x, 
-#'   alpha = c(0.9, 0.95), q_ratio = 1.05)
+#'   alpha = c(0.75, 0.95), q_ratio = 1.15)
 #' plot_cdf(res1, xCol = 1, wCol = 1:2, base = TRUE)
+#' plot_cdf(res1, xCol = 1, wCol = 1:2, base = TRUE, 
+#'   x_limits = c(0, 5), y_limits = c(0.5, 1))
 #'      
 #' @seealso See \code{\link{cdf}} for the empirical distribution function 
 #'     of a stressed model and \code{\link{quantile_stressed}} for
@@ -52,7 +58,7 @@
 #'     
 #' @export
 
-  plot_cdf <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500, x_limits, displ = TRUE){
+  plot_cdf <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500, x_limits, y_limits, displ = TRUE){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    if (anyNA(object$x)) warning("x contains NA")
    x_data <- get.data(object)[, xCol]
@@ -68,10 +74,11 @@
     
    if (displ == TRUE){
     if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 
-    ggplot2::ggplot(plot_data, ggplot2::aes(x = plot_data[,1], weight = value)) +
+    if (missing(y_limits)) y_limits <- c(0,1) 
+    ggplot2::ggplot(plot_data, ggplot2::aes_(x = plot_data[,1], weight = ~value)) +
       stat_ecdf(ggplot2::aes(color = factor(stress)), n = n) +
       ggplot2::labs(x = x_name, y = "ecdf") +
-      ggplot2::xlim(x_limits) +
+      ggplot2::coord_cartesian(xlim = x_limits, ylim = y_limits) +
       ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
    } else {
     return(plot_data)

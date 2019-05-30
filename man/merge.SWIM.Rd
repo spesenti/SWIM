@@ -15,8 +15,8 @@
 An object of class \code{SWIM} containing:
   \itemize{
     \item \code{x}, the data;
-    \item \code{new_weights}, a list of functions, that applied
-   to the \code{k}th column of \code{x} generate the vectors of 
+    \item \code{new_weights}, a list of functions, each applied
+   to a column of \code{x}, thus generating the vectors of 
    scenario weights;
     \item \code{specs}, the specification of what has been
     stressed.

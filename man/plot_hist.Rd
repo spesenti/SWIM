@@ -21,7 +21,8 @@ stresses (\code{default = "all"}).}
 are also returned (\code{default = "FALSE"}).}
 
 \item{x_limits}{Vector, the limits of the x-axis of the plot, the 
-value for the \code{xlim} function in \code{ggplot}.}
+value for \code{xlim} in the \code{coord_cartesian} 
+function in \code{ggplot}.}
 
 \item{displ}{Logical, if \code{TRUE} the plot is displayed, 
 otherwise the data.frame for customised plotting with 
@@ -29,8 +30,8 @@ otherwise the data.frame for customised plotting with
 
 \item{binwidth}{Numeric, the width of the bins used to plot 
 the histogram, the \code{binwidth} in the 
-\code{geom_histogram} function  in \code{ggplot} 
-(default corresponds to 40 bins).}
+\code{geom_freqpoly} function  in \code{ggplot} 
+(default corresponds to 30 bins).}
 }
 \value{
 If \code{displ = TRUE}, a histogram of the stochastic model 
@@ -42,23 +43,21 @@ If \code{displ = TRUE}, a histogram of the stochastic model
     (the stresses) and \code{value} (the values). \cr 
     Denote by \code{res} the return of the function call, then
     \code{ggplot} can be called via: 
-    \deqn{ggplot(res, aes(x = res[ ,1]))}
-    \deqn{ + geom_histogram(weight = value, aes(color = factor(stress))).}
+    \deqn{ggplot(res, aes(x = res[ ,1], y = ..density.., weight = value)))}
+    \deqn{ + geom_freqpoly(binwidth, aes(color = factor(stress))).}
 }
 \description{
-Plots the histogram of a stochastic model
+Plots the histogram of a stressed model component (random variable) 
     under the scenario weights.
 }
 \examples{
      
 ## example with a stress on VaR
 set.seed(0)
-x <- as.data.frame(cbind(
-  "normal" = rnorm(10^5), 
-  "gamma" = rgamma(10^5, shape = 2)))
+x <- data.frame("gamma" = rgamma(10^5, shape = 2))
 res1 <- stress(type = "VaR", x = x, 
-  alpha = c(0.9, 0.95), q_ratio = 1.05)
-plot_hist(res1, xCol = 1, wCol = 1:2, base = TRUE, binwidth = 0.1)
+  alpha = c(0.75, 0.95), q_ratio = 1.1)
+plot_hist(res1, xCol = 1, wCol = 1:2, base = TRUE, binwidth = 0.4)
                  
 }
 \seealso{

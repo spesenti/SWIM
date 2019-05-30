@@ -51,7 +51,7 @@
    sens <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f)
    sens <- reshape2::melt(sens, id.var = c("stress", "type"), variable.name = "X_all")
    if (displ == TRUE){
-     ggplot2::ggplot(sens, ggplot2::aes(x = X_all, y = value)) +
+     ggplot2::ggplot(sens, ggplot2::aes_(x = ~X_all, y = ~value)) +
       ggplot2::geom_point(ggplot2::aes(color = factor(stress), shape = type)) +
       ggplot2::labs(x = "", y = "sensitivity") +
       ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))

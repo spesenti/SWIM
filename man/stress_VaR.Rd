@@ -16,7 +16,7 @@ underlying data of the \code{SWIM} object.}
 \item{alpha}{Numeric vector, the levels of the stressed VaR.}
 
 \item{q_ratio}{Numeric vector, the ratio of the stressed VaR to the
-baseline VaR, \eqn{q_ratio =  q /  VaR}.\cr
+baseline VaR.\cr
 If \code{alpha} and \code{q_ratio} are vectors, they 
 must have the same length.}
 
@@ -32,27 +32,35 @@ have the same length.}
 A \code{SWIM} object containing:
     \itemize{
       \item \code{x}, the data;
-      \item \code{new_weights}, a list of functions, that applied to the
+      \item \code{new_weights}, a list of functions, that, applied to the
     \code{k}th column of \code{x} generate the vectors of scenario
     weights;
      \item \code{specs}, the specification of what has been
     stressed.
-    \code{specs} is a data.frame consisting of \code{type}, \code{k}
+    \code{specs} is a data.frame consisting of \code{type}, \code{k},
     \code{alpha} and \code{q}. Each row corresponds to a different 
     stress.
     }
     See \code{\link{SWIM}} for details.
 }
 \description{
-Provides weights on simulated scenarios from a stochastic
-    model, such that a stressed model component fulfils a 
-    constraint on its VaR. Scenario weights are selected by 
+Provides weights on simulated scenarios from a baseline stochastic
+    model, such that a stressed model component (random variable) fulfils a 
+    constraint on its quantile at a given level, also known as 
+    Value-at-Risk (VaR). Scenario weights are selected by 
     constrained minimisation of the relative entropy to the 
     baseline model.
 }
 \details{
+The stressed VaR is the quantile of the chosen model component,
+     subject to the calculated scenario weights. 
+     The VaR at level \code{alpha} of a random variable with distribution 
+     function F is defined as its left-quantile at alpha:
+     \deqn{VaR_alpha = F^{-1}(alpha).} 
+     
 If one of \code{alpha, q} (\code{q_ratio}) is a vector,
-   the stressed VaR's at level \code{alpha} are equal to \code{q}.
+   the stressed VaR's of the \code{k}th column of \code{x}, at levels 
+   \code{alpha}, are equal to \code{q}.
 }
 \examples{
 set.seed(0)
@@ -66,6 +74,8 @@ res1 <- stress(type = "VaR", x = x,
 ## stressing "gamma" 
 res2 <- stress_VaR(x = x, alpha = 0.9, 
   q_ratio = c(1.03, 1.05), k = 2)
+get.specs(res2)
+summary(res2)
    
 }
 \references{
