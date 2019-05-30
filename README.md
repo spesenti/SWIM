@@ -21,7 +21,8 @@ install.packages("spesenti/SWIM")
 
 ## Scope of the SWIM package
 
-Implemented stresses are:
+The SWIM package provides sensitivity analysis tools for stressing model
+components (random variables). Implemented stresses are:
 
 | R functions          | Stress                        |
 | -------------------- | ----------------------------- |
@@ -32,6 +33,10 @@ Implemented stresses are:
 | stress\_mean\_moment | moments, functions of moments |
 | stress\_prob         | probabilities of intervals    |
 | stress\_user         | user defined scenario weights |
+
+Implemented functions allow to graphically display the change in
+probability distributions under different stresses and the baseline
+model as well as calculating sensitivity measures.
 
 ## Example - Stressing the VaR of a portfolio
 
@@ -148,8 +153,10 @@ importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
 ```
 
 Visual display of the change of empirical distribution functions and
-denisty from the baseline to the two stressed models of X5, the
-portfolio component with the largest sensitivity.
+density from the baseline to the two stressed models of X5, the
+portfolio component with the largest sensitivity. Stressing the
+portfolio loss Y, results in a distribution function of X5 that has a
+heavier tail.
 
 ``` r
 plot_cdf(object = rev.stress, xCol = "X5", base = TRUE)
