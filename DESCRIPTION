@@ -16,7 +16,7 @@ Description: An efficient sensitivity analysis for stochastic models based on
     stochastic model, such that stressed random variables fulfil given 
     probabilistic constraints (e.g. specified values for risk measures), 
     under the new scenario weights. Scenario weights are selected by 
-    constrained minimisation of the relative entropy to the baseline model.
+    constrained minimisation of the relative entropy to the baseline model. 
 Depends: R (>= 3.5.0)
 Imports: 
     Rdpack (>= 0.7),

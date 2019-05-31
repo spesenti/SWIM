@@ -76,7 +76,7 @@
 
   get.weights <- function(object){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
-   specs <- get.specs(object)
+   specs <- object$specs
    x_data <- get.data(object)
    m <- length(specs$type)
    new_weights <- matrix(0, nrow = nrow(x_data), ncol = m)
@@ -105,7 +105,6 @@
 
   get.weightsfun <- function(object){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
-   specs <- get.specs(object)
    if (!is.function(object$new_weights[[1]]))
       stop("New_weights is not a function, use get.weights() instead.") 
    return(object$new_weights)
