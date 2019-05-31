@@ -34,7 +34,7 @@ components (random variables). Implemented stresses are:
 | stress\_prob         | probabilities of intervals    |
 | stress\_user         | user defined scenario weights |
 
-Implemented functions allow to graphically display the change in
+Implemented functions allow to graphically display the change in the
 probability distributions under different stresses and the baseline
 model as well as calculating sensitivity measures.
 
