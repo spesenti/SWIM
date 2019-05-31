@@ -36,9 +36,9 @@ A \code{SWIM} object containing:
     See \code{\link{SWIM}} for details.
 }
 \description{
-Provides weights on simulated scenarios from a stochastic
-    model, such that the stressed model fulfils the 
-    mean constraints. Scenario weights are selected by 
+Provides weights on simulated scenarios from a baseline stochastic
+    model, such that stressed model components (random variables) 
+    fulfil the mean constraints. Scenario weights are selected by  
     constrained minimisation of the relative entropy to the 
     baseline model.
 }
@@ -49,13 +49,32 @@ The function \code{stress_mean} is a wrapper for the
     to \code{...}.
 }
 \examples{
-## See examples in \\code{\\link{stress_moment}}.     
+set.seed(0)
+x <- data.frame(cbind(
+  "normal" = rnorm(1000), 
+  "gamma" = rgamma(1000, shape = 2), 
+  "beta" = rbeta(1000, shape1 = 2, shape2 = 2)))
+## stressing means
+res1 <- stress(type = "mean", x = x, k = 1 : 3, 
+  new_means = c(1, 1, 0.75))
+summary(res1)
+res1$specs
+## calling stress_mean directly
+res2 <- stress_mean(x = x, k = 1 : 3, 
+  new_means = c(1, 1, 0.75))
+summary(res2)
+
+## See also examples in \\code{\\link{stress_moment}} and \\code{\\link{stress_mean_sd}}.     
     
 }
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}
 }
 \seealso{
+See \code{\link{stress_mean_sd}} for stressing means 
+    and standard deviations jointly, and \code{\link{stress_moment}} for 
+    moment constraints.
+
 Other stress functions: \code{\link{stress_VaR_ES}},
   \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},
   \code{\link{stress_moment}}, \code{\link{stress_prob}},

@@ -39,24 +39,39 @@ A \code{SWIM} object containing:
     See \code{\link{SWIM}} for details.
 }
 \description{
-Provides weights on simulated scenarios from a stochastic
-    model, such that the stressed model fulfils the 
-    mean and standard deviation constraints. Scenario weights 
-    are selected by constrained minimisation of the relative 
-    entropy to the baseline model.
+Provides weights on simulated scenarios from a baseline stochastic
+    model, such that stressed model components (random variables) 
+    fulfil the mean and standard deviation constraints. 
+    Scenario weights are selected by constrained minimisation of 
+    the relative entropy to the baseline model.
 }
 \details{
 The function \code{stress_mean_sd} is a wrapper for the 
     function \code{stress_moment}. See \code{\link{stress_moment}} 
-    for details on the algorithm and for the additional arguments 
-    to \code{...}.
+    for details on the additional arguments to \code{...} and 
+    the underlying algorithm.
     
     For only stressing means, see \code{\link{stress_mean}}, 
     for stressing standard deviations without the mean or 
     other moments, see \code{\link{stress_moment}}.
 }
 \examples{
-## See examples in \\code{\\link{stress_moment}}.     
+set.seed(0)
+x <- data.frame(cbind(
+  "normal" = rnorm(1000), 
+  "gamma" = rgamma(1000, shape = 2), 
+  "beta" = rbeta(1000, shape1 = 2, shape2 = 2)))
+## stressing mean and sd of column 1
+res1 <- stress(type = "mean sd", x = x, k = 1, new_means = 0.1, 
+  new_sd = 1.1, method = "Newton", 
+  control = list(maxit = 1000, ftol = 1E-15))
+summary(res1)
+## calling stress_mean_sd directly 
+res2 <- stress_mean_sd(x = x, k = 1, new_means = 0.1, 
+  new_sd = 1.1, method = "Newton", 
+  control = list(maxit = 1000, ftol = 1E-15))
+
+## See also examples in \\code{\\link{stress_moment}}.     
           
 }
 \references{

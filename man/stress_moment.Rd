@@ -13,7 +13,7 @@ correspond to random variables; OR\cr
 A \code{SWIM} object, where \code{x} corresponds to the 
 underlying data of the \code{SWIM} object.}
 
-\item{f}{A function, or list of functions, that applied to 
+\item{f}{A function, or list of functions, that, applied to 
 \code{x}, constitute the moment constraints.}
 
 \item{k}{A vector or list of vectors, same length as \code{f},
@@ -41,9 +41,9 @@ A \code{SWIM} object containing:
     See \code{\link{SWIM}} for details.
 }
 \description{
-Provides weights on simulated scenarios from a stochastic
-    model, such that the stressed model fulfils the 
-    moment constraints. Scenario weights are selected by 
+Provides weights on simulated scenarios from a baseline stochastic
+    model, such that stressed model components (random variables) 
+    fulfil the moment constraints. Scenario weights are selected by 
     constrained minimisation of the relative entropy to the 
     baseline model.
 }
@@ -51,9 +51,10 @@ Provides weights on simulated scenarios from a stochastic
 The moment constraints are given by \code{E^Q( f(x) ) = m}, 
     where \code{E^Q} denotes the expectation under the stressed 
     model.\cr
-    If \code{f} is a function of multiple variables, \code{k}
+    If \code{f} is a function of multiple variables, \code{k} 
     corresponds to the input variables to \code{f}. Thus,
-    the length of \code{k} must be equal to the number of input
+    the length of \code{k} (or elements of \code{k}, if \code{k} 
+    is a list) must be equal to the number of input
     variables to \code{f}.
 
     The function solves the set of equations with respect to theta,
@@ -66,32 +67,24 @@ x <- data.frame(cbind(
   "normal" = rnorm(1000), 
   "gamma" = rgamma(1000, shape = 2), 
   "beta" = rbeta(1000, shape1 = 2, shape2 = 2)))
-## stressing means
-res1 <- stress(type = "mean", x = x, k = 1 : 3, 
-  new_means = c(1, 1, 0.75))
-## calling stress_mean directly
-res2 <- stress_mean(x = x, k = 1 : 3, 
-  new_means = c(1, 1, 0.75))
-
-## stressing mean and sd of column 1
-res3 <- stress(type = "mean sd", x = x, k = 1, new_means = 0.1, 
-  new_sd = 1.1, method = "Newton", 
-  control = list(maxit = 1000, ftol = 1E-15))
-## calling stress_mean_sd directly 
-res4 <- stress_mean_sd(x = x, k = 1, new_means = 0.1, 
-  new_sd = 1.1, method = "Newton", 
-  control = list(maxit = 1000, ftol = 1E-15))
-
-## stressing covariance of column 1,2 while leaving the means unchanged
-res5 <- stress_moment(x = x, 
+  
+## stressing covariance of columns 1,2 while leaving the means unchanged
+res1 <- stress_moment(x = x, 
   f = list(function(x)x, function(x)x, function(x)x[1] * x[2]), 
   k = list(1, 2, c(1, 2)), m = c(0, 2, 0.5), 
   method = "Newton", control = list(maxit = 1000, ftol = 1E-10))
-  
-## stressing jointly the VaR of column 1,3  
-res6 <- stress_moment(x = x, 
+## means under the stressed model
+apply(x, 2, stats::weighted.mean, w = get.weights(res1)) 
+## covaraince of columns 1,2 under the stressed model
+stats::weighted.mean(x[, 1] * x[, 2], w = get.weights(res1))
+    
+## stressing jointly the tail probabilities of columns 1,3  
+res2 <- stress_moment(x = x, 
   f = list(function(x)(x > 1.5), function(x)(x > 0.9)), 
   k = c(1, 3), m = c(0.9, 0.9))
+## probabilities under the stressed model
+mean((x[, 1] > 1.5) * get.weights(res2))
+mean((x[, 3] > 0.9) * get.weights(res2))
      
 }
 \references{

@@ -1,13 +1,13 @@
 #' Stressing Moments
 #'
-#' Provides weights on simulated scenarios from a stochastic
-#'     model, such that the stressed model fulfils the 
-#'     moment constraints. Scenario weights are selected by 
+#' Provides weights on simulated scenarios from a baseline stochastic
+#'     model, such that stressed model components (random variables) 
+#'     fulfil the moment constraints. Scenario weights are selected by 
 #'     constrained minimisation of the relative entropy to the 
 #'     baseline model.
 #'     
 #' @inheritParams   stress_VaR
-#' @param f         A function, or list of functions, that applied to 
+#' @param f         A function, or list of functions, that, applied to 
 #'                  \code{x}, constitute the moment constraints.
 #' @param k         A vector or list of vectors, same length as \code{f},
 #'                  indicating which columns of
@@ -21,9 +21,10 @@
 #' @details The moment constraints are given by \code{E^Q( f(x) ) = m}, 
 #'     where \code{E^Q} denotes the expectation under the stressed 
 #'     model.\cr
-#'     If \code{f} is a function of multiple variables, \code{k}
+#'     If \code{f} is a function of multiple variables, \code{k} 
 #'     corresponds to the input variables to \code{f}. Thus,
-#'     the length of \code{k} must be equal to the number of input
+#'     the length of \code{k} (or elements of \code{k}, if \code{k} 
+#'     is a list) must be equal to the number of input
 #'     variables to \code{f}.
 #' 
 #'     The function solves the set of equations with respect to theta,
@@ -48,32 +49,24 @@
 #'   "normal" = rnorm(1000), 
 #'   "gamma" = rgamma(1000, shape = 2), 
 #'   "beta" = rbeta(1000, shape1 = 2, shape2 = 2)))
-#' ## stressing means
-#' res1 <- stress(type = "mean", x = x, k = 1 : 3, 
-#'   new_means = c(1, 1, 0.75))
-#' ## calling stress_mean directly
-#' res2 <- stress_mean(x = x, k = 1 : 3, 
-#'   new_means = c(1, 1, 0.75))
-#' 
-#' ## stressing mean and sd of column 1
-#' res3 <- stress(type = "mean sd", x = x, k = 1, new_means = 0.1, 
-#'   new_sd = 1.1, method = "Newton", 
-#'   control = list(maxit = 1000, ftol = 1E-15))
-#' ## calling stress_mean_sd directly 
-#' res4 <- stress_mean_sd(x = x, k = 1, new_means = 0.1, 
-#'   new_sd = 1.1, method = "Newton", 
-#'   control = list(maxit = 1000, ftol = 1E-15))
-#' 
-#' ## stressing covariance of column 1,2 while leaving the means unchanged
-#' res5 <- stress_moment(x = x, 
+#'   
+#' ## stressing covariance of columns 1,2 while leaving the means unchanged
+#' res1 <- stress_moment(x = x, 
 #'   f = list(function(x)x, function(x)x, function(x)x[1] * x[2]), 
 #'   k = list(1, 2, c(1, 2)), m = c(0, 2, 0.5), 
 #'   method = "Newton", control = list(maxit = 1000, ftol = 1E-10))
-#'   
-#' ## stressing jointly the VaR of column 1,3  
-#' res6 <- stress_moment(x = x, 
+#' ## means under the stressed model
+#' apply(x, 2, stats::weighted.mean, w = get.weights(res1)) 
+#' ## covaraince of columns 1,2 under the stressed model
+#' stats::weighted.mean(x[, 1] * x[, 2], w = get.weights(res1))
+#'     
+#' ## stressing jointly the tail probabilities of columns 1,3  
+#' res2 <- stress_moment(x = x, 
 #'   f = list(function(x)(x > 1.5), function(x)(x > 0.9)), 
 #'   k = c(1, 3), m = c(0.9, 0.9))
+#' ## probabilities under the stressed model
+#' mean((x[, 1] > 1.5) * get.weights(res2))
+#' mean((x[, 3] > 0.9) * get.weights(res2))
 #'      
 #' @family stress functions 
 #' 
@@ -113,9 +106,9 @@ stress_moment <- function(x, f, k, m, ...){
 
 #' Stressing Means
 #'
-#' Provides weights on simulated scenarios from a stochastic
-#'     model, such that the stressed model fulfils the 
-#'     mean constraints. Scenario weights are selected by 
+#' Provides weights on simulated scenarios from a baseline stochastic
+#'     model, such that stressed model components (random variables) 
+#'     fulfil the mean constraints. Scenario weights are selected by  
 #'     constrained minimisation of the relative entropy to the 
 #'     baseline model.
 #'    
@@ -143,9 +136,28 @@ stress_moment <- function(x, f, k, m, ...){
 #'     See \code{\link{SWIM}} for details.
 #'     
 #' @examples 
-#' ## See examples in \code{\link{stress_moment}}.     
+#' set.seed(0)
+#' x <- data.frame(cbind(
+#'   "normal" = rnorm(1000), 
+#'   "gamma" = rgamma(1000, shape = 2), 
+#'   "beta" = rbeta(1000, shape1 = 2, shape2 = 2)))
+#' ## stressing means
+#' res1 <- stress(type = "mean", x = x, k = 1 : 3, 
+#'   new_means = c(1, 1, 0.75))
+#' summary(res1)
+#' res1$specs
+#' ## calling stress_mean directly
+#' res2 <- stress_mean(x = x, k = 1 : 3, 
+#'   new_means = c(1, 1, 0.75))
+#' summary(res2)
+#' 
+#' ## See also examples in \code{\link{stress_moment}} and \code{\link{stress_mean_sd}}.     
 #'     
 #' @family stress functions 
+#' @seealso See \code{\link{stress_mean_sd}} for stressing means 
+#'     and standard deviations jointly, and \code{\link{stress_moment}} for 
+#'     moment constraints.   
+#' 
 #' @inherit SWIM references 
 #' @export
 
@@ -160,11 +172,11 @@ stress_mean <- function(x, k, new_means, ...)
 
 #' Stressing Mean and Standard Deviation
 #'
-#' Provides weights on simulated scenarios from a stochastic
-#'     model, such that the stressed model fulfils the 
-#'     mean and standard deviation constraints. Scenario weights 
-#'     are selected by constrained minimisation of the relative 
-#'     entropy to the baseline model.
+#' Provides weights on simulated scenarios from a baseline stochastic
+#'     model, such that stressed model components (random variables) 
+#'     fulfil the mean and standard deviation constraints. 
+#'     Scenario weights are selected by constrained minimisation of 
+#'     the relative entropy to the baseline model.
 #'    
 #' @inheritParams   stress_mean
 #' @param new_sd    Numeric vector, same length as \code{k}, 
@@ -172,8 +184,8 @@ stress_mean <- function(x, k, new_means, ...)
 #' 
 #' @details The function \code{stress_mean_sd} is a wrapper for the 
 #'     function \code{stress_moment}. See \code{\link{stress_moment}} 
-#'     for details on the algorithm and for the additional arguments 
-#'     to \code{...}.
+#'     for details on the additional arguments to \code{...} and 
+#'     the underlying algorithm.
 #'     
 #'     For only stressing means, see \code{\link{stress_mean}}, 
 #'     for stressing standard deviations without the mean or 
@@ -193,7 +205,23 @@ stress_mean <- function(x, k, new_means, ...)
 #'     See \code{\link{SWIM}} for details.
 #'  
 #' @examples 
-#' ## See examples in \code{\link{stress_moment}}.     
+#' set.seed(0)
+#' x <- data.frame(cbind(
+#'   "normal" = rnorm(1000), 
+#'   "gamma" = rgamma(1000, shape = 2), 
+#'   "beta" = rbeta(1000, shape1 = 2, shape2 = 2)))
+#' ## stressing mean and sd of column 1
+#' res1 <- stress(type = "mean sd", x = x, k = 1, new_means = 0.1, 
+#'   new_sd = 1.1, method = "Newton", 
+#'   control = list(maxit = 1000, ftol = 1E-15))
+#' summary(res1)
+#' ## calling stress_mean_sd directly 
+#' res2 <- stress_mean_sd(x = x, k = 1, new_means = 0.1, 
+#'   new_sd = 1.1, method = "Newton", 
+#'   control = list(maxit = 1000, ftol = 1E-15))
+
+#' 
+#' ## See also examples in \code{\link{stress_moment}}.     
 #'           
 #' @family stress functions 
 #' @inherit SWIM references 

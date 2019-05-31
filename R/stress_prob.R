@@ -1,10 +1,10 @@
 #' Stressing Intervals
 #' 
-#' Provides weights on simulated scenarios from a stochastic
-#'     model, such that a stressed model component fulfils constraints 
-#'     on probability sets. Scenario weights are selected by 
-#'     constrained minimisation of the relative entropy to the 
-#'     baseline model.
+#' Provides weights on simulated scenarios from a baseline stochastic
+#'     model, such that a stressed model component (random variable) 
+#'     fulfils constraints on probability of disjoint intervals. Scenario 
+#'     weights are selected by constrained minimisation of the 
+#'     relative entropy to the baseline model.
 #'    
 #' @inheritParams stress_VaR 
 #' @param lower   Numeric vector, left endpoints of the intervals. 
@@ -13,8 +13,10 @@
 #'                the intervals defined through \code{lower} and 
 #'                \code{upper}.
 #'      
-#' @details If \code{upper = NULL}, the intervals are consecutive and 
-#'     \code{prob} cumulative.\cr
+#' @details The intervals are treated as half open intervals, that is
+#'     the lower endpoint are not included, whereas the upper endpoint 
+#'     are included. If \code{upper = NULL}, the intervals 
+#'     are consecutive and \code{prob} cumulative.\cr
 #'     The intervals defined through \code{lower} and \code{upper} must
 #'     be disjoint. 
 #' 
@@ -36,15 +38,19 @@
 #' 
 #' @examples 
 #' set.seed(0)
-#' x <- rnorm(1000)
+#' x <- rnorm(10^5)
 #' ## consecutive intervals
 #' res1 <- stress(type = "prob", x = x, 
 #'   prob = 0.008, upper = -2.4)
+#' # probability under the stressed model
+#' cdf(res1, xCol = 1)(-2.4)
 #' 
 #' ## calling stress_prob directly
 #' ## multiple intervals
 #' res2 <- stress_prob(x = x, prob = c(0.008, 0.06), 
 #'   upper = c(-2.4, -1.6), lower = c(min(x), -2))
+#' # probability under the stressed model
+#' cdf(res2, xCol = 1)(-1.6) - cdf(res1, xCol = 1)(-2)
 #' 
 #' @family stress functions 
 #' @inherit SWIM references 

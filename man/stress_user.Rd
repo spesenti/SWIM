@@ -16,12 +16,13 @@ underlying data of the \code{SWIM} object.}
 \item{new_weights}{A vector, matrix or data frame containing scenario
 weights. Columns of \code{new_weights} correspond to different
 stresses. \cr
-\code{new_weights} will be normalised to 1.}
+\code{new_weights} are normalised to have a mean of 1.}
 
-\item{new_weightsfun}{A list of functions, that applied to the \code{k}th column
-of \code{x} generate the vectors of the scenario weights. Each function 
-correspond to a stress. \cr
-\code{new_weights} will be normalised to 1.}
+\item{new_weightsfun}{A list of functions, that applied to 
+the \code{k}th column of \code{x} generate the vectors of  
+the scenario weights. Each function corresponds to a stress. \cr
+The weights generated for each stress are normalised to 
+have a mean of 1.}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.}
@@ -50,8 +51,10 @@ set.seed(0)
 x <- as.data.frame(cbind(
   "normal" = rnorm(1000), 
   "gamma" = rgamma(1000, shape = 2)))
-res1 <- stress(type = "user", x = x, new_weightsfun = function(x)x^2)
-    
+res1 <- stress(type = "user", x = x, new_weightsfun = function(x)x^2, k = 1)
+## plot user defined weights against the first column of x.
+plot(x$normal,get.weights(res1), pch=".")
+     
 }
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}
