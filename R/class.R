@@ -1,17 +1,18 @@
  # Defines the class "SWIM"
   SWIM <- function(x = "x", new_weights = "new_weights", 
-                       specs = c(type = "type", k = "k", constr = "constr"     )){
+                       type = "type", specs = "specs"){
    mymodel <- list(
-   x = x, # vector, matrix or dataframe
-   new_weights = new_weights, # list of functions providing the new_weights
-   specs = specs
-      # data.frame with the following structure (here for type = "VaR")
-      #           type    k   alpha        q
-      # stress 1  "VaR"   1   0.9       1.804807
-    
-      # type = c("VaR", "VaR ES", "prob", "moment", "user"),
-      # k = k,
-      # further columns according to the constraints of the optimisation
+   x = x, # vector, matrix or dataframe containing the underlying data
+   new_weights = new_weights, # list of eithter functions, that applied 
+      # to the kth column of x providing the scenario weights; OR a 
+      # vector containting the new_weights
+   type  = type, # a list of characters each corresponding to a stress
+      # one of ("VaR", "VaR ES", "prob", "moment", "mean", "mean sd", "user")
+   specs = specs # a list with elements called "stress i".
+      #
+      # all input varaibles of the stress and constraints according
+      # to the stress. For example a stress on 
+      # the VaR contains: k, alpha, q
    )   
    ## Name of the class
    attr(mymodel, "class") <- "SWIM"

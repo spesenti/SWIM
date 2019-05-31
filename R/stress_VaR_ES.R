@@ -122,9 +122,16 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   new_weights <- apply(X = constr, MARGIN = 1, FUN = .rn_VaR_ES, y = x_data[, k])
   if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", as.character(1:dim(x_data)[2]), sep = "")
   names(new_weights) <- paste(rep("stress", max_length), 1:max_length)
-  specs <- data.frame("type" = rep("VaR ES", length.out = max_length), "k" = rep(k, length.out = max_length), constr, stringsAsFactors = FALSE)
-  rownames(specs) <- paste(rep("stress", max_length), 1:max_length)
-  my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "specs" = specs)
+  
+  type <- rep("VaR ES", length.out = max_length)
+  constr1 <- cbind("k" = rep(k, length.out = max_length), constr)
+  constr_ES <- list()
+  for(s in 1:max_length){
+    temp_list <- list(as.list(constr1[s, ]))
+    names(temp_list) <- paste("stress", s)
+    constr_ES <- c(constr_ES, temp_list)
+  }
+  my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr_ES)
   if (is.SWIM(x)) my_list <- merge(x, my_list)
   return(my_list)
 }

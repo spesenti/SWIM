@@ -44,7 +44,9 @@ stress_user <- function(x, new_weights = NULL, new_weightsfun = NULL, k = 1){
   if (is.SWIM(x)) x_data <- get.data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (is.null(colnames(x_data))) colnames(x_data) <- paste("X", 1:ncol(x_data), sep = "")
-  
+  if (is.function(new_weightsfun)) new_weightsfun <- list(new_weightsfun)
+  if (!is.numeric(k) && length(k) != k) stop("k needs to be numeric.") 
+  if (!is.null(new_weights) && !is.null(new_weightsfun)) stop("only provide new_weightsfun or new_weights.")
   if (!is.null(new_weights)) {
     nweights <- as.matrix(new_weights)
     nweights <- t(t(nweights) / colMeans(nweights))
@@ -62,10 +64,12 @@ stress_user <- function(x, new_weights = NULL, new_weightsfun = NULL, k = 1){
        names(nweights)[i] <- paste("stress", i)
      }
   }
-
-  specs <- data.frame("type" = rep("user", length.out = max_length), "k" = rep(k, length.out = max_length), stringsAsFactors = FALSE)
-  rownames(specs) <- paste("stress", 1:max_length)
-  my_list <- SWIM("x" = x_data, "new_weights" = nweights, "specs" = specs)
+  type <- rep("user", length.out = max_length)
+  constr_user <- list("k" = k)
+  constr <- rep(list(constr_user), length.out = max_length)
+  names(constr) <- paste("stress", 1:max_length)
+  my_list <- SWIM("x" = x_data, "new_weights" = nweights, "type" = type, "specs" = constr)
   if (is.SWIM(x)) my_list <- merge(x, my_list)
   return(my_list)
   }
+  

@@ -81,14 +81,12 @@
 
    new_weights <- list(function(y) .rn_prob(y, constraints = cbind(lower, upper)) %*% as.matrix(prob_new / prob_old))
    if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
-    
-   constr = cbind(t(lower), t(upper), t(prob))
-   max_length <- length(lower)
-   colnames(constr) <- c(rep("lower", length.out = max_length), rep("upper", length.out = max_length), rep("prob", length.out = max_length))
    names(new_weights) <- paste("stress", 1)
-   specs <- data.frame("type" = "prob", "k" = k, constr, stringsAsFactors = FALSE)
-   rownames(specs) <- paste("stress", 1)
-   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "specs" = specs)
+   
+   constr_prob <- list("k" = k, "k" = k, "prob" = prob, "upper" = upper, "lower" = lower)
+   constr <- list(constr_prob)
+   names(constr) <- paste("stress", 1)
+   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = "prob", "specs" = constr)
    if (is.SWIM(x)) my_list <- merge(x, my_list)
    return(my_list)  
   }

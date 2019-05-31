@@ -97,10 +97,11 @@ stress_moment <- function(x, f, k, m, ...){
   moments <- function(x)colMeans(z * as.vector(exp(z %*% x))) - c(1, m)
   sol <- nleqslv::nleqslv(rep(0, length.out = length(f) + 1), moments, ...)
   if (sol$termcd != 1) stop(paste("nleqslv could not find a solution and terminated with code ", sol$termcd))
-# new_weights <- function(w)as.vector(exp(c(1, w) %*% sol$x))
-  new_weights <- list(function(w)as.vector(exp(z %*% sol$x)))
-  specs <- data.frame(type = "moment", "k" = NA, stringsAsFactors = FALSE)
-  my_list <- SWIM("x" = x, "new_weights" = new_weights, "specs" = specs)
+  constr_moment <- list("k" = k, "m" = m, "f" = f)
+  constr <- list(constr_moment)
+  names(constr) <- paste("stress", 1)
+  new_weights <- as.vector(exp(z %*% sol$x))
+  my_list <- SWIM("x" = x, "new_weights" = new_weights, type = "moment", "specs" = constr)
   return(my_list)
   }
 
@@ -165,7 +166,8 @@ stress_mean <- function(x, k, new_means, ...)
 {
   means <- rep(list(function(x)x), length(k))
   res <- stress_moment(x = x, f = means, k = k, m = new_means, ...)
-  res$specs$type <- "mean"
+  res$type <- "mean"
+  res$specs$`stress 1` <- list("k" = k, "new_means" = new_means)
   return(res)
 }
 
@@ -238,6 +240,7 @@ stress_mean_sd <- function(x, k, new_means, new_sd, ...)
   m <- c(new_means, new_means ^ 2 + new_sd ^ 2)
   k <- c(k, k)
   res <- stress_moment(x, f, k, m, ...)
-  res$specs$type <- "mean sd"
+  res$type <- "mean sd"
+  res$specs$`stress 1` <- list("k" = k, "new_means" = new_means, "new_sd" = new_sd)
   return(res)
 }
