@@ -103,7 +103,7 @@
     if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
     names(new_weights) <- paste("stress", 1:max_length)
 
-    type <- rep("VaR", length.out = max_length)
+    type <- rep(list("VaR"), length.out = max_length)
     constr1 <- cbind("k" = rep(k, length.out = max_length), constr)
     constr_VaR <- list()
     for(s in 1:max_length){

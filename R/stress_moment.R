@@ -100,8 +100,9 @@ stress_moment <- function(x, f, k, m, ...){
   constr_moment <- list("k" = k, "m" = m, "f" = f)
   constr <- list(constr_moment)
   names(constr) <- paste("stress", 1)
-  new_weights <- as.vector(exp(z %*% sol$x))
-  my_list <- SWIM("x" = x, "new_weights" = new_weights, type = "moment", "specs" = constr)
+  new_weights <- list("stress 1" = as.vector(exp(z %*% sol$x)))
+  type <- list("moment")
+  my_list <- SWIM("x" = x, "new_weights" = new_weights, "type" = type, "specs" = constr)
   return(my_list)
   }
 
@@ -166,7 +167,7 @@ stress_mean <- function(x, k, new_means, ...)
 {
   means <- rep(list(function(x)x), length(k))
   res <- stress_moment(x = x, f = means, k = k, m = new_means, ...)
-  res$type <- "mean"
+  res$type <- list("mean")
   res$specs$`stress 1` <- list("k" = k, "new_means" = new_means)
   return(res)
 }
@@ -238,9 +239,9 @@ stress_mean_sd <- function(x, k, new_means, new_sd, ...)
   second_moments <- rep(list(function(x)x ^ 2), length(k))
   f <- c(means, second_moments)
   m <- c(new_means, new_means ^ 2 + new_sd ^ 2)
-  k <- c(k, k)
-  res <- stress_moment(x, f, k, m, ...)
-  res$type <- "mean sd"
+  k_new <- c(k, k)
+  res <- stress_moment(x, f, k_new, m, ...)
+  res$type <- list("mean sd")
   res$specs$`stress 1` <- list("k" = k, "new_means" = new_means, "new_sd" = new_sd)
   return(res)
 }

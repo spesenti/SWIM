@@ -64,7 +64,7 @@ stress_user <- function(x, new_weights = NULL, new_weightsfun = NULL, k = 1){
        names(nweights)[i] <- paste("stress", i)
      }
   }
-  type <- rep("user", length.out = max_length)
+  type <- rep(list("user"), length.out = max_length)
   constr_user <- list("k" = k)
   constr <- rep(list(constr_user), length.out = max_length)
   names(constr) <- paste("stress", 1:max_length)

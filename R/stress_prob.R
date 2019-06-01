@@ -40,8 +40,7 @@
 #' set.seed(0)
 #' x <- rnorm(10^5)
 #' ## consecutive intervals
-#' res1 <- stress(type = "prob", x = x, 
-#'   prob = 0.008, upper = -2.4)
+#' res1 <- stress(type = "prob", x = x, prob = 0.008, upper = -2.4)
 #' # probability under the stressed model
 #' cdf(res1, xCol = 1)(-2.4)
 #' 
@@ -83,10 +82,11 @@
    if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
    names(new_weights) <- paste("stress", 1)
    
-   constr_prob <- list("k" = k, "k" = k, "prob" = prob, "upper" = upper, "lower" = lower)
+   constr_prob <- list("k" = k, "prob" = prob, "upper" = upper, "lower" = lower)
    constr <- list(constr_prob)
    names(constr) <- paste("stress", 1)
-   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = "prob", "specs" = constr)
+   type <- list("prob")
+   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr)
    if (is.SWIM(x)) my_list <- merge(x, my_list)
    return(my_list)  
   }

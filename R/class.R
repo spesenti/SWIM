@@ -77,15 +77,14 @@
 
   get.weights <- function(object){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
-   specs <- object$specs
    x_data <- get.data(object)
-   m <- length(specs$type)
+   m <- length(object$type)
    new_weights <- matrix(0, nrow = nrow(x_data), ncol = m)
    for(i in 1:m){
     if (!is.function(object$new_weights[[i]])) {
-     new_weights[, i] <- object$new_weights[, i]
+     new_weights[, i] <- object$new_weights[[i]]
     } else {
-     k <- specs$k[i]
+     k <- object$specs[[i]]$k
      new_weights[, i] <- object$new_weights[[i]](x_data[, k])
     }
    }
@@ -119,6 +118,7 @@
  #' @export
 
   get.specs <- function(object){
+   #specs <- plyr::rbind.fill(get.specs(x), get.specs(y))
    if (is.SWIM(object)) return(object$specs) else stop("Object not of class SWIM")
   }
 
@@ -154,10 +154,12 @@
   merge.SWIM <- function(x, y, ...){
   if (!is.SWIM(x) | !is.SWIM(y)) stop("x and y are not of class SWIM.")
   if (!identical(get.data(x), get.data(y))) stop("x and y are not based on the same data")
-  new_weights <- c(get.weightsfun(x), get.weightsfun(y))
-  specs <- plyr::rbind.fill(get.specs(x), get.specs(y))
-  m <- length(specs$type)
-  rownames(specs) <- names(new_weights) <- paste("stress", 1:m)
-  xy <- SWIM("x" = get.data(x), "new_weights" = new_weights, "specs" = specs)
+  type <- c(x$type, y$type)
+  m <- length(type)
+  new_weights <- c(x$new_weights, y$new_weights)
+  names(new_weights) <- paste("stress", 1:m)
+  specs <- c(x$specs, y$specs)
+  names(specs) <- paste("stress", 1:m)
+  xy <- SWIM("x" = get.data(x), "new_weights" = new_weights, "type" = type, "specs" = specs)
   return(xy)
   }
