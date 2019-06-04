@@ -112,9 +112,11 @@
 
  #' @describeIn get.data extracting information of the stress.
  #'
- #' @return \code{get.specs}: A data.frame containing the specifications 
- #'         of the \code{object}. Rows corresponds to different stresses.
- #'         See \code{\link{SWIM}} for details.
+ #' @return \code{get.specs}: A data.frame containing specifications 
+ #'         of the stresses with each row corresponding to a different 
+ #'         stress. Only a selection of the specifications is returned; 
+ #'         however, all input variables are stored in the \code{object}.
+ #'         See also \code{\link{SWIM}}.
  #' @export
 
   get.specs <- function(object){
@@ -148,23 +150,24 @@
  #'     
  #' @details Merges two objects of class \code{SWIM}, that 
  #'     are based on the same data. \cr 
- #'     Stresses with \code{type = c("user", "moment")} are ignored. 
  #' 
  #' @param x,y    Objects of class \code{SWIM}.
  #' @param ...    Additional arguments will be ignored.
  #'  
  #' @return An object of class \code{SWIM} containing:
  #'   \itemize{
- #'     \item \code{x}, the data;
- #'     \item \code{new_weights}, a list of functions, each applied
- #'    to a column of \code{x}, thus generating the vectors of 
- #'    scenario weights;
- #'     \item \code{specs}, the specification of what has been
- #'     stressed.
- #'     \code{specs} is a data.frame consisting of \code{type},
- #'     \code{k}, and constraints depending on the \code{type} of stress,
- #'     see \code{\link{SWIM}} for details.
+ #'     \item \code{x}, a data.frame containing the data;
+ #'     \item \code{new_weights}, a list, each component corresponds to 
+ #'    a different stress and is either a vector of scenario weights or a
+ #'    function, that applied to a column of \code{x}, generates the 
+ #'    vectors of scenario weights; 
+ #'     \item \code{type}, a list, each component corresponds to a 
+ #'    different stress and specifies the type of the stress,
+ #'     \item \code{specs}, a list, each component corresponds to 
+ #'    a different stress and contains a list with the specifications 
+ #'    of what has been stressed.
  #'   }
+ #' See \code{\link{SWIM}} for details.
  #' 
  #' @author Silvana M. Pesenti 
  #'

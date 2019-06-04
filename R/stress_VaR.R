@@ -26,7 +26,8 @@
  #'      
  #' @details The stressed VaR is the quantile of the chosen model component,
  #'      subject to the calculated scenario weights. 
- #'      The VaR at level \code{alpha} of a random variable with distribution 
+ #'      The VaR at level \code{alpha} of a random variable with 
+ #'      distribution 
  #'      function F is defined as its left-quantile at alpha:
  #'      \deqn{VaR_alpha = F^{-1}(alpha).} 
  #'      
@@ -36,15 +37,14 @@
  #'     
  #' @return A \code{SWIM} object containing:
  #'     \itemize{
- #'       \item \code{x}, the data;
- #'       \item \code{new_weights}, a list of functions, that, applied to the
- #'     \code{k}th column of \code{x} generate the vectors of scenario
- #'     weights;
- #'      \item \code{specs}, the specification of what has been
- #'     stressed.
- #'     \code{specs} is a data.frame consisting of \code{type}, \code{k},
- #'     \code{alpha} and \code{q}. Each row corresponds to a different 
- #'     stress.
+ #'       \item \code{x}, a data.frame containing the data;
+ #'       \item \code{new_weights}, a list of functions, that applied to 
+ #'   the \code{k}th column of \code{x}, generates the vectors of scenario 
+ #'   weights. Each component corresponds to a different stress;
+ #'      \item \code{type = "VaR"};
+ #'      \item \code{specs}, a list, each component corresponds to 
+ #'    a different stress and contains \code{k},
+ #'     \code{alpha} and \code{q}.
  #'     }
  #'     See \code{\link{SWIM}} for details.
  #' @author Silvana M. Pesenti 

@@ -15,15 +15,14 @@
 #'  
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
-#'       \item \code{x}, the data;
-#'       \item \code{new_weights}, a data frame containing scenario
-#'       weights; OR \cr
-#'       a list of functions, that applied to the \code{k}th component 
-#'       of \code{x} generate the vectors of scenario weights;
-#'       \item \code{specs}, the specification of what has been
-#'       stressed.
-#'       \code{specs} is a data.frame consisting of \code{type},
-#'       and \code{k}. Each row corresponds to a different stress.
+#'       \item \code{x}, a data.frame containing the data;
+#'       \item \code{new_weights}, a list, each component corresponds to 
+#'    a different stress and is either a vector of scenario weights (if \code{new_weights} is provided) or (if \code{new_weightsfun} is provided) a
+#'    function, that applied to the \code{k}th column of \code{x}, generates the 
+#'    vectors of scenario weights;
+#'      \item \code{type = "user"};
+#'       \item \code{specs}, a list, each component corresponds to 
+#'    a different stress and contains \code{k}.
 #'     }
 #'     See \code{\link{SWIM}} for details.
 #'     

@@ -37,9 +37,11 @@ of the \code{object} (\code{default = "all"}).}
     Use \code{\link{get.weights}} if the \code{SWIM} object only contains 
     scenario weights and not a list of functions.
 
-\code{get.specs}: A data.frame containing the specifications 
-        of the \code{object}. Rows corresponds to different stresses.
-        See \code{\link{SWIM}} for details.
+\code{get.specs}: A data.frame containing specifications 
+        of the stresses with each row corresponding to a different 
+        stress. Only a selection of the specifications is returned; 
+        however, all input variables are stored in the \code{object}.
+        See also \code{\link{SWIM}}.
 }
 \description{
 Extracting the data (realisations of the stochastic model), the 

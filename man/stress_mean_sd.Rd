@@ -28,15 +28,15 @@ containing the stressed standard deviations.}
 \value{
 A \code{SWIM} object containing:
     \itemize{
-      \item \code{x}, the data;
-      \item \code{new_weights}, a list of functions, that applied to
-      the \code{k}th column of \code{x} generate the vectors of 
-      scenario weights;
-      \item \code{specs}, the specification of what has been
-      stressed.
-      \code{specs} is a data.frame consisting of ???
-    }
-    See \code{\link{SWIM}} for details.
+      \item \code{x}, a data.frame containing the data;
+      \item \code{new_weights}, a list, each component corresponds to 
+   a different stress and is a vector of scenario weights;
+     \item \code{type = "mean"};
+      \item \code{specs}, a list, each component corresponds to 
+   a different stress and contains \code{k}, \code{new_means} and
+   \code{new_sd}.
+   }
+   See \code{\link{SWIM}} for details.
 }
 \description{
 Provides weights on simulated scenarios from a baseline stochastic
