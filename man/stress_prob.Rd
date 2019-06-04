@@ -58,8 +58,7 @@ The intervals are treated as half open intervals, that is
 set.seed(0)
 x <- rnorm(10^5)
 ## consecutive intervals
-res1 <- stress(type = "prob", x = x, 
-  prob = 0.008, upper = -2.4)
+res1 <- stress(type = "prob", x = x, prob = 0.008, upper = -2.4)
 # probability under the stressed model
 cdf(res1, xCol = 1)(-2.4)
 

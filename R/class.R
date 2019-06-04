@@ -118,10 +118,29 @@
  #' @export
 
   get.specs <- function(object){
-   #specs <- plyr::rbind.fill(get.specs(x), get.specs(y))
-   if (is.SWIM(object)) return(object$specs) else stop("Object not of class SWIM")
+   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   .type <- object$type 
+   .specs <- data.frame()
+   for (i in 1:length(.type)){  
+   if (.type[i] %in% c("VaR", "VaR ES", "user", "prob")){
+      if (.type[[i]] == "prob" && length(object$specs[[i]]$prob) > 1){
+      .specs <- plyr::rbind.fill(.specs, as.data.frame(t(unlist(object$specs[[i]]))))       
+      } else {
+      .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]])) }
+   } else if (.type[i] %in% c("moment", "mean", "mean sd")){
+    k <- paste(object$specs[[i]]$k, collapse = " ")
+    .specs <- plyr::rbind.fill(.specs, as.data.frame(k))
+   } else stop("Object contains wrong type.")}
+   .type <- t(as.data.frame(.type))
+   .specs <- cbind(.type, .specs)
+   colnames(.specs)[1] <- "type"
+   rownames(.specs) <- paste("stress", 1:length(.type), sep = " ")      
+   return(.specs)
   }
 
+  
+  
+  
  #' Merging Two Stressed Models
  #'
  #' This function is a \code{method} for an object of class 
