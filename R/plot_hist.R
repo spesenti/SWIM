@@ -9,7 +9,7 @@
 #'                   \code{geom_freqpoly} function  in \code{ggplot} 
 #'                   (default corresponds to 30 bins).   
 #' @param displLines Logical, if \code{TRUE} lines are displayed 
-#'                   (\code{default = FLASE}) instead of bins. 
+#'                   instead of bins (\code{default = FALSE}). 
 #' 
 #' @return If \code{displ = TRUE}, a histogram of the stochastic model 
 #'     under the scenario weights.
@@ -30,6 +30,7 @@
 #' res1 <- stress(type = "VaR", x = x, 
 #'   alpha = c(0.75, 0.95), q_ratio = 1.1)
 #' plot_hist(res1, xCol = "gamma", wCol = 1:2, base = TRUE, binwidth = 0.4)
+#' plot_hist(res1, xCol = "gamma", wCol = 1:2, base = TRUE, binwidth = 0.4, displLines = TRUE)
 #'                  
 #' @seealso See \code{\link{cdf}} and \code{\link{plot_cdf}} for 
 #'     values and plotting of the empirical distribution 
