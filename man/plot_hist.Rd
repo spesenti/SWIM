@@ -5,7 +5,7 @@
 \title{Plotting Histograms of a Stressed Model}
 \usage{
 plot_hist(object, xCol = 1, wCol = "all", base = FALSE, x_limits,
-  displ = TRUE, binwidth)
+  displ = TRUE, binwidth, displLines = FALSE)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
@@ -32,6 +32,9 @@ otherwise the data.frame for customised plotting with
 the histogram, the \code{binwidth} in the 
 \code{geom_freqpoly} function  in \code{ggplot} 
 (default corresponds to 30 bins).}
+
+\item{displLines}{Logical, if \code{TRUE} lines are displayed 
+instead of bins (\code{default = FALSE}).}
 }
 \value{
 If \code{displ = TRUE}, a histogram of the stochastic model 
@@ -58,6 +61,7 @@ x <- data.frame("gamma" = rgamma(10^5, shape = 2))
 res1 <- stress(type = "VaR", x = x, 
   alpha = c(0.75, 0.95), q_ratio = 1.1)
 plot_hist(res1, xCol = "gamma", wCol = 1:2, base = TRUE, binwidth = 0.4)
+plot_hist(res1, xCol = "gamma", wCol = 1:2, base = TRUE, binwidth = 0.4, displLines = TRUE)
                  
 }
 \seealso{
