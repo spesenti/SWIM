@@ -13,11 +13,11 @@ plot_cdf(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
 \item{xCol}{Numeric or character, (name of) the column of the underlying data 
 of the \code{object} (\code{default = 1}).}
 
-\item{wCol}{Vector; the columns of the scenario weights 
+\item{wCol}{Vector, the columns of the scenario weights 
 of the \code{object} corresponding to different 
 stresses (\code{default = "all"}).}
 
-\item{base}{Logical; if \code{TRUE}, statistics under the baseline 
+\item{base}{Logical, if \code{TRUE}, statistics under the baseline 
 are also returned (\code{default = "FALSE"}).}
 
 \item{n}{Integer, the number of points used to plot 

@@ -20,7 +20,7 @@ An object of class \code{SWIM} containing:
    function, that applied to a column of \code{x}, generates the 
    vectors of scenario weights; 
     \item \code{type}, a list, each component corresponds to a 
-   different stress and specifies the type of the stress,
+   different stress and specifies the type of the stress;
     \item \code{specs}, a list, each component corresponds to 
    a different stress and contains a list with the specifications 
    of what has been stressed.
