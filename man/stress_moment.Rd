@@ -30,13 +30,12 @@ range of \code{f(x)}.}
 \value{
 A \code{SWIM} object containing:
     \itemize{
-      \item \code{x}, the data;
-      \item \code{new_weights}, a list of functions, that applied to
-      the \code{k}th columns of \code{x} generate the vectors of the
-      new weights;
-      \item \code{specs}, the specification of what has been
-      stressed.
-      \code{specs} is a data.frame consisting of ???
+      \item \code{x}, a data.frame containing the data;
+      \item \code{new_weights}, a list, each component corresponds to 
+   a different stress and is a vector of scenario weights;
+     \item \code{type = "moment"};
+      \item \code{specs}, a list, each component corresponds to 
+   a different stress and contains \code{f}, \code{k} and \code{m}.
     }
     See \code{\link{SWIM}} for details.
 }

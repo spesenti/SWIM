@@ -25,15 +25,14 @@ containing the stressed means.}
 \value{
 A \code{SWIM} object containing:
     \itemize{
-      \item \code{x}, the data;
-      \item \code{new_weights}, a list of functions, that applied to
-      the \code{k}th column of \code{x} generate the vectors of the
-      new weights;
-      \item \code{specs}, the specification of what has been
-      stressed.
-      \code{specs} is a data.frame consisting of ???
-    }
-    See \code{\link{SWIM}} for details.
+      \item \code{x}, a data.frame containing the data;
+      \item \code{new_weights}, a list, each component corresponds to 
+   a different stress and is a vector of scenario weights;
+     \item \code{type = "mean"};
+      \item \code{specs}, a list, each component corresponds to 
+   a different stress and contains \code{k} and \code{new_means}.
+   }
+   See \code{\link{SWIM}} for details.
 }
 \description{
 Provides weights on simulated scenarios from a baseline stochastic
@@ -45,8 +44,8 @@ Provides weights on simulated scenarios from a baseline stochastic
 \details{
 The function \code{stress_mean} is a wrapper for the 
     function \code{stress_moment}. See \code{\link{stress_moment}} 
-    for details on the algorithm and for the additional arguments 
-    to \code{...}.
+    for details on the additional arguments to \code{...} and 
+    the underlying algorithm.
 }
 \examples{
 set.seed(0)

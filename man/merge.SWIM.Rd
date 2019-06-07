@@ -14,16 +14,18 @@
 \value{
 An object of class \code{SWIM} containing:
   \itemize{
-    \item \code{x}, the data;
-    \item \code{new_weights}, a list of functions, each applied
-   to a column of \code{x}, thus generating the vectors of 
-   scenario weights;
-    \item \code{specs}, the specification of what has been
-    stressed.
-    \code{specs} is a data.frame consisting of \code{type},
-    \code{k}, and constraints depending on the \code{type} of stress,
-    see \code{\link{SWIM}} for details.
+    \item \code{x}, a data.frame containing the data;
+    \item \code{new_weights}, a list, each component corresponds to 
+   a different stress and is either a vector of scenario weights or a
+   function, that applied to a column of \code{x}, generates the 
+   vectors of scenario weights; 
+    \item \code{type}, a list, each component corresponds to a 
+   different stress and specifies the type of the stress,
+    \item \code{specs}, a list, each component corresponds to 
+   a different stress and contains a list with the specifications 
+   of what has been stressed.
   }
+See \code{\link{SWIM}} for details.
 }
 \description{
 This function is a \code{method} for an object of class 
@@ -31,8 +33,7 @@ This function is a \code{method} for an object of class
 }
 \details{
 Merges two objects of class \code{SWIM}, that 
-    are based on the same data. \cr 
-    Stresses with \code{type = c("user", "moment")} are ignored.
+    are based on the same data. \cr
 }
 \author{
 Silvana M. Pesenti

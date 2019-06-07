@@ -33,13 +33,12 @@
 #'     
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
-#'       \item \code{x}, the data;
-#'       \item \code{new_weights}, a list of functions, that applied to
-#'       the \code{k}th columns of \code{x} generate the vectors of the
-#'       new weights;
-#'       \item \code{specs}, the specification of what has been
-#'       stressed.
-#'       \code{specs} is a data.frame consisting of ???
+#'       \item \code{x}, a data.frame containing the data;
+#'       \item \code{new_weights}, a list, each component corresponds to 
+#'    a different stress and is a vector of scenario weights;
+#'      \item \code{type = "moment"};
+#'       \item \code{specs}, a list, each component corresponds to 
+#'    a different stress and contains \code{f}, \code{k} and \code{m}.
 #'     }
 #'     See \code{\link{SWIM}} for details.
 #'     
@@ -97,10 +96,12 @@ stress_moment <- function(x, f, k, m, ...){
   moments <- function(x)colMeans(z * as.vector(exp(z %*% x))) - c(1, m)
   sol <- nleqslv::nleqslv(rep(0, length.out = length(f) + 1), moments, ...)
   if (sol$termcd != 1) stop(paste("nleqslv could not find a solution and terminated with code ", sol$termcd))
-# new_weights <- function(w)as.vector(exp(c(1, w) %*% sol$x))
-  new_weights <- list(function(w)as.vector(exp(z %*% sol$x)))
-  specs <- data.frame(type = "moment", "k" = NA, stringsAsFactors = FALSE)
-  my_list <- SWIM("x" = x, "new_weights" = new_weights, "specs" = specs)
+  constr_moment <- list("k" = k, "m" = m, "f" = f)
+  constr <- list(constr_moment)
+  names(constr) <- paste("stress", 1)
+  new_weights <- list("stress 1" = as.vector(exp(z %*% sol$x)))
+  type <- list("moment")
+  my_list <- SWIM("x" = x, "new_weights" = new_weights, "type" = type, "specs" = constr)
   return(my_list)
   }
 
@@ -120,20 +121,19 @@ stress_moment <- function(x, f, k, m, ...){
 #'                  
 #' @details The function \code{stress_mean} is a wrapper for the 
 #'     function \code{stress_moment}. See \code{\link{stress_moment}} 
-#'     for details on the algorithm and for the additional arguments 
-#'     to \code{...}.
+#'     for details on the additional arguments to \code{...} and 
+#'     the underlying algorithm.
 #' 
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
-#'       \item \code{x}, the data;
-#'       \item \code{new_weights}, a list of functions, that applied to
-#'       the \code{k}th column of \code{x} generate the vectors of the
-#'       new weights;
-#'       \item \code{specs}, the specification of what has been
-#'       stressed.
-#'       \code{specs} is a data.frame consisting of ???
-#'     }
-#'     See \code{\link{SWIM}} for details.
+#'       \item \code{x}, a data.frame containing the data;
+#'       \item \code{new_weights}, a list, each component corresponds to 
+#'    a different stress and is a vector of scenario weights;
+#'      \item \code{type = "mean"};
+#'       \item \code{specs}, a list, each component corresponds to 
+#'    a different stress and contains \code{k} and \code{new_means}.
+#'    }
+#'    See \code{\link{SWIM}} for details.
 #'     
 #' @examples 
 #' set.seed(0)
@@ -165,7 +165,8 @@ stress_mean <- function(x, k, new_means, ...)
 {
   means <- rep(list(function(x)x), length(k))
   res <- stress_moment(x = x, f = means, k = k, m = new_means, ...)
-  res$specs$type <- "mean"
+  res$type <- list("mean")
+  res$specs$`stress 1` <- list("k" = k, "new_means" = new_means)
   return(res)
 }
 
@@ -194,15 +195,15 @@ stress_mean <- function(x, k, new_means, ...)
 #' 
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
-#'       \item \code{x}, the data;
-#'       \item \code{new_weights}, a list of functions, that applied to
-#'       the \code{k}th column of \code{x} generate the vectors of 
-#'       scenario weights;
-#'       \item \code{specs}, the specification of what has been
-#'       stressed.
-#'       \code{specs} is a data.frame consisting of ???
-#'     }
-#'     See \code{\link{SWIM}} for details.
+#'       \item \code{x}, a data.frame containing the data;
+#'       \item \code{new_weights}, a list, each component corresponds to 
+#'    a different stress and is a vector of scenario weights;
+#'      \item \code{type = "mean"};
+#'       \item \code{specs}, a list, each component corresponds to 
+#'    a different stress and contains \code{k}, \code{new_means} and
+#'    \code{new_sd}.
+#'    }
+#'    See \code{\link{SWIM}} for details.
 #'  
 #' @examples 
 #' set.seed(0)
@@ -236,8 +237,9 @@ stress_mean_sd <- function(x, k, new_means, new_sd, ...)
   second_moments <- rep(list(function(x)x ^ 2), length(k))
   f <- c(means, second_moments)
   m <- c(new_means, new_means ^ 2 + new_sd ^ 2)
-  k <- c(k, k)
-  res <- stress_moment(x, f, k, m, ...)
-  res$specs$type <- "mean sd"
+  k_new <- c(k, k)
+  res <- stress_moment(x, f, k_new, m, ...)
+  res$type <- list("mean sd")
+  res$specs$`stress 1` <- list("k" = k, "new_means" = new_means, "new_sd" = new_sd)
   return(res)
 }

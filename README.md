@@ -159,13 +159,13 @@ portfolio loss Y, results in a distribution function of X5 that has a
 heavier tail.
 
 ``` r
-plot_cdf(object = rev.stress, xCol = "X5", base = TRUE)
+plot_cdf(object = rev.stress, xCol = 5, base = TRUE)
 ```
 
 <img src="man/figures/README-plot-cdf-input-1.png" width="100%" />
 
 ``` r
-plot_hist(object = rev.stress, xCol = "X5", base = TRUE)
+plot_hist(object = rev.stress, xCol = 5, base = TRUE)
 ```
 
 <img src="man/figures/README-plot-cdf-input-2.png" width="100%" />

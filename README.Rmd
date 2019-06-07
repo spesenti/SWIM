@@ -100,8 +100,8 @@ Visual display of the change of empirical distribution functions and density fro
 distribution function of X5 that has a heavier tail.  
  
 ```{r plot-cdf-input}
-plot_cdf(object = rev.stress, xCol = "X5", base = TRUE)
-plot_hist(object = rev.stress, xCol = "X5", base = TRUE)
+plot_cdf(object = rev.stress, xCol = 5, base = TRUE)
+plot_hist(object = rev.stress, xCol = 5, base = TRUE)
 ```
 
 

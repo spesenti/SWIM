@@ -22,15 +22,14 @@
 #' 
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
-#'       \item \code{x}, the data;
+#'       \item \code{x}, a data.frame containing the data;
 #'       \item \code{new_weights}, a list of functions, that applied to the
-#'     \code{k}th column of \code{x} generate the vectors of scenario
-#'     weights;
-#'     \item \code{specs}, the specification of what has been
-#'     stressed.
-#'     \code{specs} is a data.frame consisting of \code{type}, \code{k},
-#'     \code{lower}, \code{upper} and \code{prob}. Each row corresponds to a different 
-#'     stress.
+#'     \code{k}th column of \code{x}, generate the vectors of scenario
+#'     weights. Each component corresponds to a different stress;
+#'     \item \code{type = "prob"};
+#'     \item \code{specs}, a list, each component corresponds to 
+#'     a different stress and contains \code{k}, \code{lower},  
+#'     \code{upper} and \code{prob}. 
 #'     }
 #'     See \code{\link{SWIM}} for details.
 #'     
@@ -40,8 +39,7 @@
 #' set.seed(0)
 #' x <- rnorm(10^5)
 #' ## consecutive intervals
-#' res1 <- stress(type = "prob", x = x, 
-#'   prob = 0.008, upper = -2.4)
+#' res1 <- stress(type = "prob", x = x, prob = 0.008, upper = -2.4)
 #' # probability under the stressed model
 #' cdf(res1, xCol = 1)(-2.4)
 #' 
@@ -81,14 +79,13 @@
 
    new_weights <- list(function(y) .rn_prob(y, constraints = cbind(lower, upper)) %*% as.matrix(prob_new / prob_old))
    if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
-    
-   constr = cbind(t(lower), t(upper), t(prob))
-   max_length <- length(lower)
-   colnames(constr) <- c(rep("lower", length.out = max_length), rep("upper", length.out = max_length), rep("prob", length.out = max_length))
    names(new_weights) <- paste("stress", 1)
-   specs <- data.frame("type" = "prob", "k" = k, constr, stringsAsFactors = FALSE)
-   rownames(specs) <- paste("stress", 1)
-   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "specs" = specs)
+   
+   constr_prob <- list("k" = k, "prob" = prob, "upper" = upper, "lower" = lower)
+   constr <- list(constr_prob)
+   names(constr) <- paste("stress", 1)
+   type <- list("prob")
+   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr)
    if (is.SWIM(x)) my_list <- merge(x, my_list)
    return(my_list)  
   }

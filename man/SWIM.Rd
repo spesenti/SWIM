@@ -72,32 +72,47 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
 
     An object of class \code{SWIM} contains a list of:
   \itemize{
-    \item \code{x}, the data, containing realisations of a random 
+    \item \code{x}, a data.frame containing realisations of a random 
   vector;
-    \item \code{new_weights}, a list of functions, that applied
-  to the \code{k}th column of \code{x}, generate the vectors of 
-  scenario weights; OR \cr
-  a data.frame containing the scenario weights. Columns of \code{
-  new_weights} correspond to different stresses. 
-    \item \code{specs}, the specifications of what has been
-  stressed.
-  \code{specs} is a data.frame consisting of \code{type},
-  \code{k}, and constraints depending on the \code{type} of stress:
+    \item \code{new_weights}, a list, each component corresponds to 
+   a different stress and is either a vector of scenario weights or a
+   function, that applied to the \code{k}th column of \code{x}, 
+   generates the vectors of scenario weights; 
+    \item \code{type}: a list, each component corresponds to a 
+   different stress and specifies the type of the stress
+    \item \code{specs} , a list, each component corresponds to 
+  a different stress and contains a list with the specifications 
+  of what has been stressed.
+  Specifications depend on the \code{type} of stress:
     \itemize{
-      \item \code{type = "VaR"}: \code{alpha}, the level of the 
-    stressed VaR; \code{q}, the stressed VaR at level \code{alpha}.
-      \item \code{type = "VaR ES"}: \code{alpha}, the level of the 
+      \item \code{type = "VaR"}: \code{k}, the column of \code{x} 
+    on which the stress is applied to; \code{alpha}, the level of 
+    the stressed VaR; \code{q}, the stressed VaR at level 
+      \code{alpha}.
+      \item \code{type = "VaR ES"}: \code{k}, the column of \code{x} 
+    on which the stress is applied to; \code{alpha}, the level of the 
     stressed VaR and ES; \code{q}, the stressed VaR at level 
     \code{alpha};
+      \item \code{type = "mean"}: \code{k}, the columns of \code{x} 
+    on which the stress is applied to; \code{new_means}, the 
+    stressed means.
+      \item \code{type = "mean sd"}: \code{k}, the columns of \code{x} 
+    on which the stress is applied to; \code{new_means}, the 
+    stressed means; \code{new_sd}, the stressed standard deviations.
     \code{s}, the stressed ES at level \code{alpha}.
-      \item \code{type = "prob"}: \code{lower}, the left endpoints of
-    the intervals; \code{upper}, the right endpoints of the intervals;
-    \code{prob}, stressed probabilities corresponding to the intervals
-    defined through \code{lower} and \code{upper}.
-      \item \code{type = "user"}: no additional argument.  
-      \item \code{type = "moment"}: .
-      \item \code{type = "mean"}: .
-      \item \code{type = "mean sd"}: .
+      \item \code{type = "moment"}: \code{f}, the list of functions, 
+    that, applied to \code{x}, constitute the moment constraints;
+    \code{k}, the columns of \code{x} on which each function in 
+    \code{f} operates on; \code{m}, the stressed moments of 
+    \code{f(x)}. 
+      \item \code{type = "prob"}: \code{k}, the column of \code{x} 
+    on which the stress is applied to; \code{lower}, the left 
+    endpoints of the intervals; \code{upper}, the right endpoints 
+    of the intervals; \code{prob}, stressed probabilities 
+    corresponding to the intervals defined through \code{lower} 
+    and \code{upper}.
+      \item \code{type = "user"}: \code{k}, the column of \code{x} 
+    on which the stress is applied to.  
     }
   }
 }
