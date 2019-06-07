@@ -79,6 +79,7 @@
       stat_ecdf(ggplot2::aes(color = factor(stress)), n = n) +
       ggplot2::labs(x = x_name, y = "ecdf") +
       ggplot2::coord_cartesian(xlim = x_limits, ylim = y_limits) +
+      ggplot2::theme_minimal() + 
       ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
    } else {
     return(plot_data)
