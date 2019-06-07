@@ -106,7 +106,10 @@
  #'     }
  #'   } 
  #'     
- #' @references \insertRef{Pesenti2019reverse}{SWIM}
+ #' @references \insertRef{Pesenti2019reverse}{SWIM}\cr
+ #' 
+ #'     \insertRef{Csiszar1975}{SWIM}
+ #'     
  #' @seealso See \code{\link{get.data}} for extracting the data, 
  #'     \code{x}; \code{\link{get.weights}} for extracting the scenario 
  #'     weights, \code{new_weights}; \code{\link{get.weightsfun}} for

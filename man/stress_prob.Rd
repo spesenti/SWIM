@@ -55,7 +55,7 @@ The intervals are treated as half open intervals, that is
 }
 \examples{
 set.seed(0)
-x <- rnorm(10^5)
+x <- rnorm(1000)
 ## consecutive intervals
 res1 <- stress(type = "prob", x = x, prob = 0.008, upper = -2.4)
 # probability under the stressed model
@@ -64,13 +64,16 @@ cdf(res1, xCol = 1)(-2.4)
 ## calling stress_prob directly
 ## multiple intervals
 res2 <- stress_prob(x = x, prob = c(0.008, 0.06), 
-  upper = c(-2.4, -1.6), lower = c(min(x), -2))
+  upper = c(-2.4, -1.6), lower = c(-3, -2))
 # probability under the stressed model
-cdf(res2, xCol = 1)(-1.6) - cdf(res1, xCol = 1)(-2)
+cdf(res2, xCol = 1)(-2.4) - cdf(res2, xCol = 1)(-3)
+cdf(res2, xCol = 1)(-1.6) - cdf(res2, xCol = 1)(-2)
 
 }
 \references{
-\insertRef{Pesenti2019reverse}{SWIM}
+\insertRef{Pesenti2019reverse}{SWIM}\cr
+
+    \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{
 Other stress functions: \code{\link{stress_VaR_ES}},

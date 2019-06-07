@@ -79,7 +79,9 @@ summary(res2)
    
 }
 \references{
-\insertRef{Pesenti2019reverse}{SWIM}
+\insertRef{Pesenti2019reverse}{SWIM}\cr
+
+    \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{
 Other stress functions: \code{\link{stress_VaR_ES}},

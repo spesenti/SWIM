@@ -118,7 +118,9 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
 }
 
 \references{
-\insertRef{Pesenti2019reverse}{SWIM}
+\insertRef{Pesenti2019reverse}{SWIM}\cr
+
+    \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{
 See \code{\link{get.data}} for extracting the data, 

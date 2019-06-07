@@ -37,7 +37,7 @@
 #' 
 #' @examples 
 #' set.seed(0)
-#' x <- rnorm(10^5)
+#' x <- rnorm(1000)
 #' ## consecutive intervals
 #' res1 <- stress(type = "prob", x = x, prob = 0.008, upper = -2.4)
 #' # probability under the stressed model
@@ -46,9 +46,10 @@
 #' ## calling stress_prob directly
 #' ## multiple intervals
 #' res2 <- stress_prob(x = x, prob = c(0.008, 0.06), 
-#'   upper = c(-2.4, -1.6), lower = c(min(x), -2))
+#'   upper = c(-2.4, -1.6), lower = c(-3, -2))
 #' # probability under the stressed model
-#' cdf(res2, xCol = 1)(-1.6) - cdf(res1, xCol = 1)(-2)
+#' cdf(res2, xCol = 1)(-2.4) - cdf(res2, xCol = 1)(-3)
+#' cdf(res2, xCol = 1)(-1.6) - cdf(res2, xCol = 1)(-2)
 #' 
 #' @family stress functions 
 #' @inherit SWIM references 
@@ -68,15 +69,15 @@
    if (is.null(lower)){
      # probability of intervals
      prob_new <- c(prob, 1) - c(0, prob)
+     lower <- c(min(x_data[,k]), upper[1:length(upper) - 1])
+     prob_old <- stats::ecdf(x_data[,k])(upper)
    } else { 
      prob_new <- c(prob, 1 - sum(prob))
+     prob_old <- stats::ecdf(x_data[,k])(upper) - stats::ecdf(x_data[,k])(lower)
    }
-   if (is.null(lower)) lower <- c(min(x_data[,k]), upper[1:length(upper) - 1])
-   
-   # probabilty that P(a < x_data <= b) for constraints = (a,b)
-   prob_old <- stats::ecdf(x_data[,k])(upper) - stats::ecdf(x_data[,k])(lower)
-   prob_old <- c(prob_old, 1 - sum(prob_old))
 
+   # probabilty that P(a < x_data <= b) for constraints = (a,b)
+   prob_old <- c(prob_old, 1 - sum(prob_old))
    new_weights <- list(function(y) .rn_prob(y, constraints = cbind(lower, upper)) %*% as.matrix(prob_new / prob_old))
    if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
    names(new_weights) <- paste("stress", 1)
@@ -92,7 +93,18 @@
 
   .rn_prob <- function(y, constraints){
     # indicator function 1_{ a < x_data <= b}
+
+    int1 <- function(limits, z) 1 * (z <= limits[2])
     int <- function(limits, z) (limits[1] < z) * (z <= limits[2]) 
-    interval <- cbind(apply(constraints, MARGIN = 1, FUN = int, z = y), 1 - rowSums(apply(constraints, MARGIN = 1, FUN = int, z = y)))
+    nconst <- nrow(constraints)
+   if (nconst > 1){
+  # more than 2 intervals
+   f_first <- function(z) int1(limits = constraints[1,], z = z)
+   f_mid <- function(z) apply(matrix(constraints[2:nconst,], ncol = 2), MARGIN = 1, FUN = int, z = z)
+   interval <- cbind(f_first(y), f_mid(y), 1 - rowSums(cbind(f_first(y), f_mid(y))))
+    } else {
+  # only one interval     
+    interval <- cbind(apply(constraints, MARGIN = 1, FUN = int1, z = y), 1 - rowSums(apply(constraints, MARGIN = 1, FUN = int1, z = y)))
+     }
   return(interval)
   }  
