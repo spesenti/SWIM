@@ -66,8 +66,7 @@ cdf(res1, xCol = 1)(-2.4)
 res2 <- stress_prob(x = x, prob = c(0.008, 0.06), 
   upper = c(-2.4, -1.6), lower = c(-3, -2))
 # probability under the stressed model
-cdf(res2, xCol = 1)(-2.4) - cdf(res2, xCol = 1)(-3)
-cdf(res2, xCol = 1)(-1.6) - cdf(res2, xCol = 1)(-2)
+cdf(res2, xCol = 1)(c(-2.4, -1.6)) - cdf(res2, xCol = 1)(c(-3, -2))
 
 }
 \references{

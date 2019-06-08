@@ -48,8 +48,7 @@
 #' res2 <- stress_prob(x = x, prob = c(0.008, 0.06), 
 #'   upper = c(-2.4, -1.6), lower = c(-3, -2))
 #' # probability under the stressed model
-#' cdf(res2, xCol = 1)(-2.4) - cdf(res2, xCol = 1)(-3)
-#' cdf(res2, xCol = 1)(-1.6) - cdf(res2, xCol = 1)(-2)
+#' cdf(res2, xCol = 1)(c(-2.4, -1.6)) - cdf(res2, xCol = 1)(c(-3, -2))
 #' 
 #' @family stress functions 
 #' @inherit SWIM references 
@@ -63,14 +62,18 @@
    if (is.unsorted(upper)) stop("upper not sorted")
    if (!is.null(lower) && is.unsorted(lower)) stop("lower not sorted")
    if (!is.null(lower) && any(lower >= upper)) stop("lower has to be smaller than upper.")
+   if (!is.null(lower) && any(lower[-1] < upper[-length(upper)])) stop("Intervals not disjoint")
+   if (!is.null(lower) && lower[1] < min(x_data[,k])) stop("Interval not in the range of x")
+   if (upper[length(upper)] > max(x_data[,k])) stop("Interval not in the range of x")
    if ((length(upper) != length(prob)) | (!is.null(lower) && (length(lower) != length(prob)))) stop("Unequal length of lower, upper and prob")
    
    # if only one point is provided
    if (is.null(lower)){
      # probability of intervals
      prob_new <- c(prob, 1) - c(0, prob)
-     lower <- c(min(x_data[,k]), upper[1:length(upper) - 1])
+     lower <- c(min(x_data[,k]), upper[-length(upper)])
      prob_old <- stats::ecdf(x_data[,k])(upper)
+     if (prob_old == 0) stop("Not enough data points.")
    } else { 
      prob_new <- c(prob, 1 - sum(prob))
      prob_old <- stats::ecdf(x_data[,k])(upper) - stats::ecdf(x_data[,k])(lower)
