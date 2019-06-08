@@ -73,7 +73,6 @@
      prob_new <- c(prob, 1) - c(0, prob)
      lower <- c(min(x_data[,k]), upper[-length(upper)])
      prob_old <- stats::ecdf(x_data[,k])(upper)
-     if (prob_old == 0) stop("Not enough data points.")
    } else { 
      prob_new <- c(prob, 1 - sum(prob))
      prob_old <- stats::ecdf(x_data[,k])(upper) - stats::ecdf(x_data[,k])(lower)
@@ -81,6 +80,7 @@
 
    # probabilty that P(a < x_data <= b) for constraints = (a,b)
    prob_old <- c(prob_old, 1 - sum(prob_old))
+   if (any(prob_old) == 0) stop("Not enough data points.")
    new_weights <- list(function(y) .rn_prob(y, constraints = cbind(lower, upper)) %*% as.matrix(prob_new / prob_old))
    if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
    names(new_weights) <- paste("stress", 1)
