@@ -51,9 +51,9 @@ The function \code{stress_mean_sd} is a wrapper for the
     for details on the additional arguments to \code{...} and 
     the underlying algorithm.
     
-    For only stressing means, see \code{\link{stress_mean}}, 
-    for stressing standard deviations without the mean or 
-    other moments, see \code{\link{stress_moment}}.
+    For stressing means only, see \code{\link{stress_mean}}, 
+    for stressing highter moments and functions of moments, 
+    see \code{\link{stress_moment}}.
 }
 \examples{
 set.seed(0)
@@ -75,7 +75,9 @@ res2 <- stress_mean_sd(x = x, k = 1, new_means = 0.1,
           
 }
 \references{
-\insertRef{Pesenti2019reverse}{SWIM}
+\insertRef{Pesenti2019reverse}{SWIM}\cr
+
+    \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{
 Other stress functions: \code{\link{stress_VaR_ES}},

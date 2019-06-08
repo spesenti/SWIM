@@ -79,7 +79,7 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
    function, that applied to the \code{k}th column of \code{x}, 
    generates the vectors of scenario weights; 
     \item \code{type}: a list, each component corresponds to a 
-   different stress and specifies the type of the stress
+   different stress and specifies the type of the stress;
     \item \code{specs} , a list, each component corresponds to 
   a different stress and contains a list with the specifications 
   of what has been stressed.
@@ -92,7 +92,7 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
       \item \code{type = "VaR ES"}: \code{k}, the column of \code{x} 
     on which the stress is applied to; \code{alpha}, the level of the 
     stressed VaR and ES; \code{q}, the stressed VaR at level 
-    \code{alpha};
+    \code{alpha}.
       \item \code{type = "mean"}: \code{k}, the columns of \code{x} 
     on which the stress is applied to; \code{new_means}, the 
     stressed means.
@@ -118,7 +118,9 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
 }
 
 \references{
-\insertRef{Pesenti2019reverse}{SWIM}
+\insertRef{Pesenti2019reverse}{SWIM}\cr
+
+    \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{
 See \code{\link{get.data}} for extracting the data, 

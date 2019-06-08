@@ -10,11 +10,11 @@ plot_sensitivity(object, xCol = "all", wCol = "all",
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character vector; (names of) the columns of 
+\item{xCol}{Numeric or character vector, (names of) the columns of 
 the underlying data 
 of the \code{object} (\code{default = "all"}).}
 
-\item{wCol}{Vector; the columns of the scenario weights 
+\item{wCol}{Vector, the columns of the scenario weights 
 of the \code{object} corresponding to different 
 stresses (\code{default = "all"}).}
 

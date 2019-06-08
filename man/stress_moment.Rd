@@ -47,18 +47,18 @@ Provides weights on simulated scenarios from a baseline stochastic
     baseline model.
 }
 \details{
-The moment constraints are given by \code{E^Q( f(x) ) = m}, 
-    where \code{E^Q} denotes the expectation under the stressed 
-    model.\cr
-    If \code{f} is a function of multiple variables, \code{k} 
-    corresponds to the input variables to \code{f}. Thus,
-    the length of \code{k} (or elements of \code{k}, if \code{k} 
-    is a list) must be equal to the number of input
-    variables to \code{f}.
+When \code{f} is a list, \code{k[[i]]} corresponds to the input 
+    variables of \code{f[[i]]}. 
 
-    The function solves the set of equations with respect to theta,
-    using \code{\link[nleqslv]{nleqslv}}:
+    The moment constraints are given by \code{E^Q( f(x) ) = m}, 
+    where \code{E^Q} denotes the expectation under the stressed 
+    model. \code{stress_moment} solves the subsequent set of equations 
+    with respect to theta, using \code{\link[nleqslv]{nleqslv}}:
+    
     \deqn{E^Q( f(x) ) = E( f(x) * exp(theta * f(x)) ) = m.}
+    
+    There is no guarantee that the set of equations 
+    will have a solution, or that the solution is unique.
 }
 \examples{
 set.seed(0)
@@ -73,6 +73,7 @@ res1 <- stress_moment(x = x,
   k = list(1, 2, c(1, 2)), m = c(0, 2, 0.5), 
   method = "Newton", control = list(maxit = 1000, ftol = 1E-10))
 ## means under the stressed model
+summary(res1)
 apply(x, 2, stats::weighted.mean, w = get.weights(res1)) 
 ## covaraince of columns 1,2 under the stressed model
 stats::weighted.mean(x[, 1] * x[, 2], w = get.weights(res1))
@@ -81,13 +82,16 @@ stats::weighted.mean(x[, 1] * x[, 2], w = get.weights(res1))
 res2 <- stress_moment(x = x, 
   f = list(function(x)(x > 1.5), function(x)(x > 0.9)), 
   k = c(1, 3), m = c(0.9, 0.9))
+summary(res2)
 ## probabilities under the stressed model
 mean((x[, 1] > 1.5) * get.weights(res2))
 mean((x[, 3] > 0.9) * get.weights(res2))
      
 }
 \references{
-\insertRef{Pesenti2019reverse}{SWIM}
+\insertRef{Pesenti2019reverse}{SWIM}\cr
+
+    \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{
 See \code{\link{stress_mean}} for stressing means and 

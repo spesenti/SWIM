@@ -6,13 +6,13 @@
 #'     
 #' @inheritParams get.data
 #' @param ...     Additional arguments will be ignored. 
-#' @param xCol    Numeric or character vector; (names of) the columns of 
+#' @param xCol    Numeric or character vector, (names of) the columns of 
 #'                the underlying data 
 #'                of the \code{object} (\code{default = "all"}). 
-#' @param wCol    Vector; the columns of the scenario weights 
+#' @param wCol    Vector, the columns of the scenario weights 
 #'                of the \code{object} corresponding to different 
 #'                stresses (\code{default = "all"}).
-#' @param base    Logical; if \code{TRUE}, statistics under the baseline 
+#' @param base    Logical, if \code{TRUE}, statistics under the baseline 
 #'                are also returned (\code{default = "FALSE"}).
 #'                
 #' @return \code{summary.SWIM} returns a list with components
@@ -20,13 +20,13 @@
 #'     summary statistic of each column of the data of the 
 #'     \code{SWIM} object:
 #'     \tabular{ll}{
-#'       \code{mean}        \cr
-#'       \code{sd}          \cr
-#'       \code{skewness}    \cr
-#'       \code{ex kurtosis} \cr
-#'       \code{1st Qu.}     \cr
-#'       \code{Median}      \cr
-#'       \code{3rd Qu.}     \cr
+#'       \code{mean}        \tab The sample mean.\cr
+#'       \code{sd}          \tab The sample standard deviation. \cr
+#'       \code{skewness}    \tab The sample skewness.\cr
+#'       \code{ex kurtosis} \tab The sample excess kurtosis\cr
+#'       \code{1st Qu.}     \tab The 25\% quantile.\cr
+#'       \code{Median}      \tab The median, 50\% quantile.\cr
+#'       \code{3rd Qu.}     \tab The 75\% quantile.
 #'     } 
 #'     
 #' @examples      

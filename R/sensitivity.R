@@ -4,7 +4,7 @@
 #'     and the baseline model.
 #'      
 #' @inheritParams summary.SWIM
-#' @param type    Character; one of \code{"Gamma", "Kolmogorov", 
+#' @param type    Character, one of \code{"Gamma", "Kolmogorov", 
 #'                "Wasserstein", "all"}.
 #' @param f       List of functions with the same length as \code{xCol}.
 #' 

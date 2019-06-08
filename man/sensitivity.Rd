@@ -10,15 +10,15 @@ sensitivity(object, xCol = "all", wCol = "all", type = c("Gamma",
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character vector; (names of) the columns of 
+\item{xCol}{Numeric or character vector, (names of) the columns of 
 the underlying data 
 of the \code{object} (\code{default = "all"}).}
 
-\item{wCol}{Vector; the columns of the scenario weights 
+\item{wCol}{Vector, the columns of the scenario weights 
 of the \code{object} corresponding to different 
 stresses (\code{default = "all"}).}
 
-\item{type}{Character; one of \code{"Gamma", "Kolmogorov", 
+\item{type}{Character, one of \code{"Gamma", "Kolmogorov", 
 "Wasserstein", "all"}.}
 
 \item{f}{List of functions with the same length as \code{xCol}.
