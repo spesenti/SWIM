@@ -10,18 +10,17 @@
 #' @param f         A function, or list of functions, that, applied to 
 #'                  \code{x}, constitute the moment constraints.
 #' @param k         A vector or list of vectors, same length as \code{f},
-#'                  indicating which columns of
-#'                  \code{x} each function in \code{f} operates on.
+#'                  indicating which columns of \code{x} each function 
+#'                  in \code{f} operates on.\cr
+#'                  When \code{f} is a list, \code{k[[i]]} corresponds 
+#'                  to the input variables of \code{f[[i]]}. 
 #' @param m         Numeric vector, same length as \code{f}, containing
 #'                  the stressed moments of \code{f(x)}. Must be in the
 #'                  range of \code{f(x)}.
 #' @param ...       Additional arguments to be passed to 
 #'                  \code{\link[nleqslv]{nleqslv}}.
 #' 
-#' @details When \code{f} is a list, \code{k[[i]]} corresponds to the input 
-#'     variables of \code{f[[i]]}. 
-#' 
-#'     The moment constraints are given by \code{E^Q( f(x) ) = m}, 
+#' @details The moment constraints are given by \code{E^Q( f(x) ) = m}, 
 #'     where \code{E^Q} denotes the expectation under the stressed 
 #'     model. \code{stress_moment} solves the subsequent set of equations 
 #'     with respect to theta, using \code{\link[nleqslv]{nleqslv}}:

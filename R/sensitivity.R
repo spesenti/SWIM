@@ -4,12 +4,13 @@
 #'     and the baseline model.
 #'      
 #' @inheritParams summary.SWIM
+#' @inheritParams stress_moment
 #' @param type    Character, one of \code{"Gamma", "Kolmogorov", 
 #'                "Wasserstein", "all"}.
-#' @param f       List of functions with the same length as \code{xCol}.
-#' 
-#'                If provided, the transformed data, \code{f(x)},
-#'                are considered.
+#' @param xCol    Numeric or character vector, (names of) the columns 
+#'                of the underlying data of the \code{object} 
+#'                (\code{default = "all"}). If \code{xCol = NULL}, only 
+#'                the transformed data \code{f(x)} is considered.
 #' 
 #' @details Provides sensitivity measures that compare the stressed and 
 #'     the baseline model. Implemented sensitivity measures:
@@ -56,7 +57,7 @@
 #' sensitivity(res1, wCol = 1, type = "all") 
 #' ## sensitivity of log-transformed data 
 #' sensitivity(res1, wCol = 1, type = "all", 
-#'   f = list(function(x)log(x), function(x)log(x))) 
+#'   f = list(function(x)log(x), function(x)log(x)), k = list(1,2)) 
 #'   
 #' ## Consider the portfolio Y = X1 + X2 + X3 + X4 + X5,  
 #' ## where (X1, X2, X3, X4, X5) are correlated normally 
@@ -92,27 +93,43 @@
 #' @export
 #' 
 
-  sensitivity <- function(object, xCol = "all", wCol = "all", type = c("Gamma",                             "Kolmogorov", "Wasserstein", "all"), f = NULL){
+  sensitivity <- function(object, xCol = "all", wCol = "all", type = c("Gamma",                             "Kolmogorov", "Wasserstein", "all"), f = NULL, k = NULL){
    if (!is.SWIM(object)) stop("Wrong object")
    if (anyNA(object$x)) warning("x contains NA")
    if (missing(type)) type <- "all"
+   if (!is.null(f) | !is.null(k)){
+   if (is.function(f)) f <- as.list(f)
+   if (!all(sapply(f, is.function))) stop("f must be a list of functions")
+   if (is.numeric(k)) k <- as.list(k)
+   if (!all(sapply(k, is.numeric))) stop("k must be a list of numeric vectors")
+   if (length(f) != length(k)) stop("Objects f and k must have the same length.")
+   }
+   
+   if (!is.null(xCol)){
    if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
-   if(is.character(xCol) && xCol != "all") cname <- xCol
+   if (is.character(xCol) && xCol != "all") cname <- xCol
    if (is.null(colnames(get_data(object)))){
     cname <-  paste("X", as.character(xCol), sep = "")
    } else if (!is.character(xCol)){
     cname <- colnames(get_data(object))[xCol]
    } 
    x_data <- get_data(object)[ , xCol]
-   if (!is.null(f)){
-    for(i in 1:length(xCol)){
-      x_data[, i] <- sapply(x_data[, i], f[[i]])
-    }
    }
-  
+   if (!is.null(f)){
+      z <- matrix(0, ncol = length(f), nrow = nrow(get_data(object)))
+      for (i in 1:length(f)){
+         z[, i] <- apply(get_data(object)[, k[[i]], drop = FALSE], 1, f[[i]])
+      }
+      if(is.null(xCol)) cname <- NULL
+      cname <- c(cname, paste("f", 1:length(f), sep = ""))
+      if(is.null(xCol)) x_data <- NULL
+      x_data <- cbind(x_data, z)
+      colnames(x_data) <- cname
+   }
+   
    if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
    new_weights <- get_weights(object)[ , wCol]  
-   sens_w <- stats::setNames(data.frame(matrix(ncol = length(xCol) + 2, nrow = 0)), c("stress", "type", cname))
+   sens_w <- stats::setNames(data.frame(matrix(ncol = length(x_data) + 2, nrow = 0)), c("stress", "type", cname))
    if (type == "Gamma" || type == "all"){
     sens_gamma_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .gamma, z = z)
     sens_gw <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_gamma_w)

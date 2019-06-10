@@ -28,7 +28,7 @@
 #' importance_rank(res1, wCol = 1:2, type = "Gamma") 
 #' ## sensitivity of log-transformed data 
 #' importance_rank(res1, wCol = 1, type = "Wasserstein", 
-#'   f = list(function(x)log(x), function(x)log(x))) 
+#'   f = list(function(x)log(x), function(x)log(x)), k = list(1,2)) 
 #'   
 #' @seealso See \code{\link{sensitivity}} for the values of the 
 #'     sensitivity measures, \code{\link{plot_sensitivity}} for plotting 
@@ -38,12 +38,12 @@
 #' @export
 
   importance_rank <- function(object, xCol = "all", wCol = "all", 
-                              type = c("Gamma", "Wasserstein", "all"), f = NULL){
+                              type = c("Gamma", "Wasserstein", "all"), f = NULL, k = NULL){
    if (!is.SWIM(object)) stop("Wrong object")
    if (anyNA(object$x)) warning("x contains NA")
    if (missing(type)) type <- "all"
   
-   sens_w <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f = f)
+   sens_w <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f = f, k = k)
    if (length(sens_w) < 4) stop("Only one input provided.")
    rank_w <- t(apply(X = sens_w[ , 3:length(sens_w)], MARGIN = 1, FUN = function(z) rank(-z, ties.method = "min")))
    rank_w <- cbind(sens_w[ , 1:2], rank_w)

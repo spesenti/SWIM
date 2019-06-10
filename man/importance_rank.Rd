@@ -5,14 +5,15 @@
 \title{Importance Ranking for a Stressed Model}
 \usage{
 importance_rank(object, xCol = "all", wCol = "all", type = c("Gamma",
-  "Wasserstein", "all"), f = NULL)
+  "Wasserstein", "all"), f = NULL, k = NULL)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character vector, (names of) the columns of 
-the underlying data 
-of the \code{object} (\code{default = "all"}).}
+\item{xCol}{Numeric or character vector, (names of) the columns 
+of the underlying data of the \code{object} 
+(\code{default = "all"}). If \code{xCol = NULL}, only 
+the transformed data \code{f(x)} is considered.}
 
 \item{wCol}{Vector, the columns of the scenario weights 
 of the \code{object} corresponding to different 
@@ -20,10 +21,14 @@ stresses (\code{default = "all"}).}
 
 \item{type}{Character, one of \code{"Gamma", "Wasserstein", "all"}.}
 
-\item{f}{List of functions with the same length as \code{xCol}.
+\item{f}{A function, or list of functions, that, applied to 
+\code{x}, constitute the moment constraints.}
 
-               If provided, the transformed data, \code{f(x)},
-               are considered.}
+\item{k}{A vector or list of vectors, same length as \code{f},
+indicating which columns of \code{x} each function 
+in \code{f} operates on.\cr
+When \code{f} is a list, \code{k[[i]]} corresponds 
+to the input variables of \code{f[[i]]}.}
 }
 \value{
 A data.frame containing the importance ranks of the 
@@ -54,7 +59,7 @@ res1 <- stress(type = "VaR", x = x,
 importance_rank(res1, wCol = 1:2, type = "Gamma") 
 ## sensitivity of log-transformed data 
 importance_rank(res1, wCol = 1, type = "Wasserstein", 
-  f = list(function(x)log(x), function(x)log(x))) 
+  f = list(function(x)log(x), function(x)log(x)), k = list(1,2)) 
   
 }
 \seealso{
