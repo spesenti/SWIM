@@ -51,7 +51,9 @@
 #'     
 #' @export
 
-  quantile_stressed <- function(object, probs = seq(0, 1, 0.25), xCol = "all", wCol = 1, type = c("quantile","(i-1)/(n-1)","i/(n+1)","i/n")){
+  quantile_stressed <- function(object, probs = seq(0, 1, 0.25), xCol = "all", 
+                                wCol = 1, type = c("quantile","(i-1)/(n-1)",
+                                "i/(n+1)","i/n")){
    if (!is.SWIM(object)) stop("Wrong object")
    if (missing(type)) type <- as.character("quantile")
    if (anyNA(object$x)) warning("x contains NA")

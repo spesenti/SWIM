@@ -65,7 +65,7 @@
  #' @export
 
 stress_VaR_ES <- function(x, alpha, q_ratio = NULL, 
-  s_ratio = NULL, q = NULL, s = NULL, k = 1){
+                          s_ratio = NULL, q = NULL, s = NULL, k = 1){
   
   if (is.SWIM(x)) x_data <- get.data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")

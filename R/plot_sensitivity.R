@@ -45,7 +45,8 @@
 #'     
 #' @export
 
-  plot_sensitivity <- function(object, xCol = "all", wCol = "all", type = c("Gamma", "Wasserstein"), f = NULL, displ = TRUE){
+  plot_sensitivity <- function(object, xCol = "all", wCol = "all", type = 
+                               c("Gamma", "Wasserstein"), f = NULL, displ = TRUE){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    if (anyNA(object$x)) warning("x contains NA")
    sens <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f)
