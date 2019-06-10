@@ -96,22 +96,22 @@
    if (!is.SWIM(object)) stop("Wrong object")
    if (anyNA(object$x)) warning("x contains NA")
    if (missing(type)) type <- "all"
-   if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get.data(object))
+   if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
    if(is.character(xCol) && xCol != "all") cname <- xCol
-   if (is.null(colnames(get.data(object)))){
+   if (is.null(colnames(get_data(object)))){
     cname <-  paste("X", as.character(xCol), sep = "")
    } else if (!is.character(xCol)){
-    cname <- colnames(get.data(object))[xCol]
+    cname <- colnames(get_data(object))[xCol]
    } 
-   x_data <- get.data(object)[ , xCol]
+   x_data <- get_data(object)[ , xCol]
    if (!is.null(f)){
     for(i in 1:length(xCol)){
       x_data[, i] <- sapply(x_data[, i], f[[i]])
     }
    }
   
-   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(object))
-   new_weights <- get.weights(object)[ , wCol]  
+   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
+   new_weights <- get_weights(object)[ , wCol]  
    sens_w <- stats::setNames(data.frame(matrix(ncol = length(xCol) + 2, nrow = 0)), c("stress", "type", cname))
    if (type == "Gamma" || type == "all"){
     sens_gamma_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .gamma, z = z)

@@ -61,11 +61,11 @@
   plot_cdf <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,                             x_limits, y_limits, displ = TRUE){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    if (anyNA(object$x)) warning("x contains NA")
-   x_data <- get.data(object)[, xCol]
+   x_data <- get_data(object)[, xCol]
    if(is.character(xCol)) x_name <- xCol
-   if(is.null(colnames(get.data(object)))) x_name <- paste("X", xCol, sep = "") else if(!is.character(xCol)) x_name <- colnames(get.data(object))[xCol]
-   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(object))
-   plot_data <- data.frame(x_data, get.weights(object)[ , wCol])
+   if(is.null(colnames(get_data(object)))) x_name <- paste("X", xCol, sep = "") else if(!is.character(xCol)) x_name <- colnames(get_data(object))[xCol]
+   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
+   plot_data <- data.frame(x_data, get_weights(object)[ , wCol])
    names(plot_data)[1] <- x_name
    if (base == TRUE){
     plot_data <- cbind(plot_data, base = rep(1, length(x_data)))

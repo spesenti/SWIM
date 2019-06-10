@@ -57,16 +57,16 @@
    if (!is.SWIM(object)) stop("Wrong object")
    if (missing(type)) type <- as.character("quantile")
    if (anyNA(object$x)) warning("x contains NA")
-   new_weights <- get.weights(object)[ , wCol]
-   if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get.data(object))
-   if (is.null(colnames(get.data(object)))){
+   new_weights <- get_weights(object)[ , wCol]
+   if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
+   if (is.null(colnames(get_data(object)))){
     cname <-  paste("X", as.character(xCol), sep = "")
    } else if (!is.character(xCol)){
-    cname <- colnames(get.data(object))[xCol]
+    cname <- colnames(get_data(object))[xCol]
    } else {
     cname <- xCol   
    }
-   x_data <- as.matrix(get.data(object)[ , xCol])
+   x_data <- as.matrix(get_data(object)[ , xCol])
 
    quantile_w <- as.matrix(apply(X = as.matrix(x_data), MARGIN = 2, FUN = Hmisc::wtd.quantile, weights = new_weights, probs = probs, type = type))
    if (length(probs) == 1 && length(cname) > 1) quantile_w <- matrix(quantile_w, nrow = 1)

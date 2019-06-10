@@ -43,13 +43,13 @@
   plot_hist <- function(object, xCol = 1, wCol = "all", base = FALSE, x_limits,                            displ = TRUE, binwidth, displLines = FALSE){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    if (anyNA(object$x)) warning("x contains NA")
-   x_data <- get.data(object)[ , xCol]
+   x_data <- get_data(object)[ , xCol]
    if(missing(binwidth)) binwidth <- (max(x_data) - min(x_data)) / 30
-   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get.weights(object))
+   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
   
-   hist_data <- data.frame(x_data, get.weights(object)[ , wCol])
+   hist_data <- data.frame(x_data, get_weights(object)[ , wCol])
    if(is.character(xCol)) x_name <- xCol
-   if(is.null(colnames(get.data(object)))) x_name <- paste("X", xCol, sep = "") else if(!is.character(xCol)) x_name <- colnames(get.data(object))[xCol]
+   if(is.null(colnames(get_data(object)))) x_name <- paste("X", xCol, sep = "") else if(!is.character(xCol)) x_name <- colnames(get_data(object))[xCol]
    names(hist_data) <- c(x_name, paste("stress", wCol, sep = " "))
    if (base == TRUE){
     hist_data <- cbind(hist_data, "base" = rep(1, length(x_data)))

@@ -52,7 +52,7 @@ x <- as.data.frame(cbind(
   "gamma" = rgamma(1000, shape = 2)))
 res1 <- stress(type = "user", x = x, new_weightsfun = function(x)x^2, k = 1)
 ## plot user defined weights against the first column of x.
-plot(x$normal,get.weights(res1), pch=".")
+plot(x$normal,get_weights(res1), pch=".")
      
 }
 \references{

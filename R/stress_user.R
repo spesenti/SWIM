@@ -33,14 +33,14 @@
 #'   "gamma" = rgamma(1000, shape = 2)))
 #' res1 <- stress(type = "user", x = x, new_weightsfun = function(x)x^2, k = 1)
 #' ## plot user defined weights against the first column of x.
-#' plot(x$normal,get.weights(res1), pch=".")
+#' plot(x$normal,get_weights(res1), pch=".")
 #'      
 #' @family stress functions 
 #' @inherit SWIM references 
 #' @export 
 
 stress_user <- function(x, new_weights = NULL, new_weightsfun = NULL, k = 1){
-  if (is.SWIM(x)) x_data <- get.data(x) else x_data <- as.matrix(x)
+  if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (is.null(colnames(x_data))) colnames(x_data) <- paste("X", 1:ncol(x_data), sep = "")
   if (is.function(new_weightsfun)) new_weightsfun <- list(new_weightsfun)

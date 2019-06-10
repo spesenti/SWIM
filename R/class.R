@@ -32,16 +32,16 @@
  #' @param object    A \code{SWIM} object.
  #' @inheritParams   summary.SWIM
  #'  
- #' @return \code{get.data}: A data.frame containing the realisations of 
+ #' @return \code{get_data}: A data.frame containing the realisations of 
  #'         the stochastic model on which the \code{object} is based.    
  #'
  #' @seealso \code{\link{SWIM}}
  #'                  
  #' @author Silvana M. Pesenti 
- #' @describeIn get.data extracting data.
+ #' @describeIn get_data extracting data.
  #' @export
 
-  get.data <- function(object, xCol = "all"){
+  get_data <- function(object, xCol = "all"){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    if (xCol == "all" && is.null(colnames(object$x))) xCol = 1:ncol(object$x) else xCol <- colnames(object$x)
    if (is.numeric(xCol) && !(xCol %in% 1:ncol(object$x))) stop("invalid 'xCol' argument")
@@ -51,9 +51,9 @@
    return(xdata)
   }
 
- #' @describeIn get.data extracting scenario weights. 
+ #' @describeIn get_data extracting scenario weights. 
  #'
- #' @return \code{get.weights:} A data.frame containing the scenario 
+ #' @return \code{get_weights:} A data.frame containing the scenario 
  #'     weights of the \code{object}. Columns corresponds 
  #'     to different stresses.
  #'         
@@ -67,17 +67,17 @@
  #'   alpha = 0.9, q_ratio = 1.05)
  #'   
  #' ## returning the underlying data
- #' all(get.data(res1) == x)
+ #' all(get_data(res1) == x)
  #' ## the scenario weights
- #' get.weights(res1)
- #' get.weightsfun(res1)
- #' get.specs(res1)
+ #' get_weights(res1)
+ #' get_weightsfun(res1)
+ #' get_specs(res1)
  #'                             
  #' @export
 
-  get.weights <- function(object){
+  get_weights <- function(object){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
-   x_data <- get.data(object)
+   x_data <- get_data(object)
    m <- length(object$type)
    new_weights <- matrix(0, nrow = nrow(x_data), ncol = m)
    for(i in 1:m){
@@ -92,34 +92,34 @@
    return(new_weights)
   }
 
- #' @describeIn get.data extracting weight functions.
+ #' @describeIn get_data extracting weight functions.
  #'
- #' @return \code{get.weightsfun}: A list containing functions, which, 
+ #' @return \code{get_weightsfun}: A list containing functions, which, 
  #'     when applied to a column of the data, generate the 
  #'     scenario weights of the \code{object}. The corresponding stressed 
- #'     columns can be obtained via \code{get.specs}.\cr
- #'     Use \code{\link{get.weights}} if the \code{SWIM} object only contains 
+ #'     columns can be obtained via \code{get_specs}.\cr
+ #'     Use \code{\link{get_weights}} if the \code{SWIM} object only contains 
  #'     scenario weights and not a list of functions.
  #'         
  #' @export
 
-  get.weightsfun <- function(object){
+  get_weightsfun <- function(object){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    if (!is.function(object$new_weights[[1]]))
-      stop("New_weights is not a function, use get.weights() instead.") 
+      stop("New_weights is not a function, use get_weights() instead.") 
    return(object$new_weights)
   }
 
- #' @describeIn get.data extracting information of the stress.
+ #' @describeIn get_data extracting information of the stress.
  #'
- #' @return \code{get.specs}: A data.frame containing specifications 
+ #' @return \code{get_specs}: A data.frame containing specifications 
  #'         of the stresses with each row corresponding to a different 
  #'         stress. Only a selection of the specifications is returned; 
  #'         however, all input variables are stored in the \code{object}.
  #'         See also \code{\link{SWIM}}.
  #' @export
 
-  get.specs <- function(object){
+  get_specs <- function(object){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    .type <- object$type 
    .specs <- data.frame()
@@ -175,13 +175,13 @@
 
   merge.SWIM <- function(x, y, ...){
   if (!is.SWIM(x) | !is.SWIM(y)) stop("x and y are not of class SWIM.")
-  if (!identical(get.data(x), get.data(y))) stop("x and y are not based on the same data")
+  if (!identical(get_data(x), get_data(y))) stop("x and y are not based on the same data")
   type <- c(x$type, y$type)
   m <- length(type)
   new_weights <- c(x$new_weights, y$new_weights)
   names(new_weights) <- paste("stress", 1:m)
   specs <- c(x$specs, y$specs)
   names(specs) <- paste("stress", 1:m)
-  xy <- SWIM("x" = get.data(x), "new_weights" = new_weights, "type" = type, "specs" = specs)
+  xy <- SWIM("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs)
   return(xy)
   }
