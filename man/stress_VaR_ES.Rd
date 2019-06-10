@@ -89,7 +89,7 @@ res1 <- stress(type = "VaR ES", x = x,
 ## stressing "gamma"
 res2 <- stress_VaR_ES(x = x, alpha = 0.9, 
   q_ratio = 1.03, s_ratio = c(1.05, 1.08), k = 2)
-get.specs(res2)
+get_specs(res2)
 summary(res2)
             
 }

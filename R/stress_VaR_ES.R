@@ -57,7 +57,7 @@
  #' ## stressing "gamma"
  #' res2 <- stress_VaR_ES(x = x, alpha = 0.9, 
  #'   q_ratio = 1.03, s_ratio = c(1.05, 1.08), k = 2)
- #' get.specs(res2)
+ #' get_specs(res2)
  #' summary(res2)
  #'             
  #' @family stress functions 
@@ -65,9 +65,9 @@
  #' @export
 
 stress_VaR_ES <- function(x, alpha, q_ratio = NULL, 
-  s_ratio = NULL, q = NULL, s = NULL, k = 1){
+                          s_ratio = NULL, q = NULL, s = NULL, k = 1){
   
-  if (is.SWIM(x)) x_data <- get.data(x) else x_data <- as.matrix(x)
+  if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
   if (!is.null(q) && !is.null(q_ratio)) stop("Only provide q or q_ratio")

@@ -74,9 +74,9 @@ res1 <- stress_moment(x = x,
   method = "Newton", control = list(maxit = 1000, ftol = 1E-10))
 ## means under the stressed model
 summary(res1)
-apply(x, 2, stats::weighted.mean, w = get.weights(res1)) 
+apply(x, 2, stats::weighted.mean, w = get_weights(res1)) 
 ## covaraince of columns 1,2 under the stressed model
-stats::weighted.mean(x[, 1] * x[, 2], w = get.weights(res1))
+stats::weighted.mean(x[, 1] * x[, 2], w = get_weights(res1))
     
 ## stressing jointly the tail probabilities of columns 1,3  
 res2 <- stress_moment(x = x, 
@@ -84,8 +84,8 @@ res2 <- stress_moment(x = x,
   k = c(1, 3), m = c(0.9, 0.9))
 summary(res2)
 ## probabilities under the stressed model
-mean((x[, 1] > 1.5) * get.weights(res2))
-mean((x[, 3] > 0.9) * get.weights(res2))
+mean((x[, 1] > 1.5) * get_weights(res2))
+mean((x[, 3] > 0.9) * get_weights(res2))
      
 }
 \references{

@@ -31,7 +31,7 @@
  #' 
   
   stress <- function(type = c("VaR", "VaR ES", "mean", 
-     "mean sd", "moment", "prob", "user"), ...){
+                     "mean sd", "moment", "prob", "user"), ...){
    if (type == "VaR") SWIM <- stress_VaR(...)
    if (type == "VaR ES") SWIM <- stress_VaR_ES(...)
    if (type == "mean") SWIM <- stress_mean(...)

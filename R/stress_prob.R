@@ -56,7 +56,7 @@
 #' 
 
   stress_prob <- function(x, prob, upper, lower= NULL, k = 1){
-   if (is.SWIM(x)) x_data <- get.data(x) else x_data <- as.matrix(x)
+   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
    if (anyNA(x_data)) warning("x contains NA")
    if (any(prob < 0) | any(prob > 1) | (is.null(lower) && sum(prob) > 1)) stop("Invalid prob argument")
    if (is.unsorted(upper)) stop("upper not sorted")
