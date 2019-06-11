@@ -6,7 +6,7 @@
 #'   
 #' @details 
 #' 
-#' @inheritParams sensitivity 
+#' @inheritParams summary.SWIM 
 #' @param probs   Vector of probabilities with values 
 #'                in \code{[0,1]} (\code{default = (0, 0.25, 
 #'                0.5, 0.75, 1)}).

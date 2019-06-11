@@ -5,26 +5,33 @@
 \title{Plotting Sensitivities of a Stressed Model}
 \usage{
 plot_sensitivity(object, xCol = "all", wCol = "all",
-  type = c("Gamma", "Wasserstein"), f = NULL, displ = TRUE)
+  type = c("Gamma", "Kolmogorov", "Wasserstein"), f = NULL, k = NULL,
+  displ = TRUE)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character vector, (names of) the columns of 
-the underlying data 
-of the \code{object} (\code{default = "all"}).}
+\item{xCol}{Numeric or character vector, (names of) the columns 
+of the underlying data of the \code{object} 
+(\code{default = "all"}). If \code{xCol = NULL}, only 
+the transformed data \code{f(x)} is considered.}
 
 \item{wCol}{Vector, the columns of the scenario weights 
 of the \code{object} corresponding to different 
 stresses (\code{default = "all"}).}
 
-\item{type}{Character, one of \code{"Gamma", "Wasserstein"} 
-(\code{default = "Gamma"}).}
+\item{type}{Character, one of \code{"Gamma", "Kolmogorov", 
+"Wasserstein", "all"}.}
 
-\item{f}{List of functions with the same length as \code{xCol}.
+\item{f}{A function, or list of functions, that, applied to 
+\code{x}, constitute the transformation of the data 
+for which the sensitivity is calculated.}
 
-               If provided, the transformed data, \code{f(x)},
-               are considered.}
+\item{k}{A vector or list of vectors, same length as \code{f},
+indicating which columns of \code{x} each function 
+in \code{f} operates on.\cr
+When \code{f} is a list, \code{k[[i]]} corresponds 
+to the input variables of \code{f[[i]]}.}
 
 \item{displ}{Logical, if \code{TRUE} the plot is displayed, 
 otherwise the data.frame for customised plotting with 
@@ -51,19 +58,35 @@ Plots the sensitivity measures for components (random variables)
 \details{
 For the definition of the sensitivity 
     measures (\code{type}), see \code{\link{sensitivity}}.
+    
+    Note that the Kolmogorov distance is the same for all inputs under 
+    the same stress. Thus, it should only be used to compare different  
+    stresses not individual components.
 }
 \examples{
      
-## example with a stress on VaR
-set.seed(0)
-x <- as.data.frame(cbind(
-  "normal" = rnorm(1000), 
-  "gamma" = rgamma(1000, shape = 2)))
-res1 <- stress(type = "VaR", x = x, 
-  alpha = c(0.9, 0.95), q_ratio = 1.05)
+## Consider the portfolio Y = X1 + X2 + X3 + X4 + X5,  
+## where (X1, X2, X3, X4, X5) are correlated normally 
+## distributed with equal mean and different standard deviations,
+## see the README for further details.
 
-plot_sensitivity(res1, wCol = 1:2, type = "Gamma")     
-plot_sensitivity(res1, xCol = 1:2, type = "Wasserstein")     
+set.seed(0)
+SD <- round(runif(5, 30, 80))
+Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
+if (!requireNamespace("mvtnorm", quietly = TRUE))
+   stop("Package \\"mvtnorm\\" needed for this function 
+   to work. Please install it.")
+x <- mvtnorm::rmvnorm(10^5, 
+   mean =  rep(100, 5), 
+   sigma = (SD \%*\% t(SD)) * Corr) 
+data <- data.frame(rowSums(x), x)
+names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
+rev.stress <- stress(type = "VaR", x = data, 
+   alpha = c(0.75, 0.9), q_ratio = 1.1, k = 1)
+
+sensitivity(rev.stress, type = "all") 
+plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma")     
+plot_sensitivity(rev.stress, xCol = 6, wCol = 1, type = "all")   
      
 }
 \seealso{

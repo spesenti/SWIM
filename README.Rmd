@@ -90,6 +90,13 @@ sensitivity(rev.stress, type = "all")
 plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma") 
 ```
 
+Sensitivity to all sub-portfolios, (X1 + X2), (X1 + X3), ... (X4, X5): 
+
+```{r sensitivity sub-portfolios}
+importance_rank(rev.stress, xCol = NULL, wCol = 1, type = "Gamma", f = rep(list(function(x)x[1] + x[2]), 10), 
+   k = list(c(2,3), c(2,4), c(2,5), c(2,6), c(3,4), c(3,5), c(3,6), c(4,5), c(4,6), c(5,6)))
+```
+
 Ranking the input components according to the chosen sensitivity measure, in this example using *Gamma*.
 
 ```{r importance rank}

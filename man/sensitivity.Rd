@@ -5,14 +5,15 @@
 \title{Sensitivities of a Stressed Model}
 \usage{
 sensitivity(object, xCol = "all", wCol = "all", type = c("Gamma",
-  "Kolmogorov", "Wasserstein", "all"), f = NULL)
+  "Kolmogorov", "Wasserstein", "all"), f = NULL, k = NULL)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character vector, (names of) the columns of 
-the underlying data 
-of the \code{object} (\code{default = "all"}).}
+\item{xCol}{Numeric or character vector, (names of) the columns 
+of the underlying data of the \code{object} 
+(\code{default = "all"}). If \code{xCol = NULL}, only 
+the transformed data \code{f(x)} is considered.}
 
 \item{wCol}{Vector, the columns of the scenario weights 
 of the \code{object} corresponding to different 
@@ -21,10 +22,15 @@ stresses (\code{default = "all"}).}
 \item{type}{Character, one of \code{"Gamma", "Kolmogorov", 
 "Wasserstein", "all"}.}
 
-\item{f}{List of functions with the same length as \code{xCol}.
+\item{f}{A function, or list of functions, that, applied to 
+\code{x}, constitute the transformation of the data 
+for which the sensitivity is calculated.}
 
-               If provided, the transformed data, \code{f(x)},
-               are considered.}
+\item{k}{A vector or list of vectors, same length as \code{f},
+indicating which columns of \code{x} each function 
+in \code{f} operates on.\cr
+When \code{f} is a list, \code{k[[i]]} corresponds 
+to the input variables of \code{f[[i]]}.}
 }
 \value{
 A data.frame containing the sensitivity measures of the 
@@ -64,6 +70,9 @@ Provides sensitivity measures that compare the stressed and
       for two distribution functions \code{F,G} by 
       \deqn{Wasserstein = \int | F(x) - G(x)| dx.} 
     }
+    
+    If \code{f} and \code{k} are provided, the sensitivity of the 
+    transformed data is returned.
 }
 \examples{
      
@@ -78,7 +87,7 @@ res1 <- stress(type = "VaR", x = x,
 sensitivity(res1, wCol = 1, type = "all") 
 ## sensitivity of log-transformed data 
 sensitivity(res1, wCol = 1, type = "all", 
-  f = list(function(x)log(x), function(x)log(x))) 
+  f = list(function(x)log(x), function(x)log(x)), k = list(1,2)) 
   
 ## Consider the portfolio Y = X1 + X2 + X3 + X4 + X5,  
 ## where (X1, X2, X3, X4, X5) are correlated normally 
@@ -100,6 +109,9 @@ rev.stress <- stress(type = "VaR", x = data,
    alpha = c(0.75, 0.9), q_ratio = 1.1, k = 1)
 
 sensitivity(rev.stress, type = "all") 
+## sensitivity to sub-portfolios X1 + X2 and X3 + X4
+sensitivity(rev.stress, xCol = NULL, type = "Gamma", 
+  f = rep(list(function(x)x[1] + x[2]), 2), k = list(c(2,3), c(4,5))) 
 plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma")     
 importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
      

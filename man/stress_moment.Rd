@@ -17,8 +17,10 @@ underlying data of the \code{SWIM} object.}
 \code{x}, constitute the moment constraints.}
 
 \item{k}{A vector or list of vectors, same length as \code{f},
-indicating which columns of
-\code{x} each function in \code{f} operates on.}
+indicating which columns of \code{x} each function 
+in \code{f} operates on.\cr
+When \code{f} is a list, \code{k[[i]]} corresponds 
+to the input variables of \code{f[[i]]}.}
 
 \item{m}{Numeric vector, same length as \code{f}, containing
 the stressed moments of \code{f(x)}. Must be in the
@@ -47,10 +49,7 @@ Provides weights on simulated scenarios from a baseline stochastic
     baseline model.
 }
 \details{
-When \code{f} is a list, \code{k[[i]]} corresponds to the input 
-    variables of \code{f[[i]]}. 
-
-    The moment constraints are given by \code{E^Q( f(x) ) = m}, 
+The moment constraints are given by \code{E^Q( f(x) ) = m}, 
     where \code{E^Q} denotes the expectation under the stressed 
     model. \code{stress_moment} solves the subsequent set of equations 
     with respect to theta, using \code{\link[nleqslv]{nleqslv}}:
