@@ -46,7 +46,7 @@
 #' ## calling stress_prob directly
 #' ## multiple intervals
 #' res2 <- stress_prob(x = x, prob = c(0.008, 0.06), 
-#'   upper = c(-2.4, -1.6), lower = c(-3, -2))
+#'   lower = c(-3, -2), upper = c(-2.4, -1.6))
 #' # probability under the stressed model
 #' cdf(res2, xCol = 1)(c(-2.4, -1.6)) - cdf(res2, xCol = 1)(c(-3, -2))
 #' 
