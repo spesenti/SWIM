@@ -146,7 +146,8 @@ Sensitivity to all sub-portfolios, (X1 + X2), (X1 + X3), … (X4,
 X5):
 
 ``` r
-importance_rank(rev.stress, xCol = NULL, wCol = 1, type = "Gamma", f = rep(list(function(x)x[1] + x[2]), 10), k = list(c(2,3), c(2,4), c(2,5), c(2,6), c(3,4), c(3,5), c(3,6), c(4,5), c(4,6), c(5,6)))
+importance_rank(rev.stress, xCol = NULL, wCol = 1, type = "Gamma", f = rep(list(function(x)x[1] + x[2]), 10), 
+   k = list(c(2,3), c(2,4), c(2,5), c(2,6), c(3,4), c(3,5), c(3,6), c(4,5), c(4,6), c(5,6)))
 #>     stress  type f1 f2 f3 f4 f5 f6 f7 f8 f9 f10
 #> 1 stress 1 Gamma  7  5  3  1 10  9  6  8  4   2
 ```
