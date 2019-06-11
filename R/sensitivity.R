@@ -113,7 +113,6 @@
    if (!all(sapply(k, is.numeric))) stop("k must be a list of numeric vectors")
    if (length(f) != length(k)) stop("Objects f and k must have the same length.")
    }
-   
    if (!is.null(xCol)){
    if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
    if (is.character(xCol) && xCol != "all") cname <- xCol
