@@ -74,7 +74,7 @@ res1 <- stress_moment(x = x,
 ## means under the stressed model
 summary(res1)
 apply(x, 2, stats::weighted.mean, w = get_weights(res1)) 
-## covaraince of columns 1,2 under the stressed model
+## covariance of columns 1,2 under the stressed model
 stats::weighted.mean(x[, 1] * x[, 2], w = get_weights(res1))
     
 ## stressing jointly the tail probabilities of columns 1,3  

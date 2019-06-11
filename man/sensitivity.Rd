@@ -95,7 +95,7 @@ sensitivity(res1, wCol = 1, type = "all",
 ## see the README for further details.
 
 set.seed(0)
-SD <- round(runif(5, 30, 80))
+SD <- c(70, 45, 50, 60, 75)
 Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
 if (!requireNamespace("mvtnorm", quietly = TRUE))
    stop("Package \\"mvtnorm\\" needed for this function 

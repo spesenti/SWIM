@@ -4,7 +4,7 @@
 \alias{stress_prob}
 \title{Stressing Intervals}
 \usage{
-stress_prob(x, prob, upper, lower = NULL, k = 1)
+stress_prob(x, prob, lower = NULL, upper, k = 1)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame 
@@ -17,9 +17,9 @@ underlying data of the \code{SWIM} object.}
 the intervals defined through \code{lower} and 
 \code{upper}.}
 
-\item{upper}{Numeric vector, right endpoints of the intervals.}
-
 \item{lower}{Numeric vector, left endpoints of the intervals.}
+
+\item{upper}{Numeric vector, right endpoints of the intervals.}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.}
@@ -64,7 +64,7 @@ cdf(res1, xCol = 1)(-2.4)
 ## calling stress_prob directly
 ## multiple intervals
 res2 <- stress_prob(x = x, prob = c(0.008, 0.06), 
-  upper = c(-2.4, -1.6), lower = c(-3, -2))
+  lower = c(-3, -2), upper = c(-2.4, -1.6))
 # probability under the stressed model
 cdf(res2, xCol = 1)(c(-2.4, -1.6)) - cdf(res2, xCol = 1)(c(-3, -2))
 
