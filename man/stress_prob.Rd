@@ -4,7 +4,7 @@
 \alias{stress_prob}
 \title{Stressing Intervals}
 \usage{
-stress_prob(x, prob, upper, lower = NULL, k = 1)
+stress_prob(x, prob, lower = NULL, upper, k = 1)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame 
@@ -17,9 +17,9 @@ underlying data of the \code{SWIM} object.}
 the intervals defined through \code{lower} and 
 \code{upper}.}
 
-\item{upper}{Numeric vector, right endpoints of the intervals.}
-
 \item{lower}{Numeric vector, left endpoints of the intervals.}
+
+\item{upper}{Numeric vector, right endpoints of the intervals.}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.}
