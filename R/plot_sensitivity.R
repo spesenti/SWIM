@@ -11,9 +11,9 @@
 #' @details For the definition of the sensitivity 
 #'     measures (\code{type}), see \code{\link{sensitivity}}.
 #'     
-#'     Note that the Kolmogorov distance of one stress is the same for 
-#'     all inputs. Should be used to compare different stresses not 
-#'     individual components.   
+#'     Note that the Kolmogorov distance is the same for all inputs under 
+#'     the same stress. Thus, it should only be used to compare different  
+#'     stresses not individual components.   
 #'                
 #' @return If \code{displ = TRUE}, a plot displaying the sensitivity
 #'     measures of the stochastic model under the scenario weights.

@@ -22,7 +22,8 @@ stresses (\code{default = "all"}).}
 \item{type}{Character, one of \code{"Gamma", "Wasserstein", "all"}.}
 
 \item{f}{A function, or list of functions, that, applied to 
-\code{x}, constitute the moment constraints.}
+\code{x}, constitute the transformation of the data 
+for which the sensitivity is calculated.}
 
 \item{k}{A vector or list of vectors, same length as \code{f},
 indicating which columns of \code{x} each function 
@@ -33,7 +34,7 @@ to the input variables of \code{f[[i]]}.}
 \value{
 A data.frame containing the importance ranks of the 
     stressed model for different sensitivity measures. Small values 
-    correspond to large sensitivities. Differnt rows correspond 
+    correspond to large sensitivities. Different rows correspond 
     to different random variables. The first two rows specify the 
     \code{stress} and \code{type} of the sensitivity measure on 
     which the ranking is calculated.
@@ -58,7 +59,7 @@ res1 <- stress(type = "VaR", x = x,
   
 importance_rank(res1, wCol = 1:2, type = "Gamma") 
 ## sensitivity of log-transformed data 
-importance_rank(res1, wCol = 1, type = "Wasserstein", 
+importance_rank(res1, wCol = 1, type = "all", 
   f = list(function(x)log(x), function(x)log(x)), k = list(1,2)) 
   
 }

@@ -24,7 +24,8 @@ stresses (\code{default = "all"}).}
 "Wasserstein", "all"}.}
 
 \item{f}{A function, or list of functions, that, applied to 
-\code{x}, constitute the moment constraints.}
+\code{x}, constitute the transformation of the data 
+for which the sensitivity is calculated.}
 
 \item{k}{A vector or list of vectors, same length as \code{f},
 indicating which columns of \code{x} each function 
@@ -58,9 +59,9 @@ Plots the sensitivity measures for components (random variables)
 For the definition of the sensitivity 
     measures (\code{type}), see \code{\link{sensitivity}}.
     
-    Note that the Kolmogorov distance of one stress is the same for 
-    all inputs. Should be used to compare different stresses not 
-    individual components.
+    Note that the Kolmogorov distance is the same for all inputs under 
+    the same stress. Thus, it should only be used to compare different  
+    stresses not individual components.
 }
 \examples{
      
