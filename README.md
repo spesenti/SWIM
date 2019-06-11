@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# SWIM - A Package for Sensitivity Analysis
+# SWIM - An R Package for Sensitivity Analysis
 
 The SWIM package provides weights on simulated scenarios from a
 stochastic model, such that stressed model components (random variables)
