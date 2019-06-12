@@ -66,7 +66,7 @@
    if(is.null(colnames(get_data(object)))) x_name <- paste("X", xCol, sep = "") else if(!is.character(xCol)) x_name <- colnames(get_data(object))[xCol]
    if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
    plot_data <- data.frame(x_data, get_weights(object)[ , wCol])
-   names(plot_data)[1] <- x_name
+   names(plot_data) <- c(x_name, paste("stress", wCol, sep = " "))
    if (base == TRUE){
     plot_data <- cbind(plot_data, base = rep(1, length(x_data)))
    }
