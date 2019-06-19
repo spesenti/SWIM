@@ -23,6 +23,7 @@ test_that("specs", {
   expect_named(get_specs(res1), c("type", "k", "alpha", "q", "s"))
   expect_equal(as.numeric(get_specs(res1)[2:3]), c(k, alpha))
   expect_equal(res1$type[[1]], "VaR ES")
+  expect_type(get_weightsfun(res1), "list")
 })
 
 # Stress is fulfilled
@@ -36,7 +37,7 @@ test_that("stress", {
   expect_equal(ES * s_ratio, ES_stressed)
 })
   
-################ one stress ################
+################ two stresses ################
 
 alpha <- c(0.8, 0.9)
 k <- 1
@@ -53,6 +54,7 @@ test_that("specs", {
   expect_equal(as.numeric(get_specs(res2)[2,2:3]), c(k, alpha[2]))
   expect_equal(res2$type[[1]], "VaR ES")
   expect_equal(res2$type[[2]], "VaR ES")
+  expect_type(get_weightsfun(res2), "list")
 })
 
 # Stress is fulfilled
@@ -73,3 +75,5 @@ test_that("stress", {
   expect_equal(as.numeric(ES) * s_ratio, as.numeric(ES_stressed))
 })
 
+################ merge two stresses ################
+merge_test(res1, res2)

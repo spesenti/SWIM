@@ -21,6 +21,7 @@ output_test(res1, x)
 test_that("specs", {
   expect_named(get_specs(res1), c("type", "k"))
   expect_equal(res1$type[[1]], "moment")
+  expect_error(get_weightsfun(res1))
 })
 
 # Stress is fulfilled
@@ -46,6 +47,7 @@ output_test(res2, x)
 test_that("specs", {
   expect_named(get_specs(res2), c("type", "k"))
   expect_equal(res2$type[[1]], "moment")
+  expect_error(get_weightsfun(res2))
 })
 
 # Stress is fulfilled
@@ -54,3 +56,7 @@ test_that("stress", {
   expect_equal(mean(w * f[[1]](x[,k[[1]]])), m[[1]])
   expect_equal(mean(w * f[[2]](x[,k[[2]]])), m[[2]])
 })
+
+################ merge two stresses ################
+merge_test(res1, res2)
+

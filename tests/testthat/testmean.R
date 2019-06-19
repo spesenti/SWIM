@@ -19,6 +19,7 @@ output_test(res1, x)
 test_that("specs", {
   expect_named(get_specs(res1), c("type", "k"))
   expect_equal(res1$type[[1]], "mean")
+  expect_error(get_weightsfun(res1))
 })
 
 # Stress is fulfilled

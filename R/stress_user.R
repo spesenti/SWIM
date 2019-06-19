@@ -49,20 +49,20 @@ stress_user <- function(x, new_weights = NULL, new_weightsfun = NULL, k = 1){
   if (!is.null(new_weights)) {
     nweights <- as.matrix(new_weights)
     nweights <- t(t(nweights) / colMeans(nweights))
-    max_length <- ncol(nweights)
-    colnames(nweights) <- paste("stress", 1:max_length)
     if (any(nweights < 0)) stop("Invalid new_weights argument")
+    nweights <- lapply(seq_len(ncol(nweights)), function(i) nweights[,i])
+    max_length <- length(nweights)
   } else if (!is.null(new_weightsfun)) {
    if (!is.list(new_weightsfun)) new_weightsfun <- list(new_weightsfun) 
    nweights_values <- sapply(new_weightsfun, function(s) s(x_data[, k]))
    max_length <- length(new_weightsfun)
    if (any(nweights_values < 0)) stop("Invalid new_weights argument")
    nweights <- list()
-   for(i in 1:length(new_weightsfun)){
+   for(i in 1:max_length){
        nweights[[i]] <- function(x) new_weightsfun[[i]](x) / mean(new_weightsfun[[i]](x))
-       names(nweights)[i] <- paste("stress", i)
      }
   }
+  names(nweights) <- paste("stress", 1: length(nweights), sep = " ")
   type <- rep(list("user"), length.out = max_length)
   constr_user <- list("k" = k)
   constr <- rep(list(constr_user), length.out = max_length)
