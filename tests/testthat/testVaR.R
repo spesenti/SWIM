@@ -56,3 +56,6 @@ test_that("stress", {
 
 ################ merge two stresses ################
 merge_test(res1, res2)
+
+################ summary ################
+

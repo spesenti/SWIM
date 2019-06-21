@@ -63,7 +63,7 @@ res2 <- stress_mean(x = x, k = 1 : 3,
   new_means = c(1, 1, 0.75))
 summary(res2)
 
-## See also examples in \\code{\\link{stress_moment}} and \\code{\\link{stress_mean_sd}}.     
+## See also examples in stress_moment and stress_mean_sd.     
     
 }
 \references{

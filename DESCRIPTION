@@ -2,7 +2,7 @@ Package: SWIM
 Title: Scenario Weights for Importance Measurement
 Version: 0.0.0.9000
 Authors@R: c(
-  person("Silvana M.", "Pesenti", email = "pesenti@utstat.toronto.edu", 
+  person("Silvana M.", "Pesenti", email = "swimpackage@gmail.com", 
   role = c("aut", "cre")), 
   person("Alberto", "Bettini", email = "albertobettini@live.it", 
   role = c("aut")), 
@@ -26,13 +26,12 @@ Imports:
     plyr,
     ggplot2,
     spatstat,
-    stats,
+    stats
 RdMacros: Rdpack
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
 Suggests: 
-    mvtnorm,
     testthat,
-    Weighted.Desc.Stat
+    mvtnorm
