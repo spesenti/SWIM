@@ -27,3 +27,6 @@ test_that("stress", {
   w <- get_weights(res1)
   expect_equal(as.numeric(colMeans(w * x[,k])), new_means)
 })
+
+################ summary ################
+sum_test(res1)

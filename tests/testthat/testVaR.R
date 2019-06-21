@@ -58,4 +58,5 @@ test_that("stress", {
 merge_test(res1, res2)
 
 ################ summary ################
-
+sum_test(res1)
+sum_test(res2)
