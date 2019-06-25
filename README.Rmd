@@ -47,7 +47,7 @@ as well as calculating sensitivity measures.
 
 Consider a portfolio Y = X1 + X2 + X3 + X4 + X5, where (X1, X2, X3, X4, X5) are correlated normally distributed with equal mean and different standard deviations.
 We stress the VaR (quantile) of the portfolio loss Y at levels 0.75 and 0.9 with an increase of 10\%.
-
+ 
 ```{r example}
 set.seed(0)
 SD <- c(70, 45, 50, 60, 75)

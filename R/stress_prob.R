@@ -102,9 +102,9 @@
     nconst <- nrow(constraints)
    if (nconst > 1){
   # more than 2 intervals
-   f_first <- function(z) int1(limits = constraints[1,], z = z)
-   f_mid <- function(z) apply(matrix(constraints[2:nconst,], ncol = 2), MARGIN = 1, FUN = int, z = z)
-   interval <- cbind(f_first(y), f_mid(y), 1 - rowSums(cbind(f_first(y), f_mid(y))))
+#   f_first <- function(z) int1(limits = constraints[1,], z = z)
+   f_mid <- function(z) apply(matrix(constraints, ncol = 2), MARGIN = 1, FUN = int, z = z)
+   interval <- cbind(f_mid(y), 1 - rowSums(f_mid(y)))
     } else {
   # only one interval     
     interval <- cbind(apply(constraints, MARGIN = 1, FUN = int1, z = y), 1 - rowSums(apply(constraints, MARGIN = 1, FUN = int1, z = y)))

@@ -152,7 +152,7 @@ stress_moment <- function(x, f, k, m, ...){
 #'   new_means = c(1, 1, 0.75))
 #' summary(res2)
 #' 
-#' ## See also examples in \code{\link{stress_moment}} and \code{\link{stress_mean_sd}}.     
+#' ## See also examples in stress_moment and stress_mean_sd.     
 #'     
 #' @family stress functions 
 #' @seealso See \code{\link{stress_mean_sd}} for stressing means 
@@ -190,7 +190,7 @@ stress_mean <- function(x, k, new_means, ...)
 #'     the underlying algorithm.
 #'     
 #'     For stressing means only, see \code{\link{stress_mean}}, 
-#'     for stressing highter moments and functions of moments, 
+#'     for stressing higher moments and functions of moments, 
 #'     see \code{\link{stress_moment}}.
 #'     
 #' 
@@ -223,7 +223,7 @@ stress_mean <- function(x, k, new_means, ...)
 #'   control = list(maxit = 1000, ftol = 1E-15))
 
 #' 
-#' ## See also examples in \code{\link{stress_moment}}.     
+#' ## See also examples in stress_moment.     
 #'           
 #' @family stress functions 
 #' @inherit SWIM references 

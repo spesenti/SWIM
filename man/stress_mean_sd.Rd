@@ -52,7 +52,7 @@ The function \code{stress_mean_sd} is a wrapper for the
     the underlying algorithm.
     
     For stressing means only, see \code{\link{stress_mean}}, 
-    for stressing highter moments and functions of moments, 
+    for stressing higher moments and functions of moments, 
     see \code{\link{stress_moment}}.
 }
 \examples{
@@ -71,7 +71,7 @@ res2 <- stress_mean_sd(x = x, k = 1, new_means = 0.1,
   new_sd = 1.1, method = "Newton", 
   control = list(maxit = 1000, ftol = 1E-15))
 
-## See also examples in \\code{\\link{stress_moment}}.     
+## See also examples in stress_moment.     
           
 }
 \references{
