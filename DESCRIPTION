@@ -4,11 +4,11 @@ Version: 0.0.0.9000
 Authors@R: c(
   person("Silvana M.", "Pesenti", email = "swimpackage@gmail.com", 
   role = c("aut", "cre")), 
-  person("Alberto", "Bettini", email = "albertobettini@live.it", 
+  person("Alberto", "Bettini", 
   role = c("aut")), 
-  person("Pietro", "Millossovich", email = "Pietro.Millossovich.1@city.ac.uk", 
+  person("Pietro", "Millossovich", 
   role = c("aut")), 
-  person("Andreas", "Tsanakas", email = "A.Tsanakas.1@city.ac.uk", 
+  person("Andreas", "Tsanakas", 
   role = c("aut"))
   )
 Description: An efficient sensitivity analysis for stochastic models based on 
