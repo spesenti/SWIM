@@ -2,7 +2,7 @@
 #' 
 #' Provides the importance ranks of the components (random variables) 
 #'     of a stressed model for different sensitivity measures. 
-#'     
+#'      
 #' @inheritParams sensitivity
 #' @param type    Character, one of \code{"Gamma", "Wasserstein", "all"}.
 #' 
