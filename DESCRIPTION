@@ -11,6 +11,7 @@ Authors@R: c(
   person("Andreas", "Tsanakas", 
   role = c("aut"))
   )
+Maintainer: Silvana M. Pesenti <swimpackage@gmail.com>
 Description: An efficient sensitivity analysis for stochastic models based on 
     Monte Carlo samples. Provides weights on simulated scenarios from a 
     stochastic model, such that stressed random variables fulfil given 
