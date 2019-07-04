@@ -70,6 +70,7 @@ For the definition of the sensitivity
 ## distributed with equal mean and different standard deviations,
 ## see the README for further details.
 
+\donttest{
 set.seed(0)
 SD <- c(70, 45, 50, 60, 75)
 Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
@@ -87,7 +88,8 @@ rev.stress <- stress(type = "VaR", x = data,
 sensitivity(rev.stress, type = "all") 
 plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma")     
 plot_sensitivity(rev.stress, xCol = 6, wCol = 1, type = "all")   
-     
+}
+          
 }
 \seealso{
 See \code{\link{sensitivity}} for the values of the 

@@ -70,6 +70,7 @@
 #' ## distributed with equal mean and different standard deviations,
 #' ## see the README for further details.
 #' 
+#' \donttest{
 #' set.seed(0)
 #' SD <- c(70, 45, 50, 60, 75)
 #' Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
@@ -90,6 +91,7 @@
 #'   f = rep(list(function(x)x[1] + x[2]), 2), k = list(c(2,3), c(4,5))) 
 #' plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma")     
 #' importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
+#' }
 #'      
 #' @seealso See \code{\link{importance_rank}} for ranking of random
 #'     variables according to their sensitivities,  
