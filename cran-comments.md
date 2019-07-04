@@ -1,6 +1,6 @@
 ## Test environments
 * ubuntu (on travis-ci)
-* local win, R 3.5.1 
+* local win, R 3.6.0
 
 ## R CMD check results
 There were no ERRORs, WARNINGs or NOTE. 
