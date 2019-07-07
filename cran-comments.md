@@ -1,3 +1,6 @@
+## Resubmission
+Included the reference in the description field of DESCRIPTION.
+
 ## Test environments
 * ubuntu (on travis-ci)
 * local win, R 3.6.0
@@ -7,3 +10,4 @@ There were no ERRORs, WARNINGs or NOTE.
 
 ## Downstream dependencies
 “There are currently no downstream dependencies for this package”
+
