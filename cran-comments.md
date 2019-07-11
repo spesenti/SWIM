@@ -1,5 +1,5 @@
 ## Resubmission
-Included the reference in the description field of DESCRIPTION.
+Amended the reference in the description field of DESCRIPTION.
 
 ## Test environments
 * ubuntu (on travis-ci)
