@@ -14,7 +14,7 @@ model.
 
 You can install the SWIM package from
 
-1. [CRAN] via <https://CRAN.R-project.org/package=SWIM>
+1. [CRAN](https://CRAN.R-project.org/package=SWIM) via <https://CRAN.R-project.org/package=SWIM>;
 or 
 
 
