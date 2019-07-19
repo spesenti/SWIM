@@ -13,7 +13,11 @@ model.
 ## Installation
 
 You can install the SWIM package from
-[GitHub](https://github.com/spesenti/SWIM) with:
+
+1. [CRAN](https://CRAN.R-project.org/package=SWIM)
+
+or 
+2. [GitHub](https://github.com/spesenti/SWIM) with:
 
 ``` r
 install.packages("spesenti/SWIM")
