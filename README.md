@@ -8,17 +8,15 @@ stochastic model, such that stressed model components (random variables)
 fulfil given probabilistic constraints (e.g. specified values for risk
 measures), under the new scenario weights. Scenario weights are selected
 by constrained minimisation of the relative entropy to the baseline
-model.
+model. The ‘SWIM’ package is based on the paper Pesenti S.M,
+Millossovich P., Tsanakas A. (2019) “Reverse Sensitivity Testing: What
+does it take to break the model”,
+[doi:10.1016/j.ejor.2018.10.003](https://doi.org/10.1016/j.ejor.2018.10.003).
 
 ## Installation
 
 You can install the SWIM package from
-
-1. [CRAN](https://CRAN.R-project.org/package=SWIM) via <https://CRAN.R-project.org/package=SWIM>;
-or 
-
-
-2. [GitHub](https://github.com/spesenti/SWIM) with:
+[GitHub](https://github.com/spesenti/SWIM) with:
 
 ``` r
 install.packages("spesenti/SWIM")
