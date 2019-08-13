@@ -6,7 +6,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r setup, include = FALSE}
+```{r setup, include = FALSE, cache = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -20,24 +20,33 @@ The SWIM package provides weights on simulated scenarios from a stochastic model
 
 ## Installation
 
-You can install the SWIM package from [GitHub](https://github.com/spesenti/SWIM) with:
+The SWIM package can be install from [CRAN](https://CRAN.R-project.org/package=SWIM) :
 
-``` r
+> 
+<https://CRAN.R-project.org/package=SWIM>;
+
+alternatively from [GitHub](https://github.com/spesenti/SWIM) in R studio:
+
+> <https://github.com/spesenti/SWIM>
+``` r}
 install.packages("spesenti/SWIM")
 ```
+
 ## Scope of the SWIM package  
 The SWIM package provides sensitivity analysis tools for stressing model 
 components (random variables). Implemented stresses are: 
 
-R functions          | Stress
-------------------- | -------------
-stress_VaR          | VaR risk measure, a quantile
-stress_VaR_ES       | VaR and ES risk measures
-stress_mean         | means
-stress_mean_sd      | means and standard deviations
-stress_mean_moment  | moments, functions of moments
-stress_prob         | probabilities of intervals
-stress_user         | user defined scenario weights
+R functions             | Stress
+----------------------- | -------------------------------
+`stress()`              | A wrapper for the `stress_` functions
+`stress_VaR()`          | VaR risk measure, a quantile
+`stress_VaR()`          | VaR risk measure, a quantile
+`stress_VaR_ES()`       | VaR and ES risk measures
+`stress_mean()`         | means
+`stress_mean_sd()`      | means and standard deviations
+`stress_mean_moment()`  | moments, functions of moments
+`stress_prob()`         | probabilities of intervals
+`stress_user()`         | user defined scenario weights
 
 Implemented functions allow to graphically display the change in the probability distributions under different stresses and the baseline model 
 as well as calculating sensitivity measures. 
@@ -48,31 +57,30 @@ as well as calculating sensitivity measures.
 Consider a portfolio Y = X1 + X2 + X3 + X4 + X5, where (X1, X2, X3, X4, X5) are correlated normally distributed with equal mean and different standard deviations.
 We stress the VaR (quantile) of the portfolio loss Y at levels 0.75 and 0.9 with an increase of 10\%.
  
-```{r example}
+```{r example, cache = TRUE}
+ # simulating the portfolio 
 set.seed(0)
 SD <- c(70, 45, 50, 60, 75)
 Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
-if (!requireNamespace("mvtnorm", quietly = TRUE))
-   stop("Package \"mvtnorm\" needed for this function 
-   to work. Please install it.")
 x <- mvtnorm::rmvnorm(10^5, 
    mean =  rep(100, 5), 
    sigma = (SD %*% t(SD)) * Corr)
 data <- data.frame(rowSums(x), x)
 names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
+ # stressing the portfolio 
 rev.stress <- stress(type = "VaR", x = data, 
    alpha = c(0.75, 0.9), q_ratio = 1.1, k = 1)
 ```
 
-Summary statistics of the baseline and the stressed model can be obtained via the summary method.  
+Summary statistics of the baseline and the stressed model can be obtained via the `summary()` method.  
 
-```{r summary}
-summary(rev.stress, base = TRUE)
+```{r summary, echo = FALSE, cache = TRUE}
+lapply(summary(rev.stress, base = TRUE), FUN = knitr::kable, digits = 2)
 ```
 
 Visual display of the change of empirical distribution functions of the portfolio loss Y from the baseline to the two stressed models. 
 
-```{r plot-cdf}
+```{r plot-cdf, cache = TRUE}
 plot_cdf(object = rev.stress, xCol = , base = TRUE)
 ```
 
@@ -85,28 +93,30 @@ Sensitivity measures allow to assess the importance of the input components. Imp
 
 where c is a normalisation constant such that |*Gamma*| <= 1, see https://doi.org/10.1016/j.ejor.2018.10.003. Loosely speaking, the Reverse Sensitivity Measure is the normalised difference between the first moment of the stressed and the baseline distributions of Xi.
 
-```{r sensitivity}
-sensitivity(rev.stress, type = "all")
+```{r sensitivity, cache = TRUE}
+knitr::kable(sensitivity(rev.stress, type = "all"), digits = 2)
 plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma") 
 ```
 
-Sensitivity to all sub-portfolios, (X1 + X2), (X1 + X3), ... (X4, X5): 
+Sensitivity to all sub-portfolios, (Xi + Xj), i,j = 1, ..., 6: 
 
-```{r sensitivity sub-portfolios}
-importance_rank(rev.stress, xCol = NULL, wCol = 1, type = "Gamma", f = rep(list(function(x)x[1] + x[2]), 10), 
-   k = list(c(2,3), c(2,4), c(2,5), c(2,6), c(3,4), c(3,5), c(3,6), c(4,5), c(4,6), c(5,6)))
+```{r sensitivity sub-portfolios, cache = TRUE}
+ # sub-portfolios
+f <- rep(list(function(x)x[1] + x[2]), 10)
+k <- list(c(2,3), c(2,4), c(2,5), c(2,6), c(3,4), c(3,5), c(3,6), c(4,5), c(4,6), c(5,6))
+importance_rank(rev.stress, xCol = NULL, wCol = 1, type = "Gamma", f = f, k = k)
 ```
 
 Ranking the input components according to the chosen sensitivity measure, in this example using *Gamma*.
 
-```{r importance rank}
+```{r importance rank, cache = TRUE}
 importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
 ```
 
 Visual display of the change of empirical distribution functions and density from the baseline to the two stressed models of X5, the portfolio component with the largest sensitivity. Stressing the portfolio loss Y, results in a 
 distribution function of X5 that has a heavier tail.  
  
-```{r plot-cdf-input}
+```{r plot-cdf-input, cache = TRUE}
 plot_cdf(object = rev.stress, xCol = 5, base = TRUE)
 plot_hist(object = rev.stress, xCol = 5, base = TRUE)
 ```
