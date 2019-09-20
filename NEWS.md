@@ -1,6 +1,6 @@
 # SWIM package
 
-The master branch corresponds to the [CRAN](https://CRAN.R-project.org/package=SWIM version. 
+The `master` branch corresponds to the [CRAN](https://CRAN.R-project.org/package=SWIM) version. 
 
 ## Amendments to the `develop` branch: 
 
