@@ -43,11 +43,22 @@
 
   get_data <- function(object, xCol = "all"){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
-   if (xCol == "all" && is.null(colnames(object$x))) xCol = 1:ncol(object$x) else xCol <- colnames(object$x)
+   if (length(xCol) ==1 && xCol == "all") {
+      xdata <- as.matrix(object$x[, 1:ncol(object$x)])
+      if(is.character(colnames(object$x)) | is.null(colnames(object$x))) colnames(xdata) <- colnames(object$x)
+   } else{ 
+#   if (length(xCol) ==1 && xCol == "all" && is.null(colnames(object$x))) {xCol <- 1:ncol(object$x) 
+#      } else if (length(xCol) ==1 && xCol == "all") {xCol <- colnames(object$x)} 
+   if (is.null(xCol)) stop("invalid 'xCol' argument")
    if (is.numeric(xCol) && !(any(xCol %in% 1:ncol(object$x)))) stop("invalid 'xCol' argument")
    if (is.character(xCol) && !(any(xCol %in% colnames(object$x)))) stop("invalid 'xCol' argument")
    xdata <- as.matrix(object$x[, xCol])
-   colnames(xdata) <- xCol
+   if (is.character(xCol[xCol])) colnames(xdata) <- xCol
+   if (is.numeric(xCol) && is.null(colnames(object$x)[xCol])) {
+      colnames(xdata) <- paste("X", as.character(xCol), sep = "")
+   } else if (is.numeric(xCol) && is.character(colnames(object$x)[xCol])) {
+      colnames(xdata) <- colnames(object$x)[xCol]
+   }}
    return(xdata)
   }
 
