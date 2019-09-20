@@ -3,5 +3,7 @@
 ^\.Rhistory$
 ^README\.html$
 ^README\.Rmd$
+^NEWS\.html$
+^NEWS\.Rmd$
 ^SWIM\.Rproj$
 ^\.Rproj\.user$
