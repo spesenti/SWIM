@@ -102,7 +102,7 @@
     new_weights <- apply(X = constr, MARGIN = 1, FUN = .rn_VaR, y = x_data[, k])
     if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
     names(new_weights) <- paste("stress", 1:max_length)
-
+  
     type <- rep(list("VaR"), length.out = max_length)
     constr1 <- cbind("k" = rep(k, length.out = max_length), constr)
     constr_VaR <- list()
@@ -112,7 +112,19 @@
       constr_VaR <- c(constr_VaR, temp_list)
     }
     my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr_VaR)
-   if (is.SWIM(x)) my_list <- merge(x, my_list)
+  
+  # achieved VaR
+   for(j in 1:max_length){
+    var_achieved <- as.numeric(SWIM::quantile_stressed(my_list, probs = alpha[j], 
+                                            xCol = k, wCol = j, type = "i/n"))
+  # message if the achieved VaR is different from the specified stress.
+    if(q[j] != var_achieved) {
+       message(paste("Stressed VaR specified was", round(q[j], 4),", stressed VaR achieved is", round(var_achieved, 4)))
+       my_list$specs[[j]]$q <- var_achieved
+       }
+    }
+    
+    if (is.SWIM(x)) my_list <- merge(x, my_list)
   return(my_list)
   }
   
@@ -120,7 +132,7 @@
   .rn_VaR <- function(y, constraints){
      .alpha <- as.numeric(constraints[1])
      .q <- as.numeric(constraints[2])
-     prob_q <- mean(y < .q)
-     rn_weights <- function(z)(.alpha / prob_q) * (z < .q) + (1 - .alpha) / (1 - prob_q) * (z >= .q)
+     prob_q <- mean(y <= .q)
+     rn_weights <- function(z)(.alpha / prob_q) * (z <= .q) + (1 - .alpha) / (1 - prob_q) * (z > .q)
      return(rn_weights)
   }
