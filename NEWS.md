@@ -9,3 +9,4 @@ The `master` branch corresponds to the [CRAN](https://CRAN.R-project.org/package
     * amendment to the calculation of scenario weights for $Y = q$, where $q$ is the stressed VaR. 
     * retuns a message if the achieved VaR is not equal to the stressed VaR specified.
     * specs of the `SWIM` object contains the achived VaR 
+    * updated the help function of `stress_VaR()`

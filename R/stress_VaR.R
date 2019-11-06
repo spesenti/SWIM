@@ -34,6 +34,11 @@
  #' If one of \code{alpha, q} (\code{q_ratio}) is a vector,
  #'    the stressed VaR's of the \code{k}th column of \code{x}, at levels 
  #'    \code{alpha}, are equal to \code{q}.
+ #'    
+ #' The stressed VaR specified, either via \code{q} or \code{q_ratio}, might not equal
+ #'    the attained empirical VaR of the model component. In this 
+ #'    case, \code{stress_VaR} will display a \code{message} and the \code{specs} contain
+ #'    the achieved VaR. 
  #'     
  #' @return A \code{SWIM} object containing:
  #'     \itemize{
