@@ -6,20 +6,21 @@ x <- as.data.frame(cbind(
   "normal" = rnorm(100), 
   "gamma" = rgamma(100, shape = 2)))
 
-################ test for update on stress_VaR ################
+################ test for update on stress_VaR_ES ################
 
 # two stresses
 alpha <- c(0.95, 0.96)
+s_ratio <- 1.1
 k <- 1
 q_old <- quantile(x[,1], probs = alpha, type = 1)
 # next points after q_old in the order statistics
 q_new <- c(sort(x[,1])[96] + 0.01, sort(x[,1])[97] + 0.01)
 
-res1 <- stress_VaR(x, alpha = alpha, q = q_new)
+res1 <- stress_VaR_ES(x = x, alpha = alpha, q = q_new, s_ratio = s_ratio, k = 1)
 
 # achieved stresses are not equal to the stressed quantiles provided
 test_that("achieved VaR", {
-  expect_message(stress_VaR(x, alpha = alpha, q = q_new))
+  expect_message(stress_VaR_ES(x = x, alpha = alpha, q = q_new, s_ratio = s_ratio, k = 1))
   # the achieved quantiles are NOT the stressed quantiles
   expect_false(q_new[1] == as.numeric(quantile_stressed(res1, alpha[1], xCol = k, wCol = 1, type = "i/n")))
   expect_false(q_new[2] == as.numeric(quantile_stressed(res1, alpha[2], xCol = k, wCol = 2, type = "i/n")))
@@ -34,18 +35,18 @@ test_that("specs of achieved stresses", {
 })
 
 
-################ tests from testVaR.R ################
+################ tests from test_VaR_ES.R ################
 
 # output test
 output_test(res1, x)
 
 # specs test
 test_that("specs", {
-  expect_named(get_specs(res1), c("type", "k", "alpha", "q"))
+  expect_named(get_specs(res1), c("type", "k", "alpha", "q", "s"))
   expect_equal(as.numeric(get_specs(res1)[1,2:3]), c(k, alpha[1]))
   expect_equal(as.numeric(get_specs(res1)[2,2:3]), c(k, alpha[2]))
-  expect_equal(res1$type[[1]], "VaR")
-  expect_equal(res1$type[[2]], "VaR")
+  expect_equal(res1$type[[1]], "VaR ES")
+  expect_equal(res1$type[[2]], "VaR ES")
   expect_type(get_weightsfun(res1), "list")
 })
 
