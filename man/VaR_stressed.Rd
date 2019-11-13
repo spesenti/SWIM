@@ -14,7 +14,8 @@ VaR_stressed(object, alpha = 0.95, xCol = "all", wCol = 1,
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{alpha}{Numeric vector, the levels of the stressed VaR and ES.}
+\item{alpha}{Numeric vector, the levels of the stressed VaR and ES 
+(\code{default = 0.95}).}
 
 \item{xCol}{Numeric or character vector, (names of) the columns of 
 the underlying data 
@@ -41,8 +42,9 @@ Provides the Value-at-Risk (VaR) and the Expected Shortfall (ES)
 }
 \details{
 \code{ES_stressed}: The ES of a stressed model is the
-     ES of a chosen stressed model component. The ES at level \code{alpha} of a 
-     stressed model component is given by:
+     ES of a chosen stressed model component, subject to the calculated scenario 
+     weights. The ES at level \code{alpha} of a stressed model 
+     component is given by:
      \deqn{ES_alpha = 1 / (1 - alpha) * int_alpha^1 VaR_u^W d u,}
      where \code{VaR_u^W} is the VaR of the stressed model component, defined below.
 
@@ -74,11 +76,18 @@ x <- as.data.frame(cbind(
 res1 <- stress(type = "VaR", x = x, 
   alpha = c(0.9, 0.95), q_ratio = 1.05)
 ## stressed ES
-quantile_stressed(res1, probs = seq(0.9, 0.99, 0.01), xCol = 1, wCol = 2, type = "i/n")    
+quantile_stressed(res1, probs = seq(0.9, 0.99, 0.01), 
+                    xCol = 1, wCol = 2, type = "i/n")    
 quantile(x[, 1],  probs = seq(0.9, 0.99, 0.01), type = 1)
-VaR_stressed(res1, alpha = seq(0.9, 0.99, 0.01), xCol = 1, wCol = 2, base = TRUE)    
+VaR_stressed(res1, alpha = seq(0.9, 0.99, 0.01), xCol = 1, 
+                    wCol = 2, base = TRUE)    
      
-ES_stressed(res1, alpha = seq(0.9, 0.99, 0.01), xCol = 1, wCol = 2)
+## the ES of both model components under stress one     
+ES_stressed(res1, alpha = seq(0.9, 0.99, 0.01), xCol = "all", 
+                    wCol = 1)
+## the ES of both model components under stress two     
+ES_stressed(res1, alpha = seq(0.9, 0.99, 0.01), xCol = "all", 
+                    wCol = 2)
      
 }
 \seealso{
