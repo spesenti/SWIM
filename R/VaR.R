@@ -4,7 +4,8 @@
 #'     for components (random variables) of a stochastic model.
 #'    
 #' @inheritParams summary.SWIM 
-#' @param alpha   Numeric vector, the levels of the stressed VaR and ES.
+#' @param alpha   Numeric vector, the levels of the stressed VaR and ES 
+#'                (\code{default = 0.95}).
 #' @param wCol    Numeric, the column of the scenario weights 
 #'                of the \code{object} (\code{default = 1}).
 #'                
@@ -39,11 +40,18 @@
 #' res1 <- stress(type = "VaR", x = x, 
 #'   alpha = c(0.9, 0.95), q_ratio = 1.05)
 #' ## stressed ES
-#' quantile_stressed(res1, probs = seq(0.9, 0.99, 0.01), xCol = 1, wCol = 2, type = "i/n")    
+#' quantile_stressed(res1, probs = seq(0.9, 0.99, 0.01), 
+#'                     xCol = 1, wCol = 2, type = "i/n")    
 #' quantile(x[, 1],  probs = seq(0.9, 0.99, 0.01), type = 1)
-#' VaR_stressed(res1, alpha = seq(0.9, 0.99, 0.01), xCol = 1, wCol = 2, base = TRUE)    
+#' VaR_stressed(res1, alpha = seq(0.9, 0.99, 0.01), xCol = 1, 
+#'                     wCol = 2, base = TRUE)    
 #'      
-#' ES_stressed(res1, alpha = seq(0.9, 0.99, 0.01), xCol = 1, wCol = 2)
+#' ## the ES of both model components under stress one     
+#' ES_stressed(res1, alpha = seq(0.9, 0.99, 0.01), xCol = "all", 
+#'                     wCol = 1)
+#' ## the ES of both model components under stress two     
+#' ES_stressed(res1, alpha = seq(0.9, 0.99, 0.01), xCol = "all", 
+#'                     wCol = 2)
 #'      
 #' @export
 #'     
@@ -53,8 +61,12 @@
    if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
    
    VaR <- quantile_stressed(object, probs = alpha, xCol = xCol, wCol = wCol, type = "i/n")
-   if (base == TRUE) VaR <- cbind(VaR, "base"= quantile(get_data(object = object, xCol = xCol), 
-                                                probs = alpha, type = 1))
+   if (base == TRUE) {
+      VaR_base <- apply(X = as.matrix(get_data(object = object, xCol = xCol)), MARGIN = 2, 
+                        FUN = stats::quantile, probs = alpha, type= 1)
+      colnames(VaR_base) <- paste("base", colnames(get_data(object = object, xCol = xCol)))
+      VaR <- cbind(VaR, VaR_base) 
+   } 
    return(VaR)
 } 
   
