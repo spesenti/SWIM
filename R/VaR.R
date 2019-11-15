@@ -22,7 +22,7 @@
 #'      
 #'      The function \code{VaR_stressed} provides the empirical quantile whereas,
 #'      the function \code{quantile_stressed} calculates quantiles of model 
-#'      components, that is, for different interpolations.
+#'      components with different interpolations.
 #'      
 #' @author Silvana M. Pesenti 
 #' @describeIn VaR_stressed Value-at-Risk of a stressed model.

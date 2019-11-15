@@ -10,8 +10,17 @@ The `master` branch corresponds to the [CRAN](https://CRAN.R-project.org/package
     * returns a message if the achieved VaR is not equal to the stressed VaR specified.
     * specs of the `SWIM` object contains the achieved VaR 
     * updated the help function of `stress_VaR()`
+    
  - changes to the `stress_VaR_ES()` function:
     * amendment analogous to the `stress_VaR()`.
     * returns a message if the achieved VaR is not equal to the stressed VaR specified.
     * specs of the `SWIM` object contains the achieved VaR 
     * updated the help function of `stress_VaR_ES()`
+
+ - added the function `VaR_stressed()`:
+    * The function calculates the VaR of model components, subject to 
+      scenario weights.
+
+ - added the function `ES_stressed()`:
+    * The function calculates the ES of model components, subject to 
+      scenario weights.
