@@ -54,7 +54,6 @@
 #'                     wCol = 2)
 #'      
 #' @export
-#'     
 
   VaR_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FALSE) {
    if (!is.SWIM(object)) stop("Wrong object")

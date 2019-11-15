@@ -12,7 +12,6 @@
 #'      where \code{VaR_u^W} is the VaR of the stressed model component, defined below.
 #'      
 #' @export
-#'     
 
 ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FALSE) {
   if (!is.SWIM(object)) stop("Wrong object")
