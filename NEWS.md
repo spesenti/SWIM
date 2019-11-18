@@ -24,3 +24,6 @@ The `master` branch corresponds to the [CRAN](https://CRAN.R-project.org/package
  - added the function `ES_stressed()`:
     * The function calculates the ES of model components, subject to 
       scenario weights.
+      
+- added a data set containing aggregate losses from a portfolio,
+      generated through a binomial credit model.

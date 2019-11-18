@@ -57,7 +57,7 @@ Provides the Value-at-Risk (VaR) and the Expected Shortfall (ES)
      
      The function \code{VaR_stressed} provides the empirical quantile whereas,
      the function \code{quantile_stressed} calculates quantiles of model 
-     components, that is, for different interpolations.
+     components with different interpolations.
 }
 \section{Functions}{
 \itemize{

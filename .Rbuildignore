@@ -6,4 +6,6 @@
 ^NEWS\.html$
 ^NEWS\.Rmd$
 ^SWIM\.Rproj$
+^data-raw\credit_data\.R$
 ^\.Rproj\.user$
+^data-raw$
