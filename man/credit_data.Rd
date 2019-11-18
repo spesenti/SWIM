@@ -16,13 +16,13 @@
   \item{H3}{(conditional) default probability of sub-portfolio 3}
 }}
 \source{
-see ?
+see cite the SWIM Vignette
 }
 \usage{
 credit_data
 }
 \description{
-A dataset containing the prices and other attributes of almost 54,000
-diamonds. conditionally binomial credit model
+A dataset containing total aggregate losses from three sub-
+   portfolios, generated through a binomial credit model.
 }
 \keyword{datasets}
