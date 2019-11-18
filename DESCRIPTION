@@ -45,6 +45,5 @@ Suggests:
     testthat,
     mvtnorm,
     spelling,
-    Weighted.Desc.Stat,
-    copula
+    Weighted.Desc.Stat
 Language: en-US
