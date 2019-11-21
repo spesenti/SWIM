@@ -17,7 +17,7 @@
 #' @param m         Numeric vector, same length as \code{f}, containing
 #'                  the stressed moments of \code{f(x)}. Must be in the
 #'                  range of \code{f(x)}.
-#' @param show      Logical. If true, print the result of the call to nleqslv
+#' @param show      Logical. If true, print the result of the call to nleqslv.
 #' @param ...       Additional arguments to be passed to 
 #'                  \code{\link[nleqslv]{nleqslv}}.
 #' 
