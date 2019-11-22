@@ -4,7 +4,7 @@
 \alias{stress_moment}
 \title{Stressing Moments}
 \usage{
-stress_moment(x, f, k, m, ...)
+stress_moment(x, f, k, m, show = FALSE, ...)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame 
@@ -25,6 +25,8 @@ to the input variables of \code{f[[i]]}.}
 \item{m}{Numeric vector, same length as \code{f}, containing
 the stressed moments of \code{f(x)}. Must be in the
 range of \code{f(x)}.}
+
+\item{show}{Logical. If true, print the result of the call to nleqslv.}
 
 \item{...}{Additional arguments to be passed to 
 \code{\link[nleqslv]{nleqslv}}.}

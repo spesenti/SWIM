@@ -17,6 +17,7 @@
 #' @param m         Numeric vector, same length as \code{f}, containing
 #'                  the stressed moments of \code{f(x)}. Must be in the
 #'                  range of \code{f(x)}.
+#' @param show      Logical. If true, print the result of the call to nleqslv.
 #' @param ...       Additional arguments to be passed to 
 #'                  \code{\link[nleqslv]{nleqslv}}.
 #' 
@@ -76,33 +77,33 @@
 #' @inherit SWIM references 
 #' @export
 
-stress_moment <- function(x, f, k, m, ...){
+stress_moment <- function(x, f, k, m, show = FALSE, ...){
   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
-  # check if x is not a vector, matrix or data.frame.
   if (anyNA(x_data)) warning("x contains NA")
   if (is.function(f)) f <- as.list(f)
   if (!all(sapply(f, is.function))) stop("f must be a list of functions")
   if (is.numeric(k)) k <- as.list(k)
   if (!all(sapply(k, is.numeric))) stop("k must be a list of numeric vectors")
   if (!is.numeric(m)) stop("m must be numeric")
-  if ((length(m) != length(f)) || (length(m) != length(k)) || (length(f) != length(k))) stop("Objects f, k and m must have the same length.")
+  if ((length(m) != length(f)) || (length(m) != length(k)) || (length(f) != length(k))) stop("Objects f, k and m must have the same length")
   z <- matrix(0, ncol = length(f), nrow = nrow(x_data))
   for (i in 1:length(f)){
-    z[, i] <- apply(x_data[, k[[i]], drop = FALSE], 1, f[[i]])
+    z[, i] <- apply(X = x_data[, k[[i]], drop = FALSE], MARGIN = 1, FUN = f[[i]])
   }
   min.fz <- apply(z, 2, min)
   max.fz <- apply(z, 2, max)
-  if (any(m < min.fz) || any(m > max.fz)) stop("Values in m must be in the range of f(x).")
+  if (any(m < min.fz) || any(m > max.fz)) stop("Values in m must be in the range of f(x)")
   z <- cbind(1, z)
   moments <- function(x)colMeans(z * as.vector(exp(z %*% x))) - c(1, m)
   sol <- nleqslv::nleqslv(rep(0, length.out = length(f) + 1), moments, ...)
-  if (sol$termcd != 1) stop(paste("nleqslv could not find a solution and terminated with code ", sol$termcd))
+  if (sol$termcd != 1) warning(paste("nleqslv terminated with code ", sol$termcd))
   constr_moment <- list("k" = k, "m" = m, "f" = f)
-  constr <- list(constr_moment)
-  names(constr) <- paste("stress", 1)
+  names(constr_moment) <- paste("stress", 1)
   new_weights <- list("stress 1" = as.vector(exp(z %*% sol$x)))
   type <- list("moment")
-  my_list <- SWIM("x" = x, "new_weights" = new_weights, "type" = type, "specs" = constr)
+  my_list <- SWIM("x" = x, "new_weights" = new_weights, "type" = type, "specs" = constr_moment)
+  if (is.SWIM(x)) my_list <- merge(x, my_list)
+  if (show == TRUE) print(sol)
   return(my_list)
   }
 
