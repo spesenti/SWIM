@@ -101,7 +101,7 @@ stress_moment <- function(x, f, k, m, show = FALSE, ...){
   names(constr_moment) <- paste("stress", 1)
   new_weights <- list("stress 1" = as.vector(exp(z %*% sol$x)))
   type <- list("moment")
-  my_list <- SWIM("x" = x, "new_weights" = new_weights, "type" = type, "specs" = constr_moment)
+  my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr_moment)
   if (is.SWIM(x)) my_list <- merge(x, my_list)
   if (show == TRUE) print(sol)
   return(my_list)

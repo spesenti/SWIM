@@ -17,6 +17,9 @@ The `master` branch corresponds to the [CRAN](https://CRAN.R-project.org/package
     * specs of the `SWIM` object contains the achieved VaR 
     * updated the help function of `stress_VaR_ES()`
 
+ - changes to the `stress_moment()` function:
+    * added a parameter `show`: if `TRUE` (default is `FALSE`), the result of `nleqslv` is printed.
+
  - added the function `VaR_stressed()`:
     * The function calculates the VaR of model components, subject to 
       scenario weights.
@@ -25,5 +28,5 @@ The `master` branch corresponds to the [CRAN](https://CRAN.R-project.org/package
     * The function calculates the ES of model components, subject to 
       scenario weights.
       
-- added a data set containing aggregate losses from a portfolio,
+- added a data set `credit_data` containing aggregate losses from a credit portfolio,
       generated through a binomial credit model.
