@@ -80,9 +80,9 @@
 stress_moment <- function(x, f, k, m, show = FALSE, ...){
   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
-  if (is.function(f)) f <- as.list(f)
+  if (is.function(f)) f <- list(f)
   if (!all(sapply(f, is.function))) stop("f must be a list of functions")
-  if (is.numeric(k)) k <- as.list(k)
+  if (is.numeric(k)) k <- list(k)
   if (!all(sapply(k, is.numeric))) stop("k must be a list of numeric vectors")
   if (!is.numeric(m)) stop("m must be numeric")
   if ((length(m) != length(f)) || (length(m) != length(k)) || (length(f) != length(k))) stop("Objects f, k and m must have the same length")
