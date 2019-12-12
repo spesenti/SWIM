@@ -61,8 +61,8 @@
    
    VaR <- quantile_stressed(object, probs = alpha, xCol = xCol, wCol = wCol, type = "i/n")
    if (base == TRUE) {
-      VaR_base <- apply(X = as.matrix(get_data(object = object, xCol = xCol)), MARGIN = 2, 
-                        FUN = stats::quantile, probs = alpha, type= 1)
+      VaR_base <- as.matrix(apply(X = as.matrix(get_data(object = object, xCol = xCol)), MARGIN = 2, 
+                        FUN = stats::quantile, probs = alpha, type= 1))
       colnames(VaR_base) <- paste("base", colnames(get_data(object = object, xCol = xCol)))
       VaR <- cbind(VaR, VaR_base) 
    } 
