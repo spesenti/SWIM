@@ -139,10 +139,10 @@
       if (.type[[i]] == "prob" && length(object$specs[[i]]$prob) > 1){
       .specs <- plyr::rbind.fill(.specs, as.data.frame(t(unlist(object$specs[[i]]))))       
       } else {
-      .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]])) }
-   } else if (.type[i] %in% c("moment", "mean", "mean sd")){
-    k <- paste(object$specs[[i]]$k, collapse = " ")
-    .specs <- plyr::rbind.fill(.specs, as.data.frame(k))
+      .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]], stringsAsFactors = FALSE)) 
+      }} else if (.type[i] %in% c("moment", "mean", "mean sd")){
+      k <- paste(object$specs[[i]]$k, collapse = " ")
+      .specs <- plyr::rbind.fill(.specs, as.data.frame(k))
    } else stop("Object contains wrong type.")}
    .type <- t(as.data.frame(.type))
    .specs <- cbind(.type, .specs)
