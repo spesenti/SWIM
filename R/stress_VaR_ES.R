@@ -121,7 +121,6 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   ## check if the following constraints are fulfilled
   ## 1) Var < q, 2) q < s, 3) s < ess sup x, 4) E( x | x >= q ) < s
   ecdfx <- stats::ecdf(x_data[, k])
-  if (any(VaR > q)) print("VaR > q, quantile constraint is interpreted as probability constraint.")
   if (any(q > s)) stop("All q need to be smaller than s.")
   if (any(ecdfx(VaR) == ecdfx(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
   if (any(ecdfx(q) > ecdfx(s))) stop("There are not enough data points, specifically, there is none between q and s.")
