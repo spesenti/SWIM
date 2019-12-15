@@ -82,7 +82,7 @@ stats::weighted.mean(x[, 1] * x[, 2], w = get_weights(res1))
 ## stressing jointly the tail probabilities of columns 1,3  
 res2 <- stress_moment(x = x, 
   f = list(function(x)(x > 1.5), function(x)(x > 0.9)), 
-  k = c(1, 3), m = c(0.9, 0.9))
+  k = list(1, 3), m = c(0.9, 0.9))
 summary(res2)
 ## probabilities under the stressed model
 mean((x[, 1] > 1.5) * get_weights(res2))
@@ -99,9 +99,13 @@ See \code{\link{stress_mean}} for stressing means and
     \code{\link{stress_mean_sd}} for stressing mean and standard 
     deviation jointly.
 
-Other stress functions: \code{\link{stress_VaR_ES}},
-  \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},
-  \code{\link{stress_mean}}, \code{\link{stress_prob}},
-  \code{\link{stress_user}}, \code{\link{stress}}
+Other stress functions: 
+\code{\link{stress_VaR_ES}()},
+\code{\link{stress_VaR}()},
+\code{\link{stress_mean_sd}()},
+\code{\link{stress_mean}()},
+\code{\link{stress_prob}()},
+\code{\link{stress_user}()},
+\code{\link{stress}()}
 }
 \concept{stress functions}

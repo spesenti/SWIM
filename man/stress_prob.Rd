@@ -75,10 +75,14 @@ cdf(res2, xCol = 1)(c(-2.4, -1.6)) - cdf(res2, xCol = 1)(c(-3, -2))
     \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{
-Other stress functions: \code{\link{stress_VaR_ES}},
-  \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},
-  \code{\link{stress_mean}}, \code{\link{stress_moment}},
-  \code{\link{stress_user}}, \code{\link{stress}}
+Other stress functions: 
+\code{\link{stress_VaR_ES}()},
+\code{\link{stress_VaR}()},
+\code{\link{stress_mean_sd}()},
+\code{\link{stress_mean}()},
+\code{\link{stress_moment}()},
+\code{\link{stress_user}()},
+\code{\link{stress}()}
 }
 \author{
 Silvana M. Pesenti

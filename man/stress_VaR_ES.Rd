@@ -4,8 +4,15 @@
 \alias{stress_VaR_ES}
 \title{Stressing Value-at-Risk and Expected Shortfall}
 \usage{
-stress_VaR_ES(x, alpha, q_ratio = NULL, s_ratio = NULL, q = NULL,
-  s = NULL, k = 1)
+stress_VaR_ES(
+  x,
+  alpha,
+  q_ratio = NULL,
+  s_ratio = NULL,
+  q = NULL,
+  s = NULL,
+  k = 1
+)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame 
@@ -104,9 +111,13 @@ summary(res2)
     \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{
-Other stress functions: \code{\link{stress_VaR}},
-  \code{\link{stress_mean_sd}}, \code{\link{stress_mean}},
-  \code{\link{stress_moment}}, \code{\link{stress_prob}},
-  \code{\link{stress_user}}, \code{\link{stress}}
+Other stress functions: 
+\code{\link{stress_VaR}()},
+\code{\link{stress_mean_sd}()},
+\code{\link{stress_mean}()},
+\code{\link{stress_moment}()},
+\code{\link{stress_prob}()},
+\code{\link{stress_user}()},
+\code{\link{stress}()}
 }
 \concept{stress functions}

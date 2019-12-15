@@ -109,9 +109,9 @@
    if (anyNA(object$x)) warning("x contains NA")
    if (missing(type)) type <- "all"
    if (!is.null(f) | !is.null(k)){
-   if (is.function(f)) f <- as.list(f)
+   if (is.function(f)) f <- list(f)
    if (!all(sapply(f, is.function))) stop("f must be a list of functions")
-   if (is.numeric(k)) k <- as.list(k)
+   if (is.numeric(k)) k <- list(k)
    if (!all(sapply(k, is.numeric))) stop("k must be a list of numeric vectors")
    if (length(f) != length(k)) stop("Objects f and k must have the same length.")
    }
