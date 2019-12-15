@@ -63,7 +63,7 @@
 #' ## stressing jointly the tail probabilities of columns 1,3  
 #' res2 <- stress_moment(x = x, 
 #'   f = list(function(x)(x > 1.5), function(x)(x > 0.9)), 
-#'   k = c(1, 3), m = c(0.9, 0.9))
+#'   k = list(1, 3), m = c(0.9, 0.9))
 #' summary(res2)
 #' ## probabilities under the stressed model
 #' mean((x[, 1] > 1.5) * get_weights(res2))
