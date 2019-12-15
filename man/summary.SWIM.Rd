@@ -4,8 +4,7 @@
 \alias{summary.SWIM}
 \title{Summarising Stressed Models}
 \usage{
-\method{summary}{SWIM}(object, ..., xCol = "all", wCol = "all",
-  base = FALSE)
+\method{summary}{SWIM}(object, ..., xCol = "all", wCol = "all", base = FALSE)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
