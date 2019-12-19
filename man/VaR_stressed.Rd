@@ -5,11 +5,9 @@
 \alias{VaR_stressed}
 \title{Value-at-Risk and Expected Shortfall of a Stressed Model}
 \usage{
-ES_stressed(object, alpha = 0.95, xCol = "all", wCol = 1,
-  base = FALSE)
+ES_stressed(object, alpha = 0.95, xCol = "all", wCol = 1, base = FALSE)
 
-VaR_stressed(object, alpha = 0.95, xCol = "all", wCol = 1,
-  base = FALSE)
+VaR_stressed(object, alpha = 0.95, xCol = "all", wCol = 1, base = FALSE)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
