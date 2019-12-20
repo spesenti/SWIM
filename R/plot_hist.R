@@ -67,7 +67,7 @@
    } else if (displ == TRUE && displLines == FALSE){
    if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 
    ggplot2::ggplot(hist_data, ggplot2::aes_(x = hist_data[, 1], weight = ~value)) +
-    ggplot2::geom_histogram(binwidth = binwidth, position="identity", alpha = 0.1, ggplot2::aes(color = factor(stress), fill = factor(stress), linetype = factor(stress))) +
+    ggplot2::geom_histogram(binwidth = binwidth, position="identity", alpha = 0.1, ggplot2::aes(color = factor(stress), fill = factor(stress))) +
     ggplot2::labs(x = x_name, y = "histogram") +
     ggplot2::coord_cartesian(x_limits) +
     ggplot2::theme_minimal() + 
