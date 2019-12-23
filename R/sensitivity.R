@@ -70,7 +70,7 @@
 #' ## distributed with equal mean and different standard deviations,
 #' ## see the README for further details.
 #' 
-#' \donttest{
+#' \dontrun{
 #' set.seed(0)
 #' SD <- c(70, 45, 50, 60, 75)
 #' Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
@@ -78,8 +78,8 @@
 #'    stop("Package \"mvtnorm\" needed for this function 
 #'    to work. Please install it.")
 #' x <- mvtnorm::rmvnorm(10^5, 
-#'    mean =  rep(100, 5), 
-#'    sigma = (SD %*% t(SD)) * Corr) 
+#'    mean =  rep(100, 5),
+#'    sigma = (SD \%*\% t(SD)) * Corr)
 #' data <- data.frame(rowSums(x), x)
 #' names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
 #' rev.stress <- stress(type = "VaR", x = data, 
