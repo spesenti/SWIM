@@ -7,7 +7,7 @@
 #' @inheritParams stress_moment
 #' @param f       A function, or list of functions, that, applied to 
 #'                \code{x}, constitute the transformation of the data 
-#'                for which the sensitivity is calculated. 
+#'                for which the sensitivity is calculated.
 #' @param type    Character, one of \code{"Gamma", "Kolmogorov", 
 #'                "Wasserstein", "all"}.
 #' @param xCol    Numeric or character vector, (names of) the columns 
@@ -69,6 +69,7 @@
 #' ## where (X1, X2, X3, X4, X5) are correlated normally 
 #' ## distributed with equal mean and different standard deviations,
 #' ## see the README for further details.
+#'
 #' 
 #' \dontrun{
 #' set.seed(0)
@@ -79,7 +80,7 @@
 #'    to work. Please install it.")
 #' x <- mvtnorm::rmvnorm(10^5, 
 #'    mean =  rep(100, 5),
-#'    sigma = (SD \%*\% t(SD)) * Corr)
+#'    sigma = (SD %*% t(SD)) * Corr)
 #' data <- data.frame(rowSums(x), x)
 #' names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
 #' rev.stress <- stress(type = "VaR", x = data, 
