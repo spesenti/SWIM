@@ -10,12 +10,14 @@ The `master` branch corresponds to the [CRAN](https://CRAN.R-project.org/package
     * returns a message if the achieved VaR is not equal to the stressed VaR specified.
     * specs of the `SWIM` object contains the achieved VaR 
     * updated the help function of `stress_VaR()`
+    * allowing for stressing VaR downwards
     
  - changes to the `stress_VaR_ES()` function:
     * amendment analogous to the `stress_VaR()`.
     * returns a message if the achieved VaR is not equal to the stressed VaR specified.
     * specs of the `SWIM` object contains the achieved VaR 
     * updated the help function of `stress_VaR_ES()`
+    * allowing for stressing VaR and ES downwards
 
  - changes to the `stress_moment()` function:
     * added a parameter `show`: if `TRUE` (default is `FALSE`), the result of `nleqslv` is printed.
