@@ -105,7 +105,8 @@
 #' @export
 #' 
 
-  sensitivity <- function(object, xCol = "all", wCol = "all", type = c("Gamma",                             "Kolmogorov", "Wasserstein", "all"), f = NULL, k = NULL){
+  sensitivity <- function(object, xCol = "all", wCol = "all", 
+                          type = c("Gamma", "Kolmogorov", "Wasserstein", "all"), f = NULL, k = NULL){
    if (!is.SWIM(object)) stop("Wrong object")
    if (anyNA(object$x)) warning("x contains NA")
    if (missing(type)) type <- "all"
