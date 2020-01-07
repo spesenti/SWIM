@@ -76,7 +76,7 @@
     if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)) 
     if (missing(y_limits)) y_limits <- c(0,1) 
     ggplot2::ggplot(plot_data, ggplot2::aes_(x = plot_data[,1], weight = ~value)) +
-      stat_ecdf(ggplot2::aes(color = factor(stress), n = n)) +
+      stat_ecdf(ggplot2::aes(color = factor(stress)), n = n) +
       ggplot2::labs(x = x_name, y = "ecdf") +
       ggplot2::coord_cartesian(xlim = x_limits, ylim = y_limits) +
       ggplot2::theme_minimal() + 

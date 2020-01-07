@@ -119,7 +119,7 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   alpha <- rep(alpha, length.out = max_length)
   
   ## check if the following constraints are fulfilled
-  ## 1) Var < q, 2) q < s, 3) s < ess sup x, 4) E( x | x >= q ) < s
+  ## 1) Var < q, 2) q < s, 3) s < ess sup x
   ecdfx <- stats::ecdf(x_data[, k])
   if (any(q > s)) stop("All q need to be smaller than s.")
   if (any(ecdfx(VaR) == ecdfx(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
