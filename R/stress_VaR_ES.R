@@ -122,8 +122,8 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   ## 1) Var < q, 2) q < s, 3) s < ess sup x
   ecdfx <- stats::ecdf(x_data[, k])
   if (any(q > s)) stop("All q need to be smaller than s.")
-  if (any(ecdfx(VaR) == ecdfx(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
-  if (any(ecdfx(q) > ecdfx(s))) stop("There are not enough data points, specifically, there is none between q and s.")
+  if (any(VaR != q && ecdfx(VaR) == ecdfx(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
+  if (any(abs(ecdfx(q) - ecdfx(s)) <= 1/n)) stop("There are not enough data points, specifically, there is none between q and s.")
   if (any(s >= max(x_data[, k])) || any(q <= min(x_data[, k]))) stop("all s need to be smaller than the largest and all q larger than the smallest data point.") 
   
   q_matrix <- matrix(rep(VaR_achieved, each = n), ncol = max_length)

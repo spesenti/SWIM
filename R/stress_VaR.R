@@ -98,8 +98,8 @@
    q <- rep(q, length.out = max_length)  
    alpha <- rep(alpha, length.out = max_length)
 
-   ## check if VaR < q < ess sup (x_data)
-   if (any(q > VaR & stats::ecdf(x_data[, k])(VaR) == stats::ecdf(x_data[, k])(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
+   ## check if ess inf(x_data) < q < ess sup (x_data)
+   if (any(VaR != q && stats::ecdf(x_data[, k])(VaR) == stats::ecdf(x_data[, k])(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
    if (any(q >= max(x_data[, k])) || any(q <= min(x_data[, k]))) stop("All q need to be smaller than the largest and larger than the smallest data point.") 
 
     constr <- cbind(alpha, q)
