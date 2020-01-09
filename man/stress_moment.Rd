@@ -26,7 +26,7 @@ to the input variables of \code{f[[i]]}.}
 the stressed moments of \code{f(x)}. Must be in the
 range of \code{f(x)}.}
 
-\item{show}{Logical. If true, print the result of the call to nleqslv.}
+\item{show}{Logical. If true, print the result of the call to \code{nleqslv}.}
 
 \item{...}{Additional arguments to be passed to 
 \code{\link[nleqslv]{nleqslv}}.}
