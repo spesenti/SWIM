@@ -16,7 +16,8 @@
   \item{H3}{(conditional) default probability of sub-portfolio 3}
 }}
 \source{
-see cite the SWIM Vignette
+For a detailed case study of the credit data set using \code{SWIM} see \cr
+        \insertRef{Pesenti2020SSRN}{SWIM}.
 }
 \usage{
 credit_data

@@ -54,12 +54,18 @@ Provides weights on simulated scenarios from a baseline stochastic
 The moment constraints are given by \code{E^Q( f(x) ) = m}, 
     where \code{E^Q} denotes the expectation under the stressed 
     model. \code{stress_moment} solves the subsequent set of equations 
-    with respect to theta, using \code{\link[nleqslv]{nleqslv}}:
+    with respect to theta, using \code{\link[nleqslv]{nleqslv}} from package 
+    \code{\link[nleqslv]{nleqslv}}:
     
     \deqn{E^Q( f(x) ) = E( f(x) * exp(theta * f(x)) ) = m.}
     
     There is no guarantee that the set of equations 
-    will have a solution, or that the solution is unique.
+    will have a solution, or that the solution is unique. \code{SWIM} will 
+    return a warning if the termination code provided by \code{nleqslv} is 
+    different from 1 (convergence has been achieved). It is recommended to 
+    check the result of the call to \code{nleqslv} using the "show" argument. The 
+    user is referred to the \code{\link[nleqslv]{nleqslv}} documentation for 
+    further details.
 }
 \examples{
 set.seed(0)
@@ -92,6 +98,8 @@ mean((x[, 3] > 0.9) * get_weights(res2))
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}\cr
 
+    \insertRef{Pesenti2020SSRN}{SWIM}\cr
+    
     \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{

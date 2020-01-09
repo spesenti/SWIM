@@ -4,8 +4,16 @@
 \alias{plot_hist}
 \title{Plotting Histograms of a Stressed Model}
 \usage{
-plot_hist(object, xCol = 1, wCol = "all", base = FALSE, x_limits,
-  displ = TRUE, binwidth, displLines = FALSE)
+plot_hist(
+  object,
+  xCol = 1,
+  wCol = "all",
+  base = FALSE,
+  x_limits,
+  displ = TRUE,
+  binwidth,
+  displLines = FALSE
+)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}

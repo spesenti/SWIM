@@ -72,6 +72,8 @@ cdf(res2, xCol = 1)(c(-2.4, -1.6)) - cdf(res2, xCol = 1)(c(-3, -2))
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}\cr
 
+    \insertRef{Pesenti2020SSRN}{SWIM}\cr
+    
     \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{
