@@ -30,7 +30,7 @@
     * specs of the `SWIM` object contains the achieved VaR 
     * allowing for stressing VaR and ES downwards
 
-## Mionor changes
+## Minor changes
 
  - `stress()`:   
     * parameter `x` can have missing column names.
