@@ -9,3 +9,4 @@
 ^data-raw\credit_data\.R$
 ^\.Rproj\.user$
 ^data-raw$
+^CRAN-RELEASE$

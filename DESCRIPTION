@@ -33,7 +33,6 @@ Imports:
     reshape2,
     plyr,
     ggplot2,
-    spatstat,
     stats
 RdMacros: Rdpack
 License: GPL-3
