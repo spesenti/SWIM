@@ -70,6 +70,8 @@ names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
  # stressing the portfolio 
 rev.stress <- stress(type = "VaR", x = data, 
    alpha = c(0.75, 0.9), q_ratio = 1.1, k = 1)
+#> Stressed VaR specified was 722.9387 , stressed VaR achieved is 722.9378
+#> Stressed VaR specified was 878.859 , stressed VaR achieved is 878.8296
 ```
 
 Summary statistics of the baseline and the stressed model can be
@@ -119,6 +121,7 @@ portfolio loss Y from the baseline to the two stressed models.
 
 ``` r
 plot_cdf(object = rev.stress, xCol = , base = TRUE)
+#> Warning: Ignoring unknown aesthetics: n
 ```
 
 <img src="man/figures/README-plot-cdf-1.png" width="100%" />
@@ -186,6 +189,7 @@ heavier tail.
 
 ``` r
 plot_cdf(object = rev.stress, xCol = 5, base = TRUE)
+#> Warning: Ignoring unknown aesthetics: n
 ```
 
 <img src="man/figures/README-plot-cdf-input-1.png" width="100%" />

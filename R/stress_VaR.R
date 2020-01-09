@@ -34,6 +34,11 @@
  #' If one of \code{alpha, q} (\code{q_ratio}) is a vector,
  #'    the stressed VaR's of the \code{k}th column of \code{x}, at levels 
  #'    \code{alpha}, are equal to \code{q}.
+ #'    
+ #' The stressed VaR specified, either via \code{q} or \code{q_ratio}, might not equal
+ #'    the attained empirical VaR of the model component. In this 
+ #'    case, \code{stress_VaR} will display a \code{message} and the \code{specs} contain
+ #'    the achieved VaR. 
  #'     
  #' @return A \code{SWIM} object containing:
  #'     \itemize{
@@ -93,16 +98,15 @@
    q <- rep(q, length.out = max_length)  
    alpha <- rep(alpha, length.out = max_length)
 
-   ## check if VaR < q < ess sup (x_data)
-   if (any(VaR > q)) print("VaR > q, quantile constraint interpreted as probability constraint.")
-   if (any(q > VaR & stats::ecdf(x_data[, k])(VaR) == stats::ecdf(x_data[, k])(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
+   ## check if ess inf(x_data) < q < ess sup (x_data)
+   if (any(VaR != q & stats::ecdf(x_data[, k])(VaR) == stats::ecdf(x_data[, k])(q))) stop("There are not enough data points, specifically, there is none between VaR and q.")
    if (any(q >= max(x_data[, k])) || any(q <= min(x_data[, k]))) stop("All q need to be smaller than the largest and larger than the smallest data point.") 
 
     constr <- cbind(alpha, q)
     new_weights <- apply(X = constr, MARGIN = 1, FUN = .rn_VaR, y = x_data[, k])
     if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
     names(new_weights) <- paste("stress", 1:max_length)
-
+  
     type <- rep(list("VaR"), length.out = max_length)
     constr1 <- cbind("k" = rep(k, length.out = max_length), constr)
     constr_VaR <- list()
@@ -112,7 +116,19 @@
       constr_VaR <- c(constr_VaR, temp_list)
     }
     my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr_VaR)
-   if (is.SWIM(x)) my_list <- merge(x, my_list)
+  
+  # achieved VaR
+   for(j in 1:max_length){
+    var_achieved <- as.numeric(SWIM::quantile_stressed(my_list, probs = alpha[j], 
+                                            xCol = k, wCol = j, type = "i/n"))
+  # message if the achieved VaR is different from the specified stress.
+    if(q[j] != var_achieved) {
+       message(paste("Stressed VaR specified was", round(q[j], 4),", stressed VaR achieved is", round(var_achieved, 4)))
+       my_list$specs[[j]]$q <- var_achieved
+       }
+    }
+    
+    if (is.SWIM(x)) my_list <- merge(x, my_list)
   return(my_list)
   }
   
@@ -120,7 +136,7 @@
   .rn_VaR <- function(y, constraints){
      .alpha <- as.numeric(constraints[1])
      .q <- as.numeric(constraints[2])
-     prob_q <- mean(y < .q)
-     rn_weights <- function(z)(.alpha / prob_q) * (z < .q) + (1 - .alpha) / (1 - prob_q) * (z >= .q)
+     prob_q <- mean(y <= .q)
+     rn_weights <- function(z)(.alpha / prob_q) * (z <= .q) + (1 - .alpha) / (1 - prob_q) * (z > .q)
      return(rn_weights)
   }

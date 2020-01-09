@@ -4,8 +4,10 @@
 \alias{stress}
 \title{Stressing Random Variables}
 \usage{
-stress(type = c("VaR", "VaR ES", "mean", "mean sd", "moment", "prob",
-  "user"), ...)
+stress(
+  type = c("VaR", "VaR ES", "mean", "mean sd", "moment", "prob", "user"),
+  ...
+)
 }
 \arguments{
 \item{type}{Type of stress, one of \code{"VaR", 
@@ -41,10 +43,14 @@ summary(res)
     \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{
-Other stress functions: \code{\link{stress_VaR_ES}},
-  \code{\link{stress_VaR}}, \code{\link{stress_mean_sd}},
-  \code{\link{stress_mean}}, \code{\link{stress_moment}},
-  \code{\link{stress_prob}}, \code{\link{stress_user}}
+Other stress functions: 
+\code{\link{stress_VaR_ES}()},
+\code{\link{stress_VaR}()},
+\code{\link{stress_mean_sd}()},
+\code{\link{stress_mean}()},
+\code{\link{stress_moment}()},
+\code{\link{stress_prob}()},
+\code{\link{stress_user}()}
 }
 \author{
 Silvana M. Pesenti

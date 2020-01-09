@@ -108,6 +108,8 @@
  #'     
  #' @references \insertRef{Pesenti2019reverse}{SWIM}\cr
  #' 
+ #'     \insertRef{Pesenti2020SSRN}{SWIM}\cr
+ #'     
  #'     \insertRef{Csiszar1975}{SWIM}
  #'     
  #' @seealso See \code{\link{get_data}} for extracting the data, 

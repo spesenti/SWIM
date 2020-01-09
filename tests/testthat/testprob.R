@@ -26,6 +26,12 @@ test_that("stress", {
   expect_equal(cdf(res1, xCol = 1)(-2.4), prob1)
 })
 
+# Weights are correct
+test_that("weights", {
+  expect_equal(prob1 / ecdf(x[[1]])(upper1), max(get_weights(res1)))
+  expect_equal((1 - prob1) / (1 - ecdf(x[[1]])(upper1)), min(get_weights(res1)))
+})
+
 
 ################ two intervals ################
 prob2 <- c(0.008, 0.06)

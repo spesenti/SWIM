@@ -17,18 +17,25 @@
 #' @param m         Numeric vector, same length as \code{f}, containing
 #'                  the stressed moments of \code{f(x)}. Must be in the
 #'                  range of \code{f(x)}.
+#' @param show      Logical. If true, print the result of the call to nleqslv.
 #' @param ...       Additional arguments to be passed to 
 #'                  \code{\link[nleqslv]{nleqslv}}.
 #' 
 #' @details The moment constraints are given by \code{E^Q( f(x) ) = m}, 
 #'     where \code{E^Q} denotes the expectation under the stressed 
 #'     model. \code{stress_moment} solves the subsequent set of equations 
-#'     with respect to theta, using \code{\link[nleqslv]{nleqslv}}:
+#'     with respect to theta, using \code{\link[nleqslv]{nleqslv}} from package 
+#'     \code{\link[nleqslv]{nleqslv}}:
 #'     
 #'     \deqn{E^Q( f(x) ) = E( f(x) * exp(theta * f(x)) ) = m.}
 #'     
 #'     There is no guarantee that the set of equations 
-#'     will have a solution, or that the solution is unique. 
+#'     will have a solution, or that the solution is unique. \code{SWIM} will 
+#'     return a warning if the termination code provided by \code{nleqslv} is 
+#'     different from 1 (convergence has been achieved). It is recommended to 
+#'     check the result of the call to \code{nleqslv} using the "show" argument. The 
+#'     user is referred to the \code{\link[nleqslv]{nleqslv}} documentation for 
+#'     further details.
 #'     
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
@@ -62,7 +69,7 @@
 #' ## stressing jointly the tail probabilities of columns 1,3  
 #' res2 <- stress_moment(x = x, 
 #'   f = list(function(x)(x > 1.5), function(x)(x > 0.9)), 
-#'   k = c(1, 3), m = c(0.9, 0.9))
+#'   k = list(1, 3), m = c(0.9, 0.9))
 #' summary(res2)
 #' ## probabilities under the stressed model
 #' mean((x[, 1] > 1.5) * get_weights(res2))
@@ -76,33 +83,34 @@
 #' @inherit SWIM references 
 #' @export
 
-stress_moment <- function(x, f, k, m, ...){
+stress_moment <- function(x, f, k, m, show = FALSE, ...){
   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
-  # check if x is not a vector, matrix or data.frame.
   if (anyNA(x_data)) warning("x contains NA")
-  if (is.function(f)) f <- as.list(f)
+  if (is.function(f)) f <- list(f)
   if (!all(sapply(f, is.function))) stop("f must be a list of functions")
-  if (is.numeric(k)) k <- as.list(k)
+  if (is.numeric(k)) k <- list(k)
   if (!all(sapply(k, is.numeric))) stop("k must be a list of numeric vectors")
   if (!is.numeric(m)) stop("m must be numeric")
-  if ((length(m) != length(f)) || (length(m) != length(k)) || (length(f) != length(k))) stop("Objects f, k and m must have the same length.")
+  if ((length(m) != length(f)) || (length(m) != length(k)) || (length(f) != length(k))) stop("Objects f, k and m must have the same length")
   z <- matrix(0, ncol = length(f), nrow = nrow(x_data))
   for (i in 1:length(f)){
-    z[, i] <- apply(x_data[, k[[i]], drop = FALSE], 1, f[[i]])
+    z[, i] <- apply(X = x_data[, k[[i]], drop = FALSE], MARGIN = 1, FUN = f[[i]])
   }
   min.fz <- apply(z, 2, min)
   max.fz <- apply(z, 2, max)
-  if (any(m < min.fz) || any(m > max.fz)) stop("Values in m must be in the range of f(x).")
+  if (any(m < min.fz) || any(m > max.fz)) stop("Values in m must be in the range of f(x)")
   z <- cbind(1, z)
   moments <- function(x)colMeans(z * as.vector(exp(z %*% x))) - c(1, m)
   sol <- nleqslv::nleqslv(rep(0, length.out = length(f) + 1), moments, ...)
-  if (sol$termcd != 1) stop(paste("nleqslv could not find a solution and terminated with code ", sol$termcd))
+  if (sol$termcd != 1) warning(paste("nleqslv terminated with code ", sol$termcd))
   constr_moment <- list("k" = k, "m" = m, "f" = f)
   constr <- list(constr_moment)
   names(constr) <- paste("stress", 1)
   new_weights <- list("stress 1" = as.vector(exp(z %*% sol$x)))
   type <- list("moment")
-  my_list <- SWIM("x" = x, "new_weights" = new_weights, "type" = type, "specs" = constr)
+  my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr)
+  if (is.SWIM(x)) my_list <- merge(x, my_list)
+  if (show == TRUE) print(sol)
   return(my_list)
   }
 
@@ -165,7 +173,7 @@ stress_moment <- function(x, f, k, m, ...){
 stress_mean <- function(x, k, new_means, ...)
 {
   means <- rep(list(function(x)x), length(k))
-  res <- stress_moment(x = x, f = means, k = k, m = new_means, ...)
+  res <- stress_moment(x = x, f = means, k = as.list(k), m = new_means, ...)
   res$type <- list("mean")
   res$specs$`stress 1` <- list("k" = k, "new_means" = new_means)
   return(res)
@@ -238,7 +246,7 @@ stress_mean_sd <- function(x, k, new_means, new_sd, ...)
   second_moments <- rep(list(function(x)x ^ 2), length(k))
   f <- c(means, second_moments)
   m <- c(new_means, new_means ^ 2 + new_sd ^ 2)
-  k_new <- c(k, k)
+  k_new <- as.list(c(k, k))
   res <- stress_moment(x, f, k_new, m, ...)
   res$type <- list("mean sd")
   res$specs$`stress 1` <- list("k" = k, "new_means" = new_means, "new_sd" = new_sd)

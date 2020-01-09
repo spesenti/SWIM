@@ -43,11 +43,22 @@
 
   get_data <- function(object, xCol = "all"){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
-   if (xCol == "all" && is.null(colnames(object$x))) xCol = 1:ncol(object$x) else xCol <- colnames(object$x)
+   if (length(xCol) ==1 && xCol == "all") {
+      xdata <- as.matrix(object$x[, 1:ncol(object$x)])
+      if(is.character(colnames(object$x)) | is.null(colnames(object$x))) colnames(xdata) <- colnames(object$x)
+   } else{ 
+#   if (length(xCol) ==1 && xCol == "all" && is.null(colnames(object$x))) {xCol <- 1:ncol(object$x) 
+#      } else if (length(xCol) ==1 && xCol == "all") {xCol <- colnames(object$x)} 
+   if (is.null(xCol)) stop("invalid 'xCol' argument")
    if (is.numeric(xCol) && !(any(xCol %in% 1:ncol(object$x)))) stop("invalid 'xCol' argument")
    if (is.character(xCol) && !(any(xCol %in% colnames(object$x)))) stop("invalid 'xCol' argument")
    xdata <- as.matrix(object$x[, xCol])
-   colnames(xdata) <- xCol
+   if (is.character(xCol[xCol])) colnames(xdata) <- xCol
+   if (is.numeric(xCol) && is.null(colnames(object$x)[xCol])) {
+      colnames(xdata) <- paste("X", as.character(xCol), sep = "")
+   } else if (is.numeric(xCol) && is.character(colnames(object$x)[xCol])) {
+      colnames(xdata) <- colnames(object$x)[xCol]
+   }}
    return(xdata)
   }
 
@@ -128,10 +139,10 @@
       if (.type[[i]] == "prob" && length(object$specs[[i]]$prob) > 1){
       .specs <- plyr::rbind.fill(.specs, as.data.frame(t(unlist(object$specs[[i]]))))       
       } else {
-      .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]])) }
-   } else if (.type[i] %in% c("moment", "mean", "mean sd")){
-    k <- paste(object$specs[[i]]$k, collapse = " ")
-    .specs <- plyr::rbind.fill(.specs, as.data.frame(k))
+      .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]], stringsAsFactors = FALSE)) 
+      }} else if (.type[i] %in% c("moment", "mean", "mean sd")){
+      k <- paste(object$specs[[i]]$k, collapse = " ")
+      .specs <- plyr::rbind.fill(.specs, as.data.frame(k))
    } else stop("Object contains wrong type.")}
    .type <- t(as.data.frame(.type))
    .specs <- cbind(.type, .specs)
