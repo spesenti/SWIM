@@ -7,7 +7,7 @@
 #' @inheritParams stress_moment
 #' @param f       A function, or list of functions, that, applied to 
 #'                \code{x}, constitute the transformation of the data 
-#'                for which the sensitivity is calculated. 
+#'                for which the sensitivity is calculated.
 #' @param type    Character, one of \code{"Gamma", "Kolmogorov", 
 #'                "Wasserstein", "all"}.
 #' @param xCol    Numeric or character vector, (names of) the columns 
@@ -69,8 +69,9 @@
 #' ## where (X1, X2, X3, X4, X5) are correlated normally 
 #' ## distributed with equal mean and different standard deviations,
 #' ## see the README for further details.
+#'
 #' 
-#' \donttest{
+#' \dontrun{
 #' set.seed(0)
 #' SD <- c(70, 45, 50, 60, 75)
 #' Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
@@ -78,8 +79,8 @@
 #'    stop("Package \"mvtnorm\" needed for this function 
 #'    to work. Please install it.")
 #' x <- mvtnorm::rmvnorm(10^5, 
-#'    mean =  rep(100, 5), 
-#'    sigma = (SD %*% t(SD)) * Corr) 
+#'    mean =  rep(100, 5),
+#'    sigma = (SD %*% t(SD)) * Corr)
 #' data <- data.frame(rowSums(x), x)
 #' names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
 #' rev.stress <- stress(type = "VaR", x = data, 
@@ -104,14 +105,15 @@
 #' @export
 #' 
 
-  sensitivity <- function(object, xCol = "all", wCol = "all", type = c("Gamma",                             "Kolmogorov", "Wasserstein", "all"), f = NULL, k = NULL){
+  sensitivity <- function(object, xCol = "all", wCol = "all", 
+                          type = c("Gamma", "Kolmogorov", "Wasserstein", "all"), f = NULL, k = NULL){
    if (!is.SWIM(object)) stop("Wrong object")
    if (anyNA(object$x)) warning("x contains NA")
    if (missing(type)) type <- "all"
    if (!is.null(f) | !is.null(k)){
-   if (is.function(f)) f <- as.list(f)
+   if (is.function(f)) f <- list(f)
    if (!all(sapply(f, is.function))) stop("f must be a list of functions")
-   if (is.numeric(k)) k <- as.list(k)
+   if (is.numeric(k)) k <- list(k)
    if (!all(sapply(k, is.numeric))) stop("k must be a list of numeric vectors")
    if (length(f) != length(k)) stop("Objects f and k must have the same length.")
    }
