@@ -1,3 +1,8 @@
+
+# Develop version v0.2.0.900
+The develop branch corresponds to the develop version, whereas the master branch is the lastest CRAN submission. 
+
+
 # SWIM 0.2.0
 
 ## Major changes
@@ -30,7 +35,7 @@
     * specs of the `SWIM` object contains the achieved VaR 
     * allowing for stressing VaR and ES downwards
 
-## Mionor changes
+## Minor changes
 
  - `stress()`:   
     * parameter `x` can have missing column names.

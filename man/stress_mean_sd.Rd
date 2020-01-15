@@ -77,6 +77,8 @@ res2 <- stress_mean_sd(x = x, k = 1, new_means = 0.1,
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}\cr
 
+    \insertRef{Pesenti2020SSRN}{SWIM}\cr
+    
     \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{

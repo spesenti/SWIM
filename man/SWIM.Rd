@@ -3,7 +3,6 @@
 \docType{package}
 \name{SWIM}
 \alias{SWIM}
-\alias{SWIM-package}
 \title{SWIM: A Package for Sensitivity Analysis}
 \description{
 The \code{SWIM} package provides weights on simulated scenarios 
@@ -120,6 +119,8 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}\cr
 
+    \insertRef{Pesenti2020SSRN}{SWIM}\cr
+    
     \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{
