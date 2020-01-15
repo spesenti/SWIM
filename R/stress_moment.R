@@ -106,6 +106,7 @@ stress_moment <- function(x, f, k, m, show = FALSE, ...){
   constr_moment <- list("k" = k, "m" = m, "f" = f)
   constr <- list(constr_moment)
   names(constr) <- paste("stress", 1)
+  if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
   new_weights <- list("stress 1" = as.vector(exp(z %*% sol$x)))
   type <- list("moment")
   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr)
