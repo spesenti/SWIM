@@ -33,9 +33,6 @@
 #'       \code{Kolmogorov}, the Kolmogorov distance, defined for 
 #'       distribution functions \code{F,G} by 
 #'       \deqn{Kolmogorov = sup |F(x) - G(x)|.}
-#'       Note that the Kolmogorov distance of one stress is the same for 
-#'       all inputs. Should be used to compare different stresses not 
-#'       individual components.   
 #'     
 #'     \item
 #'       \code{Wasserstein}, the Wasserstein distance of order 1, defined
@@ -190,21 +187,22 @@
  # comparison between different stresses. All inputs from one
  # stress have the same Kolmogorov distance. 
   .kolmogorov <- function(z, w){
-   n <- length(z)
-   xw_cdf <- cumsum(w[rank(sort(z))]) 
-   kol_sense <- max(abs(xw_cdf - 1:n)) / n
-   return(kol_sense)
+    n <- length(z)
+    xw_cdf <- cumsum(w[order(z)]) 
+    kol_sense <- max(abs(xw_cdf - 1:n)) / n
+    return(kol_sense)
   }
 
  # help function Wasserstein distance of order p = 1 
  # x   vector
  # w   vector of weights
 
-  .wasserstein <- function(z, w, p = 1){
-   n <- length(z)
-   x_sort <- sort(z)
-   w_cdf <- cumsum(w[rank(x_sort)])[1:(n - 1)] 
-   x_diff <- diff(x_sort, lag = 1)
-   wasser_sens <- sum(abs(w_cdf - 2:n) * x_diff) / n
-   return(wasser_sens)
+  .wasserstein <- function(z, w){
+    n <- length(z)
+    x_sort <- sort(z)
+    w_cdf <- cumsum(w[order(z)])[1:(n - 1)] 
+    x_diff <- diff(x_sort, lag = 1)
+    wasser_sens <- sum(abs(w_cdf - 1:(n-1)) * x_diff)/n 
+    return(wasser_sens)
   }
+  

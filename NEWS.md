@@ -3,6 +3,8 @@
 The develop branch corresponds to the develop version, whereas the master branch is the lastest CRAN submission. 
 
 - fix bug in `merge()`. 
+- fix bug in `sensitivity()`. 
+
 
 # SWIM 0.2.0
 
