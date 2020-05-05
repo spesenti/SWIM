@@ -35,9 +35,6 @@ The SWIM package can be installed from [CRAN](https://CRAN.R-project.org/package
 alternatively from [GitHub](https://github.com/spesenti/SWIM):
 
 > <https://github.com/spesenti/SWIM>
-``` {r}
-install.packages("spesenti/SWIM")
-```
 
 ## Scope of the SWIM package  
 The SWIM package provides sensitivity analysis tools for stressing model 
