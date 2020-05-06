@@ -37,8 +37,11 @@ Imports:
 RdMacros: Rdpack
 License: GPL-3
 URL: https://github.com/spesenti/SWIM, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3515274
+BugReports: https://github.com/spesenti/SWIM/issues
 Encoding: UTF-8
+LazyLoad: true
 LazyData: true
+VignetteBuilder: knitr
 RoxygenNote: 7.0.2
 Suggests: 
     testthat,
