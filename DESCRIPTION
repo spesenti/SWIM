@@ -47,5 +47,7 @@ Suggests:
     testthat,
     mvtnorm,
     spelling,
-    Weighted.Desc.Stat
+    Weighted.Desc.Stat,
+    knitr, 
+    rmarkdown,
 Language: en-US
