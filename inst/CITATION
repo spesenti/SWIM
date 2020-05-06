@@ -1,0 +1,10 @@
+citHeader("To cite SWIM in publications, please use:")
+
+citEntry(entry = "unpublished",
+         author = personList(as.person("Silvana M. Pesenti"), as.person("Alberto Bettini"), as.person("Pietro Millossovich"), as.person("Andreas Tsanakas")),
+         title = "Scenario Weights for Importance Measurement (SWIM) - An R Package for Sensitivity Analysis",
+         year = "2020",
+         note = "Available at SSRN.",
+         url = "https://ssrn.com/abstract=3515274",
+         textVersion = "Silvana M. Pesenti, Alberto Bettini, Pietro Millossovich, Andreas Tsanakas. Scenario Weights for Importance Measurement (SWIM) - An R Package for Sensitivity Analysis. Available on SSRN, 2020."
+)
