@@ -3,6 +3,11 @@
 
 # SWIM - A Package for Sensitivity Analysis
 
+[![Travis-CI Build
+Status](https://travis-ci.org/spesenti/SWIM.svg?branch=master)](https://travis-ci.org/spesenti/SWIM)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/SWIM)](https://cran.r-project.org/package=SWIM)
+[![downloads](https://cranlogs.r-pkg.org/badges/grand-total/SWIM)](https://cran.r-project.org/package=SWIM)
+
 The SWIM package provides weights on simulated scenarios from a
 stochastic model, such that stressed model components (random variables)
 fulfil given probabilistic constraints (e.g. specified values for risk
