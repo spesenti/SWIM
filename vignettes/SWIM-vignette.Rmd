@@ -6,8 +6,7 @@ author: Silvana M. Pesenti^[Correspondence to Silvana Pesenti, Department of Sta
 output:
     bookdown::html_document2
 vignette: >
-  %\VignetteIndexEntry{Scenario Weights for Importance Measurement (**SWIM**) -- an **R** package for sensitivity
-  analysis}
+  %\VignetteIndexEntry{Scenario Weights for Importance Measurement} 
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 date: |
