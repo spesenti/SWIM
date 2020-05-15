@@ -4,13 +4,21 @@
 \alias{plot_cdf}
 \title{Plotting the Empirical Distribution Functions of a Stressed Model}
 \usage{
-plot_cdf(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
-  x_limits, y_limits, displ = TRUE)
+plot_cdf(
+  object,
+  xCol = 1,
+  wCol = "all",
+  base = FALSE,
+  n = 500,
+  x_limits,
+  y_limits,
+  displ = TRUE
+)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character, (name of) the column of the underlying data 
+\item{xCol}{Numeric or character, (name of) the column of the underlying data
 of the \code{object} (\code{default = 1}).}
 
 \item{wCol}{Vector, the columns of the scenario weights 
@@ -20,66 +28,65 @@ stresses (\code{default = "all"}).}
 \item{base}{Logical, if \code{TRUE}, statistics under the baseline 
 are also returned (\code{default = "FALSE"}).}
 
-\item{n}{Integer, the number of points used to plot 
-\code{stat_ecdf} in \code{ggplot} (\code{default 
+\item{n}{Integer, the number of points used to plot
+\code{stat_ecdf} in \code{ggplot} (\code{default
 = 500}).}
 
-\item{x_limits}{Vector, the limits of the x-axis of the plot, the 
-value for \code{xlim} in the \code{coord_cartesian} 
+\item{x_limits}{Vector, the limits of the x-axis of the plot, the
+value for \code{xlim} in the \code{coord_cartesian}
 function in \code{ggplot}.}
 
-\item{y_limits}{Vector, the limits of the y-axis of the plot, the 
-value for \code{ylim} in the \code{coord_cartesian} 
+\item{y_limits}{Vector, the limits of the y-axis of the plot, the
+value for \code{ylim} in the \code{coord_cartesian}
 function in \code{ggplot}.}
 
-\item{displ}{Logical, if \code{TRUE} the plot is displayed, 
-otherwise the data.frame for customised plotting with 
+\item{displ}{Logical, if \code{TRUE} the plot is displayed,
+otherwise the data.frame for customised plotting with
 \code{ggplot} is returned (\code{default = TRUE}).}
 }
 \value{
 If \code{displ = TRUE}, a plot displaying the empirical
-    distribution function of the stochastic model under the 
+    distribution function of the stochastic model under the
     scenario weights.
-    
-    If \code{displ = FALSE}, a data.frame for customised plotting with 
-    \code{ggplot}. The data.frame contains the columns: the column, 
-    \code{xCol}, of the data of the stressed model, 
-    \code{stress} (the stresses) and \code{value} (the values). \cr 
+
+    If \code{displ = FALSE}, a data.frame for customised plotting with
+    \code{ggplot}. The data.frame contains the columns: the column,
+    \code{xCol}, of the data of the stressed model,
+    \code{stress} (the stresses) and \code{value} (the values). \cr
     Denote by \code{res} the return of the function call, then
-    \code{ggplot} can be called via: 
+    \code{ggplot} can be called via:
     \deqn{ggplot(res, aes(x = res[ ,1], w = value))}
-    \deqn{ + stat_ecdf(aes(color = factor(stress)), n = n).}
+    \deqn{ + stat_{ecdf}(aes(color = factor(stress)), n = n).}
     Note that the ggplot2 default of \code{stat_ecdf} does not
-    take \code{weight} as an aesthetic. We use the workaround 
+    take \code{weight} as an aesthetic. We use the workaround
     by Nicolas Woloszko, see Note below.
 }
 \description{
-Plots the empirical distribution function of a stressed model 
+Plots the empirical distribution function of a stressed model
     component (random variable) under the scenario weights.
 }
 \note{
 This function is based on the ggplot \code{stat_ecdf}
-    function. However, the \code{stat_ecdf} does not allow for 
-    specifying \code{weights}, thus the function is based on 
-    the workaround by Nicolas Woloszko, see 
+    function. However, the \code{stat_ecdf} does not allow for
+    specifying \code{weights}, thus the function is based on
+    the workaround by Nicolas Woloszko, see
     \url{https://github.com/NicolasWoloszko/stat_ecdf_weighted}.
 }
 \examples{
-     
 ## example with a stress on VaR
 set.seed(0)
 x <- as.data.frame(cbind(
-  "normal" = rnorm(10^5), 
-  "gamma" = rgamma(10^5, shape = 2)))
-res1 <- stress(type = "VaR", x = x, 
+  "normal" = rnorm(10 ^ 5),
+  "gamma" = rgamma(10 ^ 5, shape = 2)))
+res1 <- stress(type = "VaR", x = x,
   alpha = c(0.75, 0.95), q_ratio = 1.15)
 plot_cdf(res1, xCol = 1, wCol = 1:2, base = TRUE)
-plot_cdf(res1, xCol = 1, wCol = 1:2, base = TRUE, 
+plot_cdf(res1, xCol = 1, wCol = 1:2, base = TRUE,
   x_limits = c(0, 5), y_limits = c(0.5, 1))
-     
+
 }
 \seealso{
-See \code{\link{cdf}} for the empirical distribution function 
+See \code{\link{cdf}} for the empirical distribution function
     of a stressed model and \code{\link{quantile_stressed}} for
     sample quantiles of a stressed model.
 }

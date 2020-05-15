@@ -7,104 +7,105 @@
 stress_moment(x, f, k, m, show = FALSE, ...)
 }
 \arguments{
-\item{x}{A vector, matrix or data frame 
-containing realisations of random variables. Columns of \code{x} 
+\item{x}{A vector, matrix or data frame
+containing realisations of random variables. Columns of \code{x}
 correspond to random variables; OR\cr
-A \code{SWIM} object, where \code{x} corresponds to the 
+A \code{SWIM} object, where \code{x} corresponds to the
 underlying data of the \code{SWIM} object.}
 
-\item{f}{A function, or list of functions, that, applied to 
+\item{f}{A function, or list of functions, that, applied to
 \code{x}, constitute the moment constraints.}
 
 \item{k}{A vector or list of vectors, same length as \code{f},
-indicating which columns of \code{x} each function 
+indicating which columns of \code{x} each function
 in \code{f} operates on.\cr
-When \code{f} is a list, \code{k[[i]]} corresponds 
+When \code{f} is a list, \code{k[[i]]} corresponds
 to the input variables of \code{f[[i]]}.}
 
 \item{m}{Numeric vector, same length as \code{f}, containing
 the stressed moments of \code{f(x)}. Must be in the
 range of \code{f(x)}.}
 
-\item{show}{Logical. If true, print the result of the call to \code{nleqslv}.}
+\item{show}{Logical. If true, print the result of the call to
+\code{\link[nleqslv]{nleqslv}}.}
 
-\item{...}{Additional arguments to be passed to 
+\item{...}{Additional arguments to be passed to
 \code{\link[nleqslv]{nleqslv}}.}
 }
 \value{
 A \code{SWIM} object containing:
     \itemize{
       \item \code{x}, a data.frame containing the data;
-      \item \code{new_weights}, a list, each component corresponds to 
+      \item \code{new_weights}, a list, each component corresponds to
    a different stress and is a vector of scenario weights;
      \item \code{type = "moment"};
-      \item \code{specs}, a list, each component corresponds to 
+      \item \code{specs}, a list, each component corresponds to
    a different stress and contains \code{f}, \code{k} and \code{m}.
     }
     See \code{\link{SWIM}} for details.
 }
 \description{
 Provides weights on simulated scenarios from a baseline stochastic
-    model, such that stressed model components (random variables) 
-    fulfil the moment constraints. Scenario weights are selected by 
-    constrained minimisation of the relative entropy to the 
+    model, such that stressed model components (random variables)
+    fulfil the moment constraints. Scenario weights are selected by
+    constrained minimisation of the relative entropy to the
     baseline model.
 }
 \details{
-The moment constraints are given by \code{E^Q( f(x) ) = m}, 
-    where \code{E^Q} denotes the expectation under the stressed 
-    model. \code{stress_moment} solves the subsequent set of equations 
-    with respect to theta, using \code{\link[nleqslv]{nleqslv}} from package 
+The moment constraints are given by \code{E^Q( f(x) ) = m},
+    where \code{E^Q} denotes the expectation under the stressed
+    model. \code{stress_moment} solves the subsequent set of equations
+    with respect to theta, using \code{\link[nleqslv]{nleqslv}} from package
     \code{\link[nleqslv]{nleqslv}}:
-    
+
     \deqn{E^Q( f(x) ) = E( f(x) * exp(theta * f(x)) ) = m.}
-    
-    There is no guarantee that the set of equations 
-    will have a solution, or that the solution is unique. \code{SWIM} will 
-    return a warning if the termination code provided by \code{nleqslv} is 
-    different from 1 (convergence has been achieved). It is recommended to 
-    check the result of the call to \code{nleqslv} using the "show" argument. The 
-    user is referred to the \code{\link[nleqslv]{nleqslv}} documentation for 
+
+    There is no guarantee that the set of equations
+    will have a solution, or that the solution is unique. \code{SWIM} will
+    return a warning if the termination code provided by \code{nleqslv} is
+    different from 1 (convergence has been achieved). It is recommended to
+    check the result of the call to \code{nleqslv} using the "show" argument. The
+    user is referred to the \code{\link[nleqslv]{nleqslv}} documentation for
     further details.
 }
 \examples{
 set.seed(0)
 x <- data.frame(cbind(
-  "normal" = rnorm(1000), 
-  "gamma" = rgamma(1000, shape = 2), 
+  "normal" = rnorm(1000),
+  "gamma" = rgamma(1000, shape = 2),
   "beta" = rbeta(1000, shape1 = 2, shape2 = 2)))
-  
-## stressing covariance of columns 1,2 while leaving the means unchanged
-res1 <- stress_moment(x = x, 
-  f = list(function(x)x, function(x)x, function(x)x[1] * x[2]), 
-  k = list(1, 2, c(1, 2)), m = c(0, 2, 0.5), 
+
+## stressing covariance of columns 1, 2 while leaving the means unchanged
+res1 <- stress_moment(x = x,
+  f = list(function(x)x, function(x)x, function(x)x[1] * x[2]),
+  k = list(1, 2, c(1, 2)), m = c(0, 2, 0.5),
   method = "Newton", control = list(maxit = 1000, ftol = 1E-10))
 ## means under the stressed model
 summary(res1)
-apply(x, 2, stats::weighted.mean, w = get_weights(res1)) 
+apply(x, 2, stats::weighted.mean, w = get_weights(res1))
 ## covariance of columns 1,2 under the stressed model
 stats::weighted.mean(x[, 1] * x[, 2], w = get_weights(res1))
-    
-## stressing jointly the tail probabilities of columns 1,3  
-res2 <- stress_moment(x = x, 
-  f = list(function(x)(x > 1.5), function(x)(x > 0.9)), 
+
+## stressing jointly the tail probabilities of columns 1, 3
+res2 <- stress_moment(x = x,
+  f = list(function(x)(x > 1.5), function(x)(x > 0.9)),
   k = list(1, 3), m = c(0.9, 0.9))
 summary(res2)
 ## probabilities under the stressed model
 mean((x[, 1] > 1.5) * get_weights(res2))
 mean((x[, 3] > 0.9) * get_weights(res2))
-     
+
 }
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}\cr
 
     \insertRef{Pesenti2020SSRN}{SWIM}\cr
-    
+
     \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{
-See \code{\link{stress_mean}} for stressing means and 
-    \code{\link{stress_mean_sd}} for stressing mean and standard 
+See \code{\link{stress_mean}} for stressing means and
+    \code{\link{stress_mean_sd}} for stressing mean and standard
     deviation jointly.
 
 Other stress functions: 

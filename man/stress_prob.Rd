@@ -7,10 +7,10 @@
 stress_prob(x, prob, lower = NULL, upper, k = 1)
 }
 \arguments{
-\item{x}{A vector, matrix or data frame 
-containing realisations of random variables. Columns of \code{x} 
+\item{x}{A vector, matrix or data frame
+containing realisations of random variables. Columns of \code{x}
 correspond to random variables; OR\cr
-A \code{SWIM} object, where \code{x} corresponds to the 
+A \code{SWIM} object, where \code{x} corresponds to the
 underlying data of the \code{SWIM} object.}
 
 \item{prob}{Numeric vector, stressed probabilities corresponding to
@@ -73,7 +73,7 @@ cdf(res2, xCol = 1)(c(-2.4, -1.6)) - cdf(res2, xCol = 1)(c(-3, -2))
 \insertRef{Pesenti2019reverse}{SWIM}\cr
 
     \insertRef{Pesenti2020SSRN}{SWIM}\cr
-    
+
     \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{

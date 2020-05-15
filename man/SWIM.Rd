@@ -5,62 +5,63 @@
 \alias{SWIM}
 \title{SWIM: A Package for Sensitivity Analysis}
 \description{
-The \code{SWIM} package provides weights on simulated scenarios 
-    from a stochastic model,such that a stressed model components 
-    (random variables) fulfil given probabilistic constraints (e.g. 
+The \code{SWIM} package provides weights on simulated scenarios
+    from a stochastic model, such that a stressed model components
+    (random variables) fulfil given probabilistic constraints (e.g.
     specified values for risk measures), under the new scenario weights.
-    Scenario weights are selected by constrained minimisation of the 
+    Scenario weights are selected by constrained minimisation of the
     relative entropy to the baseline model.
 }
 \details{
 The \code{SWIM} (Scenario Weights for Importance Measurement)
     package provides weights on simulated scenarios from a stochastic
-    model, such that stressed random variables fulfil given 
-    probabilistic constraints (e.g. specified values for risk 
-    measures), under the new scenario weights. Scenario weights are 
+    model, such that stressed random variables fulfil given
+    probabilistic constraints (e.g. specified values for risk
+    measures), under the new scenario weights. Scenario weights are
     selected by constrained minimisation of the relative entropy to the
     baseline model.
 
     The \code{SWIM} package is based on the \emph{reverse sensitivity
-    framework} developed by \insertCite{Pesenti2019reverse}{SWIM}. 
+    framework} developed by \insertCite{Pesenti2019reverse}{SWIM}.
     Consider the random vector \code{X = (X1,...,Xn)}. Let P
     represent the probability measure under which all simulated
     scenarios have the same probability. Then, for a random variable
     \code{Xi}, the package solves:
-    \deqn{min D(P | Q) s.t. constraints on the distribution
-    of Xi under Q,}
-    where \code{D(P | Q)} is the Kullback-Leibler divergence 
-    (relative entropy) between \code{P} and \code{Q}. The solution 
+    \deqn{min D(P | Q)}
+    s.t. constraints on the distribution
+    of Xi under Q,
+    where \code{D(P | Q)} is the Kullback-Leibler divergence
+    (relative entropy) between \code{P} and \code{Q}. The solution
     is formed by the scenario weights representing the Radon-Nikodym
-    derivative \code{dQ / dP}. The weighting generates a model for 
+    derivative \code{dQ / dP}. The weighting generates a model for
     which the joint distribution of \code{(X1,...,Xn)} is stressed.
-    
-    Different elements of \code{X} can be understood as 
-    inputs or outputs of a model. For example, consider a model 
-    \code{Y = g(Z)} with input vector \code{Z = (Z1,...,Z(n-1))}.  
-    One can then identify \code{X1 = Y} and \code{X1 = Z1,...,Xn  
-    = Z(n-1)}. Subsequently, the user of the \code{SWIM} package can  
-    stress the model output or any of the inputs, measuring the 
+
+    Different elements of \code{X} can be understood as
+    inputs or outputs of a model. For example, consider a model
+    \code{Y = g(Z)} with input vector \code{Z = (Z1,...,Z(n-1))}.
+    One can then identify \code{X1 = Y} and \code{X2 = Z1,...,Xn
+    = Z(n-1)}. Subsequently, the user of the \code{SWIM} package can
+    stress the model output or any of the inputs, measuring the
     resulting impact on the distributions of other variables.
 }
 \section{Stresses}{
 
     Scenario weights for the following stresses are provided:
     \tabular{ll}{
-       \code{\link{stress}}\tab calls one of the functions below by  
+       \code{\link{stress}}\tab calls one of the functions below by
     using \code{type}\cr
-      \code{\link{stress_VaR}} \tab for stressing the VaR 
+      \code{\link{stress_VaR}} \tab for stressing the VaR
     (\code{type = "VaR"})\cr
-      \code{\link{stress_VaR_ES}} \tab for stressing the VaR and 
+      \code{\link{stress_VaR_ES}} \tab for stressing the VaR and
     ES jointly (\code{type = "VaR ES"})\cr
-      \code{\link{stress_mean}}\tab for stressing means 
+      \code{\link{stress_mean}}\tab for stressing means
     (\code{type = "mean"}) \cr
       \code{\link{stress_mean_sd}} \tab for stressing means and
     standard deviations (\code{type = "mean sd"})\cr
-      \code{\link{stress_moment}} \tab for stressing moments 
+      \code{\link{stress_moment}} \tab for stressing moments
     (\code{type = "moment"})\cr
       \code{\link{stress_prob}} \tab for stressing the probabilities
-      of intervals 
+      of intervals
     (\code{type = "prob"}) \cr
       \code{\link{stress_user}} \tab for user defined scenario weights
     (\code{type = "user"})
@@ -71,47 +72,47 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
 
     An object of class \code{SWIM} contains a list of:
   \itemize{
-    \item \code{x}, a data.frame containing realisations of a random 
+    \item \code{x}, a data.frame containing realisations of a random
   vector;
-    \item \code{new_weights}, a list, each component corresponds to 
+    \item \code{new_weights}, a list, each component corresponds to
    a different stress and is either a vector of scenario weights or a
-   function, that applied to the \code{k}th column of \code{x}, 
-   generates the vectors of scenario weights; 
-    \item \code{type}: a list, each component corresponds to a 
+   function, that applied to the \code{k}th column of \code{x},
+   generates the vectors of scenario weights;
+    \item \code{type}: a list, each component corresponds to a
    different stress and specifies the type of the stress;
-    \item \code{specs} , a list, each component corresponds to 
-  a different stress and contains a list with the specifications 
+    \item \code{specs}, a list, each component corresponds to
+  a different stress and contains a list with the specifications
   of what has been stressed.
   Specifications depend on the \code{type} of stress:
     \itemize{
-      \item \code{type = "VaR"}: \code{k}, the column of \code{x} 
-    on which the stress is applied to; \code{alpha}, the level of 
-    the stressed VaR; \code{q}, the stressed VaR at level 
+      \item \code{type = "VaR"}: \code{k}, the column of \code{x}
+    on which the stress is applied to; \code{alpha}, the level of
+    the stressed VaR; \code{q}, the stressed VaR at level
       \code{alpha}.
-      \item \code{type = "VaR ES"}: \code{k}, the column of \code{x} 
-    on which the stress is applied to; \code{alpha}, the level of the 
-    stressed VaR and ES; \code{q}, the stressed VaR at level 
+      \item \code{type = "VaR ES"}: \code{k}, the column of \code{x}
+    on which the stress is applied to; \code{alpha}, the level of the
+    stressed VaR and ES; \code{q}, the stressed VaR at level
     \code{alpha}.
-      \item \code{type = "mean"}: \code{k}, the columns of \code{x} 
-    on which the stress is applied to; \code{new_means}, the 
+      \item \code{type = "mean"}: \code{k}, the columns of \code{x}
+    on which the stress is applied to; \code{new_means}, the
     stressed means.
-      \item \code{type = "mean sd"}: \code{k}, the columns of \code{x} 
-    on which the stress is applied to; \code{new_means}, the 
+      \item \code{type = "mean sd"}: \code{k}, the columns of \code{x}
+    on which the stress is applied to; \code{new_means}, the
     stressed means; \code{new_sd}, the stressed standard deviations.
     \code{s}, the stressed ES at level \code{alpha}.
-      \item \code{type = "moment"}: \code{f}, the list of functions, 
+      \item \code{type = "moment"}: \code{f}, the list of functions,
     that, applied to \code{x}, constitute the moment constraints;
-    \code{k}, the columns of \code{x} on which each function in 
-    \code{f} operates on; \code{m}, the stressed moments of 
-    \code{f(x)}. 
-      \item \code{type = "prob"}: \code{k}, the column of \code{x} 
-    on which the stress is applied to; \code{lower}, the left 
-    endpoints of the intervals; \code{upper}, the right endpoints 
-    of the intervals; \code{prob}, stressed probabilities 
-    corresponding to the intervals defined through \code{lower} 
+    \code{k}, the columns of \code{x} on which each function in
+    \code{f} operates on; \code{m}, the stressed moments of
+    \code{f(x)}.
+      \item \code{type = "prob"}: \code{k}, the column of \code{x}
+    on which the stress is applied to; \code{lower}, the left
+    endpoints of the intervals; \code{upper}, the right endpoints
+    of the intervals; \code{prob}, stressed probabilities
+    corresponding to the intervals defined through \code{lower}
     and \code{upper}.
-      \item \code{type = "user"}: \code{k}, the column of \code{x} 
-    on which the stress is applied to.  
+      \item \code{type = "user"}: \code{k}, the column of \code{x}
+    on which the stress is applied to.
     }
   }
 }
@@ -120,14 +121,14 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
 \insertRef{Pesenti2019reverse}{SWIM}\cr
 
     \insertRef{Pesenti2020SSRN}{SWIM}\cr
-    
+
     \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{
-See \code{\link{get_data}} for extracting the data, 
-    \code{x}; \code{\link{get_weights}} for extracting the scenario 
+See \code{\link{get_data}} for extracting the data,
+    \code{x}; \code{\link{get_weights}} for extracting the scenario
     weights, \code{new_weights}; \code{\link{get_weightsfun}} for
-    extracting the functions generating the scenario weights; and 
-    \code{\link{get_specs}} for extracting the specifications of 
+    extracting the functions generating the scenario weights; and
+    \code{\link{get_specs}} for extracting the specifications of
     the stress on an object of class \code{SWIM}.
 }
