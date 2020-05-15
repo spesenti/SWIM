@@ -10,3 +10,5 @@
 ^\.Rproj\.user$
 ^data-raw$
 ^CRAN-RELEASE$
+^doc$
+^Meta$
