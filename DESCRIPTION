@@ -33,11 +33,10 @@ Imports:
     reshape2,
     plyr,
     ggplot2,
-    spatstat,
     stats
 RdMacros: Rdpack
 License: GPL-3
-URL: https://github.com/spesenti/SWIM, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3515274,https://utstat.toronto.edu/pesenti/?page_id=138
+URL: https://github.com/spesenti/SWIM, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3515274, https://utstat.toronto.edu/pesenti/?page_id=138
 BugReports: https://github.com/spesenti/SWIM/issues
 Encoding: UTF-8
 LazyLoad: true
