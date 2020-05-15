@@ -51,5 +51,6 @@ Suggests:
     Weighted.Desc.Stat,
     knitr, 
     rmarkdown,
+    bookdown,
     ggpubr
 Language: en-US
