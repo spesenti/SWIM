@@ -270,12 +270,12 @@ The solutions to the optimisations \@ref(eq:optimisationprob) and \@ref(eq:optim
 ### The `stress` function and the **SWIM** object {#Rstress}
 The `stress` function is a wrapper for the `stress_type` functions, where `stress(type = "type", )` and `stress_type` are equivalent. The `stress` function solves optimisation \@ref(eq:optimisation) for constraints specified through `type` and returns a `SWIM` object, that is, a list including the elements shown in Table \@ref(tab:SWIMobject):
 
-| | |
-| :---           | :--- |       
-| `x`            | realisations of the model  |
-| `new_weights`  | scenario weights |
-| `type`         | type of stress |
-| `specs`        | details about the stress |
+| R output       | Description
+| :---           | :---       
+| `x`            | realisations of the model  
+| `new_weights`  | scenario weights 
+| `type`         | type of stress 
+| `specs`        | details about the stress 
 Table: (\#tab:SWIMobject) The **SWIM** object, returned by any `stress` function. 
 
 The data frame containing the realisations of the baseline model, `x` in the above table, can be extracted from a **SWIM** object using `get_data`. Similarly, `get_weights` and `get_weightsfun` provide the scenario weights, respectively the functions that, when applied to `x`, generate the scenario weights. The details of the applied stress can be obtained using `get_specs`.
@@ -345,7 +345,7 @@ The option `type = "user"` allows to generate a **SWIM** object with  scenario w
 ## Analysis of stressed models {#Sec:analysis}
 Table \@ref(tab:Ranalysis) provides a complete list of all implemented **R** functions in **SWIM** for analysing stressed models, which are described below in detail. 
 
-| R function          | analysis of stressed models                                
+| R function          | Analysis of stressed models                                
 | :-------------------| :------------------------------------  
 | `summary`           |summary statistics   
 | `cdf`               |cumulative distribution function
@@ -363,8 +363,8 @@ Table: (\#tab:Ranalysis) Implemented **R** function in **SWIM** for analysing st
 ### Distributional comparison
 The **SWIM** package contains functions to compare the distribution of model components under different (stressed) models. The function `summary` is a method for an object of class **SWIM** and provides summary statistics of the baseline and stressed models. If the **SWIM** object contains more than one set of scenario weights, each corresponding to one stressed model, the `summary` function returns for each set of scenario weights a list, containing the elements shown in Table \@ref(tab:summary). 
 
-|                | |
-| :---           | :--- |  
+|R output        | Description
+| :---           | :---   
 |`mean`          |sample mean
 |`sd`            |sample standard deviation
 |`skewness`      |sample skewness
