@@ -701,14 +701,14 @@ Table: (\#tab:credit) Parameter values used in the simulation for the credit ris
   myCop <- normalCopula(param = c(cor12, cor13, cor23), dim = 3, dispstr = "un")
   
 # multivariate beta with given copula
-  myMvd <- mvdc(copula = myCop,
+  myMvd <- copula::mvdc(copula = myCop,
                 margins = c("beta", "beta", "beta"),
                 paramMargins = list(list(alpha1, beta1),
                                     list(alpha2, beta2),
                                     list(alpha3, beta3)))
 
 # simulation from the chosen copula
-  H <- rMvdc(nsim, myMvd)
+  H <- copula::rMvdc(nsim, myMvd)
   
 # simulate number of default per subportfolios (binomial distributions)
   M1 <- rbinom(n = nsim, size = m1, prob = H[, 1])
