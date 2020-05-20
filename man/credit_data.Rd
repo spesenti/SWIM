@@ -4,7 +4,8 @@
 \name{credit_data}
 \alias{credit_data}
 \title{Credit data set}
-\format{A data frame with 100,000 rows and 7 variables:
+\format{
+A data frame with 100,000 rows and 7 variables:
 \describe{
   \item{L}{total aggregate loss of a portfolio consisting
            of three homogeneous sub-portfolios L1, L2 and L3}
@@ -14,16 +15,16 @@
   \item{H1}{(conditional) default probability of sub-portfolio 1}
   \item{H2}{(conditional) default probability of sub-portfolio 2}
   \item{H3}{(conditional) default probability of sub-portfolio 3}
-}}
+}
+}
 \source{
 For a detailed case study of the credit data set using \code{SWIM} see \cr
-        \insertRef{Pesenti2020SSRN}{SWIM}.
+        \insertRef{Pesenti2020SSRN}{SWIM}
 }
 \usage{
 credit_data
 }
 \description{
-A dataset containing total aggregate losses from three sub-
-   portfolios, generated through a binomial credit model.
+A dataset containing total aggregate losses from three sub-portfolios, generated through a binomial credit model.
 }
 \keyword{datasets}

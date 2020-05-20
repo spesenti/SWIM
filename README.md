@@ -3,48 +3,53 @@
 
 # SWIM - A Package for Sensitivity Analysis
 
+[![Travis-CI Build
+Status](https://travis-ci.org/spesenti/SWIM.svg?branch=master)](https://travis-ci.org/spesenti/SWIM)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/SWIM)](https://cran.r-project.org/package=SWIM)
+[![downloads](https://cranlogs.r-pkg.org/badges/grand-total/SWIM)](https://cran.r-project.org/package=SWIM)
+
 The SWIM package provides weights on simulated scenarios from a
 stochastic model, such that stressed model components (random variables)
 fulfil given probabilistic constraints (e.g. specified values for risk
 measures), under the new scenario weights. Scenario weights are selected
 by constrained minimisation of the relative entropy to the baseline
 model. The SWIM package is based on the paper Pesenti S.M, Millossovich
-P., Tsanakas A. (2019) “Reverse Sensitivity Testing: What does it take
-to break the model”,
-[doi:10.1016/j.ejor.2018.10.003](https://doi.org/10.1016/j.ejor.2018.10.003).
+P., Tsanakas A. (2019) [“Reverse Sensitivity Testing: What does it take
+to break the model”](https://openaccess.city.ac.uk/id/eprint/18896/).
+
+## Vignette
+
+The Vignette of the SWIM package is available in html format
+(<https://utstat.toronto.edu/pesenti/SWIMVignette/>) and as
+pdf(<https://openaccess.city.ac.uk/id/eprint/23473/>).
 
 ## Installation
 
-The SWIM package can be install from
+The SWIM package can be installed from
 [CRAN](https://CRAN.R-project.org/package=SWIM) :
 
 > <https://CRAN.R-project.org/package=SWIM>;
 
-alternatively from [GitHub](https://github.com/spesenti/SWIM) in R
-studio:
+alternatively from [GitHub](https://github.com/spesenti/SWIM):
 
 > <https://github.com/spesenti/SWIM>
-
-``` r}
-install.packages("spesenti/SWIM")
-```
 
 ## Scope of the SWIM package
 
 The SWIM package provides sensitivity analysis tools for stressing model
 components (random variables). Implemented stresses are:
 
-| R functions            | Stress                                |
-| ---------------------- | ------------------------------------- |
-| `stress()`             | A wrapper for the `stress_` functions |
-| `stress_VaR()`         | VaR risk measure, a quantile          |
-| `stress_VaR()`         | VaR risk measure, a quantile          |
-| `stress_VaR_ES()`      | VaR and ES risk measures              |
-| `stress_mean()`        | means                                 |
-| `stress_mean_sd()`     | means and standard deviations         |
-| `stress_mean_moment()` | moments, functions of moments         |
-| `stress_prob()`        | probabilities of intervals            |
-| `stress_user()`        | user defined scenario weights         |
+| R functions        | Stress                                |
+| ------------------ | ------------------------------------- |
+| `stress()`         | A wrapper for the `stress_` functions |
+| `stress_VaR()`     | VaR risk measure, a quantile          |
+| `stress_VaR()`     | VaR risk measure, a quantile          |
+| `stress_VaR_ES()`  | VaR and ES risk measures              |
+| `stress_mean()`    | means                                 |
+| `stress_mean_sd()` | means and standard deviations         |
+| `stress_moment()`  | moments, functions of moments         |
+| `stress_prob()`    | probabilities of intervals            |
+| `stress_user()`    | user defined scenario weights         |
 
 Implemented functions allow to graphically display the change in the
 probability distributions under different stresses and the baseline
@@ -120,8 +125,9 @@ Visual display of the change of empirical distribution functions of the
 portfolio loss Y from the baseline to the two stressed models.
 
 ``` r
-plot_cdf(object = rev.stress, xCol = , base = TRUE)
-#> Warning: Ignoring unknown aesthetics: n
+plot_cdf(object = rev.stress, xCol = 1, base = TRUE)
+#> Warning: Computation failed in `stat_ecdf()`:
+#> there is no package called 'spatstat'
 ```
 
 <img src="man/figures/README-plot-cdf-1.png" width="100%" />
@@ -165,7 +171,7 @@ Sensitivity to all sub-portfolios, (Xi + Xj), i,j = 1, …, 6:
 ``` r
  # sub-portfolios
 f <- rep(list(function(x)x[1] + x[2]), 10)
-k <- list(c(2,3), c(2,4), c(2,5), c(2,6), c(3,4), c(3,5), c(3,6), c(4,5), c(4,6), c(5,6))
+k <- list(c(2, 3), c(2, 4), c(2, 5), c(2, 6), c(3, 4), c(3, 5), c(3, 6), c(4, 5), c(4, 6), c(5, 6))
 importance_rank(rev.stress, xCol = NULL, wCol = 1, type = "Gamma", f = f, k = k)
 #>     stress  type f1 f2 f3 f4 f5 f6 f7 f8 f9 f10
 #> 1 stress 1 Gamma  7  6  3  1 10  9  5  8  4   2
@@ -189,7 +195,8 @@ heavier tail.
 
 ``` r
 plot_cdf(object = rev.stress, xCol = 5, base = TRUE)
-#> Warning: Ignoring unknown aesthetics: n
+#> Warning: Computation failed in `stat_ecdf()`:
+#> there is no package called 'spatstat'
 ```
 
 <img src="man/figures/README-plot-cdf-input-1.png" width="100%" />

@@ -1,0 +1,734 @@
+---
+title: Scenario Weights for Importance Measurement (**SWIM**) -- an **R** package for sensitivity
+  analysis
+author: Silvana M. Pesenti^[Correspondence to Silvana Pesenti, Department of Statistical Sciences, University of Toronto, Canada. silvana.pesenti@utoronto.ca] ^2^, Alberto Bettini^3^, Pietro
+  Millossovich^4,5^, Andreas Tsanakas^5^
+output:
+    bookdown::html_document2
+vignette: >
+  %\VignetteIndexEntry{Scenario Weights for Importance Measurement} 
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+date: |
+  | ^2^University of Toronto, ^3^Assicurazioni Generali S.p.A, ^4^DEAMS, University of Trieste, ^5^Cass Business School, City, University of London
+  |
+  | 10. January 2020 
+bibliography: bibliography.bib
+documentclass: article
+github-repo: spesenti/SWIMvignette
+link-citations: yes
+site: bookdown::bookdown_site
+biblio-style: apalike
+abstract: 'The **SWIM** package implements a flexible sensitivity analysis framework,
+  based primarily on results and tools developed by @Pesenti2019. **SWIM** provides a
+  stressed version of a stochastic model, subject to model components (random variables)
+  fulfilling given probabilistic constraints (stresses). Possible stresses can be applied
+  on moments, probabilities of given events, and risk measures such as Value-at-Risk
+  and Expected Shortfall. **SWIM** operates upon a single set of simulated scenarios from
+  a stochastic model, returning scenario weights, which encode the required stress
+  and allow monitoring the impact of the stress on all model components. The scenario
+  weights are calculated to minimise the relative entropy with respect to the baseline
+  model, subject to the stress applied. As well as calculating scenario weights, the package provides tools for the analysis of stressed models, including plotting facilities and evaluation of sensitivity measures. **SWIM** does not require additional evaluations
+  of the simulation model or explicit knowledge of its underlying statistical and
+  functional relations; hence it is suitable for the analysis of black box models. The capabilities of **SWIM** are demonstrated through a case study of a credit portfolio model.'
+---
+
+
+
+
+# Introduction
+``` {r, setup, echo=FALSE, cache=FALSE}
+options(digits = 2) # auto round to 2 decimals when printed
+```
+
+## Background and contribution
+
+Complex quantitative models are used extensively in actuarial and financial risk management applications, as well as in wider fields such as environmental risk modelling [@Tsanakas2016b; @Borgonovo2016; @Pesenti2019]. The complexity of such models (high dimensionality of inputs; non-linear relationships)  motivates the performance of sensitivity analyses, with the aim of providing insight into the ways that model inputs interact and impact upon the model output. 
+
+
+When model inputs are subject to uncertainty, *global* sensitivity methods are often used, considering the full space of (randomly generated) multivariate scenarios, which represent possible configurations of the model input vector. The particular task of ranking the importance of different model inputs leads to the use of sensitivity measures, which assign a score to each model input. A rich literature on global sensitivity analysis exists, with variance decomposition methods being particularly prominent; see @Saltelli2008 and @Borgonovo2016 for wide-ranging reviews.  The **R** package **sensitivity** [@Rsensitivity] implements a wide range of sensitivity analysis approaches and measures. 
+
+
+
+
+We introduce an alternative approach to sensitivity analysis called *Scenario Weights for Importance Measurement* (**SWIM**) and present the **R** package implementing it [@PesentiR]. The aim of this paper is to provide an accessible introduction to the concepts underlying **SWIM** and a vignette demonstrating how the package is used. **SWIM** quantifies how distorting a particular model component (which could be a model input, output, or an intermediate quantity) impacts all other model components. The **SWIM** approach can be summarised as follows:
+
+    
+1. The starting point is a table of simulated scenarios, each column containing realisations of a different model component. This table forms the *baseline model* as well as the dataset on which the **SWIM** bases its calculations.     
+
+2. A *stress* is defined as a particular modification of a model component (or group of components). This could relate to a change in moments, probabilities of events of interest, or risk measures, such as Value-at-Risk or Expected Shortfall (e.g. @Mcneil2015B).
+
+3. **SWIM** calculates a set of *scenario weights*, acting upon the simulated scenarios and thus modifying the relative probabilities of scenarios occurring. Scenario weights are derived such that the defined stress on model components is fulfilled, while keeping the distortion to the baseline model to a minimum, as quantified by the Kullback-Leibler divergence (relative entropy).
+
+4. Given the calculated scenario weights, the impact of the stress on the distributions of all model components is worked out and sensitivity measures, useful for ranking model components, are evaluated. 
+
+A key benefit of **SWIM** are that it provides a sensitivity analysis framework that is economical both computationally and in terms of the information needed to perform the analysis. Specifically, sensitivity analysis is performed using only one set of simulated scenarios. No further simulations are needed, thus eliminating the need for repeated evaluation of the model, which could be numerically expensive. Furthermore, the user of **SWIM** needs to know neither the explicit form of the joint distribution of model components nor the exact form of functional relations between them. Hence, **SWIM** is appropriate for the analysis of *black box* models, thus having a wide scope of applications. 
+
+The **SWIM** approach is largely based on @Pesenti2019 and uses theoretical results on risk measures and sensitivity measures developed in that paper. An early sensitivity analysis approach based on scenario weighting was proposed by @Beckman1987. The Kullback-Leibler divergence has been used extensively in the financial risk management literature -- papers that are conceptually close to **SWIM** include @Weber2007; @Breuer2013; and @Cambou2017. Some foundational results related to the minimisation of the Kullback-Leibler divergence are provided in @Csiszar1975dAP.
+
+## Installation
+
+The **SWIM** package can be installed from [CRAN](https://CRAN.R-project.org/package=SWIM) or through [GitHub](https://github.com/spesenti/SWIM): 
+
+``` r}
+# directly from CRAN
+install.packages("SWIM")
+# and the development version from GitHub 
+devtools::install_github("spesenti/SWIM")
+```
+
+## Structure of the paper
+
+Section \@ref(Sec:Intro) provides an introduction to **SWIM**, illustrating key concepts and basic functionalities of the package on a simple example. Section 
+\@ref(Sec:Scope) contains technical background on the optimisations that underlay the **SWIM** package implementation. Furthermore, Section \@ref(Sec:Scope) includes a brief reference guide, providing an overview of implemented **R** functions, objects, and graphical/analysis tools.  Finally, a detailed case study of a credit risk portfolio is presented in Section \@ref(Sec:CreditModel). Through this case study, advanced  capabilities of **SWIM** for sensitivity analysis are demonstrated.
+
+
+# What is **SWIM**? {#Sec:Intro}
+
+```{r wrap-hook, echo = FALSE}
+library(knitr)
+hook_error = knit_hooks$get('error')
+knit_hooks$set(error = function(x, options) {
+  # this hook is used only when the linewidth option is not NULL
+  if (!is.null(n <- options$linewidth)) {
+    x = knitr:::split_lines(x)
+    # any lines wider than n should be wrapped
+    if (any(nchar(x) > n)) x = strwrap(x, width = n)
+    x = paste(x, collapse = '\n')
+  }
+  hook_error(x, options)
+})
+```
+
+
+
+## Sensitivity testing and scenario weights
+
+The purpose of **SWIM** is to enable sensitivity analysis of models implemented in a Monte Carlo simulation framework, by distorting (*stressing*) some of the models' components and monitoring the resulting impact on quantities of interest.
+To clarify this idea and explain how **SWIM** works, we first define the terms used. By a *model*, we mean a set of $n$ (typically simulated) realisations from a vector of random variables $(X_1,\dots,X_d)$, along with *scenario weights* $W$ assigned to individual realisations, as shown in the table below. Hence each of of the columns 1 to $d$ corresponds to a random variable, called a *model component*, while each row corresponds to a *scenario*, that is, a state of the world.
+
+| $X_1$   	| $X_2$ 	    | $\dots$ 	| $X_d$ 	   | $W$ 	|
+|:--------:	|:----:      |:------:  |:-----:    |:-------------:	|
+| $x_{11}$ 	|$x_{21}$    | $\dots$  | $x_{d1}$  | $w_1$            	|
+| $x_{12}$ 	|$x_{22}$    | $\dots$  | $x_{d2}$  | $w_2$            	|
+| $\vdots$  |$\vdots$    | $\ddots$ | $\vdots$  | $\vdots$           |
+| $x_{1n}$  | $x_{2n}$   | $\dots$  | $x_{dn}$  | $w_n$             |
+Table: (\#tab:SWIMframework) Illustration of the **SWIM** framework, that is the baseline model, the stressed model and the scenario weights.  
+
+Each scenario has a *scenario weight*, shown in the last column, such that, scenario $i$ has probability $\frac{w_i}{n}$ of occurring. Scenario weights are always greater or equal than zero and have an average of 1. When all scenario weights are equal to 1, such that the probability of each scenario is $\frac 1 n$ (the standard Monte Carlo framework), we call the model a *baseline model* -- consequently weights of a baseline model will never be explicitly mentioned. When scenario weights are not identically equal to 1, such that some scenarios are more weighted than others, we say that we have a *stressed model*. 
+
+The scenario weights make the joint distribution of model components under the stressed model  different, compared to the baseline model. For example, under the baseline model, the expected value of $X_1$ and the cumulative distribution function of $X_1$, at threshold $t$, are respectively given by:
+
+$$
+E(X_1)=\frac 1  n \sum_{i=1}^nx_{1i},\quad F_{X_1}(t)= P(X_1\leq t)=\frac 1 n \sum_{i=1}^n \mathbf 1 _{x_{1i}\leq t},
+$$
+
+where $\mathbf 1 _{x_{1i}\leq t}=1$ if $x_{1i}\leq t$ and $0$ otherwise. For a stressed model with scenario weights $W$, the expected value $E^W$ and cumulative distribution function $F^W$ become:
+
+$$
+E^W(X_1)=\frac 1  n \sum_{i=1}^n w_i x_{1i},\quad F_{X_1}^W(t)=P^W(X_1\leq t)=\frac 1 n \sum_{i=1}^n w_i \mathbf 1 _{x_{1i}\leq t}.
+$$
+
+Similar expressions can be derived for more involved quantities, such as higher (joint) moments and quantiles. 
+
+The logic of stressing a model with **SWIM** then proceeds as follows. An analyst or modeller is  supplied with a baseline model, in the form of a matrix of equiprobable simulated scenarios of model components. The modeller wants to investigate the impact of a change in the distribution of, say, $X_1$. To this effect, she chooses a *stress* on the distribution of $X_i$, for example requiring that $E^W(X_1)=m$; we then say that she is *stressing* $X_1$ and, by extension, the model. Subsequently, **SWIM** calculates the scenario weights such that the stress is fulfilled and the distortion to the baseline model induced by the stress is as small as possible; specifically the Kullback-Leibler divergence (or relative entropy) between the baseline and stressed models is minimised. (See Section \@ref(Rfunctions) for more detail on the different types of possible stresses and the corresponding optimisation problems). Once scenario weights are obtained, they can be used to determine the stressed distribution of any model component or function of model components. For example, for scenario weights $W$ obtained through a stress on $X_1$, we may calculate
+
+$$
+E^W(X_2)=\frac 1  n\sum_{i=1}^n w_i x_{2i},\quad E^W(X_1^2+X_2^2)=\frac 1  n \sum_{i=1}^n w_i \left(x_{1i}^2+ x_{2i}^2 \right).
+$$
+
+Through this process, the modeller can monitor the impact of the stress on $X_1$ on any other random variable of interest. It is notable that this approach does not necessitate generating new simulations from a stochastic model. As the **SWIM** approach requires a single set of simulated scenarios (the baseline model) it offers a clear computational benefit. 
+
+## An introductory example
+Here, through an example, we illustrate the basic concepts and usage of **SWIM** for sensitivity analysis. More advanced usage of **SWIM** and options for constructing stresses are demonstrated in Sections \@ref(Sec:Scope) and \@ref(Sec:CreditModel).
+We consider a simple portfolio model, with the portfolio loss defined by $Y=Z_1+Z_2+Z_3$. The random variables $Z_1,Z_2,Z_3$ represent normally distributed losses, with $Z_1\sim N(100,40^2)$, $Z_2\sim Z_3\sim N(100,20^2)$. $Z_1$ and $Z_2$ are correlated, while $Z_3$ is independent of $(Z_1,Z_2)$.  Our purpose in this example is to investigate how a stress on the loss $Z_1$ impacts on the overall portfolio loss $Y$.
+First we derive simulated data from the random vector $(Z_1,Z_2,Z_3,Y)$, forming our baseline model.
+
+``` {r, example1_sim_data, include = TRUE}
+set.seed(0)
+# number of simulated scenarios
+n.sim <- 10 ^ 5
+# correlation between Z1 and Z2
+r <- 0.5
+# simulation of Z1  and Z2
+# constructed as a combination of independent standard normals U1, U2
+U1 <- rnorm(n.sim)
+U2 <- rnorm(n.sim)
+Z1 <- 100 + 40 * U1
+Z2 <- 100 + 20 * (r * U1 + sqrt(1 - r ^ 2) * U2)
+# simulation of Z3
+Z3 <- rnorm(n.sim, 100, 20)
+# portfolio loss Y
+Y <- Z1 + Z2 + Z3
+# data of baseline model
+dat <- data.frame(Z1, Z2, Z3, Y)
+```
+
+
+Now we introduce a stress to our baseline model. For our first stress, we require that the mean of $Z_1$ is increased from 100 to 110. This is done using the `stress` function, which generates as output the **SWIM** object `str.mean`. This object stores the stressed model, i.e. the realisations of the model components and the scenario weights. In the function call, the argument `k = 1` indicates that the stress is applied on the first column of `dat`, that is, on the realisations of the random variable $Z_1$.
+
+``` {r, example1_first_stress, echo = -3, warning = FALSE, message = FALSE}
+library(SWIM)
+str.mean <- stress(type = "mean", x = dat, k = 1, new_means = 110)
+options(digits = 2)
+summary(str.mean, base = TRUE)
+```
+
+The `summary` function, applied to the **SWIM** object `str.mean`, shows how the distributional characteristics of all random variables change from the baseline to the stressed model. In particular, we see that the mean of $Z_1$ changes to its required value, while the mean of $Y$ also increases. Furthermore there is a small impact on $Z_2$, due to its positive correlation to $Z_1$.
+
+
+
+Beyond considering the standard statistics evaluated via the `summary` function, stressed probability distributions can be plotted. In Figure \@ref(fig:example1-cdfs-mean) we show the impact of the stress on the cumulative distribution functions (cdf) of $Z_1$ and $Y$. It is seen how the stressed cdfs are lower than the original (baseline) ones. Loosely speaking, this demonstrates that the stress has increased (in a stochastic sense) both random variables  $Z_1$ and $Y$. While the stress was on $Z_1$, the impact on the distribution of the portfolio $Y$ is clearly visible.
+
+``` {r, example1-cdfs-mean, warning = FALSE, message = FALSE, fig.show='hold', out.width = '50%', fig.cap = "Baseline and stressed empirical distribution functions of model components  $Z_1$ (left) and $Y$ (right), subject to a stress on the mean of $Z_1$."}
+# refer to variable of interest by name...
+plot_cdf(str.mean, xCol = "Z1", base = TRUE)
+# ... or column number
+plot_cdf(str.mean, xCol = 4, base = TRUE)
+```
+
+The scenario weights, given their central role, can be extracted from a **SWIM** object. In Figure \@ref(fig:example1-weights-mean), the scenario weights from `str.mean` are plotted against realisations from $Z_1$ and $Y$ respectively. It is seen how the weights are increasing in the realisations from $Z_1$. This is a consequence of the weights' derivation via a stress on the model component $Z_1$. The increasingness shows that those scenarios for which $Z_1$ is largest are assigned a higher weight. The relation between scenario weights and $Y$ is still increasing (reflecting that high outcomes of $Y$ tend to receive higher weights), but no longer deterministic (showing that $Y$ is not completely driven by changes in $Z_1$).
+
+
+``` {r, example1-weights-mean, warning = FALSE, message = FALSE, fig.show='hold', out.width = '50%',fig.cap = "Scenario weights against observations of model components  $Z_1$ (left) and $Y$ (right), subject to a stress on the mean of $Z_1$."}
+# extract weights from stressed model
+w.mean <- get_weights(str.mean)
+plot(Z1[1:5000], w.mean[1:5000], pch = 20, xlab = "Z1", ylab = "scenario weights")
+plot(Y[1:5000], w.mean[1:5000], pch = 20, xlab = "Y", ylab = "scenario weights")
+```
+
+
+The stress to the mean of $Z_1$ did not impact the volatility of either $Z_1$ or $Y$, as can be seen by the practically unchanged standard deviations in the output of `summary(str.mean)`. Thus, we introduce an alternative stress that keeps the mean of $Z_1$ fixed at 100, but increases its standard deviation from 40 to 50. This new stress is seen to impact the standard deviation of the portfolio loss $Y$.
+
+``` {r, example1_second_stress, cache = TRUE, echo = -2, warning = FALSE, message = FALSE}
+str.sd <- stress(type = "mean sd", x = dat, k = 1, new_means = 100, new_sd = 50)
+options(digits = 2)
+summary(str.sd, base = FALSE)
+```
+
+Furthermore, in Figure \@ref(fig:example1-cdfs-sd), we compare the baseline and stressed cdfs of $Z_1$ and $Y$, under the new stress on $Z_1$. The crossing of probability distribution reflects the increase in volatility.
+
+
+``` {r, example1-cdfs-sd, cache = FALSE, warning = FALSE, message = FALSE, fig.show='hold', out.width = '50%', fig.cap = "Baseline and stressed empirical distribution functions of model components  $Z_1$ (left) and $Y$ (right), subject to a stress on the standard deviation of $Z_1$."}
+plot_cdf(str.sd, xCol = "Z1", base = TRUE)
+plot_cdf(str.sd, xCol = 4, base = TRUE)
+```
+
+The different way in which a stress on the standard deviation of $Z_1$ impacts on the model, compared to a stress on the mean, is reflected by the scenario weights. Figure \@ref(fig:example1-weights-sd) shows the pattern of the scenario weights and how, when stressing standard deviations, higher weight is placed on scenarios where $Z_1$ is extreme, either much lower or much higher than its mean of 100.
+
+``` {r, example1-weights-sd, cache = TRUE, warning = FALSE, message = FALSE, fig.show='hold', out.width = '50%',fig.cap = "Scenario weights against observations of model components  $Z_1$ (left) and $Y$ (right), subject to a stress on the standard deviation of $Z_1$."}
+w.sd <- get_weights(str.sd)
+plot(Z1[1:5000], w.sd[1:5000], pch = 20, xlab = "Z1", ylab = "scenario weights")
+plot(Y[1:5000], w.sd[1:5000], pch = 20, xlab = "Y", ylab = "scenario weights")
+```
+
+
+Finally we ought to note that not all stresses that one may wish to apply are feasible. Assume for example that we want to increase the mean of $Z_1$ from 100 to 300, which exceeds the maximum realisation of $Z_1$ in the baseline model. Then, clearly, no set of scenario weights can be found that produce a stress that yields the required mean for $Z_1$; consequently an error message is produced.
+
+
+
+```{r, example1_third_stress, cache = FALSE, error=TRUE, linewidth = 80}
+stress(type = "mean", x = dat, k = 1, new_means = 300)
+max(Z1)
+```
+
+
+# Scope of the **SWIM** package {#Sec:Scope}
+
+
+## Stressing a model {#Rfunctions}
+
+We briefly introduce key concepts, using slightly more technical language compared to Section \@ref(Sec:Intro). A *model* consists of a random vector of *model components* $\mathbf X = (X_1,\dots,X_d)$ and a probability measure; we denote the probability measure of a *baseline model* by $P$ and that of a *stressed model* by $P^W$, where $W= \frac{dP^W}{dP}$, satisfying $E(W)=1$ and $W\geq 0$, is a Radon-Nikodym derivative. In a Monte Carlo simulation context, the probability space is discrete with $n$ states $\Omega=\{\omega_1,\dots,\omega_n\}$, each of which corresponds to a simulated scenario. To reconcile this formulation with the notation of Section \@ref(Sec:Intro), we denote, for $i=1, \dots, n,~j=1,\dots, d$, the realisations $X_j(\omega_i):= x_{ji}$ and $W(\omega_i):=w_i$; the latter are the *scenario weights*. Under the baseline model, each scenario has the same probability $P(\omega_i)=1/n$, while under a stressed model it is $P^W(\omega_i)=W(\omega_i)/n=w_i/n$.
+
+The stressed model thus arises from a change of measure from $P$ to $P^W$, which entails the application of scenario weights $w_1,\dots, w_n$ on individual simulations. **SWIM** calculates scenario weights such that model components fulfil specific stresses, while the distortion to the baseline model is as small as possible when measured by the Kullback-Leibler divergence (or relative entropy). Mathematically, a stressed model is derived by solving
+
+\begin{equation} 
+\min_{ W } ~E(W \log (W)), \quad
+\text{subject to constraints on } \mathbf X \text{ under } P^W.
+(\#eq:optimisation)
+\end{equation}
+In what follows, we denote by a superscript $W$ quantities of interest under the stressed model, such as $F^W, ~ E^W$ for the probability distribution and expectation under the stressed model, respectively. We refer to @Pesenti2019 and references therein for further mathematical details and derivations of solutions to \@ref(eq:optimisation).
+
+
+Table \@ref(tab:Rfunstress) provides a collection of all implemented types of stresses in the **SWIM** package. The precise constraints of \@ref(eq:optimisation) are explained below.
+
+| R function         | Stress                                | `type`  |  Reference  
+| :------------------| :------------------------------------ |:--------|:------------------ 
+| `stress`         | wrapper for the `stress_type` functions   |      | Sec. \@ref(Rstress)
+| `stress_user`    | user defined scenario weights         |`user`   | Sec. \@ref(Sec:User)
+| `stress_prob`    | probabilities of disjoint intervals    |`prob`   | Eq. \@ref(eq:optimisationprob)
+| `stress_mean`    | means                                 |`mean`   | Eq. \@ref(eq:optimisationmean)
+| `stress_mean_sd` | means and standard deviations         |`mean sd`| Eq. \@ref(eq:optimisationmeansd)
+| `stress_moment`  | moments (of functions) |`moment` | Eq. \@ref(eq:optimisationmoment)
+| `stress_VaR`     | VaR risk measure (quantile)           |`VaR`    | Eq. \@ref(eq:optimisationVaR)
+| `stress_VaR_ES`  | VaR and ES risk measures              |`VaR ES` | Eq. \@ref(eq:optimisationVaRES)
+Table: (\#tab:Rfunstress) Implemented types of stresses in **SWIM**.
+
+The solutions to the optimisations \@ref(eq:optimisationprob) and \@ref(eq:optimisationVaR) are worked out fully analytically [@Pesenti2019], whereas problems \@ref(eq:optimisationmean), \@ref(eq:optimisationmeansd), \@ref(eq:optimisationmoment) and \@ref(eq:optimisationVaRES) require some root-finding. Specifically, problems \@ref(eq:optimisationmean), \@ref(eq:optimisationmeansd) and \@ref(eq:optimisationmoment) rely on the package **nleqslv**, whereas \@ref(eq:optimisationVaRES) uses the `uniroot` function.
+
+
+### The `stress` function and the **SWIM** object {#Rstress}
+The `stress` function is a wrapper for the `stress_type` functions, where `stress(type = "type", )` and `stress_type` are equivalent. The `stress` function solves optimisation \@ref(eq:optimisation) for constraints specified through `type` and returns a `SWIM` object, that is, a list including the elements shown in Table \@ref(tab:SWIMobject):
+
+| R output       | Description
+| :---           | :---       
+| `x`            | realisations of the model  
+| `new_weights`  | scenario weights 
+| `type`         | type of stress 
+| `specs`        | details about the stress 
+Table: (\#tab:SWIMobject) The **SWIM** object, returned by any `stress` function. 
+
+The data frame containing the realisations of the baseline model, `x` in the above table, can be extracted from a **SWIM** object using `get_data`. Similarly, `get_weights` and `get_weightsfun` provide the scenario weights, respectively the functions that, when applied to `x`, generate the scenario weights. The details of the applied stress can be obtained using `get_specs`.
+
+### Stressing disjoint probability intervals 
+
+Stressing probabilities of disjoint intervals allows defining stresses by altering the probabilities of events pertaining to a model component. The scenario weights are calculated via `stress_prob`, or equivalently `stress(type = "prob", )`, and the disjoint intervals are specified through the `lower` and `upper` arguments, the endpoints of the intervals. Specifically, 
+
+
+> `stress_prob` solves \@ref(eq:optimisation) with the constraints
+\begin{equation} 
+P^W(X_j \in B_k) = \alpha_k, ~k = 1, \ldots, K, (\#eq:optimisationprob)
+\end{equation}
+for disjoint intervals $B_1, \ldots, B_K$ with $P(X_j \in B_k) >0$ for all $k = 1, \ldots, K$, and $\alpha_1, \ldots, \alpha_K > 0$ such that $\alpha_1 + \ldots  + \alpha_K  \leq 1$ and a model component $X_j$.
+
+### Stressing moments 
+
+The functions `stress_mean`, `stress_mean_sd` and `stress_moment` provide stressed models with moment constraints. The function `stress_mean` returns a stressed model that fulfils constraints on the first moment of model components. Specifically, 
+
+>`stress_mean` solves \@ref(eq:optimisation) with the constraints
+\begin{equation} 
+E^W(X_j) = m_j, ~j \in J, (\#eq:optimisationmean)
+\end{equation}
+for $m_j, ~ j \in J$, where $J$ is a subset of $\{1, \ldots, d\}$.
+
+The arguments $m_j$ are specified in the `stress_mean` function through the argument `new_means`. The `stress_mean_sd` function allows to stress simultaneously the mean and the standard deviation of model components. Specifically,   
+
+>`stress_mean_sd` solves \@ref(eq:optimisation) with the constraints
+\begin{equation} 
+E^W(X_j) = m_j \text{ and Var}^W(X_j) = s_j^2 , ~j \in J, (\#eq:optimisationmeansd)
+\end{equation}
+for $m_j, s_j, ~ j \in J$, where $J$ is a subset of $\{1, \ldots, d\}$.
+
+The arguments $m_j, s_j$ are defined in the `stress_mean_sd` function by the arguments `new_means` and `new_sd` respectively. The functions `stress_mean` and `stress_mean_sd` are special cases of the general `stress_moment` function, which allows for stressed models with constraints on functions of the (joint) moments of model components. Specifically
+
+> For $k = 1, \ldots, K$, $J_k$ subsets of $\{1, \ldots, d\}$ and functions $f_k \colon \mathbb{R}^{|J_k|} \to \mathbb{R}$, `stress_moment` solves \@ref(eq:optimisation) with the constraints
+\begin{equation} 
+E^W(f_k(\mathbf X_{J_k}) ) = m_k, ~k = 1, \ldots, K, (\#eq:optimisationmoment)
+\end{equation}
+for $m_k, ~k=1, \dots,K$ and $\mathbf X_{J_k}$ the subvector of model components with indices in $J_k$.
+
+Note that `stress_moment` not only allows to define constraints on higher moments of model components, but also to construct constraints that apply to multiple model components simultaneously. For example, the stress $E^W(X_h X_l) =m_k$ is achieved by setting $f_k(x_h, x_l) = x_h x_l$ in \@ref(eq:optimisationmoment) above. The functions `stress_mean`, `stress_mean_sd` and `stress_moment` can be applied to multiple model components and are the only `stress` functions that have scenario weights calculated via numerical optimisation, using the [**nleqslv**](https://CRAN.R-project.org/package=nleqslv) package. Thus, depending on the choice of constraints, existence or uniqueness of a stressed model is not guaranteed. 
+
+
+### Stressing risk measures {#Sec:RiskMeasures}
+
+The functions `stress_VaR` and `stress_VaR_ES` provide stressed models, under which a model component fulfils a stress on the risk measures Value-at-Risk ($\text{VaR}$) and/or Expected Shortfall ($\text{ES}$). The $\text{VaR}$ at level $0 < \alpha < 1$ of a random variable $Z$ with distribution $F$ is defined as its left-inverse evaluated at $\alpha$, that is 
+$$\text{VaR}_\alpha(Z) = F^{-1}(\alpha) = \inf\{ y \in \mathbb{R} ~|~F(y) \geq \alpha\}.$$ 
+The $\text{ES}$ at level $0 < \alpha < 1$ of a random variable $Z$ is given by $$\text{ES}_\alpha(Z) =\frac{1}{1-\alpha}\int_\alpha^1 \text{VaR}_u(Z) \mathrm{d}u.$$ 
+The details of the constraints that `stress_VaR` and `stress_VaR_ES` solve, are as follows:
+
+> For $0< \alpha <1$ and $q, s$ such that $q < s$, `stress_VaR` solves \@ref(eq:optimisation) with the constraint
+\begin{equation} 
+\text{VaR}_{\alpha }^W(X_j) = q;  (\#eq:optimisationVaR)
+\end{equation}
+and `stress_VaR_ES` solves \@ref(eq:optimisation) with the constraints
+\begin{equation}                                                
+\text{VaR}_{\alpha }^W(X_j) = q \text{ and ES}_{\alpha }^W(X_j) = s.(\#eq:optimisationVaRES)
+\end{equation}
+
+Note that, since **SWIM** works with discrete distributions, the exact required VaR may not be achievable. In that case, `stress_VaR` will return scenario weights inducing the largest quantile in the dataset smaller or equal to the required VaR (i.e. $q$); this guarantees that $P^W(X_j\leq q)=\alpha$.
+
+### User defined scenario weights {#Sec:User}
+
+The option `type = "user"` allows to generate a **SWIM** object with  scenario weights defined by a user. The scenario weights can be provided directly via the `new_weights` argument or through a list of functions, `new_weightsfun`, that applied to the data `x` generates the scenario weights. 
+
+## Analysis of stressed models {#Sec:analysis}
+Table \@ref(tab:Ranalysis) provides a complete list of all implemented **R** functions in **SWIM** for analysing stressed models, which are described below in detail. 
+
+| R function          | Analysis of stressed models                                
+| :-------------------| :------------------------------------  
+| `summary`           |summary statistics   
+| `cdf`               |cumulative distribution function
+| `quantile_stressed` |quantile function
+| `VaR_stressed`      |VaR
+| `ES_stressed`       |ES 
+| `sensitivity`       |sensitivity measures 
+| `importance_rank`   |importance ranks    
+| `plot_cdf`          |plots cumulative distributions functions 
+| `plot_hist`         |plots histograms
+| `plot_sensitivity`  |plots sensitivity measures       
+Table: (\#tab:Ranalysis) Implemented **R** function in **SWIM** for analysing stressed models. 
+
+
+### Distributional comparison
+The **SWIM** package contains functions to compare the distribution of model components under different (stressed) models. The function `summary` is a method for an object of class **SWIM** and provides summary statistics of the baseline and stressed models. If the **SWIM** object contains more than one set of scenario weights, each corresponding to one stressed model, the `summary` function returns for each set of scenario weights a list, containing the elements shown in Table \@ref(tab:summary). 
+
+|R output        | Description
+| :---           | :---   
+|`mean`          |sample mean
+|`sd`            |sample standard deviation
+|`skewness`      |sample skewness
+|`ex kurtosis`   |sample excess kurtosis
+|`1st Qu.`       |$25%$ quantile
+|`Median`        |median, $50%$ quantile
+|`3rd Qu.`       |$75%$ quantile
+Table: (\#tab:summary) The output of the `summary` function applied to a **SWIM** object. 
+
+The empirical distribution function of model components under a stressed model^[Note that \textbf{R} functions implementing the empirical cdf or the quantile, `ecdf` and `quantile`, will not return the empirical distribution function or the quantile function under a stressed model.] can be calculated using the `cdf` function of the **SWIM** package, applied to a **SWIM** object. To calculate sample quantiles of stressed model components, the function `quantile_stressed` can be used. The function `VaR_stressed` and `ES_stressed` provide the stressed VaR and ES of model components, which is of particular interest for stressed models resulting from constraints on risk measures, see Section \@ref(Sec:RiskMeasures). (While `quantile_stressed` works very similarly to the base **R** function `quantile`, `VaR_stressed` provides better capabilities for comparing different models and model components.) 
+
+Implemented visualisation of distribution functions are `plot_cdf`, for plotting empirical distribution functions, and `plot_hist`, for plotting histograms of model components under different (stressed) models.
+
+
+### Sensitivity measures 
+Comparison of baseline and stressed models and how model components change under different models, is typically done via sensitivity measures. The **SWIM** packages contains the `sensitivity` function, which calculates sensitivity measures of stressed models and model components. The implemented sensitivity measures, summarised in the table below, are the *Wasserstein*, *Kolmogorov* and the *Gamma* sensitivity measures, see @Pesenti2016DM @Pesenti2019 @Emmer2015JR. 
+
+| **Metric**     |**Definition**         
+| :---           | :--- | :--- | 
+|Wasserstein   |$\int | F^W_X (x) - F_X(x)| dx$
+|Kolmogorov    |$\sup_x |F^W_X (x) - F_X(x)|$ 
+|Gamma         |$\frac{E^W(X) - E(X)}{c}$, for a normalisation $c$ 
+Table: (\#tab:sensitivity) Definition of the sensitivity measures implemented in **SWIM**.
+
+The Gamma sensitivity measure is normalised such that it takes values between -1 and 1, with higher positive (negative) values corresponding to a larger positive (negative) impact of the stress on the particular model component. The sensitivity measures can be plotted using `plot_sensitivity`. The function `importance_rank` returns the effective rank of model components according to the chosen sensitivity measure. 
+
+
+
+# Case study {#Sec:CreditModel}
+
+## A credit risk portfolio 
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+require(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=70),tidy=TRUE)
+```
+
+```{r, loading-packages, cache = FALSE, include = FALSE}
+  library(SWIM)
+  library(ggplot2)
+  library(ggpubr)
+```
+
+The credit model in this section is a conditionally binomial loan portfolio model including systematic and specific portfolio risk. We refer to the Appendix \@ref(AppendixCM) for details about the model and the generation of the simulated data. A key variable of interest is the total aggregate portfolio loss $L = L_1 + L_2 + L_3$, where $L_1, L_2, L_3$ are homogeneous subportfolios on a comparable scale (say, thousands of \$). The dataset contains 100,000 simulations of the portfolio $L$, the subportfolios $L_1, L_2, L_3$ as well as the random default probabilities within each subportfolio, $H_1, H_2, H_3$. These default probabilities represent the systematic risk *within* each subportfolio, while their dependence structure represents a systematic risk effect *between* the subportfolios. The simulated data of the credit risk portfolio are included in the **SWIM** package and can be accessed via `data("credit_data")`. A snippet of the dataset looks as follows:
+
+```{r, CM-data-head, echo = -2, cache = TRUE}
+data("credit_data")
+options(digits = 3)
+head(credit_data)
+``` 
+
+
+## Stressing the portfolio loss 
+
+In this section, following a reverse sensitivity approach, we study the effects that stresses on (the tail of) the aggregate portfolio loss $L$ have on the three subportfolios; thus assessing their comparative importance. First, we impose a $20\%$ increase on the VaR at level $90\%$ of the portfolio loss.  
+
+```{r, CM-stress-VaR, cache = FALSE, echo = TRUE, linewidth = 55}
+stress.credit <- stress(type = "VaR", x = credit_data, k = "L", alpha = 0.9, q_ratio = 1.2)
+```
+
+The $20\%$ increase was specified by setting the `q_ratio` argument to $1.2$ -- alternatively the argument `q` can be set to the actual value of the stressed VaR.
+
+Using the function `VaR_stressed`, we can quantify how tail quantiles of the aggregate portfolio loss change, when moving from the baseline to the stressed model. We observe that the increase in the VaR of the portfolio loss changes more broadly its tail quantiles; thus the stress on VaR also induces an increase in ES. The implemented functions `VaR_stressed` and `ES_stressed` calculate respectively VaR and ES; the argument `alpha` specifies the levels of VaR and ES, respectively, while the stressed model under which the risk measures are calculated can be chosen using `wCol` (by default equal to 1). 
+
+```{r, CM-stress-VaR-check-ES, cache = FALSE, linewidth = 70}
+VaR_stressed(object = stress.credit, alpha =  c(0.75, 0.9, 0.95, 0.99), xCol = "L", wCol = 1, base = TRUE)
+ES_stressed(object = stress.credit, alpha = 0.9, xCol = "L", wCol = 1, base = TRUE)
+```
+
+
+As a second stress, we consider, additionally to the $20\%$ increase in the $\text{VaR}_{0.9}$, an increase in $\text{ES}_{0.9}$ of the portfolio loss $L$. When stressing VaR and ES together via `stress_VaR_ES`, both VaR and ES need to be stressed at the same level, here `alpha = 0.9`. We observe that when stressing the VaR alone, ES increases to `r round(ES_stressed(object = stress.credit, alpha = 0.9, xCol = "L", base = TRUE)[1], 0)`. For the second stress we want a greater impact on ES, thus we require that the stressed ES be equal to 3500. This can be achieved by specifying the argument `s`, which is the stressed value of ES (rather than `s_ratio`, the proportional increase).
+
+
+```{r, CM-stress-VaR-ES, cache = FALSE, linewidth = 60}
+stress.credit <- stress(type = "VaR ES", x = stress.credit, k = "L", alpha = 0.9, q_ratio = 1.2, s = 3500)
+```
+
+When applying the `stress` function or one of its alternative versions to a **SWIM** object rather than to a data frame (via `x = stress.credit` in the example above), the result will be a new **SWIM** object with the new stress "appended" to existing stresses. This is convenient when large datasets are involved, as the `stress` function returns an object containing the original simulated data and the scenario weights. Note however, that this only works if the underlying data are exactly the same. 
+
+## Analysing stressed models
+
+The `summary` function provides a statistical summary of the stressed models. Choosing  `base = TRUE` compares the stressed models with the the baseline model.
+
+```{r, CM-summary, echo = -1, cache = FALSE}
+options(digits = 3)
+summary(stress.credit, base = TRUE)
+```
+Note that `stress 1` is the `summary` output corresponding to the $20\%$ increase in the VaR, while `stress 2` corresponds to the stress in both VaR and ES. The information on individual stresses can be recovered through the `get_specs` function, and the actual scenario weights using `get_weights`. Since the **SWIM** object `stress.credit` contains two stresses, the scenario weights that are returned by `get_weights` form a data frame consisting of two columns, corresponding to `stress 1` and to `stress 2`, respectively. 
+
+```{r, CM-specs, echo = -1, cache = FALSE}
+options(digits = 3)
+get_specs(stress.credit)
+```
+
+``` {r, credit-weights, warning = FALSE, cache = FALSE, message = FALSE, fig.show='hold', out.width = '50%',fig.cap = "Scenario weights against the portfolio loss $L$ for stressing VaR (left) and stressing both VaR and ES (right).", tidy = FALSE}
+# extract weights from SWIM object
+w.credit <- get_weights(stress.credit)
+# only plot a subset of the sceranio weights 
+grid <- seq(1, 100000, by = 50)
+plot(credit_data[grid, 1], w.credit[grid, 1], pch = 20, xlab = "L", 
+     ylab = "scenario weights")
+plot(credit_data[grid, 1], w.credit[grid, 2], pch = 20, xlab = "L", 
+     ylab = "scenario weights")
+```
+
+It is seen in Figure \@ref(fig:credit-weights) that the weights generated to stress VaR, and VaR and ES together, follow different patterns to the weights used to stress means and standard deviations, as shown in Section \@ref(Sec:Intro). Recall that **SWIM** calculates the scenario weights such that under the stressed model the given constraints are fulfilled. Thus, an increase in the VaR and/or ES of the portfolio loss $L$ results in large positive realisations of $L$ being assigned higher weight. On the other hand, when the standard deviation is stressed, scenario weights are calculated that inflate the probabilities of both large positive and negative values. 
+
+## Visualising stressed distributions
+The change in the distributions of the portfolio and subportfolio losses, when moving from the baseline to the stressed models, can be visualised through the functions `plot_hist` and `plot_cdf`. The following figure displays the histogram of the aggregate portfolio loss under the baseline and the two stressed models. It is seen how stressing VaR and ES has a higher impact on the right tail of $L$, compared to stressing VaR only. This is consistent with the tail-sensitive nature of the Expected Shortfall risk measure [@Mcneil2015B].
+
+```{r, CM-histL, cache = FALSE, fig.cap = "Histogram of the portfolio loss $L$ under the baseline and the two stressed models.", out.width = '80%', fig.align = 'center'}
+plot_hist(object = stress.credit, xCol = "L", base = TRUE)
+```
+
+The arguments `xCol` and `wCol` (with default to plot all stresses) define the columns of the data and the columns of the scenario weights, respectively, that are used for plotting. Next, we analyse the impact that stressing the aggregate loss $L$ has on the subportfolios $L_1,~ L_2~L_3$. Again, we use the function  `plot_hist` and `plot_cdf` for visual comparison, but this time placing the distribution plots and histograms of subportfolio losses along each other via the function `ggarrange` (from the package **ggpubr**). The plots obtained from `plot_hist` and `plot_cdf` can be further personalised when specifying the argument `displ = FALSE`, as then the graphical functions `plot_hist` and `plot_cdf` return data frames compatible with the package **ggplot2**. 
+
+
+```{r, CM-plot1, cache = FALSE, fig.cap = "Distribution functions and histograms of the subportfolios $L_1, L_2, L_3$ for the stresses on the VaR (stress 1) and on both the VaR and ES (stress 2) of the portfolio loss $L$.", out.width = '100%', fig.align = 'center', warning = FALSE}
+pL1.cdf <- plot_cdf(object = stress.credit, xCol = 2, wCol = "all", base = TRUE)
+pL2.cdf <- plot_cdf(object = stress.credit, xCol = 3, wCol = "all", base = TRUE)
+pL3.cdf <- plot_cdf(object = stress.credit, xCol = 4, wCol = "all", base = TRUE)
+
+pL1.hist <- plot_hist(object = stress.credit, xCol = 2, wCol = "all", base = TRUE)
+pL2.hist <- plot_hist(object = stress.credit, xCol = 3, wCol = "all", base = TRUE)
+pL3.hist <- plot_hist(object = stress.credit, xCol = 4, wCol = "all", base = TRUE)
+
+ggarrange(pL1.cdf, pL1.hist, pL2.cdf, pL2.hist, pL3.cdf, pL3.hist, ncol = 2, nrow = 3,
+          common.legend = TRUE)
+```
+
+It is seen from both the distribution plots and the histograms in Figures \@ref(fig:CM-histL) and \@ref(fig:CM-plot1) that the stresses have no substantial impact on $L_1$, while $L_2$ and $L_3$ are more affected, indicating a higher sensitivity. The higher impact on the tails of stress 2 (on both VaR and ES) is also visible. Sensitivity measures quantifying these effects are introduced in the following subsection.
+
+
+## Sensitivity measures
+
+The impact of the stressed models on the model components can be quantified through sensitivity measures. The function `sensitivity` includes the *Kolmogorov* distance, the *Wasserstein* distance, and the sensitivity measure *Gamma*; the choice of measure is by the argument `type`. We refer to Section \@ref(Sec:analysis) for the definitions of those sensitivity measures. The Kolmogorov distance is useful for comparing different stressed models. It is seen that `stress 2` produces a more substantial distortion to the baseline distribution of $L$ compared to `stress 1`. 
+
+```{r, CM-sensitivity0, cache = TRUE}
+sensitivity(object = stress.credit, xCol = 1, wCol = "all", type = "Kolmogorov")
+```
+
+We now rank the sensitivities of model components by the measure Gamma, for each stressed model. Consistently with what the distribution plots showed, $L_2$ is the most sensitive subportfolio, followed by $L_3$ and $L_1$. The respective default probabilities $H_1,H_2,H_3$ are similarly ranked. 
+
+```{r, CM-sensitivity1, cache = TRUE}
+sensitivity(object = stress.credit, xCol = c(2 : 7), wCol = "all", type = "Gamma")
+```
+
+Using the `sensitivity` function we can analyse whether the sensitivity of the joint subportfolio $L_1 + L_3$ exceeds the sensitivity of the (most sensitive) subportfolio $L_2$. This can be accomplished by specifying, through the argument `f`, a list of functions applicable to the columns `k` of the dataset. By setting `xCol = NULL` only the transformed data is considered. The sensitivity measure of functions of columns of the data is particularly useful when high dimensional models are considered, providing a way to compare the sensitivity of blocks of model components.
+
+```{r, CM-sensitivity2, cache = TRUE}
+sensitivity(object = stress.credit, type = "Gamma", f = sum, k = c(2, 4), wCol = 1, xCol = NULL)
+```
+
+We observe that the sensitivity of $L_1 + L_3$ is larger than the sensitivity to either $L_1$ and $L_3$, reflecting the positive dependence structure of the credit risk portfolio. Nonetheless, subportfolio $L_2$ has not only the largest sensitivity compared to $L_1$ and $L_3$ but also a higher sensitivity than the combined subportfolios $L_1 + L_3$. 
+
+
+The `importance_rank` function, having the same structure as the `sensitivity` function, returns the ranks of the sensitivity measures. This function is particularly useful when several risk factors are involved.
+
+```{r, CM-rank, cache = TRUE}
+importance_rank(object = stress.credit, xCol = c(2 : 7), wCol = 1, type = "Gamma")
+```
+
+
+## Constructing more advanced stresses
+### Sensitivity of default probabilities
+From the preceding analysis, it transpires that the subportfolios $L_2$ and $L_3$ are, in that order, most responsible for the stress in the portfolio loss, under both stresses considered. Furthermore, most of the sensitivity seems to be attributable to the systematic risk components $H_2$ and $H_3$, reflected by their high values of the Gamma measure. To investigate this, we perform another stress, resulting once again in a $20\%$ increase in $\text{VaR}(L)$, but this time fixing some elements of the distribution of $H_2$. Specifically, in addition to the $20\%$ increase in $\text{VaR}(L)$, we fix the mean and the $75\%$ quantile of $H_2$ to the same values as in the baseline model. This set of constraints is implemented via the function `stress_moment`.
+
+
+```{r, CM-stress-fixed-VaR, cache = TRUE, tidy = FALSE}
+# 90% VaR of L under the baseline model
+VaR.L <- quantile(x = credit_data[, "L"], prob = 0.9, type = 1) 
+# 75th quantile of H2 under the baseline model
+q.H2 <- quantile(x = credit_data[, "H2"], prob = 0.75, type = 1) 
+# columns to be stressed (L, H2, H2)
+k.stressH2 = list(1, 6, 6) 
+# functions to be applied to columns
+f.stressH2 <- list(
+                 # indicator function for L, for stress on VaR
+                 function(x)1 * (x <= VaR.L * 1.2), 
+                 # mean of H2
+                 function(x)x, 
+                 # indicator function for 75th quaantile of H2
+                 function(x)1 * (x <= q.H2)) 
+# new values for the 90% VaR of L, mean of H2, 75th quantile of H2
+m.stressH2 = c(0.9, mean(credit_data[, "H2"]), 0.75) 
+stress.credit <- stress_moment(x = stress.credit, f = f.stressH2, k = k.stressH2, 
+                               m = m.stressH2)
+```
+
+Using the `summary` function, we verify that the distribution of $H_2$ under the new stress has unchanged mean and 75^th^ quantile. Then we compare the sensitivities of the subportfolio losses under all three stresses applied. 
+
+```{r, summary-sens-H2, echo = -1, cache = TRUE}
+options(digits = 3)
+summary(stress.credit, wCol = 3, xCol = 6, base = TRUE)
+sensitivity(object = stress.credit, xCol = c(2:4), type = "Gamma")
+```
+
+It is seen that, by fixing part of the distribution of $H_2$, the importance ranking of the subportfolios changes, with $L_2$ now being significantly less sensitive than $L_3$. This confirms, in the credit risk model, the dominance of the systematic risk reflected in the randomness of default probabilities.
+
+### Stressing tails of subportfolios 
+Up to now, we have considered the impact of stressing the aggregate portfolio loss on subportfolios. Now, following a forward sensitivity approach, we consider the opposite situation: stressing the subportfolio losses and monitoring the impact on the aggregate portfolio loss $L$. First, we impose a stress requiring a simultaneous $20\%$ increase in the 90^th^ quantile of the losses in subportfolios $L_2$ and $L_3$. Note that the function `stress_VaR` (and `stress_VaR_ES`) allow to stress the VaR and/or the ES of only one model component. Thus, to induce a stress on the 90^th^ quantiles of $L_2$ and $L_3$, we use the function `stress_moments` and interpret the quantile constraints as moment constraints, via $E(1_{L_2 \leq \text{VaR}^W(L_2)})$ and $E(1_{L_3 \leq \text{VaR}^W(L_3)})$, respectively, where $\text{VaR}^W = \text{VaR} \cdot 1.2$ denotes the VaRs in the stressed model.
+
+
+```{r, CM-joint-stress-VaR, echo = -1, cache = TRUE, tidy = FALSE}
+options(digits = 3)
+# VaR of L2 and L3, respectively
+VaR.L2 <- quantile(x = credit_data[, "L2"], prob = 0.9, type = 1) 
+VaR.L3 <- quantile(x = credit_data[, "L3"], prob = 0.9, type = 1) 
+#stressing VaR of L2 and L3
+f.stress <- list(function(x)1 * (x <= VaR.L2 * 1.2), 
+                 function(x)1 * (x <= VaR.L3 * 1.2)) 
+stress.credit.L2L3 <- stress_moment(x = credit_data, f = f.stress, k = list(3, 4), 
+                                    m = c(0.9, 0.9))
+#impact on portfolio tail
+VaR_stressed(stress.credit.L2L3, alpha = c(0.75, 0.9, 0.95, 0.99), xCol = "L", 
+             base = TRUE)
+```
+
+It is seen how the stressing of subportfolios $L_2$ and $L_3$ has a substantial impact on the portfolio loss. Given the importance of dependence for the distribution of the aggregate loss of the portfolio, we strengthen this stress further, by additionally requiring that the frequency of joint high losses from $L_2$ and $L_3$ is increased. Specifically, we require the joint exceedance probability to be $P^W(L_2 > VaR^W(L_2),~ L_3 > VaR^W(L_3))  = 0.06$, which is almost doubling the corresponding probability in the last stressed model, which was equal to 0.0308. 
+
+
+```{r, CM-joint-stress-VaR-2, echo = TRUE, cache = TRUE}
+# probability of joint exceendance under the baseline model
+mean(1 * (credit_data[, "L2"] > VaR.L2 * 1.2) * (credit_data[, "L3"] > VaR.L3 * 1.2))
+# probability of joint exceendance under the stressed model
+mean(get_weights(stress.credit.L2L3) * (credit_data[, "L2"] > VaR.L2 * 1.2) * (credit_data[, "L3"] > VaR.L3 * 1.2))
+
+# additionally stress joint exceedance probability of L2 and L3
+f.stress.joint <- c(f.stress, function(x)1 * (x[1] > VaR.L2 * 1.2) * (x[2] > VaR.L3 * 1.2)) 
+stress.credit.L2L3 <- stress_moment(x = stress.credit.L2L3, f = f.stress.joint, k = list(3,4,c(3, 4)), m = c(0.9, 0.9, 0.06))
+```
+
+We analyse the impact the stresses of the tail of the subportfolios $L_2$ and $L_3$ have on the aggregate portfolio $L$. For this, we plot in Figure \@ref(fig:CM-joint-stress-VaR-2-effect) the quantile of the aggregate portfolio under the baseline model (blue), under the stress on the tail of $L_2$ and $L_3$ (red), and under the additional stress on the joint tail of $L_2$ and $L_3$ (green).
+
+```{r, CM-joint-stress-VaR-2-effect, echo = TRUE, cache = FALSE, fig.cap = "Quantiles of the aggregate loss $L$ under the baseline (blue), the stress on the tails of $L_2$ and $L_3$ (red), and the additional stress on the joint tail of $L_2$ and $L_3$ (green).", out.width = '80%', fig.align = 'center'}
+# stressed quantiles
+VaR.level <- seq(0.75, 0.99, by = 0.003)
+VaR.stress1 <- VaR_stressed(stress.credit.L2L3, alpha = VaR.level, xCol = "L", wCol = 1, base = TRUE)
+VaR.stress2 <- VaR_stressed(stress.credit.L2L3, alpha = VaR.level, xCol = "L", wCol = 2, base = FALSE)
+
+plot(VaR.level, VaR.stress1[, 2], col = "blue", type = "l", xlab = "quantile levels", ylab ="Quantiles of L under different models")
+lines(VaR.level, VaR.stress1[, 1], col = "red")
+lines(VaR.level, VaR.stress2, col = "darkgreen")
+```
+
+The results and the plots indicate that the additional stress on joint exceedances of subportfolios, increases the tail quantiles of $L$ even further, demonstrating the importance of (tail-)dependence in portfolio risk management. 
+
+# Conclusion and future work
+
+The **SWIM** package enables users to perform flexible and efficient sensitivity analyses of simulation models, using the method of stressing model components by re-weighting simulated scenarios. Multiple possibilities were demonstrated, from prioritising risk factors via reverse stress testing, to evaluating the impact on a portfolio distribution of increasing the probability of subportfolios’ joint exceedances. The implemented analysis and visualisation tools help users derive insights into their models and perform formal comparisons of the importance of model components. Since **SWIM** does not require re-simulation from the model, these sensitivity analyses have a low computational cost; moreover, they can be performed on black-box models. 
+
+Future work includes enhancing analysis tools, for example by including a `plot_weights` function that enables the seamless visualisation and comparison of scenario weights arising from different stresses, as well as functions that will make it easier to extract distributional characteristics of stressed models -- e.g. a `stressed_cor` function that enables the monitoring of correlation changes when models are stressed. Furthermore, we consider including alternative ways of calculating scenario weights, such as minimising the $\chi^2$ divergence instead of the Kullback-Leiber divergence.
+
+
+# Acknowledgements {-}
+
+This vignette was written in **R** [@R-base] using the packages **SWIM** [@PesentiR] and **bookdown** [@R-bookdown].
+
+
+# (APPENDIX) Appendix {-}
+
+# Appendix Credit Model {#AppendixCM}
+
+## Credit Model assumptions
+
+The credit risk portfolio of Section \@ref(Sec:CreditModel) is based on the conditionally binomial credit model described in Section 11.2 of @Mcneil2015B which belongs to the family of mixture models. Specifically, we consider a portfolio that consists of three homogeneous subportfolios and denote the aggregate portfolio loss by $L = L_1 + L_2+  L_3$, with $L_1, L_2, L_3$ the losses of each subportfolio, given by 
+\begin{equation}
+L_i=e_i\cdot\text{LGD}_i\cdot M_i,\quad i=1,2,3, 
+\end{equation}
+where $e_i$ and $M_i$ are the exposure and number of defaults of the $i^{\text{th}}$ subportfolio, respectively, and $\text{LGD}_i$ is the loss given default of subportfolio $i$. $M_i$ is Binomially distributed, conditional on $H_i$, a random common default probability. Specifically $M_i|H_i \sim Binomial(m_i,H_i)$, where $m_i$ is the portfolio size. The $H_i$s follow a Beta distributions with parameters chosen so as to match given overall unconditional default probabilities $p_i$ and default correlations $\rho_i$, that is, the correlation between (the indicators of) two default events within a subportfolio, see @Mcneil2015B. The dependence structure of $(H_1,H_2,H_3)$ is modelled via a Gaussian copula with correlation matrix    
+\begin{equation}\Sigma = \begin{pmatrix}
+1 & 0.3 & 0.1\\
+0.3 & 1 & 0.4\\
+0.1 & 0.4 & 1
+\end{pmatrix}.\end{equation}
+
+Table \@ref(tab:credit) summarises the parameter values used in the simulation.
+
+|$i$|$m_i$|$e_i$|$p_i$|$\rho_i$|$LGD_i$|
+|:------|:------|:------|:------|:------|:------|
+|1|2500|80|0.0004|0.00040|0.250|
+|2|5000|25|0.0097|0.00440|0.375|
+|3|2500|10|0.0503|0.01328|0.500|
+Table: (\#tab:credit) Parameter values used in the simulation for the credit risk portfolio in Section \@ref(Sec:CreditModel).  
+
+## Code for generating the data
+
+
+```{r, eval=FALSE, tidy = FALSE}
+  set.seed(1)
+  library(copula)
+  nsim <- 100000
+  
+# counterparties subportfolio 1, 2 and 3
+  m1 <- 2500
+  m2 <- 5000
+  m3 <- 2500
+  
+  # prob of default for subportfolios 1, 2 and 3
+  p1 <- 0.0004 
+  p2 <- 0.0097 
+  p3 <- 0.0503  
+  
+  # correlation between default probabilities
+  rho1 <- 0.0004
+  rho2 <- 0.0044
+  rho3 <- 0.01328
+  
+# exposures
+  e1 <- 80
+  e2 <- 25 
+  e3 <- 10 
+  
+# loss given default
+  LGD1 <- 0.25
+  LGD2 <- 0.375
+  LGD3 <- 0.5
+  
+# beta parameters: matching subportfolios default probabilities and correlation
+  alpha1 <- p1 * (1 / rho1 - 1)
+  beta1 <- alpha1 * (1 / p1 - 1)
+  
+  alpha2 <- p2 * (1 / rho2 - 1)
+  beta2 <- alpha2 * (1 / p2 - 1)
+  
+  alpha3 <- p3 * (1 / rho3 - 1)
+  beta3 <- alpha3 * (1 / p3 - 1)
+  
+# correlations between subportfolios
+  cor12 <- 0.3
+  cor13 <- 0.1
+  cor23 <- 0.4
+  
+# Gaussian copula structure
+  myCop <- normalCopula(param = c(cor12, cor13, cor23), dim = 3, dispstr = "un")
+  
+# multivariate beta with given copula
+  myMvd <- copula::mvdc(copula = myCop,
+                margins = c("beta", "beta", "beta"),
+                paramMargins = list(list(alpha1, beta1),
+                                    list(alpha2, beta2),
+                                    list(alpha3, beta3)))
+
+# simulation from the chosen copula
+  H <- copula::rMvdc(nsim, myMvd)
+  
+# simulate number of default per subportfolios (binomial distributions)
+  M1 <- rbinom(n = nsim, size = m1, prob = H[, 1])
+  M2 <- rbinom(n = nsim, size = m2, prob = H[, 2])
+  M3 <- rbinom(n = nsim, size = m3, prob = H[, 3])
+  
+# total loss per subportfolio
+  L1 <- M1 * e1 * LGD1
+  L2 <- M2 * e2 * LGD2
+  L3 <- M3 * e3 * LGD3
+  
+# aggregate portfolio loss
+  L <- L1 + L2 + L3
+  
+# the credit data included in SWIM
+  credit_data <- cbind(L, L1, L2, L3, H)
+  colnames(credit_data) <- c("L", "L1", "L2", "L3", "H1", "H2", "H3")
+```
+
+
+
+
+

@@ -7,75 +7,75 @@
 stress_mean(x, k, new_means, ...)
 }
 \arguments{
-\item{x}{A vector, matrix or data frame 
-containing realisations of random variables. Columns of \code{x} 
+\item{x}{A vector, matrix or data frame
+containing realisations of random variables. Columns of \code{x}
 correspond to random variables; OR\cr
-A \code{SWIM} object, where \code{x} corresponds to the 
+A \code{SWIM} object, where \code{x} corresponds to the
 underlying data of the \code{SWIM} object.}
 
 \item{k}{Numeric vector, the columns of \code{x} that
 are stressed.}
 
-\item{new_means}{Numeric vector, same length as \code{k}, 
+\item{new_means}{Numeric vector, same length as \code{k},
 containing the stressed means.}
 
-\item{...}{Additional arguments to be passed to 
+\item{...}{Additional arguments to be passed to
 \code{\link[nleqslv]{nleqslv}}.}
 }
 \value{
 A \code{SWIM} object containing:
     \itemize{
       \item \code{x}, a data.frame containing the data;
-      \item \code{new_weights}, a list, each component corresponds to 
+      \item \code{new_weights}, a list, each component corresponds to
    a different stress and is a vector of scenario weights;
      \item \code{type = "mean"};
-      \item \code{specs}, a list, each component corresponds to 
+      \item \code{specs}, a list, each component corresponds to
    a different stress and contains \code{k} and \code{new_means}.
    }
    See \code{\link{SWIM}} for details.
 }
 \description{
 Provides weights on simulated scenarios from a baseline stochastic
-    model, such that stressed model components (random variables) 
-    fulfil the mean constraints. Scenario weights are selected by  
-    constrained minimisation of the relative entropy to the 
+    model, such that stressed model components (random variables)
+    fulfil the mean constraints. Scenario weights are selected by
+    constrained minimisation of the relative entropy to the
     baseline model.
 }
 \details{
-The function \code{stress_mean} is a wrapper for the 
-    function \code{stress_moment}. See \code{\link{stress_moment}} 
-    for details on the additional arguments to \code{...} and 
+The function \code{stress_mean} is a wrapper for the
+    function \code{stress_moment}. See \code{\link{stress_moment}}
+    for details on the additional arguments to \code{...} and
     the underlying algorithm.
 }
 \examples{
 set.seed(0)
 x <- data.frame(cbind(
-  "normal" = rnorm(1000), 
-  "gamma" = rgamma(1000, shape = 2), 
+  "normal" = rnorm(1000),
+  "gamma" = rgamma(1000, shape = 2),
   "beta" = rbeta(1000, shape1 = 2, shape2 = 2)))
 ## stressing means
-res1 <- stress(type = "mean", x = x, k = 1 : 3, 
+res1 <- stress(type = "mean", x = x, k = 1:3,
   new_means = c(1, 1, 0.75))
 summary(res1)
 res1$specs
 ## calling stress_mean directly
-res2 <- stress_mean(x = x, k = 1 : 3, 
+res2 <- stress_mean(x = x, k = 1:3,
   new_means = c(1, 1, 0.75))
 summary(res2)
 
-## See also examples in stress_moment and stress_mean_sd.     
-    
+## See also examples in stress_moment and stress_mean_sd.
+
 }
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}\cr
 
     \insertRef{Pesenti2020SSRN}{SWIM}\cr
-    
+
     \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{
-See \code{\link{stress_mean_sd}} for stressing means 
-    and standard deviations jointly, and \code{\link{stress_moment}} for 
+See \code{\link{stress_mean_sd}} for stressing means
+    and standard deviations jointly, and \code{\link{stress_moment}} for
     moment constraints.
 
 Other stress functions: 

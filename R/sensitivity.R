@@ -1,111 +1,108 @@
 #' Sensitivities of a Stressed Model
-#' 
-#' Provides different sensitivity measures that compare the stressed 
+#'
+#' Provides different sensitivity measures that compare the stressed
 #'     and the baseline model.
-#'      
+#'
 #' @inheritParams summary.SWIM
 #' @inheritParams stress_moment
-#' @param f       A function, or list of functions, that, applied to 
-#'                \code{x}, constitute the transformation of the data 
+#' @param f       A function, or list of functions, that, applied to
+#'                \code{x}, constitute the transformation of the data
 #'                for which the sensitivity is calculated.
-#' @param type    Character, one of \code{"Gamma", "Kolmogorov", 
+#' @param type    Character, one of \code{"Gamma", "Kolmogorov",
 #'                "Wasserstein", "all"}.
-#' @param xCol    Numeric or character vector, (names of) the columns 
-#'                of the underlying data of the \code{object} 
-#'                (\code{default = "all"}). If \code{xCol = NULL}, only 
+#' @param xCol    Numeric or character vector, (names of) the columns
+#'                of the underlying data of the \code{object}
+#'                (\code{default = "all"}). If \code{xCol = NULL}, only
 #'                the transformed data \code{f(x)} is considered.
-#' 
-#' @details Provides sensitivity measures that compare the stressed and 
+#'
+#' @details Provides sensitivity measures that compare the stressed and
 #'     the baseline model. Implemented sensitivity measures:
 #'     \enumerate{
-#'     \item 
-#'       \code{Gamma}, the \emph{Reverse Sensitivity Measure}, defined 
-#'       for a random variable \code{Y} and scenario weights \code{w} by 
-#'       \deqn{Gamma = ( E(Y * w) - E(Y) ) / c,}
-#'       where \code{c} is a normalisation constant such that 
-#'       \code{|Gamma| <= 1}, see
-#'       \insertCite{Pesenti2019reverse}{SWIM}. Loosely speaking, the 
-#'       Reverse Sensitivity Measure is the normalised difference 
-#'       between the first moment of the stressed and the baseline 
-#'       distributions of \code{Y}. 
-#'     
 #'     \item
-#'       \code{Kolmogorov}, the Kolmogorov distance, defined for 
-#'       distribution functions \code{F,G} by 
+#'       \code{Gamma}, the \emph{Reverse Sensitivity Measure}, defined
+#'       for a random variable \code{Y} and scenario weights \code{w} by
+#'       \deqn{Gamma = ( E(Y * w) - E(Y) ) / c,}
+#'       where \code{c} is a normalisation constant such that
+#'       \code{|Gamma| <= 1}, see
+#'       \insertCite{Pesenti2019reverse}{SWIM}. Loosely speaking, the
+#'       Reverse Sensitivity Measure is the normalised difference
+#'       between the first moment of the stressed and the baseline
+#'       distributions of \code{Y}.
+#'
+#'     \item
+#'       \code{Kolmogorov}, the Kolmogorov distance, defined for
+#'       distribution functions \code{F,G} by
 #'       \deqn{Kolmogorov = sup |F(x) - G(x)|.}
-#'       Note that the Kolmogorov distance of one stress is the same for 
-#'       all inputs. Should be used to compare different stresses not 
-#'       individual components.   
-#'     
+#'
 #'     \item
 #'       \code{Wasserstein}, the Wasserstein distance of order 1, defined
-#'       for two distribution functions \code{F,G} by 
-#'       \deqn{Wasserstein = \int | F(x) - G(x)| dx.} 
+#'       for two distribution functions \code{F,G} by
+#'       \deqn{Wasserstein = \int | F(x) - G(x)| dx.}
 #'     }
-#'     
-#'     If \code{f} and \code{k} are provided, the sensitivity of the 
-#'     transformed data is returned. 
-#' 
-#' @return A data.frame containing the sensitivity measures of the 
-#'     stressed model with rows corresponding to different random   
+#'
+#'     If \code{f} and \code{k} are provided, the sensitivity of the
+#'     transformed data is returned.
+#'
+#' @return A data.frame containing the sensitivity measures of the
+#'     stressed model with rows corresponding to different random
 #'     variables. The first two rows specify the \code{stress} and
 #'     \code{type} of the sensitivity measure.
-#'      
-#' @examples      
+#'
+#' @examples
 #' ## example with a stress on VaR
 #' set.seed(0)
 #' x <- as.data.frame(cbind(
-#'   "log-normal" = rlnorm(1000), 
+#'   "log-normal" = rlnorm(1000),
 #'   "gamma" = rgamma(1000, shape = 2)))
-#' res1 <- stress(type = "VaR", x = x, 
+#' res1 <- stress(type = "VaR", x = x,
 #'   alpha = c(0.9, 0.95), q_ratio = 1.05)
-#'   
-#' sensitivity(res1, wCol = 1, type = "all") 
-#' ## sensitivity of log-transformed data 
-#' sensitivity(res1, wCol = 1, type = "all", 
-#'   f = list(function(x)log(x), function(x)log(x)), k = list(1,2)) 
-#'   
-#' ## Consider the portfolio Y = X1 + X2 + X3 + X4 + X5,  
-#' ## where (X1, X2, X3, X4, X5) are correlated normally 
+#'
+#' sensitivity(res1, wCol = 1, type = "all")
+#' ## sensitivity of log-transformed data
+#' sensitivity(res1, wCol = 1, type = "all",
+#'   f = list(function(x)log(x), function(x)log(x)), k = list(1,2))
+#'
+#' ## Consider the portfolio Y = X1 + X2 + X3 + X4 + X5,
+#' ## where (X1, X2, X3, X4, X5) are correlated normally
 #' ## distributed with equal mean and different standard deviations,
 #' ## see the README for further details.
 #'
-#' 
+#'
 #' \dontrun{
 #' set.seed(0)
 #' SD <- c(70, 45, 50, 60, 75)
-#' Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
+#' Corr <- matrix(rep(0.5, 5 ^ 2), nrow = 5) + diag(rep(1 - 0.5, 5))
 #' if (!requireNamespace("mvtnorm", quietly = TRUE))
-#'    stop("Package \"mvtnorm\" needed for this function 
+#'    stop("Package \"mvtnorm\" needed for this function
 #'    to work. Please install it.")
-#' x <- mvtnorm::rmvnorm(10^5, 
+#' x <- mvtnorm::rmvnorm(10 ^ 5,
 #'    mean =  rep(100, 5),
 #'    sigma = (SD %*% t(SD)) * Corr)
 #' data <- data.frame(rowSums(x), x)
 #' names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
-#' rev.stress <- stress(type = "VaR", x = data, 
+#' rev.stress <- stress(type = "VaR", x = data,
 #'    alpha = c(0.75, 0.9), q_ratio = 1.1, k = 1)
-#' 
-#' sensitivity(rev.stress, type = "all") 
+#'
+#' sensitivity(rev.stress, type = "all")
 #' ## sensitivity to sub-portfolios X1 + X2 and X3 + X4
-#' sensitivity(rev.stress, xCol = NULL, type = "Gamma", 
-#'   f = rep(list(function(x)x[1] + x[2]), 2), k = list(c(2,3), c(4,5))) 
-#' plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma")     
+#' sensitivity(rev.stress, xCol = NULL, type = "Gamma",
+#'   f = rep(list(function(x)x[1] + x[2]), 2), k = list(c(2, 3), c(4, 5)))
+#' plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma")
 #' importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
 #' }
-#'      
+#'
 #' @seealso See \code{\link{importance_rank}} for ranking of random
-#'     variables according to their sensitivities,  
-#'     \code{\link{plot_sensitivity}} for plotting 
-#'     sensitivity measures and \code{\link{summary}} for 
-#'     summary statistics of a stressed model.     
-#'     
+#'     variables according to their sensitivities,
+#'     \code{\link{plot_sensitivity}} for plotting
+#'     sensitivity measures and \code{\link{summary}} for
+#'     summary statistics of a stressed model.
+#'
 #' @references \insertRef{Pesenti2019reverse}{SWIM}
-#'  
+#'
 #' @export
-#' 
+#'
 
-  sensitivity <- function(object, xCol = "all", wCol = "all", 
+  sensitivity <- function(object, xCol = "all", wCol = "all",
                           type = c("Gamma", "Kolmogorov", "Wasserstein", "all"), f = NULL, k = NULL){
    if (!is.SWIM(object)) stop("Wrong object")
    if (anyNA(object$x)) warning("x contains NA")
@@ -124,7 +121,7 @@
     cname <-  paste("X", as.character(xCol), sep = "")
    } else if (!is.character(xCol)){
     cname <- colnames(get_data(object))[xCol]
-   } 
+   }
    x_data <- get_data(object)[ , xCol]
    }
    if (!is.null(f)){
@@ -138,9 +135,9 @@
       x_data <- cbind(x_data, z)
       colnames(x_data) <- cname
    }
-   
+
    if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
-   new_weights <- get_weights(object)[ , wCol]  
+   new_weights <- get_weights(object)[ , wCol]
    sens_w <- stats::setNames(data.frame(matrix(ncol = length(x_data) + 2, nrow = 0)), c("stress", "type", cname))
    if (type == "Gamma" || type == "all"){
     sens_gamma_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .gamma, z = z)
@@ -149,7 +146,7 @@
     if (length(xCol) == 1) colnames(sens_gw) <- cname
     sens_w <- rbind(sens_w, data.frame(stress = paste("stress", wCol, sep = " "), type = rep("Gamma", length.out = length(wCol)), sens_gw))
    }
-  
+
    if (type == "Kolmogorov" || type == "all"){
     sens_kolmogorov_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .kolmogorov, z = z)
     sens_kw <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_kolmogorov_w)
@@ -157,7 +154,7 @@
     if (length(xCol) == 1) colnames(sens_kw) <- cname
     sens_w <- rbind(sens_w, data.frame(stress = paste("stress", wCol, sep = " "), type = rep("Kolmogorov", length.out = length(wCol)), sens_kw))
    }
-  
+
    if (type == "Wasserstein" || type == "all"){
     sens_wasser_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .wasserstein, z = z)
     sens_ww <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_wasser_w)
@@ -188,23 +185,23 @@
  # help function Kolmogorov distance
  # maximal difference between the corresponding ecdf
  # comparison between different stresses. All inputs from one
- # stress have the same Kolmogorov distance. 
+ # stress have the same Kolmogorov distance.
   .kolmogorov <- function(z, w){
-   n <- length(z)
-   xw_cdf <- cumsum(w[rank(sort(z))]) 
-   kol_sense <- max(abs(xw_cdf - 1:n)) / n
-   return(kol_sense)
+    n <- length(z)
+    xw_cdf <- cumsum(w[order(z)])
+    kol_sense <- max(abs(xw_cdf - 1:n)) / n
+    return(kol_sense)
   }
 
- # help function Wasserstein distance of order p = 1 
+ # help function Wasserstein distance of order p = 1
  # x   vector
  # w   vector of weights
 
-  .wasserstein <- function(z, w, p = 1){
-   n <- length(z)
-   x_sort <- sort(z)
-   w_cdf <- cumsum(w[rank(x_sort)])[1:(n - 1)] 
-   x_diff <- diff(x_sort, lag = 1)
-   wasser_sens <- sum(abs(w_cdf - 2:n) * x_diff) / n
-   return(wasser_sens)
+  .wasserstein <- function(z, w){
+    n <- length(z)
+    x_sort <- sort(z)
+    w_cdf <- cumsum(w[order(z)])[1:(n - 1)]
+    x_diff <- diff(x_sort, lag = 1)
+    wasser_sens <- sum(abs(w_cdf - 1:(n-1)) * x_diff)/n
+    return(wasser_sens)
   }
