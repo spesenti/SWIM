@@ -2,7 +2,7 @@
 
 ## Test environments
 * ubuntu (on travis-ci)    
-* local win (R4.0.0; R Under development; )
+* local win (R4.0.0; R Under development)
 
 ## R CMD check results
 There were no ERRORs, no WARNINGs, and no NoOTES.
