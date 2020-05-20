@@ -7,22 +7,22 @@
 stress_VaR(x, alpha, q_ratio = NULL, q = NULL, k = 1)
 }
 \arguments{
-\item{x}{A vector, matrix or data frame 
-containing realisations of random variables. Columns of \code{x} 
+\item{x}{A vector, matrix or data frame
+containing realisations of random variables. Columns of \code{x}
 correspond to random variables; OR\cr
-A \code{SWIM} object, where \code{x} corresponds to the 
+A \code{SWIM} object, where \code{x} corresponds to the
 underlying data of the \code{SWIM} object.}
 
 \item{alpha}{Numeric vector, the levels of the stressed VaR.}
 
 \item{q_ratio}{Numeric vector, the ratio of the stressed VaR to the
 baseline VaR.\cr
-If \code{alpha} and \code{q_ratio} are vectors, they 
+If \code{alpha} and \code{q_ratio} are vectors, they
 must have the same length.}
 
-\item{q}{Numeric vector, the stressed VaR at level 
+\item{q}{Numeric vector, the stressed VaR at level
 \code{alpha}.\cr
-If \code{alpha} and \code{q} are vectors, they must 
+If \code{alpha} and \code{q} are vectors, they must
 have the same length.}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
@@ -32,11 +32,11 @@ have the same length.}
 A \code{SWIM} object containing:
     \itemize{
       \item \code{x}, a data.frame containing the data;
-      \item \code{new_weights}, a list of functions, that applied to 
-  the \code{k}th column of \code{x}, generates the vectors of scenario 
+      \item \code{new_weights}, a list of functions, that applied to
+  the \code{k}th column of \code{x}, generates the vectors of scenario
   weights. Each component corresponds to a different stress;
      \item \code{type = "VaR"};
-     \item \code{specs}, a list, each component corresponds to 
+     \item \code{specs}, a list, each component corresponds to
    a different stress and contains \code{k},
     \code{alpha} and \code{q}.
     }
@@ -44,50 +44,50 @@ A \code{SWIM} object containing:
 }
 \description{
 Provides weights on simulated scenarios from a baseline stochastic
-    model, such that a stressed model component (random variable) fulfils a 
-    constraint on its quantile at a given level, also known as 
-    Value-at-Risk (VaR). Scenario weights are selected by 
-    constrained minimisation of the relative entropy to the 
+    model, such that a stressed model component (random variable) fulfils a
+    constraint on its quantile at a given level, also known as
+    Value-at-Risk (VaR). Scenario weights are selected by
+    constrained minimisation of the relative entropy to the
     baseline model.
 }
 \details{
 The stressed VaR is the quantile of the chosen model component,
-     subject to the calculated scenario weights. 
-     The VaR at level \code{alpha} of a random variable with 
-     distribution 
+     subject to the calculated scenario weights.
+     The VaR at level \code{alpha} of a random variable with
+     distribution
      function F is defined as its left-quantile at alpha:
-     \deqn{VaR_alpha = F^{-1}(alpha).} 
-     
+     \deqn{VaR_{alpha} = F^{-1}(alpha).}
+
 If one of \code{alpha, q} (\code{q_ratio}) is a vector,
-   the stressed VaR's of the \code{k}th column of \code{x}, at levels 
+   the stressed VaR's of the \code{k}th column of \code{x}, at levels
    \code{alpha}, are equal to \code{q}.
-   
+
 The stressed VaR specified, either via \code{q} or \code{q_ratio}, might not equal
-   the attained empirical VaR of the model component. In this 
+   the attained empirical VaR of the model component. In this
    case, \code{stress_VaR} will display a \code{message} and the \code{specs} contain
    the achieved VaR.
 }
 \examples{
 set.seed(0)
 x <- as.data.frame(cbind(
-  "normal" = rnorm(1000), 
+  "normal" = rnorm(1000),
   "gamma" = rgamma(1000, shape = 2)))
-res1 <- stress(type = "VaR", x = x, 
+res1 <- stress(type = "VaR", x = x,
   alpha = 0.9, q_ratio = 1.05)
-  
+
 ## calling stress_VaR directly
-## stressing "gamma" 
-res2 <- stress_VaR(x = x, alpha = 0.9, 
+## stressing "gamma"
+res2 <- stress_VaR(x = x, alpha = 0.9,
   q_ratio = c(1.03, 1.05), k = 2)
 get_specs(res2)
 summary(res2)
-   
+
 }
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}\cr
 
     \insertRef{Pesenti2020SSRN}{SWIM}\cr
-    
+
     \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{

@@ -14,23 +14,29 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
+
 # SWIM - A Package for Sensitivity Analysis
 
-The SWIM package provides weights on simulated scenarios from a stochastic model, such that stressed model components (random variables) fulfil given probabilistic constraints (e.g. specified values for risk measures), under the new scenario weights. Scenario weights are selected by constrained minimisation of the relative entropy to the baseline model. The SWIM package is based on the paper Pesenti S.M, Millossovich P., Tsanakas A. (2019) "Reverse Sensitivity Testing: What does it take to break the model", [doi:10.1016/j.ejor.2018.10.003](https://doi.org/10.1016/j.ejor.2018.10.003).
+[![Travis-CI Build Status](https://travis-ci.org/spesenti/SWIM.svg?branch=master)](https://travis-ci.org/spesenti/SWIM)   [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/SWIM)](https://cran.r-project.org/package=SWIM) [![downloads](https://cranlogs.r-pkg.org/badges/grand-total/SWIM)](https://cran.r-project.org/package=SWIM)
+
+The SWIM package provides weights on simulated scenarios from a stochastic model, such that stressed model components (random variables) fulfil given probabilistic constraints (e.g. specified values for risk measures), under the new scenario weights. Scenario weights are selected by constrained minimisation of the relative entropy to the baseline model. The SWIM package is based on the paper Pesenti S.M, Millossovich P., Tsanakas A. (2019) ["Reverse Sensitivity Testing: What does it take to break the model"](https://openaccess.city.ac.uk/id/eprint/18896/).
+
+
+## Vignette
+
+The Vignette of the SWIM package is available in html format (https://utstat.toronto.edu/pesenti/SWIMVignette/) and as pdf(https://openaccess.city.ac.uk/id/eprint/23473/).
+
 
 ## Installation
 
-The SWIM package can be install from [CRAN](https://CRAN.R-project.org/package=SWIM) :
+The SWIM package can be installed from [CRAN](https://CRAN.R-project.org/package=SWIM) :
 
 > 
 <https://CRAN.R-project.org/package=SWIM>;
 
-alternatively from [GitHub](https://github.com/spesenti/SWIM) in R studio:
+alternatively from [GitHub](https://github.com/spesenti/SWIM):
 
 > <https://github.com/spesenti/SWIM>
-``` r}
-install.packages("spesenti/SWIM")
-```
 
 ## Scope of the SWIM package  
 The SWIM package provides sensitivity analysis tools for stressing model 
@@ -44,7 +50,7 @@ R functions             | Stress
 `stress_VaR_ES()`       | VaR and ES risk measures
 `stress_mean()`         | means
 `stress_mean_sd()`      | means and standard deviations
-`stress_mean_moment()`  | moments, functions of moments
+`stress_moment()`       | moments, functions of moments
 `stress_prob()`         | probabilities of intervals
 `stress_user()`         | user defined scenario weights
 
@@ -81,7 +87,7 @@ lapply(summary(rev.stress, base = TRUE), FUN = knitr::kable, digits = 2)
 Visual display of the change of empirical distribution functions of the portfolio loss Y from the baseline to the two stressed models. 
 
 ```{r plot-cdf, cache = TRUE}
-plot_cdf(object = rev.stress, xCol = , base = TRUE)
+plot_cdf(object = rev.stress, xCol = 1, base = TRUE)
 ```
 
 
@@ -103,7 +109,7 @@ Sensitivity to all sub-portfolios, (Xi + Xj), i,j = 1, ..., 6:
 ```{r sensitivity sub-portfolios, cache = TRUE}
  # sub-portfolios
 f <- rep(list(function(x)x[1] + x[2]), 10)
-k <- list(c(2,3), c(2,4), c(2,5), c(2,6), c(3,4), c(3,5), c(3,6), c(4,5), c(4,6), c(5,6))
+k <- list(c(2, 3), c(2, 4), c(2, 5), c(2, 6), c(3, 4), c(3, 5), c(3, 6), c(4, 5), c(4, 6), c(5, 6))
 importance_rank(rev.stress, xCol = NULL, wCol = 1, type = "Gamma", f = f, k = k)
 ```
 
@@ -120,10 +126,3 @@ distribution function of X5 that has a heavier tail.
 plot_cdf(object = rev.stress, xCol = 5, base = TRUE)
 plot_hist(object = rev.stress, xCol = 5, base = TRUE)
 ```
-
-
-
-
-
-
-

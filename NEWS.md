@@ -1,3 +1,12 @@
+
+# Develop version v0.2.0.900
+The develop branch corresponds to the develop version, whereas the master branch is the lastest CRAN submission. 
+
+- add vignette
+- fix bug in `merge()`. 
+- fix bug in `sensitivity()`. 
+
+
 # SWIM 0.2.0
 
 ## Major changes

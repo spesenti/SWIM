@@ -4,8 +4,13 @@
 \alias{quantile_stressed}
 \title{Sample Quantiles of a Stressed Model}
 \usage{
-quantile_stressed(object, probs = seq(0, 1, 0.25), xCol = "all",
-  wCol = 1, type = c("quantile", "(i-1)/(n-1)", "i/(n+1)", "i/n"))
+quantile_stressed(
+  object,
+  probs = seq(0, 1, 0.25),
+  xCol = "all",
+  wCol = 1,
+  type = c("quantile", "(i-1)/(n-1)", "i/(n+1)", "i/n")
+)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}

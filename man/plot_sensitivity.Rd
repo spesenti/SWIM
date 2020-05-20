@@ -4,96 +4,101 @@
 \alias{plot_sensitivity}
 \title{Plotting Sensitivities of a Stressed Model}
 \usage{
-plot_sensitivity(object, xCol = "all", wCol = "all",
-  type = c("Gamma", "Kolmogorov", "Wasserstein"), f = NULL, k = NULL,
-  displ = TRUE)
+plot_sensitivity(
+  object,
+  xCol = "all",
+  wCol = "all",
+  type = c("Gamma", "Kolmogorov", "Wasserstein"),
+  f = NULL,
+  k = NULL,
+  displ = TRUE
+)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character vector, (names of) the columns 
-of the underlying data of the \code{object} 
-(\code{default = "all"}). If \code{xCol = NULL}, only 
+\item{xCol}{Numeric or character vector, (names of) the columns
+of the underlying data of the \code{object}
+(\code{default = "all"}). If \code{xCol = NULL}, only
 the transformed data \code{f(x)} is considered.}
 
 \item{wCol}{Vector, the columns of the scenario weights 
 of the \code{object} corresponding to different 
 stresses (\code{default = "all"}).}
 
-\item{type}{Character, one of \code{"Gamma", "Kolmogorov", 
+\item{type}{Character, one of \code{"Gamma", "Kolmogorov",
 "Wasserstein", "all"}.}
 
-\item{f}{A function, or list of functions, that, applied to 
-\code{x}, constitute the transformation of the data 
+\item{f}{A function, or list of functions, that, applied to
+\code{x}, constitute the transformation of the data
 for which the sensitivity is calculated.}
 
 \item{k}{A vector or list of vectors, same length as \code{f},
-indicating which columns of \code{x} each function 
+indicating which columns of \code{x} each function
 in \code{f} operates on.\cr
-When \code{f} is a list, \code{k[[i]]} corresponds 
+When \code{f} is a list, \code{k[[i]]} corresponds
 to the input variables of \code{f[[i]]}.}
 
-\item{displ}{Logical, if \code{TRUE} the plot is displayed, 
-otherwise the data.frame for customised plotting with 
+\item{displ}{Logical, if \code{TRUE} the plot is displayed,
+otherwise the data.frame for customised plotting with
 \code{ggplot} is returned (\code{default = TRUE}).}
 }
 \value{
 If \code{displ = TRUE}, a plot displaying the sensitivity
     measures of the stochastic model under the scenario weights.
-    
-    If \code{displ = FALSE}, a data.frame for customised plotting with 
+
+    If \code{displ = FALSE}, a data.frame for customised plotting with
     \code{ggplot}. The data.frame
-    contains the columns: \code{stress} (the stresses), \code{type} 
+    contains the columns: \code{stress} (the stresses), \code{type}
     (the types of sensitivity), \code{X_all} (the random variables),
-    \code{value} (the values of the sensitivities). \cr 
+    \code{value} (the values of the sensitivities). \cr
     Denote by \code{result} the return of the function call, then
-    \code{ggplot} can be called via: 
-    \deqn{ggplot(result, aes(x = X_all, y = value))}
-    \deqn{ + geom_point(aes(color = factor(stress), shape = type)).}
+    \code{ggplot} can be called via:
+    \deqn{ggplot(result, aes(x = X_{all}, y = value))}
+    \deqn{ + geom_{point}(aes(color = factor(stress), shape = type)).}
 }
 \description{
-Plots the sensitivity measures for components (random variables) 
+Plots the sensitivity measures for components (random variables)
     of a stochastic model under the scenario weights.
 }
 \details{
-For the definition of the sensitivity 
+For the definition of the sensitivity
     measures (\code{type}), see \code{\link{sensitivity}}.
-    
-    Note that the Kolmogorov distance is the same for all inputs under 
-    the same stress. Thus, it should only be used to compare different  
-    stresses not individual components.
+
+    Note that the Kolmogorov distance is the same for all inputs under
+    the same stress. Thus, it should only be used to compare different
+    stresses, not individual components.
 }
 \examples{
-     
-## Consider the portfolio Y = X1 + X2 + X3 + X4 + X5,  
-## where (X1, X2, X3, X4, X5) are correlated normally 
+## Consider the portfolio Y = X1 + X2 + X3 + X4 + X5,
+## where (X1, X2, X3, X4, X5) are correlated normally
 ## distributed with equal mean and different standard deviations,
 ## see the README for further details.
 
 \donttest{
 set.seed(0)
 SD <- c(70, 45, 50, 60, 75)
-Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
+Corr <- matrix(rep(0.5, 5 ^ 2), nrow = 5) + diag(rep(1 - 0.5, 5))
 if (!requireNamespace("mvtnorm", quietly = TRUE))
-   stop("Package \\"mvtnorm\\" needed for this function 
+   stop("Package \"mvtnorm\" needed for this function
    to work. Please install it.")
-x <- mvtnorm::rmvnorm(10^5, 
-   mean =  rep(100, 5), 
-   sigma = (SD \%*\% t(SD)) * Corr) 
+x <- mvtnorm::rmvnorm(10 ^ 5,
+   mean =  rep(100, 5),
+   sigma = (SD \%*\% t(SD)) * Corr)
 data <- data.frame(rowSums(x), x)
 names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
-rev.stress <- stress(type = "VaR", x = data, 
+rev.stress <- stress(type = "VaR", x = data,
    alpha = c(0.75, 0.9), q_ratio = 1.1, k = 1)
 
-sensitivity(rev.stress, type = "all") 
-plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma")     
-plot_sensitivity(rev.stress, xCol = 6, wCol = 1, type = "all")   
+sensitivity(rev.stress, type = "all")
+plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma")
+plot_sensitivity(rev.stress, xCol = 6, wCol = 1, type = "all")
 }
-          
+
 }
 \seealso{
-See \code{\link{sensitivity}} for the values of the 
-    sensitivity measures of a stressed model and    
+See \code{\link{sensitivity}} for the values of the
+    sensitivity measures of a stressed model and
     \code{\link{importance_rank}} for ranking of random
     variables according to their sensitivities.
 }

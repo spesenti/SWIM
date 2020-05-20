@@ -7,32 +7,32 @@
 stress_mean_sd(x, k, new_means, new_sd, ...)
 }
 \arguments{
-\item{x}{A vector, matrix or data frame 
-containing realisations of random variables. Columns of \code{x} 
+\item{x}{A vector, matrix or data frame
+containing realisations of random variables. Columns of \code{x}
 correspond to random variables; OR\cr
-A \code{SWIM} object, where \code{x} corresponds to the 
+A \code{SWIM} object, where \code{x} corresponds to the
 underlying data of the \code{SWIM} object.}
 
 \item{k}{Numeric vector, the columns of \code{x} that
 are stressed.}
 
-\item{new_means}{Numeric vector, same length as \code{k}, 
+\item{new_means}{Numeric vector, same length as \code{k},
 containing the stressed means.}
 
-\item{new_sd}{Numeric vector, same length as \code{k}, 
+\item{new_sd}{Numeric vector, same length as \code{k},
 containing the stressed standard deviations.}
 
-\item{...}{Additional arguments to be passed to 
+\item{...}{Additional arguments to be passed to
 \code{\link[nleqslv]{nleqslv}}.}
 }
 \value{
 A \code{SWIM} object containing:
     \itemize{
       \item \code{x}, a data.frame containing the data;
-      \item \code{new_weights}, a list, each component corresponds to 
+      \item \code{new_weights}, a list, each component corresponds to
    a different stress and is a vector of scenario weights;
      \item \code{type = "mean"};
-      \item \code{specs}, a list, each component corresponds to 
+      \item \code{specs}, a list, each component corresponds to
    a different stress and contains \code{k}, \code{new_means} and
    \code{new_sd}.
    }
@@ -40,45 +40,45 @@ A \code{SWIM} object containing:
 }
 \description{
 Provides weights on simulated scenarios from a baseline stochastic
-    model, such that stressed model components (random variables) 
-    fulfil the mean and standard deviation constraints. 
-    Scenario weights are selected by constrained minimisation of 
+    model, such that stressed model components (random variables)
+    fulfil the mean and standard deviation constraints.
+    Scenario weights are selected by constrained minimisation of
     the relative entropy to the baseline model.
 }
 \details{
-The function \code{stress_mean_sd} is a wrapper for the 
-    function \code{stress_moment}. See \code{\link{stress_moment}} 
-    for details on the additional arguments to \code{...} and 
+The function \code{stress_mean_sd} is a wrapper for the
+    function \code{stress_moment}. See \code{\link{stress_moment}}
+    for details on the additional arguments to \code{...} and
     the underlying algorithm.
-    
-    For stressing means only, see \code{\link{stress_mean}}, 
-    for stressing higher moments and functions of moments, 
+
+    For stressing means only, see \code{\link{stress_mean}},
+    for stressing higher moments and functions of moments,
     see \code{\link{stress_moment}}.
 }
 \examples{
 set.seed(0)
 x <- data.frame(cbind(
-  "normal" = rnorm(1000), 
-  "gamma" = rgamma(1000, shape = 2), 
+  "normal" = rnorm(1000),
+  "gamma" = rgamma(1000, shape = 2),
   "beta" = rbeta(1000, shape1 = 2, shape2 = 2)))
 ## stressing mean and sd of column 1
-res1 <- stress(type = "mean sd", x = x, k = 1, new_means = 0.1, 
-  new_sd = 1.1, method = "Newton", 
+res1 <- stress(type = "mean sd", x = x, k = 1, new_means = 0.1,
+  new_sd = 1.1, method = "Newton",
   control = list(maxit = 1000, ftol = 1E-15))
 summary(res1)
-## calling stress_mean_sd directly 
-res2 <- stress_mean_sd(x = x, k = 1, new_means = 0.1, 
-  new_sd = 1.1, method = "Newton", 
+## calling stress_mean_sd directly
+res2 <- stress_mean_sd(x = x, k = 1, new_means = 0.1,
+  new_sd = 1.1, method = "Newton",
   control = list(maxit = 1000, ftol = 1E-15))
 
-## See also examples in stress_moment.     
-          
+## See also examples in stress_moment.
+
 }
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}\cr
 
     \insertRef{Pesenti2020SSRN}{SWIM}\cr
-    
+
     \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{

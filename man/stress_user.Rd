@@ -7,10 +7,10 @@
 stress_user(x, new_weights = NULL, new_weightsfun = NULL, k = 1)
 }
 \arguments{
-\item{x}{A vector, matrix or data frame 
-containing realisations of random variables. Columns of \code{x} 
+\item{x}{A vector, matrix or data frame
+containing realisations of random variables. Columns of \code{x}
 correspond to random variables; OR\cr
-A \code{SWIM} object, where \code{x} corresponds to the 
+A \code{SWIM} object, where \code{x} corresponds to the
 underlying data of the \code{SWIM} object.}
 
 \item{new_weights}{A vector, matrix or data frame containing scenario
@@ -18,10 +18,10 @@ weights. Columns of \code{new_weights} correspond to different
 stresses. \cr
 \code{new_weights} are normalised to have a mean of 1.}
 
-\item{new_weightsfun}{A list of functions, that applied to 
-the \code{k}th column of \code{x} generate the vectors of  
+\item{new_weightsfun}{A list of functions, that applied to
+the \code{k}th column of \code{x} generate the vectors of
 the scenario weights. Each function corresponds to a stress. \cr
-The weights generated for each stress are normalised to 
+The weights generated for each stress are normalised to
 have a mean of 1.}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
@@ -31,12 +31,12 @@ have a mean of 1.}
 A \code{SWIM} object containing:
     \itemize{
       \item \code{x}, a data.frame containing the data;
-      \item \code{new_weights}, a list, each component corresponds to 
+      \item \code{new_weights}, a list, each component corresponds to
    a different stress and is either a vector of scenario weights (if \code{new_weights} is provided) or (if \code{new_weightsfun} is provided) a
-   function, that applied to the \code{k}th column of \code{x}, generates the 
+   function, that applied to the \code{k}th column of \code{x}, generates the
    vectors of scenario weights;
      \item \code{type = "user"};
-      \item \code{specs}, a list, each component corresponds to 
+      \item \code{specs}, a list, each component corresponds to
    a different stress and contains \code{k}.
     }
     See \code{\link{SWIM}} for details.
@@ -45,21 +45,20 @@ A \code{SWIM} object containing:
 Returns a \code{SWIM} object with scenario weights defined by the user.
 }
 \examples{
-     
 set.seed(0)
 x <- as.data.frame(cbind(
-  "normal" = rnorm(1000), 
+  "normal" = rnorm(1000),
   "gamma" = rgamma(1000, shape = 2)))
-res1 <- stress(type = "user", x = x, new_weightsfun = function(x)x^2, k = 1)
+res1 <- stress(type = "user", x = x, new_weightsfun = function(x)x ^ 2, k = 1)
 ## plot user defined weights against the first column of x.
-plot(x$normal,get_weights(res1), pch=".")
-     
+plot(x$normal, get_weights(res1), pch = ".")
+
 }
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}\cr
 
     \insertRef{Pesenti2020SSRN}{SWIM}\cr
-    
+
     \insertRef{Csiszar1975}{SWIM}
 }
 \seealso{

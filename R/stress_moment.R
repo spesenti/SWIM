@@ -1,86 +1,87 @@
 #' Stressing Moments
 #'
 #' Provides weights on simulated scenarios from a baseline stochastic
-#'     model, such that stressed model components (random variables) 
-#'     fulfil the moment constraints. Scenario weights are selected by 
-#'     constrained minimisation of the relative entropy to the 
+#'     model, such that stressed model components (random variables)
+#'     fulfil the moment constraints. Scenario weights are selected by
+#'     constrained minimisation of the relative entropy to the
 #'     baseline model.
-#'     
+#'
 #' @inheritParams   stress_VaR
-#' @param f         A function, or list of functions, that, applied to 
+#' @param f         A function, or list of functions, that, applied to
 #'                  \code{x}, constitute the moment constraints.
 #' @param k         A vector or list of vectors, same length as \code{f},
-#'                  indicating which columns of \code{x} each function 
+#'                  indicating which columns of \code{x} each function
 #'                  in \code{f} operates on.\cr
-#'                  When \code{f} is a list, \code{k[[i]]} corresponds 
-#'                  to the input variables of \code{f[[i]]}. 
+#'                  When \code{f} is a list, \code{k[[i]]} corresponds
+#'                  to the input variables of \code{f[[i]]}.
 #' @param m         Numeric vector, same length as \code{f}, containing
 #'                  the stressed moments of \code{f(x)}. Must be in the
 #'                  range of \code{f(x)}.
-#' @param show      Logical. If true, print the result of the call to \code{nleqslv}.
-#' @param ...       Additional arguments to be passed to 
+#' @param show      Logical. If true, print the result of the call to
 #'                  \code{\link[nleqslv]{nleqslv}}.
-#' 
-#' @details The moment constraints are given by \code{E^Q( f(x) ) = m}, 
-#'     where \code{E^Q} denotes the expectation under the stressed 
-#'     model. \code{stress_moment} solves the subsequent set of equations 
-#'     with respect to theta, using \code{\link[nleqslv]{nleqslv}} from package 
+#' @param ...       Additional arguments to be passed to
+#'                  \code{\link[nleqslv]{nleqslv}}.
+#'
+#' @details The moment constraints are given by \code{E^Q( f(x) ) = m},
+#'     where \code{E^Q} denotes the expectation under the stressed
+#'     model. \code{stress_moment} solves the subsequent set of equations
+#'     with respect to theta, using \code{\link[nleqslv]{nleqslv}} from package
 #'     \code{\link[nleqslv]{nleqslv}}:
-#'     
+#'
 #'     \deqn{E^Q( f(x) ) = E( f(x) * exp(theta * f(x)) ) = m.}
-#'     
-#'     There is no guarantee that the set of equations 
-#'     will have a solution, or that the solution is unique. \code{SWIM} will 
-#'     return a warning if the termination code provided by \code{nleqslv} is 
-#'     different from 1 (convergence has been achieved). It is recommended to 
-#'     check the result of the call to \code{nleqslv} using the "show" argument. The 
-#'     user is referred to the \code{\link[nleqslv]{nleqslv}} documentation for 
+#'
+#'     There is no guarantee that the set of equations
+#'     will have a solution, or that the solution is unique. \code{SWIM} will
+#'     return a warning if the termination code provided by \code{nleqslv} is
+#'     different from 1 (convergence has been achieved). It is recommended to
+#'     check the result of the call to \code{nleqslv} using the "show" argument. The
+#'     user is referred to the \code{\link[nleqslv]{nleqslv}} documentation for
 #'     further details.
-#'     
+#'
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
 #'       \item \code{x}, a data.frame containing the data;
-#'       \item \code{new_weights}, a list, each component corresponds to 
+#'       \item \code{new_weights}, a list, each component corresponds to
 #'    a different stress and is a vector of scenario weights;
 #'      \item \code{type = "moment"};
-#'       \item \code{specs}, a list, each component corresponds to 
+#'       \item \code{specs}, a list, each component corresponds to
 #'    a different stress and contains \code{f}, \code{k} and \code{m}.
 #'     }
 #'     See \code{\link{SWIM}} for details.
-#'     
-#' @examples 
+#'
+#' @examples
 #' set.seed(0)
 #' x <- data.frame(cbind(
-#'   "normal" = rnorm(1000), 
-#'   "gamma" = rgamma(1000, shape = 2), 
+#'   "normal" = rnorm(1000),
+#'   "gamma" = rgamma(1000, shape = 2),
 #'   "beta" = rbeta(1000, shape1 = 2, shape2 = 2)))
-#'   
-#' ## stressing covariance of columns 1,2 while leaving the means unchanged
-#' res1 <- stress_moment(x = x, 
-#'   f = list(function(x)x, function(x)x, function(x)x[1] * x[2]), 
-#'   k = list(1, 2, c(1, 2)), m = c(0, 2, 0.5), 
+#'
+#' ## stressing covariance of columns 1, 2 while leaving the means unchanged
+#' res1 <- stress_moment(x = x,
+#'   f = list(function(x)x, function(x)x, function(x)x[1] * x[2]),
+#'   k = list(1, 2, c(1, 2)), m = c(0, 2, 0.5),
 #'   method = "Newton", control = list(maxit = 1000, ftol = 1E-10))
 #' ## means under the stressed model
 #' summary(res1)
-#' apply(x, 2, stats::weighted.mean, w = get_weights(res1)) 
+#' apply(x, 2, stats::weighted.mean, w = get_weights(res1))
 #' ## covariance of columns 1,2 under the stressed model
 #' stats::weighted.mean(x[, 1] * x[, 2], w = get_weights(res1))
-#'     
-#' ## stressing jointly the tail probabilities of columns 1,3  
-#' res2 <- stress_moment(x = x, 
-#'   f = list(function(x)(x > 1.5), function(x)(x > 0.9)), 
+#'
+#' ## stressing jointly the tail probabilities of columns 1, 3
+#' res2 <- stress_moment(x = x,
+#'   f = list(function(x)(x > 1.5), function(x)(x > 0.9)),
 #'   k = list(1, 3), m = c(0.9, 0.9))
 #' summary(res2)
 #' ## probabilities under the stressed model
 #' mean((x[, 1] > 1.5) * get_weights(res2))
 #' mean((x[, 3] > 0.9) * get_weights(res2))
-#'      
-#' @family stress functions 
-#' 
-#' @seealso See \code{\link{stress_mean}} for stressing means and 
-#'     \code{\link{stress_mean_sd}} for stressing mean and standard 
-#'     deviation jointly. 
-#' @inherit SWIM references 
+#'
+#' @family stress functions
+#'
+#' @seealso See \code{\link{stress_mean}} for stressing means and
+#'     \code{\link{stress_mean_sd}} for stressing mean and standard
+#'     deviation jointly.
+#' @inherit SWIM references
 #' @export
 
 stress_moment <- function(x, f, k, m, show = FALSE, ...){
@@ -106,6 +107,7 @@ stress_moment <- function(x, f, k, m, show = FALSE, ...){
   constr_moment <- list("k" = k, "m" = m, "f" = f)
   constr <- list(constr_moment)
   names(constr) <- paste("stress", 1)
+  if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
   new_weights <- list("stress 1" = as.vector(exp(z %*% sol$x)))
   type <- list("moment")
   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr)
@@ -117,57 +119,57 @@ stress_moment <- function(x, f, k, m, show = FALSE, ...){
 #' Stressing Means
 #'
 #' Provides weights on simulated scenarios from a baseline stochastic
-#'     model, such that stressed model components (random variables) 
-#'     fulfil the mean constraints. Scenario weights are selected by  
-#'     constrained minimisation of the relative entropy to the 
+#'     model, such that stressed model components (random variables)
+#'     fulfil the mean constraints. Scenario weights are selected by
+#'     constrained minimisation of the relative entropy to the
 #'     baseline model.
-#'    
+#'
 #' @inheritParams   stress_moment
 #' @param k         Numeric vector, the columns of \code{x} that
 #'                  are stressed.
-#' @param new_means Numeric vector, same length as \code{k}, 
-#'                  containing the stressed means. 
-#'                  
-#' @details The function \code{stress_mean} is a wrapper for the 
-#'     function \code{stress_moment}. See \code{\link{stress_moment}} 
-#'     for details on the additional arguments to \code{...} and 
+#' @param new_means Numeric vector, same length as \code{k},
+#'                  containing the stressed means.
+#'
+#' @details The function \code{stress_mean} is a wrapper for the
+#'     function \code{stress_moment}. See \code{\link{stress_moment}}
+#'     for details on the additional arguments to \code{...} and
 #'     the underlying algorithm.
-#' 
+#'
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
 #'       \item \code{x}, a data.frame containing the data;
-#'       \item \code{new_weights}, a list, each component corresponds to 
+#'       \item \code{new_weights}, a list, each component corresponds to
 #'    a different stress and is a vector of scenario weights;
 #'      \item \code{type = "mean"};
-#'       \item \code{specs}, a list, each component corresponds to 
+#'       \item \code{specs}, a list, each component corresponds to
 #'    a different stress and contains \code{k} and \code{new_means}.
 #'    }
 #'    See \code{\link{SWIM}} for details.
-#'     
-#' @examples 
+#'
+#' @examples
 #' set.seed(0)
 #' x <- data.frame(cbind(
-#'   "normal" = rnorm(1000), 
-#'   "gamma" = rgamma(1000, shape = 2), 
+#'   "normal" = rnorm(1000),
+#'   "gamma" = rgamma(1000, shape = 2),
 #'   "beta" = rbeta(1000, shape1 = 2, shape2 = 2)))
 #' ## stressing means
-#' res1 <- stress(type = "mean", x = x, k = 1 : 3, 
+#' res1 <- stress(type = "mean", x = x, k = 1:3,
 #'   new_means = c(1, 1, 0.75))
 #' summary(res1)
 #' res1$specs
 #' ## calling stress_mean directly
-#' res2 <- stress_mean(x = x, k = 1 : 3, 
+#' res2 <- stress_mean(x = x, k = 1:3,
 #'   new_means = c(1, 1, 0.75))
 #' summary(res2)
-#' 
-#' ## See also examples in stress_moment and stress_mean_sd.     
-#'     
-#' @family stress functions 
-#' @seealso See \code{\link{stress_mean_sd}} for stressing means 
-#'     and standard deviations jointly, and \code{\link{stress_moment}} for 
-#'     moment constraints.   
-#' 
-#' @inherit SWIM references 
+#'
+#' ## See also examples in stress_moment and stress_mean_sd.
+#'
+#' @family stress functions
+#' @seealso See \code{\link{stress_mean_sd}} for stressing means
+#'     and standard deviations jointly, and \code{\link{stress_moment}} for
+#'     moment constraints.
+#'
+#' @inherit SWIM references
 #' @export
 
 stress_mean <- function(x, k, new_means, ...)
@@ -183,63 +185,63 @@ stress_mean <- function(x, k, new_means, ...)
 #' Stressing Mean and Standard Deviation
 #'
 #' Provides weights on simulated scenarios from a baseline stochastic
-#'     model, such that stressed model components (random variables) 
-#'     fulfil the mean and standard deviation constraints. 
-#'     Scenario weights are selected by constrained minimisation of 
+#'     model, such that stressed model components (random variables)
+#'     fulfil the mean and standard deviation constraints.
+#'     Scenario weights are selected by constrained minimisation of
 #'     the relative entropy to the baseline model.
-#'    
+#'
 #' @inheritParams   stress_mean
-#' @param new_sd    Numeric vector, same length as \code{k}, 
-#'                  containing the stressed standard deviations. 
-#' 
-#' @details The function \code{stress_mean_sd} is a wrapper for the 
-#'     function \code{stress_moment}. See \code{\link{stress_moment}} 
-#'     for details on the additional arguments to \code{...} and 
+#' @param new_sd    Numeric vector, same length as \code{k},
+#'                  containing the stressed standard deviations.
+#'
+#' @details The function \code{stress_mean_sd} is a wrapper for the
+#'     function \code{stress_moment}. See \code{\link{stress_moment}}
+#'     for details on the additional arguments to \code{...} and
 #'     the underlying algorithm.
-#'     
-#'     For stressing means only, see \code{\link{stress_mean}}, 
-#'     for stressing higher moments and functions of moments, 
+#'
+#'     For stressing means only, see \code{\link{stress_mean}},
+#'     for stressing higher moments and functions of moments,
 #'     see \code{\link{stress_moment}}.
-#'     
-#' 
+#'
+#'
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
 #'       \item \code{x}, a data.frame containing the data;
-#'       \item \code{new_weights}, a list, each component corresponds to 
+#'       \item \code{new_weights}, a list, each component corresponds to
 #'    a different stress and is a vector of scenario weights;
 #'      \item \code{type = "mean"};
-#'       \item \code{specs}, a list, each component corresponds to 
+#'       \item \code{specs}, a list, each component corresponds to
 #'    a different stress and contains \code{k}, \code{new_means} and
 #'    \code{new_sd}.
 #'    }
 #'    See \code{\link{SWIM}} for details.
-#'  
-#' @examples 
+#'
+#' @examples
 #' set.seed(0)
 #' x <- data.frame(cbind(
-#'   "normal" = rnorm(1000), 
-#'   "gamma" = rgamma(1000, shape = 2), 
+#'   "normal" = rnorm(1000),
+#'   "gamma" = rgamma(1000, shape = 2),
 #'   "beta" = rbeta(1000, shape1 = 2, shape2 = 2)))
 #' ## stressing mean and sd of column 1
-#' res1 <- stress(type = "mean sd", x = x, k = 1, new_means = 0.1, 
-#'   new_sd = 1.1, method = "Newton", 
+#' res1 <- stress(type = "mean sd", x = x, k = 1, new_means = 0.1,
+#'   new_sd = 1.1, method = "Newton",
 #'   control = list(maxit = 1000, ftol = 1E-15))
 #' summary(res1)
-#' ## calling stress_mean_sd directly 
-#' res2 <- stress_mean_sd(x = x, k = 1, new_means = 0.1, 
-#'   new_sd = 1.1, method = "Newton", 
+#' ## calling stress_mean_sd directly
+#' res2 <- stress_mean_sd(x = x, k = 1, new_means = 0.1,
+#'   new_sd = 1.1, method = "Newton",
 #'   control = list(maxit = 1000, ftol = 1E-15))
 
-#' 
-#' ## See also examples in stress_moment.     
-#'           
-#' @family stress functions 
-#' @inherit SWIM references 
-#' @export 
+#'
+#' ## See also examples in stress_moment.
+#'
+#' @family stress functions
+#' @inherit SWIM references
+#' @export
 
 
 # k, new_means, new_sd have to be the same length
-# one can only stress the mean and sd together. 
+# one can only stress the mean and sd together.
 stress_mean_sd <- function(x, k, new_means, new_sd, ...)
 {
   means <- rep(list(function(x)x), length(k))

@@ -1,6 +1,6 @@
 Package: SWIM
 Title: Scenario Weights for Importance Measurement
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(
   person("Silvana M.", "Pesenti", email = "swimpackage@gmail.com", 
   role = c("aut", "cre")), 
@@ -24,7 +24,7 @@ Description: An efficient sensitivity analysis for stochastic models based on
     constrained minimisation of the relative entropy to the baseline model. 
     The 'SWIM' package is based on Pesenti S.M, Millossovich P., Tsanakas A. 
     (2019) "Reverse Sensitivity Testing: What does it take to break the model", 
-    <doi:10.1016/j.ejor.2018.10.003>.
+    <openaccess.city.ac.uk/id/eprint/18896/>.
 Depends: R (>= 3.5.0)
 Imports: 
     Rdpack (>= 0.7),
@@ -36,13 +36,20 @@ Imports:
     stats
 RdMacros: Rdpack
 License: GPL-3
-URL: https://github.com/spesenti/SWIM
+URL: https://github.com/spesenti/SWIM, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3515274, https://utstat.toronto.edu/pesenti/?page_id=138
+BugReports: https://github.com/spesenti/SWIM/issues
 Encoding: UTF-8
+LazyLoad: true
 LazyData: true
-RoxygenNote: 7.0.2
+VignetteBuilder: knitr
+RoxygenNote: 7.1.0
 Suggests: 
     testthat,
     mvtnorm,
     spelling,
-    Weighted.Desc.Stat
+    Weighted.Desc.Stat,
+    knitr, 
+    rmarkdown,
+    bookdown,
+    ggpubr
 Language: en-US
