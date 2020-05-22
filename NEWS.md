@@ -1,7 +1,7 @@
 
-# SWIM 0.2.1.9000 - DEVELOP VERSION
+# SWIM 0.2.1.9000 - develop version
 
-# SWIM 0.2.1
+# SWIM 0.2.1 - current version on CRAN
 
 ## Minor changes
 
