@@ -176,8 +176,9 @@ stress_mean <- function(x, k, new_means, ...)
 {
   means <- rep(list(function(x)x), length(k))
   res <- stress_moment(x = x, f = means, k = as.list(k), m = new_means, ...)
-  res$type <- list("mean")
-  res$specs$`stress 1` <- list("k" = k, "new_means" = new_means)
+  
+  res$type[length(res$type)] <- "mean"
+  res$specs[[length(res$specs)]] <- list("k" = k, "new_means" = new_means)
   return(res)
 }
 
@@ -250,7 +251,9 @@ stress_mean_sd <- function(x, k, new_means, new_sd, ...)
   m <- c(new_means, new_means ^ 2 + new_sd ^ 2)
   k_new <- as.list(c(k, k))
   res <- stress_moment(x, f, k_new, m, ...)
-  res$type <- list("mean sd")
-  res$specs$`stress 1` <- list("k" = k, "new_means" = new_means, "new_sd" = new_sd)
+  
+  res$type[length(res$type)] <- "mean sd"
+  res$specs[[length(res$specs)]] <- list("k" = k, "new_means" = new_means, "new_sd" = new_sd)
+  
   return(res)
 }
