@@ -1,6 +1,18 @@
 
 # SWIM 0.2.1.9000 - develop version
 
+## Major changes: Additional functions 
+
+ - `plot_quantile()`:
+    * the function plots the empirical quantile of model components, subject to 
+      scenario weights.
+
+
+## Minor changes
+
+ - fix bug in meging different stress objects.
+
+
 # SWIM 0.2.1 - current version on CRAN
 
 ## Minor changes
