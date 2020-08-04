@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_quantile.R
 \name{plot_quantile}
 \alias{plot_quantile}
-\title{Plotting the Empirical Quantile Functions of a Stressed Model}
+\title{Plotting Quantile Functions of a Stressed Model}
 \usage{
 plot_quantile(
   object,
@@ -77,5 +77,5 @@ plot_quantile(res1, xCol = 1, wCol = 1:2, base = TRUE, x_limits = c(0.8, 1),
 \seealso{
 See \code{\link{quantile_stressed}} for sample quantiles of a 
     stressed model and \code{\link{plot_cdf}} for plotting empirical 
-    distribution functions
+    distribution functions under scenario weights.
 }

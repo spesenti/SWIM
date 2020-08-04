@@ -1,4 +1,4 @@
-#' Plotting the Empirical Quantile Functions of a Stressed Model
+#' Plotting Quantile Functions of a Stressed Model
 #'
 #' Plots the empirical quantile function of a stressed model
 #'     component (random variable) under the scenario weights.
@@ -35,7 +35,7 @@
 #'
 #' @seealso See \code{\link{quantile_stressed}} for sample quantiles of a 
 #'     stressed model and \code{\link{plot_cdf}} for plotting empirical 
-#'     distribution functions
+#'     distribution functions under scenario weights.
 #'
 #' @export
 #' 
