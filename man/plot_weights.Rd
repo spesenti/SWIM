@@ -25,7 +25,7 @@ of the \code{object} corresponding to different
 stresses (\code{default = "all"}).}
 
 \item{n}{Integer, the number of points used to plot 
-(\code{default = 500}). If \code{n = "all"} all data points
+(\code{default = 500}). If \code{n = "all"}, all data points
 are plotted.}
 
 \item{x_limits}{Vector, the limits of the x-axis of the plot, the
@@ -65,7 +65,7 @@ plot_weights(model_stress, xCol = "L", wCol = 1:2)
 
 ## additional stress on VaR and ES
 model_stress <- stress_VaR_ES(model_stress, alpha = 0.9, q_ratio = 1.1, s_ratio = 1.2, k =1) 
-plot_weights(model_stress, xCol = "L", wCol = 3:4, x_limits = c(0, 3500), 
+plot_weights(model_stress, xCol = "L", wCol = "all", x_limits = c(0, 3500), 
              y_limits = c(0, 10))
 
 }
