@@ -1,4 +1,4 @@
-context("plot histogram")
+context("plot cdf")
 library("SWIM")
 
 ################ stress ################
