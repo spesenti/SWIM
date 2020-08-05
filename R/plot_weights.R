@@ -5,7 +5,7 @@
 #' @inheritParams  plot_cdf
 #' @inheritParams  sensitivity
 #' @param n        Integer, the number of points used to plot 
-#'                 (\code{default = 500}). If \code{n = "all"}, all data points
+#'                 (\code{default = 5000}). If \code{n = "all"}, all data points
 #'                 are plotted.
 #
 #' @return If \code{displ = TRUE}, a plot displaying the scenario
@@ -18,7 +18,7 @@
 #'     Denote by \code{res} the return of the function call, then
 #'     \code{ggplot} can be called via:
 #'     \deqn{ggplot(res, aes(x = res[ ,1], y = value))}
-#'     \deqn{ + geom_lines(aes(color = factor(stress)), n = n).}
+#'     \deqn{ + geom_lines(aes(color = factor(stress))).}
 #'
 #' @examples
 #' ## example with a stress with \code{credit_data} data set:
@@ -38,7 +38,7 @@
 #'
 #' @export
 #' 
-plot_weights <- function(object, xCol = 1, wCol = "all", n = 500, x_limits, y_limits, displ = TRUE){
+plot_weights <- function(object, xCol = 1, wCol = "all", n = 5000, x_limits, y_limits, displ = TRUE){
   if (!is.SWIM(object)) stop("Object not of class SWIM")
   if (anyNA(object$x)) warning("x contains NA")
   x_data <- get_data(object)[, xCol]
@@ -62,7 +62,7 @@ plot_weights <- function(object, xCol = 1, wCol = "all", n = 500, x_limits, y_li
     if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data))
     if (missing(y_limits)) y_limits <- c(min(plot_data[, "value"]), max(plot_data[, "value"]))
     ggplot2::ggplot(plot_data, ggplot2::aes_(x = plot_data[, 1], y = ~value)) +
-      ggplot2::geom_point(ggplot2::aes(color = factor(stress)), alpha = 0.3) +
+      ggplot2::geom_point(ggplot2::aes(color = factor(stress))) +
       ggplot2::labs(x = "" , y = paste("quantiles of", x_name, sep = " ")) +
       ggplot2::coord_cartesian(xlim = x_limits, ylim = y_limits) +
       ggplot2::theme_minimal() +

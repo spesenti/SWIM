@@ -8,7 +8,7 @@ plot_weights(
   object,
   xCol = 1,
   wCol = "all",
-  n = 500,
+  n = 5000,
   x_limits,
   y_limits,
   displ = TRUE
@@ -25,7 +25,7 @@ of the \code{object} corresponding to different
 stresses (\code{default = "all"}).}
 
 \item{n}{Integer, the number of points used to plot 
-(\code{default = 500}). If \code{n = "all"}, all data points
+(\code{default = 5000}). If \code{n = "all"}, all data points
 are plotted.}
 
 \item{x_limits}{Vector, the limits of the x-axis of the plot, the
@@ -51,7 +51,7 @@ If \code{displ = TRUE}, a plot displaying the scenario
     Denote by \code{res} the return of the function call, then
     \code{ggplot} can be called via:
     \deqn{ggplot(res, aes(x = res[ ,1], y = value))}
-    \deqn{ + geom_lines(aes(color = factor(stress)), n = n).}
+    \deqn{ + geom_lines(aes(color = factor(stress))).}
 }
 \description{
 Plots the scenario weights of a stressed model against a model component.

@@ -55,7 +55,7 @@ If \code{displ = TRUE}, a plot displaying the empirical
     Denote by \code{res} the return of the function call, then
     \code{ggplot} can be called via:
     \deqn{ggplot(res, aes(x = res[ ,1], y = value))}
-    \deqn{ + geom_lines(aes(color = factor(stress)), n = n).}
+    \deqn{ + geom_lines(aes(color = factor(stress))).}
 }
 \description{
 Plots the empirical quantile function of a stressed model
