@@ -7,10 +7,14 @@
     * the function plots the empirical quantile of model components, subject to 
       scenario weights.
 
+ - `plot_weights()`:
+    * the function plots the scenario weights of a stressed model agains 
+      model components.
+
 
 ## Minor changes
 
- - fix bug in meging different stress objects.
+ - fix bug in merging different stress objects.
 
 
 # SWIM 0.2.1 - current version on CRAN
