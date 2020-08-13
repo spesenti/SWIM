@@ -4,7 +4,7 @@
 \alias{stress_moment}
 \title{Stressing Moments}
 \usage{
-stress_moment(x, f, k, m, show = FALSE, ...)
+stress_moment(x, f, k, m, normalise = FALSE, show = FALSE, ...)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame
@@ -25,6 +25,9 @@ to the input variables of \code{f[[i]]}.}
 \item{m}{Numeric vector, same length as \code{f}, containing
 the stressed moments of \code{f(x)}. Must be in the
 range of \code{f(x)}.}
+
+\item{normalise}{Logical. If true, values of \code{f(x)} are linearly 
+normalised to the unit interval.}
 
 \item{show}{Logical. If true, print the result of the call to
 \code{\link[nleqslv]{nleqslv}}.}
@@ -47,7 +50,7 @@ A \code{SWIM} object containing:
 \description{
 Provides weights on simulated scenarios from a baseline stochastic
     model, such that stressed model components (random variables)
-    fulfil the moment constraints. Scenario weights are selected by
+    fulfill the moment constraints. Scenario weights are selected by
     constrained minimisation of the relative entropy to the
     baseline model.
 }
@@ -61,12 +64,14 @@ The moment constraints are given by \code{E^Q( f(x) ) = m},
     \deqn{E^Q( f(x) ) = E( f(x) * exp(theta * f(x)) ) = m.}
 
     There is no guarantee that the set of equations
-    will have a solution, or that the solution is unique. \code{SWIM} will
+    has a solution, or that the solution is unique. \code{SWIM} will
     return a warning if the termination code provided by \code{nleqslv} is
     different from 1 (convergence has been achieved). It is recommended to
     check the result of the call to \code{nleqslv} using the "show" argument. The
     user is referred to the \code{\link[nleqslv]{nleqslv}} documentation for
     further details.
+
+    Normalizing the data may help avoiding issues when the range of values is wide.
 }
 \examples{
 set.seed(0)

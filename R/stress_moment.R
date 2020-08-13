@@ -2,7 +2,7 @@
 #'
 #' Provides weights on simulated scenarios from a baseline stochastic
 #'     model, such that stressed model components (random variables)
-#'     fulfil the moment constraints. Scenario weights are selected by
+#'     fulfill the moment constraints. Scenario weights are selected by
 #'     constrained minimisation of the relative entropy to the
 #'     baseline model.
 #'
@@ -17,7 +17,8 @@
 #' @param m         Numeric vector, same length as \code{f}, containing
 #'                  the stressed moments of \code{f(x)}. Must be in the
 #'                  range of \code{f(x)}.
-#' @param normalize Logical. If true, values of \code{f(x)} are linearly normalized to the unit interval.
+#' @param normalise Logical. If true, values of \code{f(x)} are linearly 
+#'                  normalised to the unit interval.
 #' @param show      Logical. If true, print the result of the call to
 #'                  \code{\link[nleqslv]{nleqslv}}.
 #' @param ...       Additional arguments to be passed to
@@ -87,7 +88,7 @@
 #' @inherit SWIM references
 #' @export
 
-stress_moment <- function(x, f, k, m, normalize = FALSE, show = FALSE, ...){
+stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, ...){
   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (is.function(f)) f <- list(f)
@@ -103,7 +104,7 @@ stress_moment <- function(x, f, k, m, normalize = FALSE, show = FALSE, ...){
   min.fz <- apply(z, 2, min)
   max.fz <- apply(z, 2, max)
   if (any(m < min.fz) || any(m > max.fz)) stop("Values in m must be in the range of f(x)")
-  if (normalize == TRUE){
+  if (normalise == TRUE){
     z <- apply(z, 2, .scale)
     m <- (m - min.fz) / (max.fz - min.fz)
     }
