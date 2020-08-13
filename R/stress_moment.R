@@ -17,6 +17,7 @@
 #' @param m         Numeric vector, same length as \code{f}, containing
 #'                  the stressed moments of \code{f(x)}. Must be in the
 #'                  range of \code{f(x)}.
+#' @param normalize Logical. If true, values of \code{f(x)} are linearly normalized to the unit interval.
 #' @param show      Logical. If true, print the result of the call to
 #'                  \code{\link[nleqslv]{nleqslv}}.
 #' @param ...       Additional arguments to be passed to
@@ -31,12 +32,14 @@
 #'     \deqn{E^Q( f(x) ) = E( f(x) * exp(theta * f(x)) ) = m.}
 #'
 #'     There is no guarantee that the set of equations
-#'     will have a solution, or that the solution is unique. \code{SWIM} will
+#'     has a solution, or that the solution is unique. \code{SWIM} will
 #'     return a warning if the termination code provided by \code{nleqslv} is
 #'     different from 1 (convergence has been achieved). It is recommended to
 #'     check the result of the call to \code{nleqslv} using the "show" argument. The
 #'     user is referred to the \code{\link[nleqslv]{nleqslv}} documentation for
 #'     further details.
+#'
+#'     Normalizing the data may help avoiding issues when the range of values is wide.
 #'
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
@@ -84,7 +87,7 @@
 #' @inherit SWIM references
 #' @export
 
-stress_moment <- function(x, f, k, m, show = FALSE, ...){
+stress_moment <- function(x, f, k, m, normalize = FALSE, show = FALSE, ...){
   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (is.function(f)) f <- list(f)
@@ -100,6 +103,10 @@ stress_moment <- function(x, f, k, m, show = FALSE, ...){
   min.fz <- apply(z, 2, min)
   max.fz <- apply(z, 2, max)
   if (any(m < min.fz) || any(m > max.fz)) stop("Values in m must be in the range of f(x)")
+  if (normalize = TRUE){
+    z <- apply(z, 2, .scale)
+    m <- (m - min.fz) / (max.fz - min.fz)
+    }
   z <- cbind(1, z)
   moments <- function(x)colMeans(z * as.vector(exp(z %*% x))) - c(1, m)
   sol <- nleqslv::nleqslv(rep(0, length.out = length(f) + 1), moments, ...)
@@ -176,7 +183,7 @@ stress_mean <- function(x, k, new_means, ...)
 {
   means <- rep(list(function(x)x), length(k))
   res <- stress_moment(x = x, f = means, k = as.list(k), m = new_means, ...)
-  
+
   res$type[length(res$type)] <- "mean"
   res$specs[[length(res$specs)]] <- list("k" = k, "new_means" = new_means)
   return(res)
@@ -251,9 +258,11 @@ stress_mean_sd <- function(x, k, new_means, new_sd, ...)
   m <- c(new_means, new_means ^ 2 + new_sd ^ 2)
   k_new <- as.list(c(k, k))
   res <- stress_moment(x, f, k_new, m, ...)
-  
+
   res$type[length(res$type)] <- "mean sd"
   res$specs[[length(res$specs)]] <- list("k" = k, "new_means" = new_means, "new_sd" = new_sd)
-  
+
   return(res)
 }
+
+.scale <- function(x)(x - min(x)) / (max(x) - min(x))
