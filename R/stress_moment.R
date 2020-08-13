@@ -103,7 +103,7 @@ stress_moment <- function(x, f, k, m, normalize = FALSE, show = FALSE, ...){
   min.fz <- apply(z, 2, min)
   max.fz <- apply(z, 2, max)
   if (any(m < min.fz) || any(m > max.fz)) stop("Values in m must be in the range of f(x)")
-  if (normalize = TRUE){
+  if (normalize == TRUE){
     z <- apply(z, 2, .scale)
     m <- (m - min.fz) / (max.fz - min.fz)
     }
