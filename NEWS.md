@@ -1,7 +1,7 @@
 
 # SWIM 0.2.1.9000 - develop version
 
-## Major changes: Additional functions 
+## Major changes: Additional functions and features
 
  - `plot_quantile()`:
     * the function plots the empirical quantile of model components, subject to 
@@ -10,6 +10,10 @@
  - `plot_weights()`:
     * the function plots the scenario weights of a stressed model agains 
       model components.
+
+ - `stress_moment()`:
+    * add parameter "normalise" that allows to linearly normalise the values
+    called by `nleqslv`.
 
 
 ## Minor changes
