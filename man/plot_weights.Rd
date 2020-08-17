@@ -8,7 +8,7 @@ plot_weights(
   object,
   xCol = 1,
   wCol = "all",
-  n = 5000,
+  n,
   x_limits,
   y_limits,
   displ = TRUE
@@ -25,8 +25,8 @@ of the \code{object} corresponding to different
 stresses (\code{default = "all"}).}
 
 \item{n}{Integer, the number of points used to plot 
-(\code{default = 5000}). If \code{n = "all"}, all data points
-are plotted.}
+(\code{default = 5000} or the minimum of the data). If 
+\code{n = "all"}, all data points are plotted.}
 
 \item{x_limits}{Vector, the limits of the x-axis of the plot, the
 value for \code{xlim} in the \code{coord_cartesian}
