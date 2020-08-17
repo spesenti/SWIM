@@ -38,7 +38,7 @@
 #'
 #' @export
 #' 
-plot_weights <- function(object, xCol = 1, wCol = "all", n = 5000, x_limits, y_limits, displ = TRUE){
+plot_weights <- function(object, xCol = 1, wCol = "all", n, x_limits, y_limits, displ = TRUE){
   if (!is.SWIM(object)) stop("Object not of class SWIM")
   if (anyNA(object$x)) warning("x contains NA")
   x_data <- get_data(object)[, xCol]
@@ -48,6 +48,9 @@ plot_weights <- function(object, xCol = 1, wCol = "all", n = 5000, x_limits, y_l
   plot_data <- data.frame(x_data, get_weights(object)[ , wCol])
   names(plot_data) <- c(x_name, paste("stress", wCol, sep = " "))
   
+  if(missing(n)){
+    n <- min(5000, dim(get_data(object))[1])
+  } else {
   if(!is.numeric(n) && (n != "all")) stop("n not a integer or 'all'.")
   if(!is.null(n) & is.numeric(n)){
     grid <- seq(1, dim(get_data(object))[1], length.out = n)
@@ -56,6 +59,8 @@ plot_weights <- function(object, xCol = 1, wCol = "all", n = 5000, x_limits, y_l
   if(n == "all"){
     grid <- 1:length(x_data)
   }
+  }
+    
   plot_data <- reshape2::melt(plot_data, id.var = x_name, variable.name = "stress", value.name = "value")
   
   if (displ == TRUE){
@@ -63,7 +68,7 @@ plot_weights <- function(object, xCol = 1, wCol = "all", n = 5000, x_limits, y_l
     if (missing(y_limits)) y_limits <- c(min(plot_data[, "value"]), max(plot_data[, "value"]))
     ggplot2::ggplot(plot_data, ggplot2::aes_(x = plot_data[, 1], y = ~value)) +
       ggplot2::geom_point(ggplot2::aes(color = factor(stress))) +
-      ggplot2::labs(x = "" , y = paste("quantiles of", x_name, sep = " ")) +
+      ggplot2::labs(x = "" , y = "scenario weights") +
       ggplot2::coord_cartesian(xlim = x_limits, ylim = y_limits) +
       ggplot2::theme_minimal() +
       ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
