@@ -5,8 +5,9 @@
 #' @inheritParams  plot_cdf
 #' @inheritParams  sensitivity
 #' @param n        Integer, the number of points used to plot 
-#'                 (\code{default = 5000}). If \code{n = "all"}, all data points
-#'                 are plotted.
+#'                 (\code{default = 5000} or the minimum of the data). If 
+#'                 \code{n = "all"}, all data points are plotted.
+#'                 
 #
 #' @return If \code{displ = TRUE}, a plot displaying the scenario
 #'     weights of a stochastic model against a model component.
@@ -41,6 +42,8 @@
 plot_weights <- function(object, xCol = 1, wCol = "all", n, x_limits, y_limits, displ = TRUE){
   if (!is.SWIM(object)) stop("Object not of class SWIM")
   if (anyNA(object$x)) warning("x contains NA")
+  if(is.numeric(xCol) && (length(xCol) != 1)) stop("Invalide xCol argument.")
+  if(is.character(xCol) && (!(xCol %in% colnames(get_data(object))))) stop("Invalide xCol argument.")
   x_data <- get_data(object)[, xCol]
   if(is.character(xCol)) x_name <- xCol
   if(is.null(colnames(get_data(object)))) x_name <- paste("X", xCol, sep = "") else if(!is.character(xCol)) x_name <- colnames(get_data(object))[xCol]
@@ -68,7 +71,7 @@ plot_weights <- function(object, xCol = 1, wCol = "all", n, x_limits, y_limits, 
     if (missing(y_limits)) y_limits <- c(min(plot_data[, "value"]), max(plot_data[, "value"]))
     ggplot2::ggplot(plot_data, ggplot2::aes_(x = plot_data[, 1], y = ~value)) +
       ggplot2::geom_point(ggplot2::aes(color = factor(stress))) +
-      ggplot2::labs(x = "" , y = "scenario weights") +
+      ggplot2::labs(x = x_name , y = "scenario weights") +
       ggplot2::coord_cartesian(xlim = x_limits, ylim = y_limits) +
       ggplot2::theme_minimal() +
       ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
