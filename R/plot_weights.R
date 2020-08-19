@@ -42,8 +42,8 @@
 plot_weights <- function(object, xCol = 1, wCol = "all", n, x_limits, y_limits, displ = TRUE){
   if (!is.SWIM(object)) stop("Object not of class SWIM")
   if (anyNA(object$x)) warning("x contains NA")
-  if(is.numeric(xCol) && (length(xCol) != 1)) stop("Invalide xCol argument.")
-  if(is.character(xCol) && (!(xCol %in% colnames(get_data(object))))) stop("Invalide xCol argument.")
+  if(is.numeric(xCol) && (length(xCol) != 1)) stop("Invalid xCol argument.")
+  if(is.character(xCol) && (!(xCol %in% colnames(get_data(object))))) stop("Invalid xCol argument.")
   x_data <- get_data(object)[, xCol]
   if(is.character(xCol)) x_name <- xCol
   if(is.null(colnames(get_data(object)))) x_name <- paste("X", xCol, sep = "") else if(!is.character(xCol)) x_name <- colnames(get_data(object))[xCol]

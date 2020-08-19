@@ -42,8 +42,8 @@
 plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500, x_limits, y_limits, displ = TRUE){
   if (!is.SWIM(object)) stop("Object not of class SWIM")
   if (anyNA(object$x)) warning("x contains NA")
-  if(is.numeric(xCol) && (length(xCol) != 1)) stop("Invalide xCol argument.")
-  if(is.character(xCol) && (!(xCol %in% colnames(get_data(object))))) stop("Invalide xCol argument.")
+  if(is.numeric(xCol) && (length(xCol) != 1)) stop("Invalid xCol argument.")
+  if(is.character(xCol) && (!(xCol %in% colnames(get_data(object))))) stop("Invalid xCol argument.")
   
   grid <- seq(0, 1, length.out = n)
   if (is.character(xCol)) x_name <- xCol
