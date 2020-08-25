@@ -121,8 +121,7 @@ stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, ...){
   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr)
   if (is.SWIM(x)) my_list <- merge(x, my_list)
   if (show == TRUE) print(sol)
-  m.ac <- colMeans(z * as.vector(exp(z %*% x)))
-  m.ac <- m.ac[-1]
+  m.ac <- colMeans(z * as.vector(exp(z %*% sol$x)))[-1]
   if (normalise == TRUE){
     m <- min.fz + (max.fz - min.fz) * m
     m.ac <- min.fz + (max.fz - min.fz) * m.ac
