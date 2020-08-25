@@ -17,7 +17,7 @@
 #' @param m         Numeric vector, same length as \code{f}, containing
 #'                  the stressed moments of \code{f(x)}. Must be in the
 #'                  range of \code{f(x)}.
-#' @param normalise Logical. If true, values of \code{f(x)} are linearly 
+#' @param normalise Logical. If true, values of \code{f(x)} are linearly
 #'                  normalised to the unit interval.
 #' @param show      Logical. If true, print the result of the call to
 #'                  \code{\link[nleqslv]{nleqslv}}.
@@ -121,6 +121,15 @@ stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, ...){
   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr)
   if (is.SWIM(x)) my_list <- merge(x, my_list)
   if (show == TRUE) print(sol)
+  m.ac <- sol$fvec
+  if (normalise == TRUE){
+    m <- min.fz + (max.fz - min.fz) * m
+    m.ac <- min.fz + (max.fz - min.fz) * m.ac
+  }
+  err <- m - m.ac
+  rel.err <- (err / m) * (m != 0)
+  outcome <- data.frame(required_moment = m, achieved_moment = m.ac, abs_error = err, rel_error = rel.err)
+  print(outcome)
   return(my_list)
   }
 
