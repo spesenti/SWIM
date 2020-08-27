@@ -126,9 +126,10 @@ stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, ...){
     m <- min.fz + (max.fz - min.fz) * m
     m.ac <- min.fz + (max.fz - min.fz) * m.ac
   }
+  columns <-
   err <- m - m.ac
   rel.err <- (err / m) * (m != 0)
-  outcome <- data.frame(required_moment = m, achieved_moment = m.ac, abs_error = err, rel_error = rel.err)
+  outcome <- data.frame(cols = as.character(k), required_moment = m, achieved_moment = m.ac, abs_error = err, rel_error = rel.err)
   print(outcome)
   return(my_list)
   }
