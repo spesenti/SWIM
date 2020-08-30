@@ -70,7 +70,7 @@
 #' @export
 
 stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
-                          s_ratio = NULL, q = NULL, s = NULL, k = 1){
+                          s_ratio = NULL, q = NULL, s = NULL, k = 1, normalise = FALSE){
 
   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -129,7 +129,7 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   q_matrix <- matrix(rep(VaR_achieved, each = n), ncol = max_length)
 
   constr <- cbind(alpha, "q"= VaR_achieved, s)
-  new_weights <- apply(X = constr, MARGIN = 1, FUN = .rn_VaR_ES, y = x_data[, k])
+  new_weights <- apply(X = constr, MARGIN = 1, FUN = .rn_VaR_ES, y = x_data[, k], normalise = normalise)
   if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", as.character(1:dim(x_data)[2]), sep = "")
   names(new_weights) <- paste(rep("stress", max_length), 1:max_length)
 
@@ -147,10 +147,15 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
 }
 
 # help function
-.rn_VaR_ES <- function(y, constraints){
+.rn_VaR_ES <- function(y, constraints, normalise){
   .alpha <- constraints[1]
   .q <- constraints[2]
   .s <- constraints[3]
+  if(normalise == TRUE){
+    .q <- (.q - min(y)) / (max(y) - min(y))
+    .s <- (.s - min(y)) / (max(y) - min(y))
+    y <- .scale(y)
+    }
   x_q <- 1 * (y > .q)
 
   theta_sol <- function(theta){
