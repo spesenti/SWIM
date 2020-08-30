@@ -166,5 +166,6 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   prob_q <- mean(y <= .q)
   e <- mean(exp(theta * (y - .q)) * (y > .q))
   rn_weights <- function(z){(.alpha / prob_q) * (z <= .q) + (1 - .alpha) / e * exp(theta * (z - .q)) * (z > .q)}
+  if(normalise == TRUE)rn_weights <- function(z)rn.weights((z - min(y)) / (max(y) - min(y)))
   return(rn_weights)
 }
