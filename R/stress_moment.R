@@ -40,7 +40,7 @@
 #'     user is referred to the \code{\link[nleqslv]{nleqslv}} documentation for
 #'     further details.
 #'
-#'     Normalizing the data may help avoiding issues when the range of values is wide.
+#'     Normalising the data may help avoiding issues when the range of values is wide.
 #'
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
@@ -52,6 +52,8 @@
 #'    a different stress and contains \code{f}, \code{k} and \code{m}.
 #'     }
 #'     See \code{\link{SWIM}} for details.
+#'
+#'     The function call will print a message containing the termination code returned by the call to \code{nleqslv} and a table with the required and achieved moment, and the absolute and relative error.
 #'
 #' @examples
 #' set.seed(0)
@@ -126,7 +128,6 @@ stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, ...){
     m <- min.fz + (max.fz - min.fz) * m
     m.ac <- min.fz + (max.fz - min.fz) * m.ac
   }
-  columns <-
   err <- m - m.ac
   rel.err <- (err / m) * (m != 0)
   outcome <- data.frame(cols = as.character(k), required_moment = m, achieved_moment = m.ac, abs_error = err, rel_error = rel.err)
