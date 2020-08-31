@@ -11,7 +11,8 @@ stress_VaR_ES(
   s_ratio = NULL,
   q = NULL,
   s = NULL,
-  k = 1
+  k = 1,
+  normalise = FALSE
 )
 }
 \arguments{
@@ -45,6 +46,9 @@ the same length.}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.}
+
+\item{normalise}{Logical. If true, values of the columns to be stressed are linearly
+normalised to the unit interval.}
 }
 \value{
 A \code{SWIM} object containing:
@@ -88,6 +92,8 @@ The VaR at level \code{alpha} of a random variable with
    the attained empirical VaR of the model component. In this
    case, \code{stress_VaR} will display a \code{message} and the \code{specs} contain
    the achieved VaR. Further, ES is then calculated on the bases of the achieved VaR.
+
+   Normalising the data may help avoiding numerical issues when the range of values is wide.
 }
 \examples{
 set.seed(0)

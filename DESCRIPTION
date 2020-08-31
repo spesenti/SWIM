@@ -1,6 +1,6 @@
 Package: SWIM
 Title: Scenario Weights for Importance Measurement
-Version: 0.2.1
+Version: 0.2.1.9000
 Authors@R: c(
   person("Silvana M.", "Pesenti", email = "swimpackage@gmail.com", 
   role = c("aut", "cre")), 
@@ -42,7 +42,7 @@ Encoding: UTF-8
 LazyLoad: true
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests: 
     testthat,
     mvtnorm,

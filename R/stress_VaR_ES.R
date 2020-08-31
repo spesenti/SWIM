@@ -16,6 +16,8 @@
 #'                   the baseline ES.\cr
 #'                   If \code{q} (\code{q_ratio}) and \code{s_ratio} are vectors,
 #'                   they must have the same length.
+#' @param normalise Logical. If true, values of the columns to be stressed are linearly
+#'                  normalised to the unit interval.
 #'
 #' @details The VaR at level \code{alpha} of a random variable with
 #'     distribution function F is defined as its left-quantile at \code{alpha}:
@@ -36,6 +38,8 @@
 #'    the attained empirical VaR of the model component. In this
 #'    case, \code{stress_VaR} will display a \code{message} and the \code{specs} contain
 #'    the achieved VaR. Further, ES is then calculated on the bases of the achieved VaR.
+#'
+#'    Normalising the data may help avoiding numerical issues when the range of values is wide.
 #'
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
@@ -70,7 +74,7 @@
 #' @export
 
 stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
-                          s_ratio = NULL, q = NULL, s = NULL, k = 1){
+                          s_ratio = NULL, q = NULL, s = NULL, k = 1, normalise = FALSE){
 
   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -129,7 +133,7 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   q_matrix <- matrix(rep(VaR_achieved, each = n), ncol = max_length)
 
   constr <- cbind(alpha, "q"= VaR_achieved, s)
-  new_weights <- apply(X = constr, MARGIN = 1, FUN = .rn_VaR_ES, y = x_data[, k])
+  new_weights <- apply(X = constr, MARGIN = 1, FUN = .rn_VaR_ES, y = x_data[, k], normalise = normalise)
   if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", as.character(1:dim(x_data)[2]), sep = "")
   names(new_weights) <- paste(rep("stress", max_length), 1:max_length)
 
@@ -147,10 +151,17 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
 }
 
 # help function
-.rn_VaR_ES <- function(y, constraints){
+.rn_VaR_ES <- function(y, constraints, normalise){
   .alpha <- constraints[1]
   .q <- constraints[2]
   .s <- constraints[3]
+  if(normalise == TRUE){
+    min.y <- min(y)
+    max.y <- max(y)
+    .q <- (.q - min.y) / (max.y - min.y)
+    .s <- (.s - min.y) / (max.y - min.y)
+    y <- .scale(y)
+    }
   x_q <- 1 * (y > .q)
 
   theta_sol <- function(theta){
@@ -160,6 +171,13 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   theta <- stats::uniroot(theta_sol, lower = -10^-20, upper = 10^-20, tol = 10^-30, extendInt = "yes")$root
   prob_q <- mean(y <= .q)
   e <- mean(exp(theta * (y - .q)) * (y > .q))
-  rn_weights <- function(z){(.alpha / prob_q) * (z <= .q) + (1 - .alpha) / e * exp(theta * (z - .q)) * (z > .q)}
+  if(normalise == FALSE){
+    rn_weights <- function(z){(.alpha / prob_q) * (z <= .q) + (1 - .alpha) / e * exp(theta * (z - .q)) * (z > .q)}
+  } else {
+    rn_weights <- function(z){
+      z1 <- (z - min.y) / (max.y - min.y)
+      (.alpha / prob_q) * (z1 <= .q) + (1 - .alpha) / e * exp(theta * (z1 - .q)) * (z1 > .q)
+      }
+    }
   return(rn_weights)
 }

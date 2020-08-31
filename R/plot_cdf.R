@@ -58,7 +58,8 @@
 #'
 #' @export
 
-  plot_cdf <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,                             x_limits, y_limits, displ = TRUE){
+  plot_cdf <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,                            
+                       x_limits, y_limits, displ = TRUE){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    if (anyNA(object$x)) warning("x contains NA")
    x_data <- get_data(object)[, xCol]
