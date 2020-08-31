@@ -37,6 +37,8 @@
 #'    case, \code{stress_VaR} will display a \code{message} and the \code{specs} contain
 #'    the achieved VaR. Further, ES is then calculated on the bases of the achieved VaR.
 #'
+#'    Normalising the data may help avoiding numerical issues when the range of values is wide.
+#'
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
 #'       \item \code{x}, a data.frame containing the data;
