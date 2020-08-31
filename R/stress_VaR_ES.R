@@ -152,8 +152,10 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   .q <- constraints[2]
   .s <- constraints[3]
   if(normalise == TRUE){
-    .q <- (.q - min(y)) / (max(y) - min(y))
-    .s <- (.s - min(y)) / (max(y) - min(y))
+    min.y <- min(y)
+    max.y <- max(y)
+    .q <- (.q - min.y) / (max.y - min.y)
+    .s <- (.s - min.y) / (max.y - min.y)
     y <- .scale(y)
     }
   x_q <- 1 * (y > .q)
@@ -165,7 +167,13 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   theta <- stats::uniroot(theta_sol, lower = -10^-20, upper = 10^-20, tol = 10^-30, extendInt = "yes")$root
   prob_q <- mean(y <= .q)
   e <- mean(exp(theta * (y - .q)) * (y > .q))
-  rn_weights <- function(z){(.alpha / prob_q) * (z <= .q) + (1 - .alpha) / e * exp(theta * (z - .q)) * (z > .q)}
-  if(normalise == TRUE)rn_weights <- function(z)rn_weights((z - min(y)) / (max(y) - min(y)))
+  if(normalise == FALSE){
+    rn_weights <- function(z){(.alpha / prob_q) * (z <= .q) + (1 - .alpha) / e * exp(theta * (z - .q)) * (z > .q)}
+  } else {
+    rn_weights <- function(z){
+      z1 <- (z - min.y) / (max.y - min.y)
+      (.alpha / prob_q) * (z1 <= .q) + (1 - .alpha) / e * exp(theta * (z1 - .q)) * (z1 > .q)
+      }
+    }
   return(rn_weights)
 }
