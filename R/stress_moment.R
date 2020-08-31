@@ -40,7 +40,7 @@
 #'     user is referred to the \code{\link[nleqslv]{nleqslv}} documentation for
 #'     further details.
 #'
-#'     Normalising the data may help avoiding issues when the range of values is wide.
+#'     Normalising the data may help avoiding numerical issues when the range of values is wide.
 #'
 #' @return A \code{SWIM} object containing:
 #'     \itemize{
