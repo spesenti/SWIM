@@ -14,6 +14,11 @@
  - `stress_moment()`:
     * add parameter "normalise" that allows to linearly normalise the values
     called by `nleqslv`.
+    * the function prints a table with the required and achieved moments and the absolute and relative error.
+
+ - `stress_VaR_ES()`:
+    * add parameter "normalise" that allows to linearly normalise the values 
+    before `uniroot` is applied.
 
 
 ## Minor changes
