@@ -16,6 +16,8 @@
 #'                   the baseline ES.\cr
 #'                   If \code{q} (\code{q_ratio}) and \code{s_ratio} are vectors,
 #'                   they must have the same length.
+#' @param normalise Logical. If true, values of the columns to be stressed are linearly
+#'                  normalised to the unit interval.
 #'
 #' @details The VaR at level \code{alpha} of a random variable with
 #'     distribution function F is defined as its left-quantile at \code{alpha}:
