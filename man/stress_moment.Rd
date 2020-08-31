@@ -26,7 +26,7 @@ to the input variables of \code{f[[i]]}.}
 the stressed moments of \code{f(x)}. Must be in the
 range of \code{f(x)}.}
 
-\item{normalise}{Logical. If true, values of \code{f(x)} are linearly 
+\item{normalise}{Logical. If true, values of \code{f(x)} are linearly
 normalised to the unit interval.}
 
 \item{show}{Logical. If true, print the result of the call to
@@ -46,6 +46,8 @@ A \code{SWIM} object containing:
    a different stress and contains \code{f}, \code{k} and \code{m}.
     }
     See \code{\link{SWIM}} for details.
+
+    The function call will print a message containing the termination code returned by the call to \code{nleqslv} and a table with the required and achieved moment, and the absolute and relative error.
 }
 \description{
 Provides weights on simulated scenarios from a baseline stochastic
@@ -71,7 +73,7 @@ The moment constraints are given by \code{E^Q( f(x) ) = m},
     user is referred to the \code{\link[nleqslv]{nleqslv}} documentation for
     further details.
 
-    Normalizing the data may help avoiding issues when the range of values is wide.
+    Normalising the data may help avoiding numerical issues when the range of values is wide.
 }
 \examples{
 set.seed(0)
