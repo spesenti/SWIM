@@ -23,7 +23,8 @@ containing the stressed means.}
 containing the stressed standard deviations.}
 
 \item{...}{Additional arguments to be passed to
-\code{\link[nleqslv]{nleqslv}}.}
+\code{\link[nleqslv]{nleqslv}} or
+\code{\link{stress_moment}}.}
 }
 \value{
 A \code{SWIM} object containing:

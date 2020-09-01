@@ -148,6 +148,9 @@ stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, ...){
 #'                  are stressed.
 #' @param new_means Numeric vector, same length as \code{k},
 #'                  containing the stressed means.
+#' @param ...       Additional arguments to be passed to
+#'                  \code{\link[nleqslv]{nleqslv}} or
+#'                  \code{\link{stress_moment}}.
 #'
 #' @details The function \code{stress_mean} is a wrapper for the
 #'     function \code{stress_moment}. See \code{\link{stress_moment}}

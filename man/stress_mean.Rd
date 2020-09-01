@@ -20,7 +20,8 @@ are stressed.}
 containing the stressed means.}
 
 \item{...}{Additional arguments to be passed to
-\code{\link[nleqslv]{nleqslv}}.}
+\code{\link[nleqslv]{nleqslv}} or
+\code{\link{stress_moment}}.}
 }
 \value{
 A \code{SWIM} object containing:
