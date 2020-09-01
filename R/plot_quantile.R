@@ -53,7 +53,7 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
   quant_data <- cbind(grid, sapply(wCol, FUN = quantile_stressed, object = object, probs = grid, xCol = xCol,type = c("quantile")))
   colnames(quant_data) <- c("grid", paste("stress", wCol, sep = " "))
   if (base == TRUE){
-    quant_data <- cbind(quant_data, base = as.numeric(quantile(get_data(object)[, xCol], grid)))
+    quant_data <- cbind(quant_data, base = as.numeric(stats::quantile(get_data(object)[, xCol], grid)))
   }
   
     plot_data <- reshape2::melt(as.data.frame(quant_data), id.var = "grid", variable.name = "stress", value.name = "value")

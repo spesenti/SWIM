@@ -126,8 +126,9 @@ portfolio loss Y from the baseline to the two stressed models.
 
 ``` r
 plot_cdf(object = rev.stress, xCol = 1, base = TRUE)
-#> Warning: Computation failed in `stat_ecdf()`:
-#> there is no package called 'spatstat'
+#> Registered S3 method overwritten by 'spatstat':
+#>   method     from
+#>   print.boxx cli
 ```
 
 <img src="man/figures/README-plot-cdf-1.png" width="100%" />
@@ -151,14 +152,14 @@ first moment of the stressed and the baseline distributions of Xi.
 knitr::kable(sensitivity(rev.stress, type = "all"), digits = 2)
 ```
 
-| stress   | type        |    Y |   X1 |   X2 |   X3 |   X4 |   X5 |
-| :------- | :---------- | ---: | ---: | ---: | ---: | ---: | ---: |
-| stress 1 | Gamma       | 1.00 | 0.79 | 0.74 | 0.75 | 0.77 | 0.81 |
-| stress 2 | Gamma       | 1.00 | 0.79 | 0.74 | 0.75 | 0.77 | 0.80 |
-| stress 1 | Kolmogorov  | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
-| stress 2 | Kolmogorov  | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
-| stress 1 | Wasserstein | 0.25 | 0.08 | 0.05 | 0.05 | 0.06 | 0.08 |
-| stress 2 | Wasserstein | 0.14 | 0.04 | 0.03 | 0.03 | 0.04 | 0.04 |
+| stress   | type        |     Y |   X1 |   X2 |   X3 |   X4 |   X5 |
+| :------- | :---------- | ----: | ---: | ---: | ---: | ---: | ---: |
+| stress 1 | Gamma       |  1.00 | 0.79 | 0.74 | 0.75 | 0.77 | 0.81 |
+| stress 2 | Gamma       |  1.00 | 0.79 | 0.74 | 0.75 | 0.77 | 0.80 |
+| stress 1 | Kolmogorov  |  0.08 | 0.05 | 0.05 | 0.05 | 0.05 | 0.05 |
+| stress 2 | Kolmogorov  |  0.05 | 0.03 | 0.03 | 0.03 | 0.03 | 0.03 |
+| stress 1 | Wasserstein | 33.84 | 8.07 | 4.84 | 5.45 | 6.72 | 8.77 |
+| stress 2 | Wasserstein | 24.02 | 5.73 | 3.43 | 3.88 | 4.77 | 6.21 |
 
 ``` r
 plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma") 
@@ -195,8 +196,6 @@ heavier tail.
 
 ``` r
 plot_cdf(object = rev.stress, xCol = 5, base = TRUE)
-#> Warning: Computation failed in `stat_ecdf()`:
-#> there is no package called 'spatstat'
 ```
 
 <img src="man/figures/README-plot-cdf-input-1.png" width="100%" />
