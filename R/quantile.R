@@ -67,7 +67,7 @@
     cname <- xCol   
    }
    x_data <- as.matrix(get_data(object)[ , xCol])
-
+   
    quantile_w <- as.matrix(apply(X = as.matrix(x_data), MARGIN = 2, FUN = Hmisc::wtd.quantile, weights = new_weights, probs = probs, type = type))
    if (length(probs) == 1 && length(cname) > 1) quantile_w <- matrix(quantile_w, nrow = 1)
    colnames(quantile_w) <- cname
