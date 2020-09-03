@@ -18,7 +18,7 @@
 #'                  the stressed moments of \code{f(x)}. Must be in the
 #'                  range of \code{f(x)}.
 #' @param normalise Logical. If true, values of \code{f(x)} are linearly
-#'                  normalised to the unit interval.
+#'                  scaled to the unit interval.
 #' @param show      Logical. If true, print the result of the call to
 #'                  \code{\link[nleqslv]{nleqslv}}.
 #' @param ...       Additional arguments to be passed to
