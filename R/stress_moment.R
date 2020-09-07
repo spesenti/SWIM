@@ -194,10 +194,10 @@ stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, ...){
 #' @inherit SWIM references
 #' @export
 
-stress_mean <- function(x, k, new_means, ...)
+stress_mean <- function(x, k, new_means, normalise = FALSE, ...)
 {
   means <- rep(list(function(x)x), length(k))
-  res <- stress_moment(x = x, f = means, k = as.list(k), m = new_means, ...)
+  res <- stress_moment(x = x, f = means, k = as.list(k), m = new_means, normalise, ...)
 
   res$type[length(res$type)] <- "mean"
   res$specs[[length(res$specs)]] <- list("k" = k, "new_means" = new_means)
@@ -265,14 +265,14 @@ stress_mean <- function(x, k, new_means, ...)
 
 # k, new_means, new_sd have to be the same length
 # one can only stress the mean and sd together.
-stress_mean_sd <- function(x, k, new_means, new_sd, ...)
+stress_mean_sd <- function(x, k, new_means, new_sd, normalise = FALSE, ...)
 {
   means <- rep(list(function(x)x), length(k))
   second_moments <- rep(list(function(x)x ^ 2), length(k))
   f <- c(means, second_moments)
   m <- c(new_means, new_means ^ 2 + new_sd ^ 2)
   k_new <- as.list(c(k, k))
-  res <- stress_moment(x, f, k_new, m, ...)
+  res <- stress_moment(x, f, k_new, m, normalise...)
 
   res$type[length(res$type)] <- "mean sd"
   res$specs[[length(res$specs)]] <- list("k" = k, "new_means" = new_means, "new_sd" = new_sd)
@@ -280,4 +280,7 @@ stress_mean_sd <- function(x, k, new_means, new_sd, ...)
   return(res)
 }
 
-.scale <- function(x)(x - min(x)) / (max(x) - min(x))
+.scale <- function(x){
+  .res <- (x - min(x)) / (max(x) - min(x))
+  return(.res)
+  }
