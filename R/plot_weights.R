@@ -6,7 +6,9 @@
 #' @inheritParams  sensitivity
 #' @param n        Integer, the number of points used to plot 
 #'                 (\code{default = 5000} or the minimum of the data). If 
-#'                 \code{n = "all"}, all data points are plotted.
+#'                 \code{n = "all"}, all data points are plotted. If \code{n} is
+#'                 a subset of points, the plotted scenario weights are chosen in 
+#'                 an equidistant way.  
 #'                 
 #
 #' @return If \code{displ = TRUE}, a plot displaying the scenario

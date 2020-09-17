@@ -26,7 +26,9 @@ stresses (\code{default = "all"}).}
 
 \item{n}{Integer, the number of points used to plot 
 (\code{default = 5000} or the minimum of the data). If 
-\code{n = "all"}, all data points are plotted.}
+\code{n = "all"}, all data points are plotted. If \code{n} is
+a subset of points, the plotted scenario weights are chosen in 
+an equidistant way.}
 
 \item{x_limits}{Vector, the limits of the x-axis of the plot, the
 value for \code{xlim} in the \code{coord_cartesian}
