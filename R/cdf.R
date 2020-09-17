@@ -44,6 +44,7 @@
    cdf <- .cdf(x = x_data, w = new_weights)
    return(cdf)
   }
+  # tst 
 
  # help function 
  # x    numeric vector  
