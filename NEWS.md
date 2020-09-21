@@ -8,7 +8,7 @@
       scenario weights.
 
  - `plot_weights()`:
-    * the function plots the scenario weights of a stressed model agains 
+    * the function plots the scenario weights of a stressed model against 
       model components.
 
  - `stress_moment()`:
