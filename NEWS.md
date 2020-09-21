@@ -1,5 +1,5 @@
 
-# SWIM 0.2.1.9000 - develop version
+# SWIM 0.2.2
 
 ## Major changes: Additional functions and features
 

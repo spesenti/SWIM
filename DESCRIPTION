@@ -1,6 +1,6 @@
 Package: SWIM
 Title: Scenario Weights for Importance Measurement
-Version: 0.2.1.9000
+Version: 0.2.2
 Authors@R: c(
   person("Silvana M.", "Pesenti", email = "swimpackage@gmail.com", 
   role = c("aut", "cre")), 
