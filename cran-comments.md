@@ -7,16 +7,16 @@
 * local win (R4.0.2; R Under development)
 
 ## R CMD check results
-There were no ERRORs and no NoOTES.    
+There were no ERRORs, no WARNINGS and no NOTES.    
+
+
+## CRAN status: WARN: 1, OK: 11
+The Warning on the current CRAN version pertains to the bibtex package as follows: 
 
 There is 1 Warning "Requires (indirectly) orphaned package: 'bibtex'". The bibtex 
 is an Import for the Rdpack package which I use for citing BibTex entries in the 
 help files. The bibtex package has been ORPHAND on CRAN on 19. Sept. 2020 and I don't
 know whether this is permanent. 
-
-## CRAN status: WARN: 1, OK: 11
-The Warning on the current CRAN version pertains to the bibtex package as described 
-in the R CMD check results above. 
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.
