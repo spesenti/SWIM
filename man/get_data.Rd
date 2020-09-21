@@ -64,18 +64,29 @@ Extracting the data (realisations of the stochastic model), the
 ## continuing example in stress_VaR
 set.seed(0)
 x <- as.data.frame(cbind(
-  "normal" = rnorm(1000), 
-  "gamma" = rgamma(1000, shape = 2)))
-res1 <- stress(type = "VaR", x = x, 
-  alpha = 0.9, q_ratio = 1.05)
-  
+     "normal" = rnorm(1000), 
+     "gamma" = rgamma(1000, shape = 2)))
+  res1 <- stress(type = "VaR", x = x, 
+                 alpha = 0.9, q_ratio = 1.05, k = 1)
+
 ## returning the underlying data
 all(get_data(res1) == x)
-## the scenario weights
-get_weights(res1)
+ ## the scenario weights
+w <- get_weights(res1) 
 get_weightsfun(res1)
 get_specs(res1)
-                            
+  
+## now add a stress on the means of both variables
+res1 <- stress(type = "mean", x = res1, k = 1:2, new_means = c(0.5,1.5))
+get_specs(res1)
+## the required moments for a stress of type "mean" are not displayed 
+## the type of stress and the specs for the second stress can be 
+## extracted directly from the SWIM object.
+res1$type[[2]]
+res1$specs[[2]]
+                                             
+                                                              
+                                                                                                
 }
 \seealso{
 \code{\link{SWIM}}

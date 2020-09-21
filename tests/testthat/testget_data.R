@@ -43,7 +43,7 @@ x <- data.frame(cbind(
   rnorm(1000), 
   rgamma(1000, shape = 2), 
   rbeta(1000, shape1 = 2, shape2 = 2)))
-colnames(x)
+colnames(x) <- c("X1", "X2", "X3")
 
 k <- 1:3
 new_means <- c(1, 1, 0.75)
@@ -78,7 +78,7 @@ x <- as.matrix(cbind(
   rnorm(1000), 
   rgamma(1000, shape = 2), 
   rbeta(1000, shape1 = 2, shape2 = 2)))
-colnames(x)
+colnames(x) <- c("X1", "X2", "X3")
 
 k <- 1:3
 new_means <- c(1, 1, 0.75)
@@ -93,7 +93,6 @@ test_that("get data", {
   # "all" 
   expect_equal(colnames(get_data(res3, xCol = "all")), colnames(x))
   # xCol numeric
-  expect_error(colnames(get_data(res3, xCol = colnames(x)[1])))
   expect_equal(colnames(get_data(res3, xCol = 1)), "X1")
   # xCol vector
   expect_equal(colnames(get_data(res3, xCol = c(1,3))), c("X1", "X3"))

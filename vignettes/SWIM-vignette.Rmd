@@ -12,7 +12,7 @@ vignette: >
 date: |
   | ^2^University of Toronto, ^3^Assicurazioni Generali S.p.A, ^4^DEAMS, University of Trieste, ^5^Cass Business School, City, University of London
   |
-  | 10. January 2020 
+  | 20. September 2020 
 bibliography: bibliography.bib
 documentclass: article
 github-repo: spesenti/SWIMvignette
@@ -189,12 +189,11 @@ plot_cdf(str.mean, xCol = 4, base = TRUE)
 
 The scenario weights, given their central role, can be extracted from a **SWIM** object. In Figure \@ref(fig:example1-weights-mean), the scenario weights from `str.mean` are plotted against realisations from $Z_1$ and $Y$ respectively. It is seen how the weights are increasing in the realisations from $Z_1$. This is a consequence of the weights' derivation via a stress on the model component $Z_1$. The increasingness shows that those scenarios for which $Z_1$ is largest are assigned a higher weight. The relation between scenario weights and $Y$ is still increasing (reflecting that high outcomes of $Y$ tend to receive higher weights), but no longer deterministic (showing that $Y$ is not completely driven by changes in $Z_1$).
 
-
 ``` {r, example1-weights-mean, warning = FALSE, message = FALSE, fig.show='hold', out.width = '50%',fig.cap = "Scenario weights against observations of model components  $Z_1$ (left) and $Y$ (right), subject to a stress on the mean of $Z_1$."}
-# extract weights from stressed model
-w.mean <- get_weights(str.mean)
-plot(Z1[1:5000], w.mean[1:5000], pch = 20, xlab = "Z1", ylab = "scenario weights")
-plot(Y[1:5000], w.mean[1:5000], pch = 20, xlab = "Y", ylab = "scenario weights")
+# parameter n specifies the number of scenario weights plotted
+plot_weights(str.mean, xCol = "Z1", n = 1000)
+# specifying the limits of the x-axis
+plot_weights(str.mean, xCol = "Y", x_limits = c(90, 550), n = 1000)
 ```
 
 
@@ -217,9 +216,8 @@ plot_cdf(str.sd, xCol = 4, base = TRUE)
 The different way in which a stress on the standard deviation of $Z_1$ impacts on the model, compared to a stress on the mean, is reflected by the scenario weights. Figure \@ref(fig:example1-weights-sd) shows the pattern of the scenario weights and how, when stressing standard deviations, higher weight is placed on scenarios where $Z_1$ is extreme, either much lower or much higher than its mean of 100.
 
 ``` {r, example1-weights-sd, cache = TRUE, warning = FALSE, message = FALSE, fig.show='hold', out.width = '50%',fig.cap = "Scenario weights against observations of model components  $Z_1$ (left) and $Y$ (right), subject to a stress on the standard deviation of $Z_1$."}
-w.sd <- get_weights(str.sd)
-plot(Z1[1:5000], w.sd[1:5000], pch = 20, xlab = "Z1", ylab = "scenario weights")
-plot(Y[1:5000], w.sd[1:5000], pch = 20, xlab = "Y", ylab = "scenario weights")
+plot_weights(str.sd, xCol = "Z1", n = 2000)
+plot_weights(str.sd, xCol = "Y", n = 2000)
 ```
 
 
@@ -355,6 +353,8 @@ Table \@ref(tab:Ranalysis) provides a complete list of all implemented **R** fun
 | `sensitivity`       |sensitivity measures 
 | `importance_rank`   |importance ranks    
 | `plot_cdf`          |plots cumulative distributions functions 
+| `plot_quantile`     |plots quantile functions 
+| `plot_weights`      |plots scenario weights 
 | `plot_hist`         |plots histograms
 | `plot_sensitivity`  |plots sensitivity measures       
 Table: (\#tab:Ranalysis) Implemented **R** function in **SWIM** for analysing stressed models. 
@@ -458,15 +458,12 @@ options(digits = 3)
 get_specs(stress.credit)
 ```
 
+Next, we produce a scatter plot of the scenario weights against the portfolio loss $L$. As the number of scenario weights is large, we only $5000$ data points. This can be achieved via the parameter `n` in the function `plot_weights`, that has a default of $n = 5000$. 
+
 ``` {r, credit-weights, warning = FALSE, cache = FALSE, message = FALSE, fig.show='hold', out.width = '50%',fig.cap = "Scenario weights against the portfolio loss $L$ for stressing VaR (left) and stressing both VaR and ES (right).", tidy = FALSE}
-# extract weights from SWIM object
-w.credit <- get_weights(stress.credit)
-# only plot a subset of the sceranio weights 
-grid <- seq(1, 100000, by = 50)
-plot(credit_data[grid, 1], w.credit[grid, 1], pch = 20, xlab = "L", 
-     ylab = "scenario weights")
-plot(credit_data[grid, 1], w.credit[grid, 2], pch = 20, xlab = "L", 
-     ylab = "scenario weights")
+plot_weights(stress.credit, xCol = "L", wCol = 1, n = 2000)
+# parameter `wCol` specifies the stresses, whose scenario weights are plotted.
+plot_weights(stress.credit, xCol = "L", wCol = 2, n = 7000)
 ```
 
 It is seen in Figure \@ref(fig:credit-weights) that the weights generated to stress VaR, and VaR and ES together, follow different patterns to the weights used to stress means and standard deviations, as shown in Section \@ref(Sec:Intro). Recall that **SWIM** calculates the scenario weights such that under the stressed model the given constraints are fulfilled. Thus, an increase in the VaR and/or ES of the portfolio loss $L$ results in large positive realisations of $L$ being assigned higher weight. On the other hand, when the standard deviation is stressed, scenario weights are calculated that inflate the probabilities of both large positive and negative values. 
@@ -499,7 +496,7 @@ It is seen from both the distribution plots and the histograms in Figures \@ref(
 
 ## Sensitivity measures
 
-The impact of the stressed models on the model components can be quantified through sensitivity measures. The function `sensitivity` includes the *Kolmogorov* distance, the *Wasserstein* distance, and the sensitivity measure *Gamma*; the choice of measure is by the argument `type`. We refer to Section \@ref(Sec:analysis) for the definitions of those sensitivity measures. The Kolmogorov distance is useful for comparing different stressed models. It is seen that `stress 2` produces a more substantial distortion to the baseline distribution of $L$ compared to `stress 1`. 
+The impact of the stressed models on the model components can be quantified through sensitivity measures. The function `sensitivity` includes the *Kolmogorov* distance, the *Wasserstein* distance, and the sensitivity measure *Gamma*; the choice of measure is by the argument `type`. We refer to Section \@ref(Sec:analysis) for the definitions of those sensitivity measures. The Kolmogorov distance is useful for comparing different stressed models. Calculating the Kolmogorov distance, we observe that `stress 2` produces a larger Kolmogorov distance compared to `stress 1`, which reflects the additional stress on the ES for the stressed model `stress 2`. 
 
 ```{r, CM-sensitivity0, cache = TRUE}
 sensitivity(object = stress.credit, xCol = 1, wCol = "all", type = "Kolmogorov")
@@ -599,14 +596,7 @@ stress.credit.L2L3 <- stress_moment(x = stress.credit.L2L3, f = f.stress.joint, 
 We analyse the impact the stresses of the tail of the subportfolios $L_2$ and $L_3$ have on the aggregate portfolio $L$. For this, we plot in Figure \@ref(fig:CM-joint-stress-VaR-2-effect) the quantile of the aggregate portfolio under the baseline model (blue), under the stress on the tail of $L_2$ and $L_3$ (red), and under the additional stress on the joint tail of $L_2$ and $L_3$ (green).
 
 ```{r, CM-joint-stress-VaR-2-effect, echo = TRUE, cache = FALSE, fig.cap = "Quantiles of the aggregate loss $L$ under the baseline (blue), the stress on the tails of $L_2$ and $L_3$ (red), and the additional stress on the joint tail of $L_2$ and $L_3$ (green).", out.width = '80%', fig.align = 'center'}
-# stressed quantiles
-VaR.level <- seq(0.75, 0.99, by = 0.003)
-VaR.stress1 <- VaR_stressed(stress.credit.L2L3, alpha = VaR.level, xCol = "L", wCol = 1, base = TRUE)
-VaR.stress2 <- VaR_stressed(stress.credit.L2L3, alpha = VaR.level, xCol = "L", wCol = 2, base = FALSE)
-
-plot(VaR.level, VaR.stress1[, 2], col = "blue", type = "l", xlab = "quantile levels", ylab ="Quantiles of L under different models")
-lines(VaR.level, VaR.stress1[, 1], col = "red")
-lines(VaR.level, VaR.stress2, col = "darkgreen")
+plot_quantile(stress.credit.L2L3, xCol = "L", wCol = "all", base = TRUE, x_limits = c(0.75, 1))
 ```
 
 The results and the plots indicate that the additional stress on joint exceedances of subportfolios, increases the tail quantiles of $L$ even further, demonstrating the importance of (tail-)dependence in portfolio risk management. 

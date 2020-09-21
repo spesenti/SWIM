@@ -4,7 +4,7 @@
 \alias{stress_mean_sd}
 \title{Stressing Mean and Standard Deviation}
 \usage{
-stress_mean_sd(x, k, new_means, new_sd, ...)
+stress_mean_sd(x, k, new_means, new_sd, normalise = FALSE, ...)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame
@@ -22,8 +22,12 @@ containing the stressed means.}
 \item{new_sd}{Numeric vector, same length as \code{k},
 containing the stressed standard deviations.}
 
+\item{normalise}{Logical. If true, values of \code{f(x)} are linearly
+scaled to the unit interval.}
+
 \item{...}{Additional arguments to be passed to
-\code{\link[nleqslv]{nleqslv}}.}
+\code{\link[nleqslv]{nleqslv}} or
+\code{\link{stress_moment}}.}
 }
 \value{
 A \code{SWIM} object containing:

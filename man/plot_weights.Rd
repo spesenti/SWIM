@@ -26,7 +26,9 @@ stresses (\code{default = "all"}).}
 
 \item{n}{Integer, the number of points used to plot 
 (\code{default = 5000} or the minimum of the data). If 
-\code{n = "all"}, all data points are plotted.}
+\code{n = "all"}, all data points are plotted. If \code{n} is
+a subset of points, the plotted scenario weights are chosen in 
+an equidistant way.}
 
 \item{x_limits}{Vector, the limits of the x-axis of the plot, the
 value for \code{xlim} in the \code{coord_cartesian}
@@ -64,9 +66,11 @@ model_stress <- stress_VaR(credit_data, alpha = c(0.9, 0.95), q_ratio = 1.1, k =
 plot_weights(model_stress, xCol = "L", wCol = 1:2)
 
 ## additional stress on VaR and ES
+\donttest{
 model_stress <- stress_VaR_ES(model_stress, alpha = 0.9, q_ratio = 1.1, s_ratio = 1.2, k =1) 
-plot_weights(model_stress, xCol = "L", wCol = "all", x_limits = c(0, 3500), 
+plot_weights(model_stress, xCol = "L", wCol = "all", n = 1000, x_limits = c(0, 3500), 
              y_limits = c(0, 10))
+             }
 
 }
 \seealso{
