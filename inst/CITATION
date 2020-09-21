@@ -5,6 +5,6 @@ citEntry(entry = "unpublished",
          title = "Scenario Weights for Importance Measurement (SWIM) - An R Package for Sensitivity Analysis",
          year = "2020",
          note = "Available at SSRN.",
-         url = "https://ssrn.com/abstract=3515274",
+         url = "https://www.ssrn.com/abstract=3515274",
          textVersion = "Silvana M. Pesenti, Alberto Bettini, Pietro Millossovich, Andreas Tsanakas. Scenario Weights for Importance Measurement (SWIM) - An R Package for Sensitivity Analysis. Available on SSRN, 2020."
 )
