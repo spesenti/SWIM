@@ -1,5 +1,10 @@
 
-# SWIM 0.2.2
+# SWIM 0.2.2.9000 - current develop version on GitHub
+
+ 
+
+
+# SWIM 0.2.2 - current version on CRAN
 
 ## Major changes: Additional functions and features
 
@@ -26,7 +31,7 @@
  - fix bug in merging different stress objects.
 
 
-# SWIM 0.2.1 - current version on CRAN
+# SWIM 0.2.1 
 
 ## Minor changes
 
