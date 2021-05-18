@@ -1,54 +1,61 @@
-corr <- function(object, xCol = c(1, 2), wCol = 1, method = "pearson"){
+corr <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson", base=TRUE){
   # if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
   if (anyNA(object$x)) warning("x contains NA")
   if (!(method %in% c("pearson", "spearman", "kendall"))) stop("Method must be one of pearson, spearman and kendall")
   
-  new_weights <- get_weights(object)[ , wCol]
-  x_data <- get_data(object)[ , xCol]
-  x1 <- x_data[, 1]; x2 <- x_data[, 2]
-    
+  x_data <- as.matrix(get_data(object, xCol = xCol))
+  cname <- colnames(x_data)
+  if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
+  new_weights <- get_weights(object)[ ,wCol]  
+  
+  corr_w <- apply(X = as.matrix(new_weights), MARGIN = 2, 
+                  FUN = .summary, x_data = x_data, cname = cname, method = method)
+  names(corr_w) <- paste("stress", wCol)
+  
+  if (base == TRUE){
+    old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)
+    corr_base <- .summary(x_data = x_data, cname = cname, new_weights = old_weights, method = method)
+    corr_w <- c(list("base" = corr_base), corr_w)
+  }
+  return (corr_w)
+}
+
+.summary <- function(x_data, cname, new_weights, method){
+  # print(length(new_weights))
+  # .temp <- function(y, w, method) apply(X = w, FUN = .corr, MARGIN = 2, y = x_data, method = method)
+  corr_w <- .corr(x_data, new_weights, method = method)
+  
+  colnames(corr_w) <- cname
+  rownames(corr_w) <- cname
+  return(data.frame(corr_w))
+} 
+
+.corr <- function(x, w, method){
+  x1 <- x[, 1]; x2 <- x[, 2]
   if (method == "pearson") {
-    res <- .pearson(x1,x2,new_weights)
+    res <- .pearson(x1,x2,w)
   }
   if (method == "kendall") {
-    # print(dim(x_data))
-    # print(length(new_weights))
-    # res <- cor(x_data*new_weights, method = method)
-    res <- .tau(x1*new_weights, x2*new_weights)
+    # res <- cor(x1*w, x2*w, method = method)
+    res <- .tau(x1*w, x2*w)
   }
   if (method == "spearman") {
     x_rank <- rank(x1)
     y_rank <- rank(x2)
-    res <- .pearson(x_rank, y_rank, new_weights)
-  }  
-  return (res)
+    res <- .pearson(x_rank, y_rank, w)
+  }
+  return (matrix(c(1, res, res, 1), byrow = TRUE, nrow = 2))
 }
-
-# .moments <- function(x, w, degree=1){
-#   return(mean(x^degree * w))
-# }
 
 .moments <- function(x, w){
   n <- length(as.vector(x))
   mean_w <- stats::weighted.mean(x = x, w = w)
   sd_w <- sqrt(mean(w * (x - mean_w)^2)) * n / (n-1)
-  skew_w <- mean(w * (x - mean_w)^3) / (sd_w^3) * n^2 / ((n-1) * (n-2))
-  ex_kurt_w <- mean(w * (x - mean_w)^4) / (sd_w^4) - 3
-  quartile_w <- as.matrix(Hmisc::wtd.quantile(x, weights = w, probs = c(0.25, 0.5, 0.75)))
-  moments_w <- rbind(mean_w, sd_w, skew_w, ex_kurt_w, quartile_w)
+  moments_w <- rbind(mean_w, sd_w)
   return(moments_w)
 }
 
 .pearson <- function(x1,x2,new_weights){
-  # m1 <- .moments(x1, new_weights)
-  # m2 <- .moments(x2, new_weights)
-  # print(length(m1))
-  # print(length(x1))
-  # 
-  # cov <- .moments((x1 - m1) * (x2 - m2), new_weights)
-  # var1 <- .moments(x1, new_weights, 2) - m1^2
-  # var2 <- .moments(x2, new_weights, 2) - m2^2
-  # res <- cov / sqrt(var1*var2)
   moments_x1 <- .moments(x1, new_weights)
   moments_x2 <- .moments(x2, new_weights)
   m1 <- moments_x1["mean_w", ]
@@ -67,14 +74,6 @@ corr <- function(object, xCol = c(1, 2), wCol = 1, method = "pearson"){
     x_vec <- x[1:i-1]; y_vec <- y[1:i-1]
     x_curr <- x[i]; y_curr <- y[i]
     acc <- acc + sum(sign(x_vec-x_curr)*sign(y_vec-y_curr))
-    
-    # xi <- x[i]; yi <- y[i]
-    # for (j in 1:i-1){
-    #   xj <- x[j]; yj <- y[j]
-    #   if (is.logical(xi > xj & yi > yj) | is.logical(xi < xj & yi < yj))
-    #     {acc <- acc+1}
-    #   else {acc <- acc-1}
-    #   }
   }
   return (acc*2/(n*(n-1)))
 }
@@ -82,8 +81,12 @@ corr <- function(object, xCol = c(1, 2), wCol = 1, method = "pearson"){
 # test
 library(SWIM)
 data("credit_data")
-credit_data <- credit_data[1:50,]
+credit_data <- credit_data[1:100,]
 stress.credit <- stress(type = "VaR", x = credit_data, k = "L", alpha = 0.9,
                         q_ratio = 1.2)
+stress.credit <- stress(type = "VaR ES", x = stress.credit, k = "L", alpha = 0.9, 
+                        q_ratio = 1.1, s = 2000)
+
 corr(stress.credit, xCol = c(1, 2), method="kendall")
+# cor(get_data(stress.credit)[, c(1,2)], method="kendall")
 
