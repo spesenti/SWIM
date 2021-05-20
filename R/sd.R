@@ -1,4 +1,4 @@
-sd <- function(object, xCol = 1, wCol = 1){
+sd_stressed <- function(object, xCol = 1, wCol = 1){
   if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
   if (anyNA(object$x)) warning("x contains NA")
   new_weights <- get_weights(object)[ , wCol]
