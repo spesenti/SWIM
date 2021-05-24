@@ -1,3 +1,44 @@
+#' Correlation a Stressed Model
+#' 
+#' Provides the correlation of two stressed model components
+#'     (random variable) under the scenario weights. 
+#' 
+#' @inheritParams summary.SWIM
+#' @param method  Character, one of \code{"pearson", "spearman", "kendall"}. Pearson by default.
+#' 
+#' @return The correlation coefficient of the \code{xCol}
+#'     components of the stressed model with weights \code{wCol} and method \code{wCol}.
+#' 
+#' @details \code{cor_stressed}: The correlation coefficient of two 
+#'      chosen stressed model components, subject to the calculated scenario weights.
+#'      The scorrelation coefficient of a stressed model component
+#'      is denoted as \deqn{cor^W}
+#'
+#'      The function \code{cor_stressed} provides stressed correlation coefficient of model
+#'      components with different interpolations.
+#' 
+#' @examples      
+#' ## example with a stress on VaR
+#' set.seed(0)
+#' x <- as.data.frame(cbind(
+#'   "normal" = rnorm(1000), 
+#'   "gamma" = rgamma(1000, shape = 2)))
+#' res1 <- stress(type = "VaR", x = x, 
+#'   alpha = c(0.9, 0.95), q_ratio = 1.05)
+#' ## stressed correlation
+#' cor_stressed(res1, xCol = c(1, 2), wCol = 1)
+#' ## baseline correlation
+#' cor(x$normal, x$gamma)
+#' 
+#' @author Kent Wu
+#' @describeIn cor_stressed correlation coefficient of stressed model components
+#' 
+#' @seealso See \code{\link{stress_moment}} stressing a baseline 
+#'     model with desired moment constraints, and \code{\link{var_stressed}} provides
+#'     stressed variances under the scenario weights
+#' @export
+
+
 cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson", base=TRUE){
   # if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
   if (anyNA(object$x)) warning("x contains NA")
@@ -79,13 +120,13 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
 
 # # # test
 # library(SWIM)
-# data("credit_data")
-# credit_data <- credit_data[1:100,]
-# stress.credit <- stress(type = "VaR", x = credit_data, k = "L", alpha = 0.9,
-#                         q_ratio = 1.2)
-# stress.credit <- stress(type = "VaR ES", x = stress.credit, k = "L", alpha = 0.9,
-#                         q_ratio = 1.1, s = 2000)
-# 
-# cor_stressed(stress.credit, xCol = c(1, 2), method="kendall")
+data("credit_data")
+credit_data <- credit_data[1:100,]
+stress.credit <- stress(type = "VaR", x = credit_data, k = "L", alpha = 0.9,
+                        q_ratio = 1.2)
+stress.credit <- stress(type = "VaR ES", x = stress.credit, k = "L", alpha = 0.9,
+                        q_ratio = 1.1, s = 2000)
+
+cor_stressed(stress.credit, xCol = c(1, 2), method="kendall")
 # # # cor(get_data(stress.credit)[, c(1,2)], method="kendall")
 
