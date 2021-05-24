@@ -118,15 +118,15 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
   return (acc*2/(n*(n-1)))
 }
 
-# # # test
+# # test
 # library(SWIM)
-data("credit_data")
-credit_data <- credit_data[1:100,]
-stress.credit <- stress(type = "VaR", x = credit_data, k = "L", alpha = 0.9,
-                        q_ratio = 1.2)
-stress.credit <- stress(type = "VaR ES", x = stress.credit, k = "L", alpha = 0.9,
-                        q_ratio = 1.1, s = 2000)
-
-cor_stressed(stress.credit, xCol = c(1, 2), method="kendall")
-# # # cor(get_data(stress.credit)[, c(1,2)], method="kendall")
+# data("credit_data")
+# credit_data <- credit_data[1:100,]
+# stress.credit <- stress(type = "VaR", x = credit_data, k = "L", alpha = 0.9,
+#                         q_ratio = 1.2)
+# stress.credit <- stress(type = "VaR ES", x = stress.credit, k = "L", alpha = 0.9,
+#                         q_ratio = 1.1, s = 2000)
+# 
+# cor_stressed(stress.credit, xCol = c(1, 2), method="kendall")
+# # cor(get_data(stress.credit)[, c(1,2)], method="kendall")
 
