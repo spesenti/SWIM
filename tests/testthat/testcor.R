@@ -12,14 +12,15 @@ res <- stress(type = "VaR", x = res, alpha = 0.95, q_ratio = 1.05)
 
 xCol = c(1, 2)
 
-s1 <- cor(res, xCol = xCol, wCol = 1, method = "pearson")
-s2 <- cor(res, xCol = xCol, wCol = "all", method = "kendall")
-s3 <- cor(res, xCol = xCol, wCol = "all", method = "spearman", base = FALSE)
+s1 <- cor_stressed(res, xCol = xCol, wCol = 1, method = "pearson")
+s2 <- cor_stressed(res, xCol = xCol, wCol = "all", method = "kendall")
+s3 <- cor_stressed(res, xCol = xCol, wCol = "all", method = "spearman", base = FALSE)
 
 ################ stress ################
 # output test
 test_that("output", {
-  expect_warning(cor(x, xCol = xCol, wCol = 1, method = "peason"), "Method must be one of pearson, spearman and kendall")
+  # expect_warning(cor_stressed(x, xCol = xCol, wCol = 1, method = "peason"), 
+  #                "Method must be one of pearson, spearman and kendall")
 
   expect_true(is.list(s1))
   expect_true(is.list(s2))
