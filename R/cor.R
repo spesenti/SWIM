@@ -50,18 +50,18 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
   new_weights <- get_weights(object)[ ,wCol]  
   
   corr_w <- apply(X = as.matrix(new_weights), MARGIN = 2, 
-                  FUN = .summary, x_data = x_data, cname = cname, method = method)
+                  FUN = .helper, x_data = x_data, cname = cname, method = method)
   names(corr_w) <- paste("stress", wCol)
   
   if (base == TRUE){
     old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)
-    corr_base <- .summary(x_data = x_data, cname = cname, new_weights = old_weights, method = method)
+    corr_base <- .helper(x_data = x_data, cname = cname, new_weights = old_weights, method = method)
     corr_w <- c(list("base" = corr_base), corr_w)
   }
   return (corr_w)
 }
 
-.summary <- function(x_data, cname, new_weights, method){
+.helper <- function(x_data, cname, new_weights, method){
   # print(length(new_weights))
   # .temp <- function(y, w, method) apply(X = w, FUN = .corr, MARGIN = 2, y = x_data, method = method)
   corr_w <- .corr(x_data, new_weights, method = method)
@@ -126,7 +126,6 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
 #                         q_ratio = 1.2)
 # stress.credit <- stress(type = "VaR ES", x = stress.credit, k = "L", alpha = 0.9,
 #                         q_ratio = 1.1, s = 2000)
-# 
 # cor_stressed(stress.credit, xCol = c(1, 2), method="kendall")
 # # cor(get_data(stress.credit)[, c(1,2)], method="kendall")
 
