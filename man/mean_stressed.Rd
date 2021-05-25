@@ -43,7 +43,7 @@ res1 <- stress(type = "VaR", x = x,
 ## stressed mean
 mean_stressed(res1, xCol = 1, wCol = 1)
 ## baseline mean
-mean_stressed(x$normal)
+mean(x$normal)
 
 }
 \seealso{

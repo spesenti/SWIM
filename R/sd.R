@@ -49,8 +49,8 @@ sd_stressed <- function(object, xCol = 1, wCol = 1){
 }
 
 var_stressed <- function(object, xCol = 1, wCol = 1){
-  var <- sd_stressed(object, xCol = 1, wCol = 1)^2
-  return(sd)
+  var <- (sd_stressed(object, xCol = 1, wCol = 1))^2
+  return(var)
 }
 
 # tst 
