@@ -39,7 +39,7 @@ Provides the correlation of two stressed model components
 \details{
 \code{cor_stressed}: The correlation coefficient of two 
      chosen stressed model components, subject to the calculated scenario weights.
-     The scorrelation coefficient of a stressed model component
+     The correlation coefficient of a stressed model component
      is denoted as \deqn{cor^W}
 
      The function \code{cor_stressed} provides stressed correlation coefficient of model
@@ -67,8 +67,8 @@ cor(x$normal, x$gamma)
 }
 \seealso{
 See \code{\link{stress_moment}} stressing a baseline 
-    model with desired moment constraints, and \code{\link{var_stressed}} provides
-    stressed variances under the scenario weights
+    model with desired moment constraints, and \code{\link{sd}} provides
+    stressed standard deviations under the scenario weights
 }
 \author{
 Kent Wu

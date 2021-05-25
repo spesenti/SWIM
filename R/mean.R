@@ -28,8 +28,8 @@
 #' @describeIn mean_stressed mean of stressed model components
 #' 
 #' @seealso See \code{\link{stress_moment}} stressing a baseline 
-#'     model with desired moment constraints, and \code{\link{var_stressed}} computes
-#'     stressed variances under the scenario weights
+#'     model with desired moment constraints, and \code{\link{sd}} computes
+#'     stressed standard deviations under the scenario weights
 #' @export
 
 mean_stressed <- function(object, xCol = 1, wCol = 1){

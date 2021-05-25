@@ -48,8 +48,8 @@ mean(x$normal)
 }
 \seealso{
 See \code{\link{stress_moment}} stressing a baseline 
-    model with desired moment constraints, and \code{\link{var_stressed}} computes
-    stressed variances under the scenario weights
+    model with desired moment constraints, and \code{\link{sd}} computes
+    stressed standard deviations under the scenario weights
 }
 \author{
 Kent Wu
