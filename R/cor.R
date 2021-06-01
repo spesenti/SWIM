@@ -1,21 +1,18 @@
-#' Correlation a Stressed Model
+#' Correlation of a Stressed Model
 #' 
-#' Provides the correlation of two stressed model components
+#' Provides the correlation of stressed model components
 #'     (random variable) under the scenario weights. 
 #' 
 #' @inheritParams summary.SWIM
-#' @param method  Character, one of \code{"pearson", "spearman", "kendall"}. Pearson by default.
+#' @param method  Character, one of \code{"pearson", "spearman", "kendall"}. (\code{default = "pearson"}).
 #' 
-#' @return The correlation coefficient of the \code{xCol}
-#'     components of the stressed model with weights \code{wCol} and method \code{wCol}.
+#' @return \code{cor_stressed} returns a list of correlation matrices
+#'     corresponding to different stresses. Entries of the matrices denote 
+#'     correlation coefficients between stressed model components specified by \code{xCol}. 
 #' 
-#' @details \code{cor_stressed}: The correlation coefficient of two 
-#'      chosen stressed model components, subject to the calculated scenario weights.
-#'      The correlation coefficient of a stressed model component
-#'      is denoted as \deqn{cor^W}
+#' @details \code{cor_stressed}: The correlation coefficient of  
+#'      stressed model components, subject to the calculated scenario weights.
 #'
-#'      The function \code{cor_stressed} provides stressed correlation coefficient of model
-#'      components with different interpolations.
 #' 
 #' @examples      
 #' ## example with a stress on VaR
@@ -33,41 +30,52 @@
 #' @author Kent Wu
 #' @describeIn cor_stressed correlation coefficient of stressed model components
 #' 
-#' @seealso See \code{\link{stress_moment}} stressing a baseline 
-#'     model with desired moment constraints, and \code{\link{sd}} provides
-#'     stressed standard deviations under the scenario weights
+#' @seealso See \code{\link{var_stressed}} and \code{\link{sd_stressed}} compute
+#'     stressed variance and standard deviations under the scenario weights, respectively.
+#'          
+#'     See \code{\link{cor_stressed}} for correlations between stressed model components.
+#'     
 #' @export
 
-
-cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson", base=TRUE){
-  # if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
+cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson", base=FALSE){
+  if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
   if (anyNA(object$x)) warning("x contains NA")
   if (!(method %in% c("pearson", "spearman", "kendall"))) stop("Method must be one of pearson, spearman and kendall")
   
   x_data <- as.matrix(get_data(object, xCol = xCol))
   cname <- colnames(x_data)
+
   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
   new_weights <- get_weights(object)[ ,wCol]  
   
   corr_w <- apply(X = as.matrix(new_weights), MARGIN = 2, 
-                  FUN = .helper, x_data = x_data, cname = cname, method = method)
+                  FUN = .cor_helper, x_data = x_data, method = method)
   names(corr_w) <- paste("stress", wCol)
   
   if (base == TRUE){
     old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)
-    corr_base <- .helper(x_data = x_data, cname = cname, new_weights = old_weights, method = method)
+    corr_base <- .cor_helper(x_data = x_data, w = old_weights, method = method)
     corr_w <- c(list("base" = corr_base), corr_w)
+  }
+  
+  for (i in 1:length(corr_w)){
+    colnames(corr_w[[i]]) <- cname
+    rownames(corr_w[[i]]) <- cname
   }
   return (corr_w)
 }
 
-.helper <- function(x_data, cname, new_weights, method){
-  # print(length(new_weights))
-  # .temp <- function(y, w, method) apply(X = w, FUN = .corr, MARGIN = 2, y = x_data, method = method)
-  corr_w <- .corr(x_data, new_weights, method = method)
-  colnames(corr_w) <- cname
-  rownames(corr_w) <- cname
-  return(data.frame(corr_w))
+.cor_helper <- function(x_data, w, method){
+  d <- ncol(x_data)
+  mat <- matrix(NA, nrow=d, ncol=d)
+  # corr_w <- outer(1:d, 1:d, FUN = function(i,j) .corr(x_data[,c(i, j)], w, method))
+  # corr_w <- mapply(function(i,j) .corr(x_data[,c(i, j)], w, method), row(mat), col(mat))
+  for (i in 1:d){
+    for (j in 1:d){
+      mat[i,j] <- .corr(x_data[,c(i, j)], w, method)
+    }
+  }
+  return (data.frame(mat))
 } 
 
 .corr <- function(x, w, method){
@@ -84,7 +92,7 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
     y_rank <- rank(x2)
     res <- .pearson(x_rank, y_rank, w)
   }
-  return (matrix(c(1, res, res, 1), byrow = TRUE, nrow = 2))
+  return (res)
 }
 
 .moments <- function(x, w){

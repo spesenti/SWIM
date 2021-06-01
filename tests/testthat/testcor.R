@@ -12,8 +12,8 @@ res <- stress(type = "VaR", x = res, alpha = 0.95, q_ratio = 1.05)
 
 xCol = c(1, 2)
 
-s1 <- cor_stressed(res, xCol = xCol, wCol = 1, method = "pearson")
-s2 <- cor_stressed(res, xCol = xCol, wCol = "all", method = "kendall")
+s1 <- cor_stressed(res, xCol = xCol, wCol = 1, method = "pearson", base = TRUE)
+s2 <- cor_stressed(res, xCol = xCol, wCol = "all", method = "kendall", base = TRUE)
 s3 <- cor_stressed(res, xCol = xCol, wCol = "all", method = "spearman", base = FALSE)
 
 ################ stress ################
