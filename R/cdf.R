@@ -4,9 +4,9 @@
 #'     model component (random variable) under the scenario weights. 
 #' 
 #' @inheritParams sensitivity 
-#' @param xCol    Numeric or character, (name of) the column of the underlying data 
+#' @param xCol    Vector or characters, (names of) the columns of the underlying data 
 #'                of the \code{object} (\code{default = 1}). 
-#' @param wCol    Numeric, the column of the scenario weights 
+#' @param wCol    Vector, the columns of the scenario weights 
 #'                of the \code{object} (\code{default = 1}).
 #' 
 #' @return The empirical distribution function (a function) of 
