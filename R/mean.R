@@ -1,14 +1,13 @@
 #' Mean of a Stressed Model
 #' 
-#' Provides the mean of a stressed model component (random variable) under the scenario weights. 
+#' Provides the mean of stressed model components (random variables) under the scenario weights. 
 #' 
-#' @inheritParams cdf 
+#' @inheritParams summary.SWIM 
 #' 
-#' @return The mean of the \code{xCol}
-#'     component of the stressed model with weights \code{wCol}.
+#' @return A matrix containing the means of the \code{xCol}
+#'     components of the stressed model with weights \code{wCol}.
 #' 
 #' @details \code{mean_stressed}: The mean of a chosen stressed model component, subject to the calculated scenario weights.
-#'      The mean of a stressed model component is denoted as \deqn{\overline{X^W}}
 #'
 #' 
 #' @examples      
@@ -27,27 +26,32 @@
 #' @author Kent Wu
 #' @describeIn mean_stressed mean of stressed model components
 #' 
-#' @seealso See \code{\link{stress_moment}} stressing a baseline 
-#'     model with desired moment constraints, and \code{\link{sd}} computes
-#'     stressed standard deviations under the scenario weights
+#' @seealso See \code{\link{var_stressed}} and \code{\link{sd_stressed}} compute
+#'     stressed variance and standard deviations under the scenario weights, respectively.
+#'     
 #' @export
 
-mean_stressed <- function(object, xCol = 1, wCol = 1){
+mean_stressed <- function(object, xCol = 1, wCol = 1, base=FALSE){
   if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
   if (anyNA(object$x)) warning("x contains NA")
-  new_weights <- get_weights(object)[ , wCol]
-  x_data <- get_data(object)[ , xCol]
-  mean <- .mean(x = x_data, w = new_weights)
+  
+  x_data <- as.matrix(get_data(object, xCol = xCol))
+  cname <- colnames(x_data)
+  if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
+  new_weights <- as.matrix(get_weights(object)[ ,wCol])  
+  
+  n <- dim(x_data)[1]
+  mean <- t(new_weights) %*% x_data / n
+  colnames(mean) <- cname
+  rownames(mean) <- paste("stress", wCol)
+  
+  if (base == TRUE){
+    old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)
+    mean_base <- t(old_weights) %*% x_data / n
+    mean <- rbind(mean_base, mean)
+    rownames(mean) <- c("base", paste("stress", wCol))
+  }
+
   return(mean)
 }
 
-# tst 
-
-# help function 
-# x    numeric vector  
-# w    numeric vector with weights
-.mean <- function(x, w){
-  n <- length(as.vector(x))
-  mean_w <- stats::weighted.mean(x = x, w = w)
-  return(mean_w)
-}
