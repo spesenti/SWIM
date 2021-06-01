@@ -2,42 +2,56 @@
 % Please edit documentation in R/sd.R
 \name{sd_stressed}
 \alias{sd_stressed}
-\title{Standard deviation and variance of a Stressed Model}
+\alias{var_stressed}
+\title{Standard Deviation and Variance of a Stressed Model}
 \usage{
-sd_stressed(object, xCol = 1, wCol = 1)
+sd_stressed(object, xCol = 1, wCol = 1, base = FALSE)
+
+var_stressed(object, xCol = 1, wCol = 1, base = FALSE)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character, (name of) the column of the underlying data 
-of the \code{object} (\code{default = 1}).}
+\item{xCol}{Numeric or character vector, (names of) the columns of 
+the underlying data 
+of the \code{object} (\code{default = "all"}).}
 
-\item{wCol}{Numeric, the column of the scenario weights 
-of the \code{object} (\code{default = 1}).}
+\item{wCol}{Vector, the columns of the scenario weights 
+of the \code{object} corresponding to different 
+stresses (\code{default = "all"}).}
+
+\item{base}{Logical, if \code{TRUE}, statistics under the baseline 
+are also returned (\code{default = "FALSE"}).}
 }
 \value{
-The standard deviation and variance of the \code{xCol}
+\code{sd_stressed}: Return the standard deviation of the \code{xCol}
     component of the stressed model with weights \code{wCol}.
-    Both quantities can be evaluated at a vector.
+    The quantity can be evaluated at a vector.
+
+\code{var_stressed}: Return the variance of the \code{xCol}
+    component of the stressed model with weights \code{wCol}.
+    The quantity can be evaluated at a vector.
 }
 \description{
-Provides the standard deviation and variance of a stressed 
-    model component (random variable) under the scenario weights.
+Provides the standard deviation and variance of stressed 
+    model components (random variables) under the scenario weights.
 }
 \details{
 \code{sd_stressed}: The standard deviation of 
-     a chosen stressed model component, subject to the calculated scenario weights.
-     The standard deviation of a stressed model component
-     is denoted as \deqn{sd^W}.
+     a chosen model component, subject to the calculated scenario weights.
 
-     The function \code{sd_stressed} provides stressed standard deviation, whereas
-     the function \code{var_stressed} calculates stressed variance of model
-     components with different interpolations.
+     The function \code{sd_stressed} provides stressed standard deviationw
+
+\code{var_stressed}: The variance of 
+     a chosen stressed model component, subject to the calculated scenario weights.
+
+     The variance of a stressed model component is denoted as \deqn{var^W}
 }
 \section{Functions}{
 \itemize{
-\item \code{sd_stressed}: Standard deviation and var_stressed
-variance of stressed model components
+\item \code{sd_stressed}: Standard deviation of model components
+
+\item \code{var_stressed}: variance of model components
 }}
 
 \examples{
@@ -54,10 +68,15 @@ sd_stressed(res1, xCol = 1, wCol = 1)
 ## baseline standard deviation
 sd(x$normal)
 
+## stressed variance
+var_stressed(res1, xCol = 1, wCol = 1)
+## baseline variance
+var(x$normal)
+
 }
 \seealso{
-See \code{\link{stress_moment}} stressing a baseline 
-    model with desired moment constraints.
+See \code{\link{mean_stressed}} for means of stressed model components,
+and \code{\link{cor_stressed}} for correlations between stressed model components.
 }
 \author{
 Kent Wu

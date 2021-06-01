@@ -2,14 +2,14 @@
 % Please edit documentation in R/cor.R
 \name{cor_stressed}
 \alias{cor_stressed}
-\title{Correlation a Stressed Model}
+\title{Correlation of a Stressed Model}
 \usage{
 cor_stressed(
   object,
   xCol = c(1, 2),
   wCol = "all",
   method = "pearson",
-  base = TRUE
+  base = FALSE
 )
 }
 \arguments{
@@ -23,27 +23,23 @@ of the \code{object} (\code{default = "all"}).}
 of the \code{object} corresponding to different 
 stresses (\code{default = "all"}).}
 
-\item{method}{Character, one of \code{"pearson", "spearman", "kendall"}. Pearson by default.}
+\item{method}{Character, one of \code{"pearson", "spearman", "kendall"}. (\code{default = "pearson"}).}
 
 \item{base}{Logical, if \code{TRUE}, statistics under the baseline 
 are also returned (\code{default = "FALSE"}).}
 }
 \value{
-The correlation coefficient of the \code{xCol}
-    components of the stressed model with weights \code{wCol} and method \code{wCol}.
+\code{cor_stressed} returns a list of correlation matrices
+    corresponding to different stresses. Entries of the matrices denote 
+    correlation coefficients between stressed model components specified by \code{xCol}.
 }
 \description{
-Provides the correlation of two stressed model components
+Provides the correlation of stressed model components
     (random variable) under the scenario weights.
 }
 \details{
-\code{cor_stressed}: The correlation coefficient of two 
-     chosen stressed model components, subject to the calculated scenario weights.
-     The correlation coefficient of a stressed model component
-     is denoted as \deqn{cor^W}
-
-     The function \code{cor_stressed} provides stressed correlation coefficient of model
-     components with different interpolations.
+\code{cor_stressed}: The correlation coefficient of  
+     stressed model components, subject to the calculated scenario weights.
 }
 \section{Functions}{
 \itemize{
@@ -66,9 +62,10 @@ cor(x$normal, x$gamma)
 
 }
 \seealso{
-See \code{\link{stress_moment}} stressing a baseline 
-    model with desired moment constraints, and \code{\link{sd}} provides
-    stressed standard deviations under the scenario weights
+See \code{\link{var_stressed}} and \code{\link{sd_stressed}} compute
+    stressed variance and standard deviations under the scenario weights, respectively.
+         
+    See \code{\link{cor_stressed}} for correlations between stressed model components.
 }
 \author{
 Kent Wu

@@ -4,27 +4,31 @@
 \alias{mean_stressed}
 \title{Mean of a Stressed Model}
 \usage{
-mean_stressed(object, xCol = 1, wCol = 1)
+mean_stressed(object, xCol = 1, wCol = 1, base = FALSE)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character, (name of) the column of the underlying data 
-of the \code{object} (\code{default = 1}).}
+\item{xCol}{Numeric or character vector, (names of) the columns of 
+the underlying data 
+of the \code{object} (\code{default = "all"}).}
 
-\item{wCol}{Numeric, the column of the scenario weights 
-of the \code{object} (\code{default = 1}).}
+\item{wCol}{Vector, the columns of the scenario weights 
+of the \code{object} corresponding to different 
+stresses (\code{default = "all"}).}
+
+\item{base}{Logical, if \code{TRUE}, statistics under the baseline 
+are also returned (\code{default = "FALSE"}).}
 }
 \value{
-The mean of the \code{xCol}
-    component of the stressed model with weights \code{wCol}.
+A matrix containing the means of the \code{xCol}
+    components of the stressed model with weights \code{wCol}.
 }
 \description{
-Provides the mean of a stressed model component (random variable) under the scenario weights.
+Provides the mean of stressed model components (random variables) under the scenario weights.
 }
 \details{
 \code{mean_stressed}: The mean of a chosen stressed model component, subject to the calculated scenario weights.
-     The mean of a stressed model component is denoted as \deqn{\overline{X^W}}
 }
 \section{Functions}{
 \itemize{
@@ -47,9 +51,8 @@ mean(x$normal)
 
 }
 \seealso{
-See \code{\link{stress_moment}} stressing a baseline 
-    model with desired moment constraints, and \code{\link{sd}} computes
-    stressed standard deviations under the scenario weights
+See \code{\link{var_stressed}} and \code{\link{sd_stressed}} compute
+    stressed variance and standard deviations under the scenario weights, respectively.
 }
 \author{
 Kent Wu
