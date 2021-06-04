@@ -4,7 +4,7 @@
 \alias{mean_stressed}
 \title{Mean of a Stressed Model}
 \usage{
-mean_stressed(object, xCol = 1, wCol = 1, base = FALSE)
+mean_stressed(object, xCol = "all", wCol = "all", base = FALSE)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
@@ -45,9 +45,7 @@ x <- as.data.frame(cbind(
 res1 <- stress(type = "VaR", x = x, 
   alpha = c(0.9, 0.95), q_ratio = 1.05)
 ## stressed mean
-mean_stressed(res1, xCol = 1, wCol = 1)
-## baseline mean
-mean(x$normal)
+mean_stressed(res1, xCol = "all", wCol = "all", base = TRUE)
 
 }
 \seealso{

@@ -42,6 +42,7 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
   if (anyNA(object$x)) warning("x contains NA")
   if (!(method %in% c("pearson", "spearman", "kendall"))) stop("Method must be one of pearson, spearman and kendall")
   
+  if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
   x_data <- as.matrix(get_data(object, xCol = xCol))
   cname <- colnames(x_data)
 
@@ -84,8 +85,8 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
     res <- .pearson(x1,x2,w)
   }
   if (method == "kendall") {
-    # res <- cor(x1*w, x2*w, method = method)
-    res <- .tau(x1*w, x2*w)
+    res <- cor(x1*w, x2*w, method = method)
+    # res <- .tau(x1*w, x2*w)
   }
   if (method == "spearman") {
     x_rank <- rank(x1)
@@ -98,33 +99,34 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
 .moments <- function(x, w){
   n <- length(as.vector(x))
   mean_w <- stats::weighted.mean(x = x, w = w)
-  sd_w <- sqrt(mean(w * (x - mean_w)^2)) * n / (n-1)
+  sd_w <- sqrt(mean(w * (x - mean_w)^2) * n / (n-1)) 
   moments_w <- rbind(mean_w, sd_w)
   return(moments_w)
 }
 
-.pearson <- function(x1,x2,new_weights){
-  moments_x1 <- .moments(x1, new_weights)
-  moments_x2 <- .moments(x2, new_weights)
+.pearson <- function(x1, x2, w){
+  n <- length(w)
+  moments_x1 <- .moments(x1, w)
+  moments_x2 <- .moments(x2, w)
   m1 <- moments_x1["mean_w", ]
   m2 <- moments_x2["mean_w", ]
-  cov <- .moments((x1 - m1) * (x2 - m2), new_weights)["mean_w", ]
+  cov <- sum((x1 - m1) * (x2 - m2) * w)
   sd1 <- moments_x1["sd_w", ]
   sd2 <- moments_x2["sd_w", ]
-  res <- unname(cov / (sd1 * sd2))
+  res <- unname(cov / (sd1 * sd2) / (n-1))
 }
 
-.tau = function(x, y) {
-  acc <- 0
-  n <- length(as.vector(x))
-
-  for (i in 2:n){
-    x_vec <- x[1:i-1]; y_vec <- y[1:i-1]
-    x_curr <- x[i]; y_curr <- y[i]
-    acc <- acc + sum(sign(x_vec-x_curr)*sign(y_vec-y_curr))
-  }
-  return (acc*2/(n*(n-1)))
-}
+# .tau = function(x, y) {
+#   acc <- 0
+#   n <- length(as.vector(x))
+# 
+#   for (i in 2:n){
+#     x_vec <- x[1:i-1]; y_vec <- y[1:i-1]
+#     x_curr <- x[i]; y_curr <- y[i]
+#     acc <- acc + sum(sign(x_vec-x_curr)*sign(y_vec-y_curr))
+#   }
+#   return (acc*2/(n*(n-1)))
+# }
 
 # # test
 # library(SWIM)

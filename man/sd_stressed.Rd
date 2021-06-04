@@ -5,9 +5,9 @@
 \alias{var_stressed}
 \title{Standard Deviation and Variance of a Stressed Model}
 \usage{
-sd_stressed(object, xCol = 1, wCol = 1, base = FALSE)
+sd_stressed(object, xCol = "all", wCol = "all", base = FALSE)
 
-var_stressed(object, xCol = 1, wCol = 1, base = FALSE)
+var_stressed(object, xCol = "all", wCol = "all", base = FALSE)
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
@@ -40,18 +40,14 @@ Provides the standard deviation and variance of stressed
 \code{sd_stressed}: The standard deviation of 
      a chosen model component, subject to the calculated scenario weights.
 
-     The function \code{sd_stressed} provides stressed standard deviationw
-
 \code{var_stressed}: The variance of 
      a chosen stressed model component, subject to the calculated scenario weights.
-
-     The variance of a stressed model component is denoted as \deqn{var^W}
 }
 \section{Functions}{
 \itemize{
-\item \code{sd_stressed}: Standard deviation of model components
+\item \code{sd_stressed}: Sample standard deviation of model components
 
-\item \code{var_stressed}: variance of model components
+\item \code{var_stressed}: Sample variance of model components
 }}
 
 \examples{
@@ -64,14 +60,10 @@ x <- as.data.frame(cbind(
 res1 <- stress(type = "VaR", x = x, 
   alpha = c(0.9, 0.95), q_ratio = 1.05)
 ## stressed standard deviation
-sd_stressed(res1, xCol = 1, wCol = 1)
-## baseline standard deviation
-sd(x$normal)
+sd_stressed(res1, xCol = "all", wCol = "all", base = TRUE)
 
 ## stressed variance
-var_stressed(res1, xCol = 1, wCol = 1)
-## baseline variance
-var(x$normal)
+var_stressed(res1, xCol = "all", wCol = "all", base = TRUE)
 
 }
 \seealso{

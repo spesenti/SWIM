@@ -11,8 +11,6 @@
 #' 
 #' @details \code{sd_stressed}: The standard deviation of 
 #'      a chosen model component, subject to the calculated scenario weights.
-#'
-#'      The function \code{sd_stressed} provides stressed standard deviationw
 #' 
 #' @examples      
 #' ## example with a stress on VaR
@@ -23,28 +21,25 @@
 #' res1 <- stress(type = "VaR", x = x, 
 #'   alpha = c(0.9, 0.95), q_ratio = 1.05)
 #' ## stressed standard deviation
-#' sd_stressed(res1, xCol = 1, wCol = 1)
-#' ## baseline standard deviation
-#' sd(x$normal)
+#' sd_stressed(res1, xCol = "all", wCol = "all", base = TRUE)
 #' 
 #' ## stressed variance
-#' var_stressed(res1, xCol = 1, wCol = 1)
-#' ## baseline variance
-#' var(x$normal)
+#' var_stressed(res1, xCol = "all", wCol = "all", base = TRUE)
 #' 
 #' @author Kent Wu
-#' @describeIn sd_stressed Standard deviation of model components
+#' @describeIn sd_stressed Sample standard deviation of model components
 #' 
 #' @seealso See \code{\link{mean_stressed}} for means of stressed model components,
 #' and \code{\link{cor_stressed}} for correlations between stressed model components. 
 #' 
 #' @export
 
-sd_stressed <- function(object, xCol = 1, wCol = 1, base=FALSE){
+sd_stressed <- function(object, xCol = "all", wCol = "all", base=FALSE){
   mean_w <- mean_stressed(object, xCol, wCol, base)
   cname <- colnames(mean_w)
   rname <- rownames(mean_w)
-
+  
+  if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
   x_data <- as.matrix(get_data(object, xCol = xCol))
   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
   new_weights <- as.matrix(get_weights(object)[ ,wCol])
@@ -75,7 +70,7 @@ sd_stressed <- function(object, xCol = 1, wCol = 1, base=FALSE){
   return(sd)
 }
 
-#' @describeIn sd_stressed variance of model components
+#' @describeIn sd_stressed Sample variance of model components
 #' 
 #' @return \code{var_stressed}: Return the variance of the \code{xCol}
 #'     component of the stressed model with weights \code{wCol}.
@@ -84,11 +79,9 @@ sd_stressed <- function(object, xCol = 1, wCol = 1, base=FALSE){
 #' @details \code{var_stressed}: The variance of 
 #'      a chosen stressed model component, subject to the calculated scenario weights.
 #'
-#'      The variance of a stressed model component is denoted as \deqn{var^W}
-#'
 #' @export
 
-var_stressed <- function(object, xCol = 1, wCol = 1, base=FALSE){
-  var <- (sd_stressed(object, xCol = 1, wCol = 1, base))^2
+var_stressed <- function(object, xCol = "all", wCol = "all", base=FALSE){
+  var <- (sd_stressed(object, xCol, wCol, base))^2
   return(var)
 }

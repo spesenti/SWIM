@@ -7,7 +7,7 @@
 #' @return A matrix containing the means of the \code{xCol}
 #'     components of the stressed model with weights \code{wCol}.
 #' 
-#' @details \code{mean_stressed}: The mean of a chosen stressed model component, subject to the calculated scenario weights.
+#' @details \code{mean_stressed}: Sample mean of chosen stressed model components, subject to the calculated scenario weights.
 #'
 #' 
 #' @examples      
@@ -19,22 +19,21 @@
 #' res1 <- stress(type = "VaR", x = x, 
 #'   alpha = c(0.9, 0.95), q_ratio = 1.05)
 #' ## stressed mean
-#' mean_stressed(res1, xCol = 1, wCol = 1)
-#' ## baseline mean
-#' mean(x$normal)
+#' mean_stressed(res1, xCol = "all", wCol = "all", base = TRUE)
 #' 
 #' @author Kent Wu
-#' @describeIn mean_stressed mean of stressed model components
+#' @describeIn mean_stressed Sample mean of stressed model components
 #' 
 #' @seealso See \code{\link{var_stressed}} and \code{\link{sd_stressed}} compute
 #'     stressed variance and standard deviations under the scenario weights, respectively.
 #'     
 #' @export
 
-mean_stressed <- function(object, xCol = 1, wCol = 1, base=FALSE){
+mean_stressed <- function(object, xCol = "all", wCol = "all", base=FALSE){
   if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
   if (anyNA(object$x)) warning("x contains NA")
   
+  if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
   x_data <- as.matrix(get_data(object, xCol = xCol))
   cname <- colnames(x_data)
   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
