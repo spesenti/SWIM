@@ -1,7 +1,20 @@
 
 # SWIM 0.2.2.9000 - current develop version on GitHub
 
- 
+## Major changes: Additional functions and features
+
+ - `mean_stressed()`:
+    - sample mean of chosen stressed model components, subject to the calculated scenario weights.
+ - `sd_stressed()`:
+    - sample standard deviation of chosen stressed model components, subject to the calculated scenario weights.
+ - `var_stressed()`:
+    - sample variance of chosen stressed model components, subject to the calculated scenario weights.
+ - `cor_stressed()`:
+    - sample correlation coefficient of chosen stressed model components, subject to the calculated scenario weights.
+
+## Minor changes
+
+ - fix minor bug in `summary()`
 
 
 # SWIM 0.2.2 - current version on CRAN
@@ -53,7 +66,7 @@
  - `ES_stressed()`:
     * the function calculates the ES of model components, subject to 
       scenario weights.
-      
+    
  - `credit_data`:
     * a data set containing aggregate losses from a credit portfolio,
       generated through a binomial credit model.
