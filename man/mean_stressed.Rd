@@ -28,11 +28,11 @@ A matrix containing the means of the \code{xCol}
 Provides the mean of stressed model components (random variables) under the scenario weights.
 }
 \details{
-\code{mean_stressed}: The mean of a chosen stressed model component, subject to the calculated scenario weights.
+\code{mean_stressed}: Sample mean of chosen stressed model components, subject to the calculated scenario weights.
 }
 \section{Functions}{
 \itemize{
-\item \code{mean_stressed}: mean of stressed model components
+\item \code{mean_stressed}: Sample mean of stressed model components
 }}
 
 \examples{

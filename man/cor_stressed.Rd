@@ -56,9 +56,7 @@ x <- as.data.frame(cbind(
 res1 <- stress(type = "VaR", x = x, 
   alpha = c(0.9, 0.95), q_ratio = 1.05)
 ## stressed correlation
-cor_stressed(res1, xCol = c(1, 2), wCol = 1)
-## baseline correlation
-cor(x$normal, x$gamma)
+cor_stressed(res1, xCol = c(1, 2), wCol = 1, base=TRUE)
 
 }
 \seealso{
