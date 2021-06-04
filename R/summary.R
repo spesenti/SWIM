@@ -89,7 +89,7 @@ summary.SWIM <- function(object, ..., xCol = "all", wCol = "all", base = FALSE){
   .moments <- function(x, w){
    n <- length(as.vector(x))
    mean_w <- stats::weighted.mean(x = x, w = w)
-   sd_w <- sqrt(mean(w * (x - mean_w)^2)) * n / (n-1)
+   sd_w <- sqrt(mean(w * (x - mean_w)^2) * n / (n-1)) 
    skew_w <- mean(w * (x - mean_w)^3) / (sd_w^3) * n^2 / ((n-1) * (n-2))
    ex_kurt_w <- mean(w * (x - mean_w)^4) / (sd_w^4) - 3
    quartile_w <- as.matrix(Hmisc::wtd.quantile(x, weights = w, probs = c(0.25, 0.5, 0.75)))
