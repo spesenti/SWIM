@@ -40,8 +40,9 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
   if (anyNA(object$x)) warning("x contains NA")
   if (!(method %in% c("pearson", "spearman", "kendall"))) stop("Method must be one of pearson, spearman and kendall")
   if (method == "kendall") {
-    ans <- menu(c("Yes", "No"), 
-              title="The dataset is very large and calculating the weighted Kendall's tau might be time consuming. Do you want to proceed? Press 1 for yes and 2 to abort")
+    ans <- utils::menu(
+      c("Yes", "No"), 
+      title="The dataset is very large and calculating the weighted Kendall's tau might be time consuming. Do you want to proceed? Press 1 for yes and 2 to abort")
     if (ans != 1) invokeRestart("abort")
   }
   
