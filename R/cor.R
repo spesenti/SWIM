@@ -39,6 +39,11 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
   if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
   if (anyNA(object$x)) warning("x contains NA")
   if (!(method %in% c("pearson", "spearman", "kendall"))) stop("Method must be one of pearson, spearman and kendall")
+  if (method == "kendall") {
+    ans <- menu(c("Yes", "No"), 
+              title="The dataset is very large and calculating the weighted Kendall's tau might be time consuming. Do you want to proceed? Press 1 for yes and 2 to abort")
+    if (ans != 1) invokeRestart("abort")
+  }
   
   if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
   x_data <- as.matrix(get_data(object, xCol = xCol))
@@ -60,6 +65,7 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
   for (i in 1:length(corr_w)){
     colnames(corr_w[[i]]) <- cname
     rownames(corr_w[[i]]) <- cname
+    diag(corr_w[[i]]) <- 1
   }
   return (corr_w)
 }
@@ -83,8 +89,8 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
     res <- .pearson(x1,x2,w)
   }
   if (method == "kendall") {
-    res <- stats::cor(x1*w, x2*w, method = method)
-    # res <- .tau(x1*w, x2*w)
+    # res <- stats::cor(x1*w, x2*w, method = method)
+    res <- .tau(x1, x2, w)
   }
   if (method == "spearman") {
     x_rank <- rank(x1)
@@ -114,17 +120,17 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
   res <- unname(cov / (sd1 * sd2) / (n-1))
 }
 
-# .tau = function(x, y) {
-#   acc <- 0
-#   n <- length(as.vector(x))
-# 
-#   for (i in 2:n){
-#     x_vec <- x[1:i-1]; y_vec <- y[1:i-1]
-#     x_curr <- x[i]; y_curr <- y[i]
-#     acc <- acc + sum(sign(x_vec-x_curr)*sign(y_vec-y_curr))
-#   }
-#   return (acc*2/(n*(n-1)))
-# }
+.tau = function(x, y, w) {
+  acc <- 0
+  n <- length(as.vector(x))
+
+  for (i in 2:n){
+    x_js <- x[1:i-1]; y_js <- y[1:i-1]; w_js <- w[1:i-1]
+    x_i <- x[i]; y_i <- y[i]; w_i <- w[i]
+    acc <- acc + sum(sign(x_i-x_js) * sign(y_i-y_js) * w_js * w_i)
+  }
+  return (acc*2/(n*(n-1)))
+}
 
 # # test
 # library(SWIM)
