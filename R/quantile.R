@@ -53,7 +53,7 @@
 
   quantile_stressed <- function(object, probs = seq(0, 1, 0.25), xCol = "all", 
                                 wCol = 1, type = c("quantile","(i-1)/(n-1)",
-                                "i/(n+1)","i/n")){
+                                "i/(n+1)","i/n"), base = FALSE){
    if (!is.SWIM(object)) stop("Wrong object")
    if (missing(type)) type <- as.character("quantile")
    if (anyNA(object$x)) warning("x contains NA")
@@ -72,5 +72,13 @@
    if (length(probs) == 1 && length(cname) > 1) quantile_w <- matrix(quantile_w, nrow = 1)
    colnames(quantile_w) <- cname
    rownames(quantile_w) <- paste(probs * 100, "%", sep = "")
+   
+   if (base == TRUE){
+      old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)
+      quantile_base <- as.matrix(apply(X = as.matrix(x_data), MARGIN = 2, FUN = Hmisc::wtd.quantile, weights = old_weights, probs = probs, type = type))
+      colnames(quantile_base) <- paste("base", cname, sep=' ')
+      quantile_w <- cbind(quantile_w, quantile_base)
+   }
+   
    return(quantile_w)
   }
