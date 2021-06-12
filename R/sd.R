@@ -35,6 +35,8 @@
 #' @export
 
 sd_stressed <- function(object, xCol = "all", wCol = "all", base=FALSE){
+  if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
+  
   mean_w <- mean_stressed(object, xCol, wCol, base)
   cname <- colnames(mean_w)
   rname <- rownames(mean_w)
@@ -43,6 +45,8 @@ sd_stressed <- function(object, xCol = "all", wCol = "all", base=FALSE){
   x_data <- as.matrix(get_data(object, xCol = xCol))
   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
   new_weights <- as.matrix(get_weights(object)[ ,wCol])
+  
+  if (anyNA(x_data)) warning("x contains NA")
   
   if (base == TRUE){
     old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)
@@ -54,15 +58,8 @@ sd_stressed <- function(object, xCol = "all", wCol = "all", base=FALSE){
   d <- dim(mean_w)[2] # number of random variables
   
   temp <- do.call(rbind, lapply(1:m, function(i) (x_data - rep(mean_w[i,], each=n))^2))
-
-  # print(dim(x_data))
-  # print(dim(mean_w))
-  # print(dim(new_weights))
-  # print(dim(temp))
-
   dim(new_weights) <- c(n, m, 1)
   dim(temp) <- c(n, m, d)
-
   sd <- do.call(rbind, lapply(1:m, function(i) sqrt(t(new_weights[,i,]) %*% temp[,i,] /(n-1) )))
   colnames(sd) <- cname
   rownames(sd) <- rname
