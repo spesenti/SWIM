@@ -39,19 +39,22 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
   if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
   if (anyNA(object$x)) warning("x contains NA")
   if (!(method %in% c("pearson", "spearman", "kendall"))) stop("Method must be one of pearson, spearman and kendall")
-  if (method == "kendall") {
+  
+  if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
+  x_data <- as.matrix(get_data(object, xCol = xCol))
+  cname <- colnames(x_data)
+  
+  if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
+  new_weights <- get_weights(object)[ ,wCol]  
+  
+  d <- ncol(x_data)
+  n <- nrow(x_data)
+  if (method == "kendall" && (n > 1000 || d > 10)) {
     ans <- utils::menu(
       c("Yes", "No"), 
       title="The dataset is very large and calculating the weighted Kendall's tau might be time consuming. Do you want to proceed? Press 1 for yes and 2 to abort")
     if (ans != 1) invokeRestart("abort")
   }
-  
-  if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
-  x_data <- as.matrix(get_data(object, xCol = xCol))
-  cname <- colnames(x_data)
-
-  if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
-  new_weights <- get_weights(object)[ ,wCol]  
   
   corr_w <- apply(X = as.matrix(new_weights), MARGIN = 2, 
                   FUN = .cor_helper, x_data = x_data, method = method)
@@ -74,8 +77,7 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
 .cor_helper <- function(x_data, w, method){
   d <- ncol(x_data)
   mat <- matrix(NA, nrow=d, ncol=d)
-  # corr_w <- outer(1:d, 1:d, FUN = function(i,j) .corr(x_data[,c(i, j)], w, method))
-  # corr_w <- mapply(function(i,j) .corr(x_data[,c(i, j)], w, method), row(mat), col(mat))
+
   for (i in 1:d){
     for (j in 1:d){
       mat[i,j] <- .corr(x_data[,c(i, j)], w, method)
@@ -132,15 +134,3 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
   }
   return (acc*2/(n*(n-1)))
 }
-
-# # test
-# library(SWIM)
-# data("credit_data")
-# credit_data <- credit_data[1:100,]
-# stress.credit <- stress(type = "VaR", x = credit_data, k = "L", alpha = 0.9,
-#                         q_ratio = 1.2)
-# stress.credit <- stress(type = "VaR ES", x = stress.credit, k = "L", alpha = 0.9,
-#                         q_ratio = 1.1, s = 2000)
-# cor_stressed(stress.credit, xCol = c(1, 2), method="kendall")
-# # cor(get_data(stress.credit)[, c(1,2)], method="kendall")
-
