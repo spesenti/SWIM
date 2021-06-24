@@ -3,7 +3,10 @@
 #' Provides the standard deviation and variance of stressed 
 #'     model components (random variables) under the scenario weights. 
 #' 
-#' @inheritParams summary.SWIM  
+#' @inheritParams mean_stressed
+#' @param xCol    Vector, (names of) the columns
+#'                of the underlying data of the \code{object}
+#'                (\code{default = "all"}). 
 #' 
 #' @return \code{sd_stressed}: Return the standard deviation of the \code{xCol}
 #'     component of the stressed model with weights \code{wCol}.
@@ -27,7 +30,6 @@
 #' var_stressed(res1, xCol = "all", wCol = "all", base = TRUE)
 #' 
 #' @author Kent Wu
-#' @describeIn sd_stressed Sample standard deviation of model components
 #' 
 #' @seealso See \code{\link{mean_stressed}} for means of stressed model components,
 #' and \code{\link{cor_stressed}} for correlations between stressed model components. 

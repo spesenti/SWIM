@@ -9,9 +9,9 @@ mean_stressed(object, xCol = "all", wCol = "all", base = FALSE)
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character vector, (names of) the columns of 
-the underlying data 
-of the \code{object} (\code{default = "all"}).}
+\item{xCol}{Vector, (names of) the columns
+of the underlying data of the \code{object}
+(\code{default = "all"}).}
 
 \item{wCol}{Vector, the columns of the scenario weights 
 of the \code{object} corresponding to different 
@@ -30,11 +30,6 @@ Provides the mean of stressed model components (random variables) under the scen
 \details{
 \code{mean_stressed}: Sample mean of chosen stressed model components, subject to the calculated scenario weights.
 }
-\section{Functions}{
-\itemize{
-\item \code{mean_stressed}: Sample mean of stressed model components
-}}
-
 \examples{
      
 ## example with a stress on VaR

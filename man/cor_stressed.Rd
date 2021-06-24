@@ -8,7 +8,7 @@ cor_stressed(
   object,
   xCol = c(1, 2),
   wCol = "all",
-  method = "pearson",
+  method = "Pearson",
   base = FALSE
 )
 }
@@ -23,7 +23,7 @@ of the \code{object} (\code{default = "all"}).}
 of the \code{object} corresponding to different 
 stresses (\code{default = "all"}).}
 
-\item{method}{Character, one of \code{"pearson", "spearman", "kendall"}. (\code{default = "pearson"}).}
+\item{method}{Character, one of \code{"Pearson", "Spearman", "Kendall"}. (\code{default = "Pearson"}).}
 
 \item{base}{Logical, if \code{TRUE}, statistics under the baseline 
 are also returned (\code{default = "FALSE"}).}
@@ -41,11 +41,6 @@ Provides the correlation of stressed model components
 \code{cor_stressed}: The correlation coefficient of  
      stressed model components, subject to the calculated scenario weights.
 }
-\section{Functions}{
-\itemize{
-\item \code{cor_stressed}: correlation coefficient of stressed model components
-}}
-
 \examples{
      
 ## example with a stress on VaR
@@ -63,7 +58,8 @@ cor_stressed(res1, xCol = c(1, 2), wCol = 1, base=TRUE)
 See \code{\link{var_stressed}} and \code{\link{sd_stressed}} compute
     stressed variance and standard deviations under the scenario weights, respectively.
          
-    See \code{\link{cor_stressed}} for correlations between stressed model components.
+    See \code{\link[stats]{cor}} for unweighted correlations between model components, while 
+    \code{cor_stressed} return correlations between stressed model components
 }
 \author{
 Kent Wu

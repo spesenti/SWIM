@@ -12,9 +12,9 @@ var_stressed(object, xCol = "all", wCol = "all", base = FALSE)
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Numeric or character vector, (names of) the columns of 
-the underlying data 
-of the \code{object} (\code{default = "all"}).}
+\item{xCol}{Vector, (names of) the columns
+of the underlying data of the \code{object}
+(\code{default = "all"}).}
 
 \item{wCol}{Vector, the columns of the scenario weights 
 of the \code{object} corresponding to different 
@@ -45,8 +45,6 @@ Provides the standard deviation and variance of stressed
 }
 \section{Functions}{
 \itemize{
-\item \code{sd_stressed}: Sample standard deviation of model components
-
 \item \code{var_stressed}: Sample variance of model components
 }}
 

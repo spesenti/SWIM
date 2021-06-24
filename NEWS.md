@@ -11,10 +11,13 @@
     - sample variance of chosen stressed model components, subject to the calculated scenario weights.
  - `cor_stressed()`:
     - sample correlation coefficient of chosen stressed model components, subject to the calculated scenario weights.
+- `cdf_stressed()`:
+    - the empirical distribution function of a stressed model component (random variable) under the scenario weights. 
 
 ## Minor changes
 
- - fix minor bug in `summary()`
+ - fix minor bug in `summary()`.
+ - add `base` argument for `quantile_stressed()` and an error message if the input has `wCol` has dimension larger than 1.
 
 
 # SWIM 0.2.2 - current version on CRAN

@@ -9,7 +9,8 @@ quantile_stressed(
   probs = seq(0, 1, 0.25),
   xCol = "all",
   wCol = 1,
-  type = c("quantile", "(i-1)/(n-1)", "i/(n+1)", "i/n")
+  type = c("quantile", "(i-1)/(n-1)", "i/(n+1)", "i/n"),
+  base = FALSE
 )
 }
 \arguments{
@@ -29,6 +30,9 @@ of the \code{object} (\code{default = 1}).}
 \item{type}{Character, one of \code{"quantile","(i-1)/(n-1)",
 "i/(n+1)","i/n"}, with \code{default  = "quantile"}. 
 See details below.}
+
+\item{base}{Logical, if \code{TRUE}, statistics under the baseline 
+are also returned (\code{default = "FALSE"}).}
 }
 \value{
 Returns a matrix with estimates of the distribution quantiles

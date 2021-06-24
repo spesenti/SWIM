@@ -66,6 +66,8 @@
    } else {
     cname <- xCol   
    }
+   if (length(wCol) > 1 || wCol == "all") warning("Input wCol has dimension larger than 1")
+   
    x_data <- as.matrix(get_data(object)[ , xCol])
    
    quantile_w <- as.matrix(apply(X = as.matrix(x_data), MARGIN = 2, FUN = Hmisc::wtd.quantile, weights = new_weights, probs = probs, type = type))

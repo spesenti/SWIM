@@ -3,6 +3,9 @@
 #' Provides the mean of stressed model components (random variables) under the scenario weights. 
 #' 
 #' @inheritParams summary.SWIM 
+#' @param xCol    Vector, (names of) the columns
+#'                of the underlying data of the \code{object}
+#'                (\code{default = "all"}). 
 #' 
 #' @return A matrix containing the means of the \code{xCol}
 #'     components of the stressed model with weights \code{wCol}.
@@ -22,7 +25,6 @@
 #' mean_stressed(res1, xCol = "all", wCol = "all", base = TRUE)
 #' 
 #' @author Kent Wu
-#' @describeIn mean_stressed Sample mean of stressed model components
 #' 
 #' @seealso See \code{\link{var_stressed}} and \code{\link{sd_stressed}} compute
 #'     stressed variance and standard deviations under the scenario weights, respectively.

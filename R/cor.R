@@ -4,7 +4,7 @@
 #'     (random variable) under the scenario weights. 
 #' 
 #' @inheritParams summary.SWIM
-#' @param method  Character, one of \code{"pearson", "spearman", "kendall"}. (\code{default = "pearson"}).
+#' @param method  Character, one of \code{"Pearson", "Spearman", "Kendall"}. (\code{default = "Pearson"}).
 #' 
 #' @return \code{cor_stressed} returns a list of correlation matrices
 #'     corresponding to different stresses. Entries of the matrices denote 
@@ -26,19 +26,19 @@
 #' cor_stressed(res1, xCol = c(1, 2), wCol = 1, base=TRUE)
 #' 
 #' @author Kent Wu
-#' @describeIn cor_stressed correlation coefficient of stressed model components
 #' 
 #' @seealso See \code{\link{var_stressed}} and \code{\link{sd_stressed}} compute
 #'     stressed variance and standard deviations under the scenario weights, respectively.
 #'          
-#'     See \code{\link{cor_stressed}} for correlations between stressed model components.
+#'     See \code{\link[stats]{cor}} for unweighted correlations between model components, while 
+#'     \code{cor_stressed} return correlations between stressed model components
 #'     
 #' @export
 
-cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson", base=FALSE){
+cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "Pearson", base=FALSE){
   if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
   if (anyNA(object$x)) warning("x contains NA")
-  if (!(method %in% c("pearson", "spearman", "kendall"))) stop("Method must be one of pearson, spearman and kendall")
+  if (!(method %in% c("Pearson", "Spearman", "Kendall"))) stop("Method must be one of Pearson, Spearman and Kendall")
   
   if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
   x_data <- as.matrix(get_data(object, xCol = xCol))
@@ -49,7 +49,7 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
   
   d <- ncol(x_data)
   n <- nrow(x_data)
-  if (method == "kendall" && (n > 1000 || d > 10)) {
+  if (method == "Kendall" && (n > 1000 || d > 10)) {
     ans <- utils::menu(
       c("Yes", "No"), 
       title="The dataset is very large and calculating the weighted Kendall's tau might be time consuming. Do you want to proceed? Press 1 for yes and 2 to abort")
@@ -88,17 +88,17 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
 
 .corr <- function(x, w, method){
   x1 <- x[, 1]; x2 <- x[, 2]
-  if (method == "pearson") {
-    res <- .pearson(x1,x2,w)
+  if (method == "Pearson") {
+    res <- .Pearson(x1,x2,w)
   }
-  if (method == "kendall") {
+  if (method == "Kendall") {
     # res <- stats::cor(x1*w, x2*w, method = method)
     res <- .tau(x1, x2, w)
   }
-  if (method == "spearman") {
+  if (method == "Spearman") {
     x_rank <- rank(x1)
     y_rank <- rank(x2)
-    res <- .pearson(x_rank, y_rank, w)
+    res <- .Pearson(x_rank, y_rank, w)
   }
   return (res)
 }
@@ -111,7 +111,7 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "pearson
   return(moments_w)
 }
 
-.pearson <- function(x1, x2, w){
+.Pearson <- function(x1, x2, w){
   n <- length(w)
   moments_x1 <- .moments(x1, w)
   moments_x2 <- .moments(x2, w)
