@@ -4,7 +4,7 @@
 #'     model components (random variables) under the scenario weights. 
 #' 
 #' @inheritParams mean_stressed
-#' @param xCol    Vector, (names of) the columns
+#' @param xCol    Vector, or character vector,(names of) the columns
 #'                of the underlying data of the \code{object}
 #'                (\code{default = "all"}). 
 #' 

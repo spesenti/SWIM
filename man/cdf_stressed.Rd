@@ -10,15 +10,16 @@ cdf_stressed(object, xCol = "all", wCol = 1, grid, base = FALSE)
 \item{object}{A \code{SWIM} object.}
 
 \item{xCol}{Vector or characters, (names of) the columns of the underlying data 
+of the \code{object} (\code{default = "all"}).}
+
+\item{wCol}{Numeric, the columns of the scenario weights 
 of the \code{object} (\code{default = 1}).}
 
-\item{wCol}{Vector, the columns of the scenario weights 
-of the \code{object} (\code{default = 1}).}
+\item{grid}{A matrix containing the empirical distribution of the xCol components 
+of the stressed model with weights wCol. The empirical distribution 
+function can be evaluated at a vector valued xCol.}
 
-\item{grid}{Vector, or matrix of values for the underlying data
-in \code{xCol} of the \code{object}.}
-
-\item{base}{Logical, if TRUE, statistics under the baseline are also returned (default = "FALSE").}
+\item{base}{Logical, if TRUE, statistics under the baseline are also returned (default = "FALSE").]}
 }
 \value{
 The empirical distribution function (a function) of 
@@ -27,8 +28,13 @@ The empirical distribution function (a function) of
     evaluated at a vector.
 }
 \description{
-Provides the empirical distribution function of a stressed 
-    model component (random variable) under the scenario weights.
+Provides the empirical distribution of a stressed model component (random variable) under the scenario weights
+}
+\details{
+The \code{cdf_stressed} returns the values of the empirical distribution function 
+         of the xCol model components for weights wCol. In contrast, the \code{cdf} function 
+         returns a function, analogous to the ecdf from the base package. The 
+         function \code{cdf_stressed} is the \code{cdf} function applied to grid.
 }
 \examples{
      
@@ -42,15 +48,14 @@ res1 <- stress(type = "VaR", x = x,
 grid <- cbind(seq(min(x$normal), max(x$normal), length.out = 5), 
               seq(min(x$gamma), max(x$gamma), length.out = 5))
 ## stressed empirical distribution function
-cdf_stressed(res1, xCol = 1, wCol = 1, grid = grid)
+cdf_stressed(res1, xCol = "all", wCol = 1, grid = grid)
 
 }
 \seealso{
-See \code{\link{plot_cdf}} for plotting the empirical 
-    distribution function of the stressed model and 
-    \code{\link{quantile_stressed}} for sample quantiles of 
+See \code{\link{cdf}} for the empirical distribution function of a stressed 
+    model component and \code{\link{quantile_stressed}} for sample quantiles of 
     a stressed model.
 }
 \author{
-Silvana M. Pesenti
+Kent Wu
 }

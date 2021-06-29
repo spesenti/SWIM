@@ -1,17 +1,21 @@
 #' Empirical Distribution Function of a Stressed Model
 #' 
-#' Provides the empirical distribution function of a stressed 
-#'     model component (random variable) under the scenario weights. 
+#' Provides the empirical distribution of a stressed model component (random variable) under the scenario weights
 #' 
 #' @inheritParams sensitivity 
 #' @param xCol    Vector or characters, (names of) the columns of the underlying data 
-#'                of the \code{object} (\code{default = 1}). 
-#' @param wCol    Vector, the columns of the scenario weights 
+#'                of the \code{object} (\code{default = "all"}). 
+#' @param wCol    Numeric, the columns of the scenario weights 
 #'                of the \code{object} (\code{default = 1}).
-#' @param grid    Vector, or matrix of values for the underlying data
-#'                in \code{xCol} of the \code{object}. 
-#' @param base    Logical, if TRUE, statistics under the baseline are also returned (default = "FALSE").
-#'                 
+#' @param grid    A matrix containing the empirical distribution of the xCol components 
+#'                of the stressed model with weights wCol. The empirical distribution 
+#'                function can be evaluated at a vector valued xCol.
+#' @param base    Logical, if TRUE, statistics under the baseline are also returned (default = "FALSE").]
+#' 
+#' @details The \code{cdf_stressed} returns the values of the empirical distribution function 
+#'          of the xCol model components for weights wCol. In contrast, the \code{cdf} function 
+#'          returns a function, analogous to the ecdf from the base package. The 
+#'          function \code{cdf_stressed} is the \code{cdf} function applied to grid.
 #' 
 #' @return The empirical distribution function (a function) of 
 #'     the \code{xCol} component of the stressed model with weights 
@@ -29,13 +33,12 @@
 #' grid <- cbind(seq(min(x$normal), max(x$normal), length.out = 5), 
 #'               seq(min(x$gamma), max(x$gamma), length.out = 5))
 #' ## stressed empirical distribution function
-#' cdf_stressed(res1, xCol = 1, wCol = 1, grid = grid)
+#' cdf_stressed(res1, xCol = "all", wCol = 1, grid = grid)
 #' 
-#' @author Silvana M. Pesenti 
+#' @author Kent Wu
 #' 
-#' @seealso See \code{\link{plot_cdf}} for plotting the empirical 
-#'     distribution function of the stressed model and 
-#'     \code{\link{quantile_stressed}} for sample quantiles of 
+#' @seealso See \code{\link{cdf}} for the empirical distribution function of a stressed 
+#'     model component and \code{\link{quantile_stressed}} for sample quantiles of 
 #'     a stressed model. 
 #' @export
 #' 
@@ -44,9 +47,12 @@ cdf_stressed <- function(object, xCol = "all", wCol = 1, grid, base=FALSE){
   if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
   if (anyNA(object$x)) warning("x contains NA")
 
+  if (length(wCol) > 1 || wCol == "all") stop("Input wCol has dimension larger than 1")
   if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
   x_data <- as.matrix(get_data(object, xCol = xCol))
   new_weights <- as.matrix(get_weights(object)[ , wCol]) # single weight
+  
+  if (ncol(as.matrix(x_data)) != ncol(as.matrix(grid))) stop("The number of model components does match with input dimension of grid")
   cdf <- .cdf_stressed(x = x_data, w = new_weights, grid = grid)
   
   if (is.null(colnames(get_data(object)))){

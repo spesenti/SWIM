@@ -9,10 +9,10 @@ cdf(object, xCol = 1, wCol = 1)
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Vector or characters, (names of) the columns of the underlying data 
+\item{xCol}{Numeric or character, (name of) the columns of the underlying data 
 of the \code{object} (\code{default = 1}).}
 
-\item{wCol}{Vector, the columns of the scenario weights 
+\item{wCol}{Numeric, the columns of the scenario weights 
 of the \code{object} (\code{default = 1}).}
 }
 \value{
