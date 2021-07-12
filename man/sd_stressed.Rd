@@ -45,6 +45,8 @@ Provides the standard deviation and variance of stressed
 }
 \section{Functions}{
 \itemize{
+\item \code{sd_stressed}: Sample standard deviation of model components
+
 \item \code{var_stressed}: Sample variance of model components
 }}
 

@@ -17,10 +17,9 @@
 #'          returns a function, analogous to the ecdf from the base package. The 
 #'          function \code{cdf_stressed} is the \code{cdf} function applied to grid.
 #' 
-#' @return The empirical distribution function (a function) of 
-#'     the \code{xCol} component of the stressed model with weights 
-#'     \code{wCol}. The empirical distribution function can be 
-#'     evaluated at a vector. 
+#' @return A matrix containing the empirical distribution function 
+#'         applied to \code{grid} of the xCol components of the 
+#'         stressed model with weights wCol
 #' 
 #' @examples      
 #' ## example with a stress on VaR

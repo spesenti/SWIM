@@ -14,6 +14,8 @@
 #' 
 #' @details \code{sd_stressed}: The standard deviation of 
 #'      a chosen model component, subject to the calculated scenario weights.
+#'      
+#' @describeIn sd_stressed Sample standard deviation of model components
 #' 
 #' @examples      
 #' ## example with a stress on VaR

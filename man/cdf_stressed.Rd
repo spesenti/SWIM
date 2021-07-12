@@ -22,10 +22,9 @@ function can be evaluated at a vector valued xCol.}
 \item{base}{Logical, if TRUE, statistics under the baseline are also returned (default = "FALSE").]}
 }
 \value{
-The empirical distribution function (a function) of 
-    the \code{xCol} component of the stressed model with weights 
-    \code{wCol}. The empirical distribution function can be 
-    evaluated at a vector.
+A matrix containing the empirical distribution function 
+        applied to \code{grid} of the xCol components of the 
+        stressed model with weights wCol
 }
 \description{
 Provides the empirical distribution of a stressed model component (random variable) under the scenario weights
