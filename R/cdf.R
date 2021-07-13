@@ -4,9 +4,9 @@
 #'     model component (random variable) under the scenario weights. 
 #' 
 #' @inheritParams sensitivity 
-#' @param xCol    Numeric or character, (name of) the column of the underlying data 
+#' @param xCol    Numeric or character, (name of) the columns of the underlying data 
 #'                of the \code{object} (\code{default = 1}). 
-#' @param wCol    Numeric, the column of the scenario weights 
+#' @param wCol    Numeric, the columns of the scenario weights 
 #'                of the \code{object} (\code{default = 1}).
 #' 
 #' @return The empirical distribution function (a function) of 
@@ -36,20 +36,28 @@
 #'     a stressed model. 
 #' @export
 
-  cdf <- function(object, xCol = 1, wCol = 1){
-   if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
-   if (anyNA(object$x)) warning("x contains NA")
-   new_weights <- get_weights(object)[ , wCol]
-   x_data <- get_data(object)[ , xCol]
-   cdf <- .cdf(x = x_data, w = new_weights)
-   return(cdf)
-  }
-  # tst 
+cdf <- function(object, xCol = 1, wCol = 1){
+  if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
+  if (anyNA(object$x)) warning("x contains NA")
+  if (length(wCol) > 1 || wCol == "all") stop("Input wCol has dimension larger than 1")
+  if (length(xCol) > 1 || xCol == "all") stop("Input xCol has dimension larger than 1")
+  
+  new_weights <- get_weights(object)[ , wCol]
+  x_data <- get_data(object)[ , xCol]
 
- # help function 
- # x    numeric vector  
- # w    numeric vector with weights
-  .cdf <- function(x, w){
-    .cdf_stress <- function(t) colMeans(w * (sapply(t, FUN = function(s) x <= s)))
-   return(.cdf_stress)
-  }
+  cdf <- .cdf(x = x_data, w = new_weights)
+  return(cdf)
+}
+
+# tst 
+
+# help function 
+# x    numeric vector  
+# w    numeric vector with weights
+.cdf <- function(x, w){
+  func <- function(t) {
+    if (!is.vector(t)) stop("Given grid is not a vector")
+    colMeans(w * (sapply(t, FUN = function(s) x <= s)))
+    }
+  return(func)
+}
