@@ -3,9 +3,9 @@
                        type = "type", specs = "specs"){
    mymodel <- list(
    x = x, # vector, matrix or dataframe containing the underlying data
-   new_weights = new_weights, # list of eithter functions, that applied 
+   new_weights = new_weights, # list of either functions, that applied 
       # to the kth column of x providing the scenario weights; OR a 
-      # vector containting the new_weights
+      # vector containing the new_weights
    type  = type, # a list of characters each corresponding to a stress
       # one of ("VaR", "VaR ES", "prob", "moment", "mean", "mean sd", "user")
    specs = specs # a list with elements called "stress i".
@@ -22,6 +22,34 @@
   
   is.SWIM <- function(object) inherits(object, "SWIM")
 
+ # Defines the class "SWIMw"
+  SWIMw <- function(x = "x", h = "h", u="u", lam = "lam", new_weights = "new_weights", 
+                    str.fY = 'str.fY', str.FY = 'str.FY', type = "type", specs = "specs"){
+     mymodel <- list(
+        x = x, # vector, matrix or dataframe containing the underlying data
+        h = h, # function, that applied to x, provide the bandwidths
+        u = u, # vector containing the gridspace on [0,1]
+        lam = lam, # optimized lambda value(s)
+        str.fY = str.fY, # function, that applied to the stressed column, provide the density
+        str.FY = str.FY, # function, that applied to the stressed column, provide the cdf
+        new_weights = new_weights, # list of either functions, that applied 
+        # to the k-th column of x providing the scenario weights; OR a 
+        # vector containing the new_weights
+        type  = type, # a list of characters each corresponding to a stress
+        # one of ("VaR", "VaR ES", "prob", "moment", "mean", "mean sd", "user")
+        specs = specs # a list with elements called "stress i".
+        #
+        # all input variables of the stress and constraints according
+        # to the stress. For example a stress on 
+        # the VaR contains: k, alpha, q
+     )   
+     ## Name of the class
+     attr(mymodel, "class") <- "SWIMw"
+     return(mymodel)
+  }
+  
+  is.SWIMw <- function(object) inherits(object, "SWIMw")
+  
  #' Extracting from a Stressed Model
  #'
  #' Extracting the data (realisations of the stochastic model), the 
@@ -42,7 +70,7 @@
  #' @export
 
   get_data <- function(object, xCol = "all"){
-   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
    if (length(xCol) ==1 && xCol == "all") {
       xdata <- as.matrix(object$x[, 1:ncol(object$x)])
       if(is.character(colnames(object$x)) | is.null(colnames(object$x))) colnames(xdata) <- colnames(object$x)
@@ -98,7 +126,7 @@
  #' @export
 
   get_weights <- function(object){
-   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
    x_data <- get_data(object)
    m <- length(object$type)
    new_weights <- matrix(0, nrow = nrow(x_data), ncol = m)
