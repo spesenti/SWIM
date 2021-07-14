@@ -73,7 +73,6 @@ cdf_stressed <- function(object, xCol = "all", wCol = 1, grid, base=FALSE){
 }
 
 
-
 # help function 
 # x    numeric vector  
 # w    numeric vector with weights
