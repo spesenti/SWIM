@@ -153,25 +153,6 @@ stress_ES_w <- function(x, alpha, s_ratio = NULL, s = NULL, k = 1, normalise = F
                    "new_weights" = new.weights, "str.fY" = gY.fn, "str.FY" = GY.fn,
                    "str.FY.inv" = GY.inv.fn, "type" = type, "specs" = constr_ES)
   
-  quantile.data <- data.frame(FY.inv=FY.inv.fn(u), GY.inv, ell, u)
-  plt <- ggplot2::ggplot(quantile.data, ggplot2::aes(x=u)) +
-    ggplot2::geom_line(ggplot2::aes(y = FY.inv), color = "darkred") +
-    ggplot2::geom_line(ggplot2::aes(y = GY.inv), color = "steelblue") +
-    ggplot2::geom_line(ggplot2::aes(y = ell), color="lightgreen", linetype="twodash") +
-    ggplot2::labs(x = 'u', y = "quantile") +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(legend.text = ggplot2::element_text(size = 10))
-  print(plt)
-  
-  cdf.data <- data.frame(FY = FY.fn(y.grid), GY = GY.fn(y.grid), y.grid)
-  plt <- ggplot2::ggplot(cdf.data, ggplot2::aes(x=y.grid)) +
-    ggplot2::geom_line(ggplot2::aes(y = FY), color = "orange") +
-    ggplot2::geom_line(ggplot2::aes(y = GY), color = "blue") +
-    ggplot2::labs(x = 'u', y = "cdf") +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(legend.text = ggplot2::element_text(size = 10))
-
-  print(plt)
   return(my_list)
 }
 
