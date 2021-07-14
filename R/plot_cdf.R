@@ -18,7 +18,7 @@
 #'                 value for \code{ylim} in the \code{coord_cartesian}
 #'                 function in \code{ggplot}.
 #
-#' @return If \code{displ = TRUE}, a plot displaying the empirical
+#' @return If \code{displ = TRUE}, a plot displaying the (empirical)
 #'     distribution function of the stochastic model under the
 #'     scenario weights.
 #'
@@ -60,29 +60,76 @@
 
   plot_cdf <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,                            
                        x_limits, y_limits, displ = TRUE){
-   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
    if (anyNA(object$x)) warning("x contains NA")
    x_data <- get_data(object)[, xCol]
    if(is.character(xCol)) x_name <- xCol
    if(is.null(colnames(get_data(object)))) x_name <- paste("X", xCol, sep = "") else if(!is.character(xCol)) x_name <- colnames(get_data(object))[xCol]
    if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
-   plot_data <- data.frame(x_data, get_weights(object)[ , wCol])
-   names(plot_data) <- c(x_name, paste("stress", wCol, sep = " "))
-   if (base == TRUE){
-    plot_data <- cbind(plot_data, base = rep(1, length(x_data)))
-   }
-   plot_data <- reshape2::melt(plot_data, id.var = x_name, variable.name = "stress", value.name = "value")
-
-   if (displ == TRUE){
-    if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data))
-    if (missing(y_limits)) y_limits <- c(0,1)
-    ggplot2::ggplot(plot_data, ggplot2::aes_(x = plot_data[,1], weight = ~value)) +
-      stat_ecdf(ggplot2::aes(color = factor(stress)), n = n) +
-      ggplot2::labs(x = x_name, y = "ecdf") +
-      ggplot2::coord_cartesian(xlim = x_limits, ylim = y_limits) +
-      ggplot2::theme_minimal() +
-      ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
+   
+   if (is.SWIM(object) ){
+      # K-L Divergence
+      plot_data <- data.frame(x_data, get_weights(object)[ , wCol])
+      names(plot_data) <- c(x_name, paste("stress", wCol, sep = " "))
+      if (base == TRUE){
+         plot_data <- cbind(plot_data, base = rep(1, length(x_data)))
+      }
+      plot_data <- reshape2::melt(plot_data, id.var = x_name, variable.name = "stress", value.name = "value")
+      
+      if (displ == TRUE){
+         if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data))
+         if (missing(y_limits)) y_limits <- c(0,1)
+         ggplot2::ggplot(plot_data, ggplot2::aes_(x = plot_data[,1], weight = ~value)) +
+            stat_ecdf(ggplot2::aes(color = factor(stress)), n = n) +
+            ggplot2::labs(x = x_name, y = "ecdf") +
+            ggplot2::coord_cartesian(xlim = x_limits, ylim = y_limits) +
+            ggplot2::theme_minimal() +
+            ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
+      } else {
+         return(plot_data)
+      }
    } else {
-    return(plot_data)
+      # Wasserstein Distance
+      w <- get_weights(object)[ , wCol]
+      h <- object$h(x_data)
+
+      k <- object$specs$'stress 1'$k
+      if(is.character(k)) k_name <- k
+      if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
+      else if(!is.character(k)) k_name <- colnames(get_data(object))[k]
+      
+      if(k_name == x_name){
+         G.fn <- object$str.FY
+      } else{
+         G.fn <- function(x){
+            return(sum(w * pnorm((x - x_data)/h)/length(x_data)))
+         }
+         G.fn <- Vectorize(G.fn)
+      }
+      
+      plot.data <- data.frame(x_data, G.fn(x_data))
+      names(plot.data) <- c(x_name, paste("stress", wCol, sep = " "))
+      
+      if (base == TRUE){
+         F.fn <- function(x){
+            return(sum(pnorm((x - x_data)/h)/length(x_data)))
+         }
+         F.fn <- Vectorize(F.fn)
+         plot.data <- cbind(plot.data, base = F.fn(x_data))
+      }
+      
+      plot.data <- reshape2::melt(plot.data, id.var = x_name, variable.name = "stress", value.name = "value")
+      if (displ == TRUE){
+         if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)+0.1)
+         if (missing(y_limits)) y_limits <- c(0,1)
+         ggplot2::ggplot(plot.data, ggplot2::aes(x = plot.data[,1], value, col=stress)) +
+            ggplot2::geom_line(ggplot2::aes(color = stress)) +
+            ggplot2::labs(x = x_name, y = "cdf") +
+            ggplot2::coord_cartesian(xlim = x_limits, ylim = y_limits) +
+            ggplot2::theme_minimal() +
+            ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
+      } else {
+         return(plot.data)
+      }
    }
   }
