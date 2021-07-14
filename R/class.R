@@ -24,7 +24,7 @@
 
  # Defines the class "SWIMw"
   SWIMw <- function(x = "x", h = "h", u="u", lam = "lam", new_weights = "new_weights", 
-                    str.fY = 'str.fY', str.FY = 'str.FY', type = "type", specs = "specs"){
+                    str.fY = 'str.fY', str.FY = 'str.FY', str.FY.inv = 'str.FY.inv', type = "type", specs = "specs"){
      mymodel <- list(
         x = x, # vector, matrix or dataframe containing the underlying data
         h = h, # function, that applied to x, provide the bandwidths
@@ -32,6 +32,7 @@
         lam = lam, # optimized lambda value(s)
         str.fY = str.fY, # function, that applied to the stressed column, provide the density
         str.FY = str.FY, # function, that applied to the stressed column, provide the cdf
+        str.FY.inv = str.FY.inv, # function, that applied to the stressed column, provide the quantile
         new_weights = new_weights, # list of either functions, that applied 
         # to the k-th column of x providing the scenario weights; OR a 
         # vector containing the new_weights

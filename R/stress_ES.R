@@ -56,7 +56,7 @@ stress_ES_w <- function(x, alpha, s_ratio = NULL, s = NULL, k = 1, normalise = F
   n <- length(x_data[, k])
   
   # Create grid u in [0,1]
-  u <- c(.ab_grid(1e-5, 0.05, 100), .ab_grid(0.05, 0.99, 500), .ab_grid(0.99, 1-1e-5, 100))
+  u <- c(.ab_grid(1e-4, 0.05, 100), .ab_grid(0.05, 0.99, 500), .ab_grid(0.99, 1-1e-4, 100))
   
   # Get the KDE estimates for fY, FY
   if (is.null(h)){
@@ -150,8 +150,8 @@ stress_ES_w <- function(x, alpha, s_ratio = NULL, s = NULL, k = 1, normalise = F
     }
   }
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam,
-                   "new_weights" = new.weights, "str.fY" = gY.fn,
-                   "str.FY" = GY.fn, "type" = type, "specs" = constr_ES)
+                   "new_weights" = new.weights, "str.fY" = gY.fn, "str.FY" = GY.fn,
+                   "str.FY.inv" = GY.inv.fn, "type" = type, "specs" = constr_ES)
   
   quantile.data <- data.frame(FY.inv=FY.inv.fn(u), GY.inv, ell, u)
   plt <- ggplot2::ggplot(quantile.data, ggplot2::aes(x=u)) +
