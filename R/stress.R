@@ -30,6 +30,7 @@
  #' @export
  #' 
   
+# K-L
   stress <- function(type = c("VaR", "VaR ES", "mean", 
                      "mean sd", "moment", "prob", "user"), ...){
    if (type == "VaR") SWIM <- stress_VaR(...)
@@ -40,4 +41,10 @@
    if (type == "prob") SWIM <- stress_prob(...)
    if (type == "user") SWIM <- stress_user(...)
    return(SWIM)
+  }
+  
+# Wasserstein
+  stress.wass <- function(type = c("ES"), ...){
+     if (type == "ES") SWIMw <- stress_ES_w(...)
+     return(SWIMw)
   }
