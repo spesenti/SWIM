@@ -42,7 +42,7 @@
 
   plot_hist <- function(object, xCol = 1, wCol = "all", base = FALSE, x_limits,                            
                         displ = TRUE, binwidth, displLines = FALSE){
-   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
    if (anyNA(object$x)) warning("x contains NA")
    x_data <- get_data(object)[ , xCol]
    if(missing(binwidth)) binwidth <- (max(x_data) - min(x_data)) / 30

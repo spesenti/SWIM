@@ -40,34 +40,92 @@
 #' @export
 #' 
 plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500, x_limits, y_limits, displ = TRUE){
-  if (!is.SWIM(object)) stop("Object not of class SWIM")
+  if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
   if (anyNA(object$x)) warning("x contains NA")
   if(is.numeric(xCol) && (length(xCol) != 1)) stop("Invalid xCol argument.")
   if(is.character(xCol) && (!(xCol %in% colnames(get_data(object))))) stop("Invalid xCol argument.")
-  
-  grid <- seq(0, 1, length.out = n)
+
   if (is.character(xCol)) x_name <- xCol
   if (is.null(colnames(get_data(object)))) x_name <- paste("X", xCol, sep = "") else if(!is.character(xCol)) x_name <- colnames(get_data(object))[xCol]
   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
+    
+  if (is.SWIM(object)){
+    grid <- seq(0, 1, length.out = n)
+    quant_data <- cbind(grid, sapply(wCol, FUN = quantile_stressed, object = object, probs = grid, xCol = xCol,type = c("quantile")))
+    colnames(quant_data) <- c("grid", paste("stress", wCol, sep = " "))
+    if (base == TRUE){
+      quant_data <- cbind(quant_data, base = as.numeric(stats::quantile(get_data(object)[, xCol], grid)))
+    }
+    
+    plot_data <- reshape2::melt(as.data.frame(quant_data), id.var = "grid", variable.name = "stress", value.name = "value")
+    
+    if (displ == TRUE){
+      if (missing(x_limits)) x_limits <- c(0,1)
+      if (missing(y_limits)) y_limits <- c(min(get_data(object)[, xCol]), max(get_data(object)[, xCol]))
+      ggplot2::ggplot(plot_data, ggplot2::aes_(x = plot_data[,1], y = ~value)) +
+        ggplot2::geom_line(ggplot2::aes(color = factor(stress)), n = n) +
+        ggplot2::labs(x = "" , y = paste("quantiles of", x_name, sep = " ")) +
+        ggplot2::coord_cartesian(xlim = x_limits, ylim = y_limits) +
+        ggplot2::theme_minimal() +
+        ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
+    } else {
+      return(plot_data)
+    }
+  } else {
+    # Wasserstein Distance
+    grid <- object$u
+    w <- get_weights(object)[ , wCol]
+    x_data <- get_data(object)[, xCol]
+    h <- object$h(x_data)
+    
+    k <- object$specs$'stress 1'$k
+    if(is.character(k)) k_name <- k
+    if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
+    else if(!is.character(k)) k_name <- colnames(get_data(object))[k]
+    
+    lower.bracket = min(x_data)-(max(x_data)-min(x_data))*0.1
+    upper.bracket = max(x_data)+(max(x_data)-min(x_data))*0.1
+    
+    if(k_name == x_name){
+      G.inv.fn <- Vectorize(object$str.FY.inv)
+    } else{
+      G.fn <- function(x){
+        return(sum(w * pnorm((x - x_data)/h)/length(x_data)))
+      }
+      G.fn <- Vectorize(G.fn)
+      G.inv.fn <- Vectorize(.inverse(G.fn, lower.bracket, upper.bracket))
+    }
 
-  quant_data <- cbind(grid, sapply(wCol, FUN = quantile_stressed, object = object, probs = grid, xCol = xCol,type = c("quantile")))
-  colnames(quant_data) <- c("grid", paste("stress", wCol, sep = " "))
-  if (base == TRUE){
-    quant_data <- cbind(quant_data, base = as.numeric(stats::quantile(get_data(object)[, xCol], grid)))
+    quant_data <- cbind(grid, G.inv.fn(grid))
+    colnames(quant_data) <- c("grid", paste("stress", wCol, sep = " "))
+    if (base == TRUE){
+      F.fn <- function(x){
+        return(sum(pnorm((x - x_data)/h)/length(x_data)))
+      }
+      F.fn <- Vectorize(F.fn)
+      F.inv.fn <- Vectorize(.inverse(F.fn, lower.bracket, upper.bracket))
+      quant_data <- cbind(quant_data, base = F.inv.fn(grid))
+    }
+    
+    plot_data <- reshape2::melt(as.data.frame(quant_data), id.var = "grid", variable.name = "stress", value.name = "value")
+    
+    if (displ == TRUE){
+      if (missing(x_limits)) x_limits <- c(0,1)
+      if (missing(y_limits)) y_limits <- c(min(get_data(object)[, xCol]), max(get_data(object)[, xCol]))
+      ggplot2::ggplot(plot_data, ggplot2::aes_(x = plot_data[,1], y = ~value)) +
+        ggplot2::geom_line(ggplot2::aes(color = factor(stress)), n = n) +
+        ggplot2::labs(x = "" , y = paste("quantiles of", x_name, sep = " ")) +
+        ggplot2::coord_cartesian(xlim = x_limits, ylim = y_limits) +
+        ggplot2::theme_minimal() +
+        ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
+    } else {
+      return(plot_data)
+    }
   }
   
-    plot_data <- reshape2::melt(as.data.frame(quant_data), id.var = "grid", variable.name = "stress", value.name = "value")
+}
 
-  if (displ == TRUE){
-    if (missing(x_limits)) x_limits <- c(0,1)
-    if (missing(y_limits)) y_limits <- c(min(get_data(object)[, xCol]), max(get_data(object)[, xCol]))
-    ggplot2::ggplot(plot_data, ggplot2::aes_(x = plot_data[,1], y = ~value)) +
-      ggplot2::geom_line(ggplot2::aes(color = factor(stress)), n = n) +
-      ggplot2::labs(x = "" , y = paste("quantiles of", x_name, sep = " ")) +
-      ggplot2::coord_cartesian(xlim = x_limits, ylim = y_limits) +
-      ggplot2::theme_minimal() +
-      ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
-  } else {
-    return(plot_data)
-  }
+# helper
+.inverse <- function(f, lower = -100, upper = 100){
+  return(function(y){stats::uniroot((function(x){f(x) - y}), lower = lower, upper = upper)$root})
 }
