@@ -72,7 +72,7 @@ cdf_stressed <- function(object, xCol = "all", wCol = 1, grid, base=FALSE){
   return(cdf)
 }
 
-# tst 
+
 
 # help function 
 # x    numeric vector  
