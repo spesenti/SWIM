@@ -42,11 +42,28 @@ cdf <- function(object, xCol = 1, wCol = 1){
   if (length(wCol) > 1 || wCol == "all") stop("Input wCol has dimension larger than 1")
   if (length(xCol) > 1 || xCol == "all") stop("Input xCol has dimension larger than 1")
   
-  new_weights <- get_weights(object)[ , wCol]
-  x_data <- get_data(object)[ , xCol]
-
-  cdf <- .cdf(x = x_data, w = new_weights)
-  return(cdf)
+  if (is.SWIM(object)){
+    new_weights <- get_weights(object)[ , wCol]
+    x_data <- get_data(object)[ , xCol]
+    
+    cdf <- .cdf(x = x_data, w = new_weights)
+    return(cdf)    
+  } else {
+    k <- object$specs$'stress 1'$k
+    if(is.character(k)) k_name <- k
+    if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
+    else if(!is.character(k)) k_name <- colnames(get_data(object))[k]
+    
+    if(k_name == x_name){
+      G.fn <- object$str.FY
+    } else{
+      G.fn <- function(x){
+        return(sum(w * pnorm((x - x_data)/h)/length(x_data)))
+      }
+      G.fn <- Vectorize(G.fn)
+    }
+    return(G.fn)
+  }
 }
 
 # tst 
