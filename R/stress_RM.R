@@ -88,18 +88,15 @@ stress_RM_w <- function(x, alpha, s_ratio = NULL, s = NULL, k = 1,
   
   
   # Calculate the risk measure
-  if(is.null(s)){s <- .es(FY.inv.fn(u), gamma(u), u) * s_ratio}
+  if(is.null(s)){s <- .rm(FY.inv.fn(u), gamma(u), u) * s_ratio}
   
   .objective_fn <- function(par){
-    # Get gamma for ES
-    gamma <- function(x){as.numeric((x >= alpha) / (1 - alpha))}
-    
     # Get ell = F_inv + sum(lam*gamma)
     ell.fn <- function(x){FY.inv.fn(x) + par * gamma(x)}
     
     # Get isotonic projection of ell
     GY.inv <- stats::isoreg(u, ell.fn(u))$yf
-    rm.stress <- .es(GY.inv, gamma(u), u)
+    rm.stress <- .rm(GY.inv, gamma(u), u)
     
     # Return RM error
     return(sqrt((s - rm.stress)^2))
@@ -129,35 +126,36 @@ stress_RM_w <- function(x, alpha, s_ratio = NULL, s = NULL, k = 1,
   
   # Create SWIMw object
   max_length <- max(length(s), length(alpha))
-  type <- rep(list("ES"), length.out = max_length)
-  
-  # Get constraints
-  s <- rep(s, length.out = max_length)
-  alpha <- rep(alpha, length.out = max_length)
-  constr_ES <- cbind("k" = rep(k, length.out = max_length), alpha, s)
-
-  for(i in 1:max_length){
-    temp_list <- list(as.list(constr_ES[i, ]))
-    names(temp_list) <- paste("stress", i)
-    constr_ES <- c(constr_ES, temp_list)
-  }
+  type <- rep(list("RM"), length.out = max_length)
 
   # Get weights
   new.weights <- .get_weights(x_data[,k], y.grid, gY.fn, fY.fn, hY)
   names(new.weights) <- paste("stress", 1:max_length)
   
-  # achieved ES
+  # achieved RM
   for(j in 1:max_length){
-    ES_achieved <- .es(GY.inv.fn(u), gamma(u), u)
-    # message if the achieved ES is different from the specified stress.
-    if(s != ES_achieved) {
-      s <- ES_achieved
-      message(paste("Stressed ES specified was", round(s, 4),", stressed ES achieved is", round(ES_achieved, 4)))
+    RM_achieved <- .rm(GY.inv.fn(u), gamma(u), u)
+    # message if the achieved RM is different from the specified stress.
+    if(s - RM_achieved > 1e-4) {
+      message(paste("Stressed RM specified was", round(s, 4),", stressed RM achieved is", round(RM_achieved, 4)))
+      s <- RM_achieved
     }
   }
+  
+  # Get constraints
+  s <- rep(s, length.out = max_length)
+  alpha <- rep(alpha, length.out = max_length)
+  constr_RM <- cbind("k" = rep(k, length.out = max_length), alpha, s)
+  
+  for(i in 1:max_length){
+    temp_list <- list(as.list(constr_RM[i, ]))
+    names(temp_list) <- paste("stress", i)
+    constr_RM <- c(constr_RM, temp_list)
+  }
+  
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam,
                    "new_weights" = new.weights, "str.fY" = gY.fn, "str.FY" = GY.fn,
-                   "str.FY.inv" = GY.inv.fn, "type" = type, "specs" = constr_ES)
+                   "str.FY.inv" = GY.inv.fn, "type" = type, "specs" = constr_RM)
   
   return(my_list)
 }
@@ -173,7 +171,7 @@ stress_RM_w <- function(x, alpha, s_ratio = NULL, s = NULL, k = 1,
   return(function(y){stats::uniroot((function(x){f(x) - y}), lower = lower, upper = upper)$root})
 }
 
-.es <- function(F_inv, gamma, u){
+.rm <- function(F_inv, gamma, u){
   return(.integrate(F_inv*gamma, u))
 }
 
