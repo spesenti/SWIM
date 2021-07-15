@@ -47,7 +47,7 @@
 #' 
 
 summary.SWIM <- function(object, ..., xCol = "all", wCol = "all", base = FALSE){
-  if (!is.SWIM(object)) stop("Wrong object")
+  if (!is.SWIM(object) && !is.SWIMw(object)) stop("Wrong object")
   if (anyNA(object$x)) warning("x contains NA")
 #  if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
 #  if (is.null(colnames(get_data(object)))){
@@ -66,9 +66,9 @@ summary.SWIM <- function(object, ..., xCol = "all", wCol = "all", base = FALSE){
   names(summary_w) <- paste("stress", wCol)
   
   if (base == TRUE){
-  old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)
-  summary_base <- .summary(x_data = x_data, cname = cname, new_weights = old_weights)
-  summary_w <- c(list("base" = summary_base), summary_w)
+    old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)
+    summary_base <- .summary(x_data = x_data, cname = cname, new_weights = old_weights)
+    summary_w <- c(list("base" = summary_base), summary_w)
   }
     return(summary_w)
   }
