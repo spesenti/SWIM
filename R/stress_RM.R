@@ -45,13 +45,20 @@
 #'     See \code{\link{SWIMw}} for details.
 
 
-stress_ES_w <- function(x, alpha, s_ratio = NULL, s = NULL, k = 1, normalise = FALSE, h = NULL){
+stress_RM_w <- function(x, alpha, s_ratio = NULL, s = NULL, k = 1,
+                        normalise = FALSE, h = NULL, gamma = NULL){
 
-  if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
+  if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
   if (!is.null(s) && !is.null(s_ratio)) stop("Only provide s or s_ratio")
   if (is.null(s) && is.null(s_ratio)) stop("no s or s_ratio defined")
+  if (!is.null(gamma)){
+    if (!all(sapply(gamma, is.function))) stop("gamma must be a function")
+  } else{
+    warning("No gamma passed. Using expected shortfall.")
+    gamma <- function(x){as.numeric((x >= alpha) / (1 - alpha))}
+  }
 
   n <- length(x_data[, k])
   
@@ -81,19 +88,18 @@ stress_ES_w <- function(x, alpha, s_ratio = NULL, s = NULL, k = 1, normalise = F
   
   
   # Calculate the risk measure
-  gamma_ES <- function(x){as.numeric((x >= alpha) / (1 - alpha))}
-  if(is.null(s)){s <- .es(FY.inv.fn(u), gamma_ES(u), u) * s_ratio}
+  if(is.null(s)){s <- .es(FY.inv.fn(u), gamma(u), u) * s_ratio}
   
   .objective_fn <- function(par){
     # Get gamma for ES
-    gamma_ES <- function(x){as.numeric((x >= alpha) / (1 - alpha))}
+    gamma <- function(x){as.numeric((x >= alpha) / (1 - alpha))}
     
     # Get ell = F_inv + sum(lam*gamma)
-    ell.fn <- function(x){FY.inv.fn(x) + par * gamma_ES(x)}
+    ell.fn <- function(x){FY.inv.fn(x) + par * gamma(x)}
     
     # Get isotonic projection of ell
     GY.inv <- stats::isoreg(u, ell.fn(u))$yf
-    rm.stress <- .es(GY.inv, gamma_ES(u), u)
+    rm.stress <- .es(GY.inv, gamma(u), u)
     
     # Return RM error
     return(sqrt((s - rm.stress)^2))
@@ -105,7 +111,7 @@ stress_ES_w <- function(x, alpha, s_ratio = NULL, s = NULL, k = 1, normalise = F
   lam <- res$par
   
   # Get ell
-  ell.fn <- function(x){FY.inv.fn(x) + lam * gamma_ES(x)}
+  ell.fn <- function(x){FY.inv.fn(x) + lam * gamma(x)}
   ell <- ell.fn(u)
 
   # Get GY_inv, y_grid
@@ -142,7 +148,7 @@ stress_ES_w <- function(x, alpha, s_ratio = NULL, s = NULL, k = 1, normalise = F
   
   # achieved ES
   for(j in 1:max_length){
-    ES_achieved <- .es(GY.inv.fn(u), gamma_ES(u), u)
+    ES_achieved <- .es(GY.inv.fn(u), gamma(u), u)
     # message if the achieved ES is different from the specified stress.
     if(s != ES_achieved) {
       s <- ES_achieved
