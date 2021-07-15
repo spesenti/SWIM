@@ -70,7 +70,6 @@ stress_mean_std_w <- function(x, mean_ratio, std_ratio, k = 1,
   lower.bracket = min(x_data[,k])-(max(x_data[,k])-min(x_data[,k]))*0.1
   upper.bracket = max(x_data[,k])+(max(x_data[,k])-min(x_data[,k]))*0.1
   FY.inv.fn <- Vectorize(.inverse(FY.fn, lower.bracket, upper.bracket))
-  print("hi 1")
   
   # Calculate the mean and std
   mean.base <- .integrate(FY.inv.fn(u), u)
@@ -96,8 +95,6 @@ stress_mean_std_w <- function(x, mean_ratio, std_ratio, k = 1,
   init.lam <- stats::rnorm(2)
   res <- stats::optim(init.lam, .objective_fn, method = "Nelder-Mead")
   lam <- res$par
-  
-  print("hi 2")
   
   # Get ell
   ell.fn <- function(x){(FY.inv.fn(x) + lam[1] + lam[2]*mean.target)/(1 + lam[2])}
