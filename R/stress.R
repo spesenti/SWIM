@@ -44,9 +44,10 @@
   }
   
 # Wasserstein
-  stress.wass <- function(type = c("RM", "mean-std", "RM-mean-std"), ...){
+  stress.wass <- function(type = c("RM", "mean-std", "RM-mean-std", "HARA-RM"), ...){
      if (type == "RM") SWIMw <- stress_RM_w(...)
      if (type == "mean-std") SWIMw <- stress_mean_std_w(...)
      if (type == "RM-mean-std") SWIMw <- stress_RM_mean_std_w(...)
+     if (type == "HARA-RM") SWIMw <- stress_HARA_RM_w(...)
      return(SWIMw)
   }
