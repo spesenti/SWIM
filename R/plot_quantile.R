@@ -127,5 +127,5 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
 
 # helper
 .inverse <- function(f, lower = -100, upper = 100){
-  return(function(y){stats::uniroot((function(x){f(x) - y}), lower = lower, upper = upper)$root})
+  return(function(y){stats::uniroot((function(x){f(x) - y}), lower = lower, upper = upper, extendInt = 'yes')$root})
 }

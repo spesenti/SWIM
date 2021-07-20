@@ -114,7 +114,9 @@ stress_RM_mean_std_w <- function(x, mean_ratio, alpha, std_ratio, s_ratio = NULL
 
   # Get GY_inv, y_grid
   GY.inv <- stats::isoreg(u, ell)$yf
-  GY.inv.fn <- stats::approxfun(u, GY.inv)
+  left <- min(min(x_data[,k]), GY.inv[4])
+  right <- max(max(x_data[,k]), GY.inv[length(GY.inv)-3])
+  GY.inv.fn <- stats::approxfun(u, GY.inv, yleft=left-1e-5, yright=right+1e-5)
   y.grid <- seq(from=GY.inv[4], to=GY.inv[length(GY.inv)-3], length.out=500)
   
   # Get GY and gY
@@ -182,7 +184,7 @@ stress_RM_mean_std_w <- function(x, mean_ratio, alpha, std_ratio, s_ratio = NULL
 }
 
 .inverse <- function(f, lower = -100, upper = 100){
-  return(function(y){stats::uniroot((function(x){f(x) - y}), lower = lower, upper = upper)$root})
+  return(function(y){stats::uniroot((function(x){f(x) - y}), lower = lower, upper = upper, extendInt = 'yes')$root})
 }
 
 .integrate <- function(f, x){

@@ -113,15 +113,17 @@ stress_RM_w <- function(x, alpha, s_ratio = NULL, s = NULL, k = 1,
 
   # Get GY_inv, y_grid
   GY.inv <- stats::isoreg(u, ell)$yf
-  GY.inv.fn <- stats::approxfun(u, GY.inv)
+  left <- min(min(x_data[,k]), GY.inv[4])
+  right <- max(max(x_data[,k]), GY.inv[length(GY.inv)-3])
+  GY.inv.fn <- stats::approxfun(u, GY.inv, yleft=left-1e-5, yright=right+1e-5)
   y.grid <- seq(from=GY.inv[4], to=GY.inv[length(GY.inv)-3], length.out=500)
   
 
   # Get GY and gY
-  GY.fn <- Vectorize(.inverse(GY.inv.fn, lower=min(u), upper=max(u)))
+  GY.fn <- Vectorize(.inverse(GY.inv.fn, lower=0, upper=1))
   
   dG.inv <- (GY.inv[3:length(GY.inv)] - GY.inv[1:(length(GY.inv)-2)])/(u[3:length(u)] - u[1:(length(u)-2)])
-  dG.inv.fn <- stats::approxfun(0.5*(u[3:length(u)] + u[1:(length(u)-2)]), dG.inv)
+  dG.inv.fn <- stats::approxfun(0.5*(u[3:length(u)] + u[1:(length(u)-2)]), dG.inv, rule=2)
   gY.fn <- function(x){1/dG.inv.fn(GY.fn(x))}
   
   # Create SWIMw object
@@ -168,7 +170,7 @@ stress_RM_w <- function(x, alpha, s_ratio = NULL, s = NULL, k = 1,
 }
 
 .inverse <- function(f, lower = -100, upper = 100){
-  return(function(y){stats::uniroot((function(x){f(x) - y}), lower = lower, upper = upper)$root})
+  return(function(y){stats::uniroot((function(x){f(x) - y}), lower = lower, upper = upper, extendInt = 'yes')$root})
 }
 
 .rm <- function(F_inv, gamma, u){
@@ -182,7 +184,7 @@ stress_RM_w <- function(x, alpha, s_ratio = NULL, s = NULL, k = 1,
 .get_weights <- function(y_data, y_grid, gY_fn, fY_fn, hY){
   # Get dQ/dP
   g.val <- gY_fn(y_grid)
-  g.val[is.na(g.val)] <- 0
+  # g.val[is.na(g.val)] <- 0
   g.val <- g.val/.integrate(g.val, y_grid)
   f.val <- fY_fn(y_grid)/.integrate(fY_fn(y_grid), y_grid)
   dQ.dP <- g.val / f.val

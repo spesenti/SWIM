@@ -43,8 +43,40 @@
    return(SWIM)
   }
   
+#' Stressing Random Variables Using Wasserstein Distance
+#' 
+#' Provides weights on simulated scenarios from a baseline stochastic
+#'     model, such that stressed random variables fulfill given 
+#'     probabilistic constraints (e.g. specified values for risk 
+#'     measures), under the new scenario weights. Scenario weights are 
+#'     selected by constrained minimisation of the Wasserstein Distance to the
+#'     baseline model. 
+#'    
+#' @param type    Type of stress, one of \code{"RM", 
+#'     "mean sd", "RM mean sd", "HARA RM"}.
+#' @param ...     Arguments to be passed on, depending on \code{type}.
+#'                
+#' @return An object of class \code{SWIMw}, see \code{\link{SWIMw}} 
+#'     for details.
+#' 
+#' @examples 
+#' set.seed(0)
+#' x <- as.data.frame(cbind(
+#'   "normal" = rnorm(1000), 
+#'   "gamma" = rgamma(1000, shape = 2)))
+#' res <- stress_wass(type = "RM", x = x, 
+#'   alpha = 0.9, q_ratio = 1.05)
+#' summary(res)   
+#' 
+#' @author Zhuomin Mao 
+#' @family stress functions
+#' @inherit SWIMw references 
+#' 
+#' @export
+#' 
+  
 # Wasserstein
-  stress.wass <- function(type = c("RM", "mean-std", "RM-mean-std", "HARA-RM"), ...){
+  stress_wass <- function(type = c("RM", "mean sd", "RM mean sd", "HARA RM"), ...){
      if (type == "RM") SWIMw <- stress_RM_w(...)
      if (type == "mean-std") SWIMw <- stress_mean_std_w(...)
      if (type == "RM-mean-std") SWIMw <- stress_RM_mean_std_w(...)

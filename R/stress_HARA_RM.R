@@ -111,6 +111,8 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   }
   
   # Run optimization
+  # May require loop to have random reinitializations of init.lam if result of 
+  # optim is not good enough
   init.lam <- stats::rnorm(2)
   res <- stats::optim(init.lam, .objective_fn, method = "Nelder-Mead")
   lam <- res$par
@@ -122,14 +124,16 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   # Get GY_inv, y_grid
   iso.g <- stats::isoreg(u, ell)$yf
   GY.inv <- .utransform(a, b, eta, u, iso.g, exp(lam[1]), 600)
-  GY.inv.fn <- stats::approxfun(u, GY.inv)
+  left <- min(min(x_data[,k]), GY.inv[4])
+  right <- max(max(x_data[,k]), GY.inv[length(GY.inv)-3])
+  GY.inv.fn <- stats::approxfun(u, GY.inv, yleft=left-1e-5, yright=right+1e-5)
   y.grid <- seq(from=GY.inv[4], to=GY.inv[length(GY.inv)-3], length.out=500)
 
   # Get GY and gY
   GY.fn <- Vectorize(.inverse(GY.inv.fn, lower=min(u), upper=max(u)))
   
   dG.inv <- (GY.inv[3:length(GY.inv)] - GY.inv[1:(length(GY.inv)-2)])/(u[3:length(u)] - u[1:(length(u)-2)])
-  dG.inv.fn <- stats::approxfun(0.5*(u[3:length(u)] + u[1:(length(u)-2)]), dG.inv)
+  dG.inv.fn <- stats::approxfun(0.5*(u[3:length(u)] + u[1:(length(u)-2)]), dG.inv, rule=2)
   gY.fn <- function(x){1/dG.inv.fn(GY.fn(x))}
   
   # Create SWIMw object
@@ -147,7 +151,7 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
     if(s - RM_achieved > 1e-4) {
       message(paste("Stressed RM specified was", round(s, 4),", stressed RM achieved is", round(RM_achieved, 4)))
       s <- RM_achieved
-    }  
+    }
     hara_achieved <- .hara_utility(a, b, eta, u, GY.inv)
     # message if the achieved hara utility is different from the specified utility.
     if(hu - hara_achieved > 1e-4) {
@@ -174,6 +178,25 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam,
                    "new_weights" = new.weights, "str.fY" = gY.fn, "str.FY" = GY.fn,
                    "str.FY.inv" = GY.inv.fn, "type" = type, "specs" = constr)
+
+  quantile.data <- data.frame(FY,inv, GY.inv, u)
+  plt <- ggplot2::ggplot(quantile.data, aes(x=u)) +
+    geom_line(aes(y = FY.inv), color = "darkred") +
+    geom_line(aes(y = GY.inv), color = "steelblue") +
+    ggplot2::labs(x = 'x', y = "cdf") +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(legend.text = ggplot2::element_text(size = 10))
+  print(plt)
+    
+  cdf.data <- data.frame(FY=FY.fn(x_data[, k]), GY=GY.fn(x_data[,k]), x=x_data[,k])
+  plt <- ggplot2::ggplot(quantile.data, aes(x=x)) +
+    geom_line(aes(y = FY), color = "darkred") +
+    geom_line(aes(y = GY), color = "steelblue") +
+    ggplot2::labs(x = 'x', y = "cdf") +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(legend.text = ggplot2::element_text(size = 10))
+  
+  print(plt)
   
   return(my_list)
 }
@@ -186,7 +209,7 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
 }
 
 .inverse <- function(f, lower = -100, upper = 100){
-  return(function(y){stats::uniroot((function(x){f(x) - y}), lower = lower, upper = upper)$root})
+  return(function(y){stats::uniroot((function(x){f(x) - y}), lower = lower, upper = upper, extendInt = 'yes')$root})
 }
 
 .rm <- function(F_inv, gamma, u){
@@ -219,7 +242,7 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
 .get_weights <- function(y_data, y_grid, gY_fn, fY_fn, hY){
   # Get dQ/dP
   g.val <- gY_fn(y_grid)
-  g.val[is.na(g.val)] <- 0
+  # g.val[is.na(g.val)] <- 0
   g.val <- g.val/.integrate(g.val, y_grid)
   f.val <- fY_fn(y_grid)/.integrate(fY_fn(y_grid), y_grid)
   dQ.dP <- g.val / f.val
