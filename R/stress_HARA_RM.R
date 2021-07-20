@@ -178,25 +178,6 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam,
                    "new_weights" = new.weights, "str.fY" = gY.fn, "str.FY" = GY.fn,
                    "str.FY.inv" = GY.inv.fn, "type" = type, "specs" = constr)
-
-  quantile.data <- data.frame(FY,inv, GY.inv, u)
-  plt <- ggplot2::ggplot(quantile.data, aes(x=u)) +
-    geom_line(aes(y = FY.inv), color = "darkred") +
-    geom_line(aes(y = GY.inv), color = "steelblue") +
-    ggplot2::labs(x = 'x', y = "cdf") +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(legend.text = ggplot2::element_text(size = 10))
-  print(plt)
-    
-  cdf.data <- data.frame(FY=FY.fn(x_data[, k]), GY=GY.fn(x_data[,k]), x=x_data[,k])
-  plt <- ggplot2::ggplot(quantile.data, aes(x=x)) +
-    geom_line(aes(y = FY), color = "darkred") +
-    geom_line(aes(y = GY), color = "steelblue") +
-    ggplot2::labs(x = 'x', y = "cdf") +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(legend.text = ggplot2::element_text(size = 10))
-  
-  print(plt)
   
   return(my_list)
 }
