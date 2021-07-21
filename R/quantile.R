@@ -104,7 +104,6 @@ if (is.SWIM(object)){
    for (c in cname){
       lower.bracket = min(x_data[, c])#-(max(x_data[, c])-min(x_data[, c]))*0.1
       upper.bracket = max(x_data[, c])#+(max(x_data[, c])-min(x_data[, c]))*0.1
-      print(lower.bracket)
       
       if(k_name == c){
          G.inv.fn <- Vectorize(object$str.FY.inv)
