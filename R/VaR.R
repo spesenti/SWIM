@@ -56,16 +56,21 @@
 #' @export
 
   VaR_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FALSE) {
-   if (!is.SWIM(object)) stop("Wrong object")
+   if (!is.SWIM(object) && !is.SWIMw(object)) stop("Wrong object")
    if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
 
-   VaR <- quantile_stressed(object, probs = alpha, xCol = xCol, wCol = wCol, type = "i/n")
-   if (base == TRUE) {
-      VaR_base <- as.matrix(apply(X = as.matrix(get_data(object = object, xCol = xCol)), MARGIN = 2,
-                        FUN = stats::quantile, probs = alpha, type= 1))
-      colnames(VaR_base) <- paste("base", colnames(get_data(object = object, xCol = xCol)))
-      VaR <- cbind(VaR, VaR_base)
+   if (is.SWIM(object)){
+      VaR <- quantile_stressed(object, probs = alpha, xCol = xCol, wCol = wCol, type = "i/n")
+      if (base == TRUE) {
+         VaR_base <- as.matrix(apply(X = as.matrix(get_data(object = object, xCol = xCol)), MARGIN = 2,
+                                     FUN = stats::quantile, probs = alpha, type= 1))
+         colnames(VaR_base) <- paste("base", colnames(get_data(object = object, xCol = xCol)))
+         VaR <- cbind(VaR, VaR_base)
+      } 
+   } else {
+      VaR <- quantile_stressed(object, probs = alpha, xCol = xCol, wCol = wCol, type = "quantile", base=base)
    }
+
    return(VaR)
 }
 
