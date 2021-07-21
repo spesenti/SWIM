@@ -37,23 +37,27 @@
 #' @export
 
 cdf <- function(object, xCol = 1, wCol = 1){
-  if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
+  if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class 'SWIM'")
   if (anyNA(object$x)) warning("x contains NA")
   if (length(wCol) > 1 || wCol == "all") stop("Input wCol has dimension larger than 1")
   if (length(xCol) > 1 || xCol == "all") stop("Input xCol has dimension larger than 1")
   
+  
+  w <- get_weights(object)[ , wCol]
+  x_data <- get_data(object)[ , xCol]
   if (is.SWIM(object)){
-    new_weights <- get_weights(object)[ , wCol]
-    x_data <- get_data(object)[ , xCol]
-    
-    cdf <- .cdf(x = x_data, w = new_weights)
+
+    cdf <- .cdf(x = x_data, w = w)
     return(cdf)    
+    
   } else {
     k <- object$specs$'stress 1'$k
+    h <- object$h(x_data)
     if(is.character(k)) k_name <- k
     if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
     else if(!is.character(k)) k_name <- colnames(get_data(object))[k]
     
+    x_name <- colnames(get_data(object))[xCol]
     if(k_name == x_name){
       G.fn <- object$str.FY
     } else{

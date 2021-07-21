@@ -13,21 +13,66 @@
 #'
 #' @export
 
-ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FALSE) {
-  if (!is.SWIM(object)) stop("Wrong object")
+ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FALSE, gamma = NULL) {
+  if (!is.SWIM(object) && !is.SWIMw(object)) stop("Wrong object")
   if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
   if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
   x_data <- as.matrix(get_data(object, xCol = xCol))
   weights <- matrix(rep(get_weights(object)[, wCol], dim(x_data)[2] ), ncol = dim(x_data)[2])
   if (base == TRUE) weights <- cbind(weights, matrix(1, nrow = dim(x_data)[1], ncol = dim(x_data)[2]))
   if (base == TRUE) x_data <- cbind(x_data, x_data)
-
-  VaR <- VaR_stressed(object, alpha = alpha, xCol = xCol, wCol = wCol, base = base)
-  ES <- matrix(nrow = dim(VaR)[1], ncol = dim(VaR)[2])
-  for (i in 1:dim(VaR)[2]){
-    ES[, i] <- .ES_stressed(x_data[, i], w = weights[, i], alpha = alpha, VaR = VaR[, i])
+  if (!is.null(gamma)){
+    if (!all(sapply(gamma, is.function))) stop("gamma must be a function")
+  } else{
+    gamma <- function(x){as.numeric((x >= alpha) / (1 - alpha))}
   }
 
+  if (is.SWIM(object)){
+    VaR <- VaR_stressed(object, alpha = alpha, xCol = xCol, wCol = wCol, base = base)
+    ES <- matrix(nrow = dim(VaR)[1], ncol = dim(VaR)[2])
+    for (i in 1:dim(VaR)[2]){
+      ES[, i] <- .ES_stressed(x_data[, i], w = weights[, i], alpha = alpha, VaR = VaR[, i])
+    }
+    
+  } else {
+    
+    k <- object$specs$'stress 1'$k
+    if(is.character(k)) k_name <- k
+    if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
+    else if(!is.character(k)) k_name <- colnames(get_data(object))[k]
+    
+    u <- object$u
+    w <- get_weights(object)[ , wCol]
+    
+    VaR <- VaR_stressed(object, alpha = alpha, xCol = xCol, wCol = wCol, base = base)
+    ES <- c()
+    for (c in xCol){
+      h <- object$h(x_data[, c])
+      lower.bracket = min(x_data[, c])#-(max(x_data[, c])-min(x_data[, c]))*0.1
+      upper.bracket = max(x_data[, c])#+(max(x_data[, c])-min(x_data[, c]))*0.1
+      
+      if(k_name == colnames(get_data(object))[c]){
+        G.inv.fn <- Vectorize(object$str.FY.inv)
+      } else{
+        G.fn <- function(x){
+          return(sum(w * pnorm((x - x_data[,c])/h)/length(x_data[,c])))
+        }
+        G.fn <- Vectorize(G.fn)
+        G.inv.fn <- Vectorize(.inverse(G.fn, lower.bracket, upper.bracket))
+      }
+      ES <- cbind(ES, .rm(G.inv.fn(u), gamma(u), u))
+      
+      if (base == TRUE){
+        F.fn <- function(x){
+          return(sum(pnorm((x - x_data[, c])/h)/length(x_data[, c])))
+        }
+        F.fn <- Vectorize(F.fn)
+        F.inv.fn <- Vectorize(.inverse(F.fn, lower.bracket, upper.bracket))
+        ES <- cbind(ES, .rm(F.inv.fn(u), gamma(u), u))
+      }
+    }
+  }
+  
   rownames(ES) <- rownames(VaR)
   colnames(ES) <- colnames(VaR)
   return(ES)
@@ -46,5 +91,13 @@ ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FAL
   return(matrix(ES, ncol = 1))
 }
 
+# help function to get risk measure for gamma function
+.rm <- function(F_inv, gamma, u){
+  return(.integrate(F_inv*gamma, u))
+}
+
+.integrate <- function(f, x){
+  return(sum(0.5*(f[1:length(f) - 1] + f[2:length(f)])*diff(x)))
+}
 
 
