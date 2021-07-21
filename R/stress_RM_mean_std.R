@@ -45,7 +45,7 @@ stress_RM_mean_std_w <- function(x, mean_ratio, alpha, std_ratio, s_ratio = NULL
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (!is.null(gamma)){
-    if (!all(sapply(gamma, is.function))) stop("gamma must be a function")
+    if (sapply(gamma, is.function)) stop("gamma must be a function")
   } else{
     warning("No gamma passed. Using expected shortfall.")
     gamma <- function(x){as.numeric((x >= alpha) / (1 - alpha))}

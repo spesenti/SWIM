@@ -54,7 +54,7 @@ stress_RM_w <- function(x, alpha, s_ratio = NULL, s = NULL, k = 1,
   if (!is.null(s) && !is.null(s_ratio)) stop("Only provide s or s_ratio")
   if (is.null(s) && is.null(s_ratio)) stop("no s or s_ratio defined")
   if (!is.null(gamma)){
-    if (!all(sapply(gamma, is.function))) stop("gamma must be a function")
+    if (sapply(gamma, is.function)) stop("gamma must be a function")
   } else{
     warning("No gamma passed. Using expected shortfall.")
     gamma <- function(x){as.numeric((x >= alpha) / (1 - alpha))}
