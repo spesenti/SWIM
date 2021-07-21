@@ -103,7 +103,8 @@
 #'
 
   sensitivity <- function(object, xCol = "all", wCol = "all",
-                          type = c("Gamma", "Kolmogorov", "Wasserstein", "all"), f = NULL, k = NULL){
+                          type = c("Gamma", "Kolmogorov", "Wasserstein", "reverse", "all"),
+                          f = NULL, k = NULL, s = NULL){
    if (!is.SWIM(object) && !is.SWIMw(object)) stop("Wrong object")
    if (anyNA(object$x)) warning("x contains NA")
    if (missing(type)) type <- "all"
@@ -113,6 +114,13 @@
    if (is.numeric(k)) k <- list(k)
    if (!all(sapply(k, is.numeric))) stop("k must be a list of numeric vectors")
    if (length(f) != length(k)) stop("Objects f and k must have the same length.")
+   }
+   if (!is.null(s)){
+     if (!is.function(s)) stop("s must be a function")
+   }
+   if ((type == 'reverse' | type == 'all') && is.null(s)){
+     warning("No s passed in. Using identity")
+     s <- function(x) x
    }
    if (!is.null(xCol)){
    if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
@@ -139,6 +147,7 @@
    if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
    new_weights <- get_weights(object)[ , wCol]
    sens_w <- stats::setNames(data.frame(matrix(ncol = length(x_data) + 2, nrow = 0)), c("stress", "type", cname))
+   
    if (type == "Gamma" || type == "all"){
     sens_gamma_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .gamma, z = z)
     sens_gw <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_gamma_w)
@@ -161,7 +170,15 @@
     if (length(wCol) == 1) sens_ww <- as.matrix(t(sens_ww))
     if (length(xCol) == 1) colnames(sens_ww) <- cname
     sens_w <- rbind(sens_w, data.frame(stress = paste("stress", wCol, sep = " "), type = rep("Wasserstein", length.out = length(wCol)), sens_ww))
-    }
+   }
+   
+   if (type == "reverse" || type == "all"){
+     sens_reverse_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .reverse, z = z, s=s)
+     sens_rw <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_reverse_w)
+     if (length(wCol) == 1) sens_rw <- as.matrix(t(sens_rw))
+     if (length(xCol) == 1) colnames(sens_rw) <- cname
+     sens_w <- rbind(sens_w, data.frame(stress = paste("stress", wCol, sep = " "), type = rep("Reverse", length.out = length(wCol)), sens_rw))
+   }
    rownames(sens_w) <- NULL
    return(sens_w)
   }
@@ -204,4 +221,25 @@
     x_diff <- diff(x_sort, lag = 1)
     wasser_sens <- sum(abs(w_cdf - 1:(n-1)) * x_diff)/n
     return(wasser_sens)
+  }
+  
+  # comparison between input vectors for a given stress
+  .reverse <- function(z, s, w){
+    w <- as.numeric(w)
+    
+    EQ_sX <- mean(sapply(z, s) * w)
+    EP_sX <- mean(sapply(z, s))
+    
+    z_inc <- sort(z)
+    w_inc <- sort(w)
+    w_dec <- sort(w, decreasing = TRUE)
+
+    if (EQ_sX >= EP_sX){
+      max_EQ <- mean(sapply(z_inc, s) * w_inc)
+      reverse_sens <- (EQ_sX - EP_sX) / (max_EQ - EP_sX)
+    } else {
+      min_EQ <- mean(sapply(z_inc, s) * w_dec)
+      reverse_sens <- - (EQ_sX - EP_sX) / (min_EQ - EP_sX)
+    }
+    return(reverse_sens)
   }

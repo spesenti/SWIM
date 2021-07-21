@@ -38,13 +38,22 @@
 #' @export
 
   importance_rank <- function(object, xCol = "all", wCol = "all",
-                              type = c("Gamma", "Wasserstein", "all"),
-                              f = NULL, k = NULL){
-   if (!is.SWIM(object)) stop("Wrong object")
+                              type = c("Gamma", "Wasserstein", "reverse", "all"),
+                              f = NULL, k = NULL, s=NULL){
+   if (!is.SWIM(object) && !is.SWIMw(object)) stop("Wrong object")
    if (anyNA(object$x)) warning("x contains NA")
    if (missing(type)) type <- "all"
-   if (type == "Kolmogorov") stop("The Kolmogorov distance is the same for all model components.")
-   sens_w <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f = f, k = k)
+   if (is.SWIM(object) && type == "Kolmogorov") stop("The Kolmogorov distance is the same for all model components.")
+   if (is.SWIMw(object) && type == "Wasserstein") stop("The Wasserstein distance is the same for all model components.")
+   if (!is.null(s)){
+      if (sapply(s, is.function)) stop("s must be a function")
+   }
+   if ((type == 'reverse' | type == 'all') && is.null(s)){
+      warning("No s passed in. Using identity")
+      s <- function(x) x
+   }
+   
+   sens_w <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f = f, k = k, s=s)
    if (length(sens_w) < 4) stop("Only one input provided.")
    rank_w <- t(apply(X = sens_w[ , 3:length(sens_w)], MARGIN = 1, FUN = function(z) rank(-z, ties.method = "min")))
    rank_w <- cbind(sens_w[ , 1:2], rank_w)

@@ -62,11 +62,18 @@
 #' @export
 
   plot_sensitivity <- function(object, xCol = "all", wCol = "all", type =
-                               c("Gamma",  "Kolmogorov", "Wasserstein"),
-                               f = NULL, k = NULL, displ = TRUE){
+                               c("Gamma",  "Kolmogorov", "Wasserstein", "reverse"),
+                               f = NULL, k = NULL, s= NULL, displ = TRUE){
    if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw.")
    if (anyNA(object$x)) warning("x contains NA")
-   sens <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f, k)
+  if (!is.null(s)){
+     if (!is.function(s)) stop("s must be a function")
+  }
+  if ((type == 'reverse' | type == 'all') && is.null(s)){
+     warning("No s passed in. Using identity")
+     s <- function(x) x
+  }
+   sens <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f, k, s=s)
    sens <- reshape2::melt(sens, id.var = c("stress", "type"), variable.name = "X_all")
    if (displ == TRUE){
      ggplot2::ggplot(sens, ggplot2::aes_(x = ~X_all, y = ~value)) +
