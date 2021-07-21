@@ -57,7 +57,7 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   if (!is.null(hu) && !is.null(hu_ratio)) stop("Only provide one of hu or hu_ratio")
   if (is.null(hu) && is.null(hu_ratio)) stop("No hu or hu_ratio defined")
   if (!is.null(gamma)){
-    if (sapply(gamma, is.function)) stop("gamma must be a function")
+    if (!is.function(gamma)) stop("gamma must be a function")
   } else{
     warning("No gamma passed. Using expected shortfall.")
     gamma <- function(x){as.numeric((x >= alpha) / (1 - alpha))}
