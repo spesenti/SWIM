@@ -29,8 +29,6 @@
  #' 
  #' @export
  #' 
-  
-# K-L
   stress <- function(type = c("VaR", "VaR ES", "mean", 
                      "mean sd", "moment", "prob", "user"), ...){
    if (type == "VaR") SWIM <- stress_VaR(...)
@@ -74,12 +72,10 @@
 #' 
 #' @export
 #' 
-  
-# Wasserstein
   stress_wass <- function(type = c("RM", "mean sd", "RM mean sd", "HARA RM"), ...){
      if (type == "RM") SWIMw <- stress_RM_w(...)
-     if (type == "mean-std") SWIMw <- stress_mean_std_w(...)
-     if (type == "RM-mean-std") SWIMw <- stress_RM_mean_std_w(...)
-     if (type == "HARA-RM") SWIMw <- stress_HARA_RM_w(...)
+     if (type == "mean sd") SWIMw <- stress_mean_std_w(...)
+     if (type == "RM mean sd") SWIMw <- stress_RM_mean_std_w(...)
+     if (type == "HARA RM") SWIMw <- stress_HARA_RM_w(...)
      return(SWIMw)
   }

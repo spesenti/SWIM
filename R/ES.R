@@ -1,6 +1,7 @@
 #' @describeIn VaR_stressed Expected Shortfall of a stressed model
 #'
-#' @return \code{ES_stressed}: Returns a matrix with the empirical ES's at level \code{alpha} of
+#' @return \code{ES_stressed}: Returns a matrix with the empirical or KDE 
+#'     ES's at level \code{alpha} of
 #'     model components specified in \code{xCol}, under the scenario weights
 #'     \code{wCol}.
 #'

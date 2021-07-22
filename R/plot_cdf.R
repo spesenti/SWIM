@@ -1,7 +1,8 @@
-#' Plotting the Empirical Distribution Functions of a Stressed Model
+#' Plotting the Distribution Functions of a Stressed Model
 #'
-#' Plots the empirical distribution function of a stressed model
-#'     component (random variable) under the scenario weights.
+#' Plots the empirical distribution function of a stressed SWIM model
+#'     component (random variable) or KDE distribution function of a stressed
+#'     SWIMw model component under the scenario weights.
 #'
 #' @inheritParams  sensitivity
 #' @inheritParams  plot_sensitivity
@@ -18,7 +19,7 @@
 #'                 value for \code{ylim} in the \code{coord_cartesian}
 #'                 function in \code{ggplot}.
 #
-#' @return If \code{displ = TRUE}, a plot displaying the (empirical)
+#' @return If \code{displ = TRUE}, a plot displaying the empirical or KDE
 #'     distribution function of the stochastic model under the
 #'     scenario weights.
 #'
@@ -52,7 +53,7 @@
 #' plot_cdf(res1, xCol = 1, wCol = 1:2, base = TRUE,
 #'   x_limits = c(0, 5), y_limits = c(0.5, 1))
 #'
-#' @seealso See \code{\link{cdf}} for the empirical distribution function
+#' @seealso See \code{\link{cdf}} for the empirical or KDE distribution function
 #'     of a stressed model and \code{\link{quantile_stressed}} for
 #'     sample quantiles of a stressed model.
 #'

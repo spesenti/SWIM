@@ -1,7 +1,8 @@
-#' Empirical Distribution Function of a Stressed Model
+#' Distribution Function of a Stressed Model
 #' 
-#' Provides the empirical distribution function of a stressed 
-#'     model component (random variable) under the scenario weights. 
+#' Provides the empirical distribution function of a stressed SWIM
+#'     model component (random variable) or KDE distribution of a stressed
+#'     SWIMw model component under the scenario weights. 
 #' 
 #' @inheritParams sensitivity 
 #' @param xCol    Numeric or character, (name of) the columns of the underlying data 
@@ -9,7 +10,7 @@
 #' @param wCol    Numeric, the columns of the scenario weights 
 #'                of the \code{object} (\code{default = 1}).
 #' 
-#' @return The empirical distribution function (a function) of 
+#' @return The empirical or KDE distribution function (a function) of 
 #'     the \code{xCol} component of the stressed model with weights 
 #'     \code{wCol}. The empirical distribution function can be 
 #'     evaluated at a vector. 
@@ -30,7 +31,7 @@
 #' 
 #' @author Silvana M. Pesenti 
 #' 
-#' @seealso See \code{\link{plot_cdf}} for plotting the empirical 
+#' @seealso See \code{\link{plot_cdf}} for plotting the empirical or KDE 
 #'     distribution function of the stressed model and 
 #'     \code{\link{quantile_stressed}} for sample quantiles of 
 #'     a stressed model. 

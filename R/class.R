@@ -28,13 +28,13 @@
                     gamma = 'gamma', type = "type", specs = "specs"){
      mymodel <- list(
         x = x, # vector, matrix or dataframe containing the underlying data
-        h = h, # function, that applied to x, provide the bandwidths
+        h = h, # function, that applied to x, provide the bandwidths for KDE estimation
         u = u, # vector containing the gridspace on [0,1]
         lam = lam, # optimized lambda value(s)
-        str.fY = str.fY, # function, that applied to the stressed column, provide the density
-        str.FY = str.FY, # function, that applied to the stressed column, provide the cdf
-        str.FY.inv = str.FY.inv, # function, that applied to the stressed column, provide the quantile
-        gamma = gamma, # function that provides gamma used to calculate the risk measure;
+        str.fY = str.fY, # function, that applied to the stressed column, provides the density
+        str.FY = str.FY, # function, when applied to the stressed column, provides the cdf
+        str.FY.inv = str.FY.inv, # function, when applied to the stressed column, provides the quantile
+        gamma = gamma, # function that provides gamma used to calculate the risk measure (if applicable);
         new_weights = new_weights, # list of either functions, that applied 
         # to the k-th column of x providing the scenario weights; OR a 
         # vector containing the new_weights
@@ -58,9 +58,9 @@
  #' Extracting the data (realisations of the stochastic model), the 
  #'     scenario weights, the functions generating the scenario weights, 
  #'     or the specifications of the stress from an object of class 
- #'     \code{SWIM}. 
+ #'     \code{SWIM} of \code{SWIMw}. 
  #' 
- #' @param object    A \code{SWIM} object.
+ #' @param object    A \code{SWIM} or \code{SWIMw} object.
  #' @inheritParams   summary.SWIM
  #'  
  #' @return \code{get_data}: A data.frame containing the realisations of 

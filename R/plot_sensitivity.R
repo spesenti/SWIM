@@ -12,8 +12,8 @@
 #'     measures (\code{type}), see \code{\link{sensitivity}}.
 #'
 #'     Note that the Kolmogorov distance is the same for all inputs under
-#'     the same stress. Thus, it should only be used to compare different
-#'     stresses, not individual components.
+#'     the same stress for a SWIM object. Thus, it should only be used to 
+#'     compare different stresses, not individual components.
 #'
 #' @return If \code{displ = TRUE}, a plot displaying the sensitivity
 #'     measures of the stochastic model under the scenario weights.

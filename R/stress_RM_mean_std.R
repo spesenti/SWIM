@@ -1,24 +1,33 @@
-#' Stressing Value-at-Risk and Expected Shortfall
+#' Stressing Risk Measure, Mean and Standard Deviation
 #'
 #' Provides weights on simulated scenarios from a baseline stochastic
 #'     model, such that a stressed model component (random variable) fulfils a
-#'     constraint on its Expected Shortfall (ES) risk
-#'     measure, evaluated at a given level. Scenario weights are
-#'     selected by constrained minimisation of the relative entropy to the
+#'     constraint on its risk measure, mean, and standard deviation
+#'     evaluated at a given level. Scenario weights are
+#'     selected by constrained minimisation of the Wasserstein distance to the
 #'     baseline model.
 #' @param x       A vector, matrix or data frame
 #'     containing realisations of random variables. Columns of \code{x}
 #'     correspond to random variables; OR\cr
-#'     A \code{SWIM} object, where \code{x} corresponds to the
-#'     underlying data of the \code{SWIM} object.
+#'     A \code{SWIMw} object, where \code{x} corresponds to the
+#'     underlying data of the \code{SWIMw} object.
 #' @param k       Numeric, the column of \code{x} that is stressed
 #'     \code{(default = 1)}.
+#' @param alpha   Numeric vector, the levels of the stressed VaR.
+#' @param q          Numeric, vector, the stressed ES at level
+#'                   \code{alpha}.\cr
+#' @param q_ratio    Numeric, vector, the ratio of the stressed ES to
+#'                   the baseline ES.\cr
 #' @param mean_ratio    Numeric, the ratio of the stressed mean to
 #'                   the baseline mean\cr
 #' @param std_ratio    Numeric, the ratio of the stressed std to
 #'                   the baseline std\cr
 #' @param normalise Logical. If true, values of the columns to be stressed are linearly
 #'                  normalised to the unit interval.
+#' @param h Function that defines the bandwidth used in KDEs. If null,
+#' Silverman's rule will be used..
+#' @param gamma Function that defines the gamma of the risk measure. If null,
+#' the Expected Shortfall (ES) will be used.
 #'
 #' @details The ES at level \code{alpha} of a random variable with distribution
 #'     function F is defined by:
@@ -29,21 +38,50 @@
 #'     \itemize{
 #'       \item \code{x}, a data.frame containing the data;
 #'       \item \code{h}, bandwidths;
+#'       \item \code{u}, vector containing the gridspace on [0, 1]
+#'       \item \code{lam}, vector containing the lambda's of the optimized model
+#'       \item \code{str.fY}, function defining the densities of the stressed component;
+#'       \item \code{str.FY}, function defining the distribution of the stressed component;
+#'       \item \code{str.FY.inv}, function defining the quantiles of the stressed component;
+#'       \item \code{gamma}, function defining the risk measure;
 #'       \item \code{new_weights}, a list of functions, that applied to
 #'   the \code{k}th column of \code{x}, generates the vectors of scenario
 #'   weights. Each component corresponds to a different stress;
-#'      \item \code{type = "mean-std"};
+#'      \item \code{type = "RM mean sd"};
 #'      \item \code{specs}, a list, each component corresponds to
-#'    a different stress and contains \code{k}, and \code{s}.
+#'    a different stress and contains \code{k}, \code{alpha},
+#'    \code{q}, \code{target.mean}, \code{target.sd} and \code{gamma}.
 #'     }
 #'     See \code{\link{SWIMw}} for details.
-
-
-stress_RM_mean_std_w <- function(x, mean_ratio, alpha, std_ratio, s_ratio = NULL, s = NULL, k = 1,
+#'     
+#' @author Zhuomin Mao
+#'
+#' @examples
+#' set.seed(0)
+#' x <- as.data.frame(cbind(
+#'   "normal" = rnorm(1000),
+#'   "gamma" = rgamma(1000, shape = 2)))
+#' res1 <- stress_wass(type = "RM mean sd", x = x,
+#'   alpha = 0.9, q_ratio = 1.05, mean_ratio=1.1, std_ratio=0.9)
+#'   summary.SWIM(res1)
+#'
+#' ## calling stress_RM_w directly
+#' ## stressing "gamma"
+#' res2 <- stress_RM_mean_std_w(x = x, alpha = 0.9,
+#'   q_ratio = 1.05, mean_ratio=1.1, std_ratio=0.9, k = 2)
+#' summary.SWIM(res2)
+#'
+#' @family stress functions
+#' @inherit SWIM references
+#' @export
+#'
+stress_RM_mean_std_w <- function(x, mean_ratio, alpha, std_ratio, q_ratio = NULL, q = NULL, k = 1,
                         normalise = FALSE, h = NULL, gamma = NULL){
 
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
+  if (!is.null(q) && !is.null(q_ratio)) stop("Only provide q or q_ratio")
+  if (is.null(q) && is.null(q_ratio)) stop("no q or q_ratio defined")
   if (!is.null(gamma)){
     if (!is.function(gamma)) stop("gamma must be a function")
   } else{
@@ -79,15 +117,15 @@ stress_RM_mean_std_w <- function(x, mean_ratio, alpha, std_ratio, s_ratio = NULL
   
   # Calculate the mean and std
   mean.base <- .integrate(FY.inv.fn(u), u)
-  mean.target <- mean.base * mean_ratio
-  std.target <- sqrt(.integrate((FY.inv.fn(u) - mean.base)^2, u)) * std_ratio
+  target.mean <- mean.base * mean_ratio
+  target.sd <- sqrt(.integrate((FY.inv.fn(u) - mean.base)^2, u)) * std_ratio
   
   # Calculate the risk measure
-  if(is.null(s)){s <- .rm(FY.inv.fn(u), gamma(u), u) * s_ratio}
+  if(is.null(q)){q <- .rm(FY.inv.fn(u), gamma(u), u) * q_ratio}
   
   .objective_fn <- function(par){
     # Get ell = 1/(1 + lambda2) * (F_inv(u) + lambda_1 + lambda_2 * m + sum{lambda_{k+2} + gamma_k(u)})
-    ell.fn <- function(x){(FY.inv.fn(x) + par[1] + par[2]*mean.target + par[3]*gamma(x))/(1 + par[2])}
+    ell.fn <- function(x){(FY.inv.fn(x) + par[1] + par[2]*target.mean + par[3]*gamma(x))/(1 + par[2])}
     
     # Get isotonic projection of ell
     GY.inv <- stats::isoreg(u, ell.fn(u))$yf
@@ -96,9 +134,9 @@ stress_RM_mean_std_w <- function(x, mean_ratio, alpha, std_ratio, s_ratio = NULL
     rm.stress <- .rm(GY.inv, gamma(u), u)
     
     # Return RM error
-    error <- sqrt(2*(mean.stress - mean.target)^2 + 
-                  2*(std.stress - std.target)^2 +
-                  (s - rm.stress)^2)
+    error <- sqrt(2*(mean.stress - target.mean)^2 + 
+                  2*(std.stress - target.sd)^2 +
+                  (q - rm.stress)^2)
     # sqrt(2) normalization constant
     return(error)
   }
@@ -109,7 +147,7 @@ stress_RM_mean_std_w <- function(x, mean_ratio, alpha, std_ratio, s_ratio = NULL
   lam <- res$par
   
   # Get ell
-  ell.fn <- function(x){(FY.inv.fn(x) + lam[1] + lam[2]*mean.target + lam[3]*gamma(x))/(1 + lam[2])}
+  ell.fn <- function(x){(FY.inv.fn(x) + lam[1] + lam[2]*target.mean + lam[3]*gamma(x))/(1 + lam[2])}
   ell <- ell.fn(u)
 
   # Get GY_inv, y_grid
@@ -127,7 +165,7 @@ stress_RM_mean_std_w <- function(x, mean_ratio, alpha, std_ratio, s_ratio = NULL
   gY.fn <- function(x){1/dG.inv.fn(GY.fn(x))}
   
   # Create SWIMw object
-  max_length <- max(length(mean_ratio), length(std_ratio), length(s), length(alpha))
+  max_length <- max(length(mean_ratio), length(std_ratio), length(q), length(alpha))
   type <- rep(list("mean-std"), length.out = max_length)
 
   # Get weights
@@ -137,32 +175,33 @@ stress_RM_mean_std_w <- function(x, mean_ratio, alpha, std_ratio, s_ratio = NULL
   # achieved mean and std
   for(j in 1:max_length){
     mean.achieved <- .integrate(GY.inv, u)
-    std.achieved <- sqrt(.integrate((GY.inv - mean.achieved)^2, u))
+    sd.achieved <- sqrt(.integrate((GY.inv - mean.achieved)^2, u))
     RM_achieved <- .rm(GY.inv.fn(u), gamma(u), u)
     
     # message if the achieved RM is different from the specified stress.
-    if(s - RM_achieved > 1e-4) {
-      message(paste("Stressed RM specified was", round(s, 4),", stressed RM achieved is", round(RM_achieved, 4)))
-      s <- RM_achieved
+    if(q - RM_achieved > 1e-4) {
+      message(paste("Stressed RM specified was", round(q, 4),", stressed RM achieved is", round(RM_achieved, 4)))
+      q <- RM_achieved
     }
     
     # message if the achieved mean or std is different from the specified stress.
-    if(mean.achieved - mean.target > 1e-4) {
-      message(paste("Stressed mean specified was", round(mean.target, 4),", stressed mean achieved is", round(mean.achieved, 4)))
-      mean.target <- mean.achieved
+    if(mean.achieved - target.mean > 1e-4) {
+      message(paste("Stressed mean specified was", round(target.mean, 4),", stressed mean achieved is", round(mean.achieved, 4)))
+      target.mean <- mean.achieved
     }
-    if(std.achieved - std.target > 1e-4) {
-      message(paste("Stressed std specified was", round(std.target, 4),", stressed std achieved is", round(std.achieved, 4)))
-      std.target <- std.achieved
+    if(sd.achieved - target.sd > 1e-4) {
+      message(paste("Stressed std specified was", round(target.sd, 4),", stressed std achieved is", round(sd.achieved, 4)))
+      target.sd <- sd.achieved
     }
   }
   
   # Get constraints
-  mean.target <- rep(mean.target, length.out = max_length)
-  std.target <- rep(std.target, length.out = max_length)
-  s <- rep(s, length.out = max_length)
+  target.mean <- rep(target.mean, length.out = max_length)
+  target.sd <- rep(target.sd, length.out = max_length)
+  q <- rep(q, length.out = max_length)
   alpha <- rep(alpha, length.out = max_length)
-  constr <- cbind("k" = rep(k, length.out = max_length), alpha, s, mean_ratio, std_ratio)
+  gamma <- rep(gamma, length.out = max_length)
+  constr <- cbind("k" = rep(k, length.out = max_length), alpha, q, target.mean, target.sd, gamma)
   
   for(i in 1:max_length){
     temp_list <- list(as.list(constr[i, ]))
@@ -170,7 +209,7 @@ stress_RM_mean_std_w <- function(x, mean_ratio, alpha, std_ratio, s_ratio = NULL
     constr <- c(constr, temp_list)
   }
   
-  my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam,
+  my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam, "gamma" = gamma,
                    "new_weights" = new.weights, "str.fY" = gY.fn, "str.FY" = GY.fn,
                    "str.FY.inv" = GY.inv.fn, "type" = type, "specs" = constr)
   return(my_list)

@@ -9,7 +9,8 @@
 #' @param wCol    Numeric, the column of the scenario weights
 #'                of the \code{object} (\code{default = 1}).
 #'
-#' @return \code{VaR_stressed}: Returns a matrix with the empirical VaR's at level \code{alpha} of
+#' @return \code{VaR_stressed}: Returns a matrix with the empirical or KDE VaR's
+#'     at level \code{alpha} of
 #'     model components specified in \code{xCol}, under the scenario weights
 #'     \code{wCol}.
 #'
@@ -28,7 +29,7 @@
 #' @describeIn VaR_stressed Value-at-Risk of a stressed model.
 #'
 #' @seealso See \code{quantile_stressed} for quantiles other than the
-#'     empirical quantiles and \code{cdf} for the empirical distribution
+#'     empirical quantiles and \code{cdf} for the empirical or KDE distribution
 #'     function of a stressed model.
 #'
 #' @examples

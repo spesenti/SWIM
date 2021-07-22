@@ -4,7 +4,8 @@
 #'     of a stressed model for different sensitivity measures.
 #'
 #' @inheritParams sensitivity
-#' @param type    Character, one of \code{"Gamma", "Wasserstein", "all"}.
+#' @param type    Character, one of \code{"Gamma", "Wasserstein", "Kolmogorov",
+#' "reverse", "all"}.
 #'
 #' @details For the definition of the sensitivity
 #'     measures (\code{type}), see \code{\link{sensitivity}}.

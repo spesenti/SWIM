@@ -1,14 +1,15 @@
 #' Plotting Quantile Functions of a Stressed Model
 #'
-#' Plots the empirical quantile function of a stressed model
-#'     component (random variable) under the scenario weights.
+#' Plots the empirical quantile function of a stressed SWIM model
+#'     component (random variable) or KDE quantile function of a stressed
+#'     SWIMw model component under the scenario weights.
 #'
 #' @inheritParams  plot_cdf
 #' @inheritParams  sensitivity
 #' @param n        Integer, the number of points used to plot 
 #'                 (\code{default = 500}).
 #
-#' @return If \code{displ = TRUE}, a plot displaying the empirical
+#' @return If \code{displ = TRUE}, a plot displaying the empirical or KDE 
 #'     quantile function of the stochastic model under the
 #'     scenario weights.
 #'
@@ -34,7 +35,7 @@
 #'               y_limits = c(0, 5))
 #'
 #' @seealso See \code{\link{quantile_stressed}} for sample quantiles of a 
-#'     stressed model and \code{\link{plot_cdf}} for plotting empirical 
+#'     stressed model and \code{\link{plot_cdf}} for plotting empirical or KDE 
 #'     distribution functions under scenario weights.
 #'
 #' @export

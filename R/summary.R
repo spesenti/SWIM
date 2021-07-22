@@ -1,7 +1,7 @@
 #' Summarising Stressed Models
 #' 
 #' This function is a \code{\link[utils]{methods}} for an object of class 
-#'     \code{SWIM}. Provides summary statistics of the stochastic model, 
+#'     \code{SWIM} or \code{SWIMw}. Provides summary statistics of the stochastic model, 
 #'     stressed using the scenario weights. 
 #'     
 #' @inheritParams get_data
@@ -18,7 +18,7 @@
 #' @return \code{summary.SWIM} returns a list with components
 #'     corresponding to different stresses. Components contain a
 #'     summary statistic of each column of the data of the 
-#'     \code{SWIM} object:
+#'     \code{SWIM} or \code{SWIMw} object:
 #'     \tabular{ll}{
 #'       \code{mean}        \tab The sample mean.\cr
 #'       \code{sd}          \tab The sample standard deviation. \cr

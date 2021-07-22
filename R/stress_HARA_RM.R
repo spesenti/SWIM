@@ -1,59 +1,95 @@
-#' Stressing Value-at-Risk and Expected Shortfall
+#' Stressing Risk Measure and HARA Utility
 #'
 #' Provides weights on simulated scenarios from a baseline stochastic
 #'     model, such that a stressed model component (random variable) fulfils a
-#'     constraint on its Expected Shortfall (ES) risk
-#'     measure, evaluated at a given level. Scenario weights are
-#'     selected by constrained minimisation of the relative entropy to the
+#'     constraint on its risk measure and HARA utility
+#'     evaluated at a given level. Scenario weights are
+#'     selected by constrained minimisation of the Wasserstein distance to the
 #'     baseline model.
 #' @param x       A vector, matrix or data frame
 #'     containing realisations of random variables. Columns of \code{x}
 #'     correspond to random variables; OR\cr
-#'     A \code{SWIM} object, where \code{x} corresponds to the
-#'     underlying data of the \code{SWIM} object.
+#'     A \code{SWIMw} object, where \code{x} corresponds to the
+#'     underlying data of the \code{SWIMw} object.
 #' @param k       Numeric, the column of \code{x} that is stressed
 #'     \code{(default = 1)}.
 #' @param alpha   Numeric vector, the levels of the stressed VaR.
-#' @param s          Numeric, vector, the stressed ES at level
+#' @param a   Numeric vector, input to HARA utility function.
+#' @param b   Numeric vector, input to HARA utility function.
+#' @param eta   Numeric vector, input to HARA utility function.
+#' @param q          Numeric, vector, the stressed ES at level
 #'                   \code{alpha}.\cr
-#'                   If \code{q} and \code{s} are vectors, they must have
-#'                   the same length.
-#' @param s_ratio    Numeric, vector, the ratio of the stressed ES to
+#' @param q_ratio    Numeric, vector, the ratio of the stressed ES to
 #'                   the baseline ES.\cr
-#'                   If \code{q} (\code{q_ratio}) and \code{s_ratio} are vectors,
-#'                   they must have the same length.
+#' @param hu          Numeric, vector, the stressed HARA utility with parameters
+#' \code{a}, \code{b} and \code{eta}.\cr
+#' @param hu_ratio    Numeric, vector, the ratio of the HARA utility to the 
+#' baseline hara utility.\cr
 #' @param normalise Logical. If true, values of the columns to be stressed are linearly
 #'                  normalised to the unit interval.
+#' @param h Function that defines the bandwidth used in KDEs. If null,
+#' Silverman's rule will be used..
+#' @param gamma Function that defines the gamma of the risk measure. If null,
+#' the Expected Shortfall (ES) will be used.
 #'
 #' @details The ES at level \code{alpha} of a random variable with distribution
 #'     function F is defined by:
 #'     \deqn{ES_{alpha} = 1 / (1 - alpha) * \int_{alpha}^1 VaR_u d u.}
+#'     The HARA Utility is defined by 
+#'     \deqn{u(x) = \frac{1-\eta}{\eta}(\frac{ax}{1 - \eta} + b)^\eta}.
 #'
 #'
 #' @return A \code{SWIMw} object containing:
 #'     \itemize{
 #'       \item \code{x}, a data.frame containing the data;
 #'       \item \code{h}, bandwidths;
+#'       \item \code{u}, vector containing the gridspace on [0, 1]
+#'       \item \code{lam}, vector containing the lambda's of the optimized model
+#'       \item \code{str.fY}, function defining the densities of the stressed component;
+#'       \item \code{str.FY}, function defining the distribution of the stressed component;
+#'       \item \code{str.FY.inv}, function defining the quantiles of the stressed component;
+#'       \item \code{gamma}, function defining the risk measure;
 #'       \item \code{new_weights}, a list of functions, that applied to
 #'   the \code{k}th column of \code{x}, generates the vectors of scenario
 #'   weights. Each component corresponds to a different stress;
-#'      \item \code{type = "ES"};
+#'      \item \code{type = "HARA RM"};
 #'      \item \code{specs}, a list, each component corresponds to
-#'    a different stress and contains \code{k}, \code{alpha},
-#'    \code{q} and \code{s}.
+#'    a different stress and contains \code{k}, \code{alpha}, \code{a}, \code{b},
+#'    \code{eta}, \code{q}, and \code{hu}.
 #'     }
 #'     See \code{\link{SWIMw}} for details.
+#'     
+#' @author Zhuomin Mao
+#'
+#' @examples
+#' set.seed(0)
+#' x <- as.data.frame(cbind(
+#'   "normal" = rnorm(1000),
+#'   "gamma" = rgamma(1000, shape = 2)))
+#' res1 <- stress_wass(type = "HARA RM", x = x, a=1, b=5, eta=0.5, alpha=0.95,
+#'  q_ratio=1.05, hu_ratio=1.05, k=1)
+#'   summary.SWIM(res1)
+#'
+#' ## calling stress_RM_w directly
+#' ## stressing "gamma"
+#' res2 <- stress_HARA_RM_w(type = "HARA RM", x = x, a=1, b=5, eta=0.5, alpha=0.95,
+#'  q_ratio=1.05, hu_ratio=1.05, k=2)
+#' summary.SWIM(res2)
+#'
+#' @family stress functions
+#' @inherit SWIM references
+#' @export
 
 
 stress_HARA_RM_w <- function(x, alpha, a, b, eta, 
-                        s_ratio = NULL, s = NULL, hu_ratio = NULL, hu=NULL,
+                        q_ratio = NULL, q = NULL, hu_ratio = NULL, hu=NULL,
                         k = 1, normalise = FALSE, h = NULL, gamma = NULL){
 
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
-  if (!is.null(s) && !is.null(s_ratio)) stop("Only provide one of s or s_ratio")
-  if (is.null(s) && is.null(s_ratio)) stop("No s or s_ratio defined")
+  if (!is.null(q) && !is.null(q_ratio)) stop("Only provide one of q or q_ratio")
+  if (is.null(q) && is.null(q_ratio)) stop("No q or q_ratio defined")
   if (!is.null(hu) && !is.null(hu_ratio)) stop("Only provide one of hu or hu_ratio")
   if (is.null(hu) && is.null(hu_ratio)) stop("No hu or hu_ratio defined")
   if (!is.null(gamma)){
@@ -90,7 +126,7 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   FY.inv.fn <- Vectorize(.inverse(FY.fn, lower.bracket, upper.bracket))
   
   # Calculate the risk measure and hara utility
-  if(is.null(s)){s <- .rm(FY.inv.fn(u), gamma(u), u) * s_ratio}
+  if(is.null(q)){q <- .rm(FY.inv.fn(u), gamma(u), u) * q_ratio}
   if(is.null(hu)){hu <- .hara_utility(a, b, eta, u, FY.inv.fn(u)) * hu_ratio}
   
   .objective_fn <- function(par){
@@ -107,7 +143,7 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
     hara.stress <- .hara_utility(a, b, eta, u, GY.inv)
     
     # Return RM error
-    return(sqrt((s - rm.stress)^2 + (hara.stress - hu)^2))
+    return(sqrt((q - rm.stress)^2 + (hara.stress - hu)^2))
   }
   
   # Run optimization
@@ -137,7 +173,7 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   gY.fn <- function(x){1/dG.inv.fn(GY.fn(x))}
   
   # Create SWIMw object
-  max_length <- max(length(s), length(alpha))
+  max_length <- max(length(q), length(alpha))
   type <- rep(list("RM"), length.out = max_length)
 
   # Get weights
@@ -148,9 +184,9 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   for(j in 1:max_length){
     RM_achieved <- .rm(GY.inv.fn(u), gamma(u), u)
     # message if the achieved RM is different from the specified stress.
-    if(s - RM_achieved > 1e-4) {
-      message(paste("Stressed RM specified was", round(s, 4),", stressed RM achieved is", round(RM_achieved, 4)))
-      s <- RM_achieved
+    if(q - RM_achieved > 1e-4) {
+      message(paste("Stressed RM specified was", round(q, 4),", stressed RM achieved is", round(RM_achieved, 4)))
+      q <- RM_achieved
     }
     hara_achieved <- .hara_utility(a, b, eta, u, GY.inv)
     # message if the achieved hara utility is different from the specified utility.
@@ -161,13 +197,13 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   }
   
   # Get constraints
-  s <- rep(s, length.out = max_length)
+  q <- rep(q, length.out = max_length)
   hu <- rep(hu, length.out = max_length)
   alpha <- rep(alpha, length.out = max_length)
   a <- rep(a, length.out = max_length)
   b <- rep(b, length.out = max_length)
   eta <- rep(eta, length.out = max_length)
-  constr <- cbind("k" = rep(k, length.out = max_length), alpha, s, hu, a, b, eta)
+  constr <- cbind("k" = rep(k, length.out = max_length), alpha, q, hu, a, b, eta)
   
   for(i in 1:max_length){
     temp_list <- list(as.list(constr[i, ]))
@@ -175,7 +211,7 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
     constr <- c(constr, temp_list)
   }
   
-  my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam,
+  my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam, "gamma"=gamma,
                    "new_weights" = new.weights, "str.fY" = gY.fn, "str.FY" = GY.fn,
                    "str.FY.inv" = GY.inv.fn, "type" = type, "specs" = constr)
   
