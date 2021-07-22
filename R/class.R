@@ -1,6 +1,6 @@
  # Defines the class "SWIM"
   SWIM <- function(x = "x", new_weights = "new_weights", 
-                       type = "type", specs = "specs", names = "names"){
+                       type = "type", specs = "specs"){
    mymodel <- list(
       x = x, 
       # vector, matrix or dataframe containing the underlying data
@@ -11,12 +11,12 @@
       type  = type,
       # a list of characters each corresponding to a stress
       # one of ("VaR", "VaR ES", "prob", "moment", "mean", "mean sd", "user")
-      specs = specs,
+      specs = specs
       # a list with elements called "stress i".
       # all input varaibles of the stress and constraints according
       # to the stress. For example a stress on 
       # the VaR contains: k, alpha, q
-      names = names
+      # names = names
    )   
    
    ## Name of the class
@@ -116,7 +116,8 @@
     }
    }
    # colnames(new_weights) <- paste("stress", 1:m)
-   colnames(new_weights) <- object$names   
+   # colnames(new_weights) <- object$names   
+   colnames(new_weights) <- names(object$specs)
    return(new_weights)
   }
 
@@ -165,7 +166,7 @@
    .type <- t(as.data.frame(.type))
    .specs <- cbind(.type, .specs)
    colnames(.specs)[1] <- "type"
-   rownames(.specs) <- object$names    
+   # rownames(.specs) <- object$names    
    return(.specs)
   }
 
@@ -176,7 +177,7 @@
   
   set_names <- function(object, new_names){
      if (!is.SWIM(object)) stop("Object not of class SWIM")
-     object$names <- new_names
+     # object$names <- new_names
      names(object$new_weights) <- new_names
      names(object$specs) <- new_names
      # return(object)
@@ -212,19 +213,24 @@
  #'
  #' @export
 
-  merge.SWIM <- function(x, y, ...){
+  merge.SWIM <- function(x, y, names = NULL, ...){
   if (!is.SWIM(x) | !is.SWIM(y)) stop("x and y are not of class SWIM.")
   if (!identical(get_data(x), get_data(y))) stop("x and y are not based on the same data")
   type <- c(x$type, y$type)
   m <- length(type)
   new_weights <- c(x$new_weights, y$new_weights)
-  # names(new_weights) <- paste("stress", 1:m)
   
-  names(new_weights) <- object$names   
+  # names(new_weights) <- object$names   
+  # names(specs) <- object$names
+  
   specs <- c(x$specs, y$specs)
   
-  # names(specs) <- paste("stress", 1:m)
-  names(specs) <- object$names
+  # Name stresses
+  if (is.null(names)) {
+     names(new_weights) <- paste("stress", 1:m)
+     names(specs) <- paste("stress", 1:m)
+     } 
+  
   xy <- SWIM("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs)
   return(xy)
   }

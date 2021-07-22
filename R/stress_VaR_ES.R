@@ -74,7 +74,7 @@
 #' @export
 
 stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
-                          s_ratio = NULL, q = NULL, s = NULL, k = 1, normalise = FALSE){
+                          s_ratio = NULL, q = NULL, s = NULL, k = 1, normalise = FALSE, names = NULL){
 
   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -135,14 +135,19 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   constr <- cbind(alpha, "q"= VaR_achieved, s)
   new_weights <- apply(X = constr, MARGIN = 1, FUN = .rn_VaR_ES, y = x_data[, k], normalise = normalise)
   if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", as.character(1:dim(x_data)[2]), sep = "")
-  names(new_weights) <- paste(rep("stress", max_length), 1:max_length)
+  
+  # Name stresses
+  if (is.null(names)) {
+    names <- paste(rep("stress", max_length), 1:max_length)
+  }
+  names(new_weights) <- names
 
   type <- rep(list("VaR ES"), length.out = max_length)
   constr1 <- cbind("k" = rep(k, length.out = max_length), constr)
   constr_ES <- list()
   for(s in 1:max_length){
     temp_list <- list(as.list(constr1[s, ]))
-    names(temp_list) <- paste("stress", s)
+    names(temp_list) <- names[s]
     constr_ES <- c(constr_ES, temp_list)
   }
   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr_ES)

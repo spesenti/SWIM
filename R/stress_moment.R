@@ -129,7 +129,7 @@ stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, names = N
   new_weights[[names]] <- as.vector(exp(z %*% sol$x))
 
   type <- list("moment")
-  my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr, names = names)
+  my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr)
   if (is.SWIM(x)) my_list <- merge(x, my_list)
   if (show == TRUE) print(sol)
   m.ac <- colMeans(z * as.vector(exp(z %*% sol$x)))[-1]

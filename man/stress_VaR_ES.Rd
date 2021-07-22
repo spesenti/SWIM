@@ -12,7 +12,8 @@ stress_VaR_ES(
   q = NULL,
   s = NULL,
   k = 1,
-  normalise = FALSE
+  normalise = FALSE,
+  names = NULL
 )
 }
 \arguments{

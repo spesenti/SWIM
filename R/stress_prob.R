@@ -95,7 +95,7 @@
    constr <- list(constr_prob)
    names(constr) <- names
    type <- list("prob")
-   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr, "names" = names)
+   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr)
    if (is.SWIM(x)) my_list <- merge(x, my_list)
    return(my_list)  
   }

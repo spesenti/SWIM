@@ -75,7 +75,7 @@ stress_user <- function(x, new_weights = NULL, new_weightsfun = NULL, k = 1, nam
   constr_user <- list("k" = k)
   constr <- rep(list(constr_user), length.out = max_length)
   names(constr) <- names
-  my_list <- SWIM("x" = x_data, "new_weights" = nweights, "type" = type, "specs" = constr, "names" = names)
+  my_list <- SWIM("x" = x_data, "new_weights" = nweights, "type" = type, "specs" = constr)
   if (is.SWIM(x)) my_list <- merge(x, my_list)
   return(my_list)
   }

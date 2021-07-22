@@ -122,7 +122,7 @@
       names(temp_list) <- names[s]
       constr_VaR <- c(constr_VaR, temp_list)
     }
-    my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr_VaR, "names" = names)
+    my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr_VaR)
 
   # achieved VaR
    for(j in 1:max_length){
@@ -136,7 +136,6 @@
     }
 
     if (is.SWIM(x)) my_list <- merge(x, my_list)
-    print(is.SWIM(my_list))
     return(my_list)
   }
 
