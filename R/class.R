@@ -1,19 +1,24 @@
  # Defines the class "SWIM"
   SWIM <- function(x = "x", new_weights = "new_weights", 
-                       type = "type", specs = "specs"){
+                       type = "type", specs = "specs", names = "names"){
    mymodel <- list(
-   x = x, # vector, matrix or dataframe containing the underlying data
-   new_weights = new_weights, # list of eithter functions, that applied 
+      x = x, 
+      # vector, matrix or dataframe containing the underlying data
+      new_weights = new_weights, 
+      # list of eithter functions, that applied 
       # to the kth column of x providing the scenario weights; OR a 
       # vector containting the new_weights
-   type  = type, # a list of characters each corresponding to a stress
+      type  = type,
+      # a list of characters each corresponding to a stress
       # one of ("VaR", "VaR ES", "prob", "moment", "mean", "mean sd", "user")
-   specs = specs # a list with elements called "stress i".
-      #
+      specs = specs,
+      # a list with elements called "stress i".
       # all input varaibles of the stress and constraints according
       # to the stress. For example a stress on 
       # the VaR contains: k, alpha, q
+      names = names
    )   
+   
    ## Name of the class
    attr(mymodel, "class") <- "SWIM"
    return(mymodel)
@@ -110,7 +115,8 @@
      new_weights[, i] <- object$new_weights[[i]](x_data[, k])
     }
    }
-   colnames(new_weights) <- paste("stress", 1:m)
+   # colnames(new_weights) <- paste("stress", 1:m)
+   colnames(new_weights) <- object$names   
    return(new_weights)
   }
 
@@ -153,17 +159,28 @@
       .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]], stringsAsFactors = FALSE)) 
       }} else if (.type[i] %in% c("moment", "mean", "mean sd")){
       k <- paste(object$specs[[i]]$k, collapse = " ")
+      print(k)
       .specs <- plyr::rbind.fill(.specs, as.data.frame(k))
    } else stop("Object contains wrong type.")}
    .type <- t(as.data.frame(.type))
    .specs <- cbind(.type, .specs)
    colnames(.specs)[1] <- "type"
-   rownames(.specs) <- paste("stress", 1:length(.type), sep = " ")      
+   rownames(.specs) <- object$names    
    return(.specs)
   }
 
+  get_names <- function(object){
+     if (!is.SWIM(object)) stop("Object not of class SWIM")
+     return (object$names)
+  }
   
-  
+  set_names <- function(object, new_names){
+     if (!is.SWIM(object)) stop("Object not of class SWIM")
+     object$names <- new_names
+     names(object$new_weights) <- new_names
+     names(object$specs) <- new_names
+     # return(object)
+  }
   
  #' Merging Two Stressed Models
  #'
@@ -201,9 +218,13 @@
   type <- c(x$type, y$type)
   m <- length(type)
   new_weights <- c(x$new_weights, y$new_weights)
-  names(new_weights) <- paste("stress", 1:m)
+  # names(new_weights) <- paste("stress", 1:m)
+  
+  names(new_weights) <- object$names   
   specs <- c(x$specs, y$specs)
-  names(specs) <- paste("stress", 1:m)
+  
+  # names(specs) <- paste("stress", 1:m)
+  names(specs) <- object$names
   xy <- SWIM("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs)
   return(xy)
   }

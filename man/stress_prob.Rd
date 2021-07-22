@@ -4,7 +4,7 @@
 \alias{stress_prob}
 \title{Stressing Intervals}
 \usage{
-stress_prob(x, prob, lower = NULL, upper, k = 1)
+stress_prob(x, prob, lower = NULL, upper, k = 1, names = NULL)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame

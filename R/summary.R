@@ -63,7 +63,7 @@ summary.SWIM <- function(object, ..., xCol = "all", wCol = "all", base = FALSE){
   new_weights <- get_weights(object)[ ,wCol]  
 
   summary_w <- apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .summary, x_data = x_data, cname = cname, base = base)
-  names(summary_w) <- paste("stress", wCol)
+  names(summary_w) <- object$names
   
   if (base == TRUE){
   old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)

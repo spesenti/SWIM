@@ -73,7 +73,7 @@
  #' @inherit SWIM references
  #' @export
  #'
-  stress_VaR <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1){
+  stress_VaR <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1, names = NULL){
    if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
    if (anyNA(x_data)) warning("x contains NA")
    if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
@@ -105,17 +105,24 @@
     constr <- cbind(alpha, q)
     new_weights <- apply(X = constr, MARGIN = 1, FUN = .rn_VaR, y = x_data[, k])
     if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
-    names(new_weights) <- paste("stress", 1:max_length)
+    # names(new_weights) <- paste("stress", 1:max_length)
+    
+    # Name stresses
+    if (is.null(names)) {
+      names <- paste("stress", 1:max_length)
+    }
+
+    names(new_weights) <- names
 
     type <- rep(list("VaR"), length.out = max_length)
     constr1 <- cbind("k" = rep(k, length.out = max_length), constr)
     constr_VaR <- list()
     for(s in 1:max_length){
       temp_list <- list(as.list(constr1[s, ]))
-      names(temp_list) <- paste("stress", s)
+      names(temp_list) <- names[s]
       constr_VaR <- c(constr_VaR, temp_list)
     }
-    my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr_VaR)
+    my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr_VaR, "names" = names)
 
   # achieved VaR
    for(j in 1:max_length){
@@ -129,7 +136,8 @@
     }
 
     if (is.SWIM(x)) my_list <- merge(x, my_list)
-  return(my_list)
+    print(is.SWIM(my_list))
+    return(my_list)
   }
 
   # help function

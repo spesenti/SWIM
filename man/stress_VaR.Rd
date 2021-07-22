@@ -4,7 +4,7 @@
 \alias{stress_VaR}
 \title{Stressing Value-at-Risk}
 \usage{
-stress_VaR(x, alpha, q_ratio = NULL, q = NULL, k = 1)
+stress_VaR(x, alpha, q_ratio = NULL, q = NULL, k = 1, names = NULL)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame

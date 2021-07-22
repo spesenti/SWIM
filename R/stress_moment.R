@@ -90,7 +90,7 @@
 #' @inherit SWIM references
 #' @export
 
-stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, ...){
+stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, names = NULL, ...){
   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (is.function(f)) f <- list(f)
@@ -116,11 +116,20 @@ stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, ...){
   if (sol$termcd != 1) warning(paste("nleqslv terminated with code ", sol$termcd))
   constr_moment <- list("k" = k, "m" = m, "f" = f)
   constr <- list(constr_moment)
-  names(constr) <- paste("stress", 1)
+  # names(constr) <- paste("stress", 1)
+
+  # Name stresses
+  if (is.null(names)) {
+    names <- paste("stress", 1)
+  }
+  names(constr) <- names  
+
   if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
-  new_weights <- list("stress 1" = as.vector(exp(z %*% sol$x)))
+  new_weights = list()
+  new_weights[[names]] <- as.vector(exp(z %*% sol$x))
+
   type <- list("moment")
-  my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr)
+  my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr, names = names)
   if (is.SWIM(x)) my_list <- merge(x, my_list)
   if (show == TRUE) print(sol)
   m.ac <- colMeans(z * as.vector(exp(z %*% sol$x)))[-1]

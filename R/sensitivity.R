@@ -144,7 +144,7 @@
     sens_gw <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_gamma_w)
     if (length(wCol) == 1) sens_gw <- as.matrix(t(sens_gw))
     if (length(xCol) == 1) colnames(sens_gw) <- cname
-    sens_w <- rbind(sens_w, data.frame(stress = paste("stress", wCol, sep = " "), type = rep("Gamma", length.out = length(wCol)), sens_gw))
+    sens_w <- rbind(sens_w, data.frame(stress = object$names, type = rep("Gamma", length.out = length(wCol)), sens_gw))
    }
 
    if (type == "Kolmogorov" || type == "all"){
@@ -152,7 +152,7 @@
     sens_kw <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_kolmogorov_w)
     if (length(wCol) == 1) sens_kw <- as.matrix(t(sens_kw))
     if (length(xCol) == 1) colnames(sens_kw) <- cname
-    sens_w <- rbind(sens_w, data.frame(stress = paste("stress", wCol, sep = " "), type = rep("Kolmogorov", length.out = length(wCol)), sens_kw))
+    sens_w <- rbind(sens_w, data.frame(stress = object$names, type = rep("Kolmogorov", length.out = length(wCol)), sens_kw))
    }
 
    if (type == "Wasserstein" || type == "all"){
@@ -160,7 +160,7 @@
     sens_ww <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_wasser_w)
     if (length(wCol) == 1) sens_ww <- as.matrix(t(sens_ww))
     if (length(xCol) == 1) colnames(sens_ww) <- cname
-    sens_w <- rbind(sens_w, data.frame(stress = paste("stress", wCol, sep = " "), type = rep("Wasserstein", length.out = length(wCol)), sens_ww))
+    sens_w <- rbind(sens_w, data.frame(stress = object$names, type = rep("Wasserstein", length.out = length(wCol)), sens_ww))
     }
    rownames(sens_w) <- NULL
    return(sens_w)

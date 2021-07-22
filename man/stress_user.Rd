@@ -4,7 +4,7 @@
 \alias{stress_user}
 \title{User Defined Stress}
 \usage{
-stress_user(x, new_weights = NULL, new_weightsfun = NULL, k = 1)
+stress_user(x, new_weights = NULL, new_weightsfun = NULL, k = 1, names = NULL)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame
