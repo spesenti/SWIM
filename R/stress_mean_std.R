@@ -167,10 +167,11 @@ stress_mean_std_w <- function(x, mean_ratio, std_ratio, k = 1,
   # Get constraints
   target.mean <- rep(target.mean, length.out = max_length)
   target.sd <- rep(target.sd, length.out = max_length)
-  constr <- cbind("k" = rep(k, length.out = max_length), mean_ratio, std_ratio)
+  constr_mean_std <- cbind("k" = rep(k, length.out = max_length), mean_ratio, std_ratio)
   
+  constr <- list()
   for(i in 1:max_length){
-    temp_list <- list(as.list(constr[i, ]))
+    temp_list <- list(as.list(constr_mean_std[i, ]))
     names(temp_list) <- paste("stress", i)
     constr <- c(constr, temp_list)
   }

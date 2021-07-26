@@ -203,10 +203,11 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   a <- rep(a, length.out = max_length)
   b <- rep(b, length.out = max_length)
   eta <- rep(eta, length.out = max_length)
-  constr <- cbind("k" = rep(k, length.out = max_length), alpha, q, hu, a, b, eta)
+  constr_HARA <- cbind("k" = rep(k, length.out = max_length), alpha, q, hu, a, b, eta)
   
+  constr <- list()
   for(i in 1:max_length){
-    temp_list <- list(as.list(constr[i, ]))
+    temp_list <- list(as.list(constr_HARA[i, ]))
     names(temp_list) <- paste("stress", i)
     constr <- c(constr, temp_list)
   }

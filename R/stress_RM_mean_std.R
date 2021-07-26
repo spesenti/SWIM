@@ -200,11 +200,11 @@ stress_RM_mean_std_w <- function(x, mean_ratio, alpha, std_ratio, q_ratio = NULL
   target.sd <- rep(target.sd, length.out = max_length)
   q <- rep(q, length.out = max_length)
   alpha <- rep(alpha, length.out = max_length)
-  gamma <- rep(gamma, length.out = max_length)
-  constr <- cbind("k" = rep(k, length.out = max_length), alpha, q, target.mean, target.sd, gamma)
+  constr_RM_mean_std <- cbind("k" = rep(k, length.out = max_length), alpha, q, target.mean, target.sd)
   
+  constr <- list()
   for(i in 1:max_length){
-    temp_list <- list(as.list(constr[i, ]))
+    temp_list <- list(as.list(constr_RM_mean_std[i, ]))
     names(temp_list) <- paste("stress", i)
     constr <- c(constr, temp_list)
   }

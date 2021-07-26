@@ -129,7 +129,7 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   
   # Run optimization
   init.lam <- stats::rnorm(1)
-  res <- stats::optim(init.lam, .objective_fn, method = "Brent", lower=-100, upper=100)
+  res <- stats::optim(init.lam, .objective_fn, method = "Nelder-Mead", lower=-100, upper=100)
   lam <- res$par
   
   # Get ell
@@ -173,16 +173,17 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   q <- rep(q, length.out = max_length)
   alpha <- rep(alpha, length.out = max_length)
   constr_RM <- cbind("k" = rep(k, length.out = max_length), alpha, q)
-  
+
+  constr <- list()
   for(i in 1:max_length){
     temp_list <- list(as.list(constr_RM[i, ]))
     names(temp_list) <- paste("stress", i)
-    constr_RM <- c(constr_RM, temp_list)
+    constr <- c(constr, temp_list)
   }
   
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam, "gamma" = gamma, 
                    "new_weights" = new.weights, "str.fY" = gY.fn, "str.FY" = GY.fn,
-                   "str.FY.inv" = GY.inv.fn, "type" = type, "specs" = constr_RM)
+                   "str.FY.inv" = GY.inv.fn, "type" = type, "specs" = constr)
   
   return(my_list)
 }
