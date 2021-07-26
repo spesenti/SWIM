@@ -157,7 +157,7 @@
  #' @export
 
   get_weightsfun <- function(object){
-   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
    if (!is.function(object$new_weights[[1]]))
       stop("New_weights is not a function, use get_weights() instead.") 
    return(object$new_weights)
@@ -237,4 +237,59 @@
   names(specs) <- paste("stress", 1:m)
   xy <- SWIM("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs)
   return(xy)
+  }
+
+  #' Merging Two Stressed Models
+  #'
+  #' This function is a \code{method} for an object of class 
+  #'     \code{SWIMw}.
+  #'     
+  #' @details Merges two objects of class \code{SWIMw}, that 
+  #'     are based on the same data. \cr 
+  #' 
+  #' @param x,y    Objects of class \code{SWIMw}.
+  #' @param ...    Additional arguments will be ignored.
+  #'  
+  #' @return A \code{SWIMw} object containing:
+  #'     \itemize{
+  #'       \item \code{x}, a data.frame containing the data;
+  #'       \item \code{h}, bandwidths;
+  #'       \item \code{u}, vector containing the gridspace on [0, 1]
+  #'       \item \code{lam}, vector containing the lambda's of the optimized model
+  #'       \item \code{str.fY}, function defining the densities of the stressed component;
+  #'       \item \code{str.FY}, function defining the distribution of the stressed component;
+  #'       \item \code{str.FY.inv}, function defining the quantiles of the stressed component;
+  #'       \item \code{gamma}, function defining the risk measure;
+  #'       \item \code{new_weights}, a list of functions, that applied to
+  #'   the \code{k}th column of \code{x}, generates the vectors of scenario
+  #'   weights. Each component corresponds to a different stress;
+  #'      \item \code{type}, specifies the stress type
+  #'      \item \code{specs}, a list, each component corresponds to
+  #'    a different stress and contains \code{k}, \code{alpha}, and
+  #'    \code{q}.
+  #'     }
+  #'     See \code{\link{SWIMw}} for details.
+  #' @author Zhuomin Mao
+  #'
+  #' @export  
+  merge.SWIMw <- function(x, y, ...){
+    if (!is.SWIMw(x) | !is.SWIMw(y)) stop("x and y are not of class SWIMw.")
+    if (!identical(get_data(x), get_data(y))) stop("x and y are not based on the same data")
+    type <- c(x$type, y$type)
+    h <- c(x$h, y$h)
+    u <- c(x$u, y$u)
+    lam <- c(x$lam, y$lam)
+    str.fY <- c(x$str.fY, y$str.fY)
+    str.FY <- c(x$str.FY, y$str.FY)
+    str.FY.inv <- c(x$str.FY.inv, y$str.FY.inv)
+    gamma <- c(x$gamma, y$gamma)
+    m <- length(type)
+    new_weights <- c(x$new_weights, y$new_weights)
+    names(new_weights) <- paste("stress", 1:m)
+    specs <- c(x$specs, y$specs)
+    names(specs) <- paste("stress", 1:m)
+    xy <- SWIMw("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs,
+                "str.fY" = str.fY, "str.FY" = str.FY, "str.FY.inv" = str.FY.inv,
+                "u" = u, "h" = h, "lam"=lam, "gamma"=gamma)
+    return(xy)
   }
