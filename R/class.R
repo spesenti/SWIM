@@ -169,23 +169,38 @@
  #'         of the stresses with each row corresponding to a different 
  #'         stress. Only a selection of the specifications is returned; 
  #'         however, all input variables are stored in the \code{object}.
- #'         See also \code{\link{SWIM}}.
+ #'         See also \code{\link{SWIM}} and \code{\link{SWIMw}}.
  #' @export
 
   get_specs <- function(object){
-   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw.")
    .type <- object$type 
    .specs <- data.frame()
-   for (i in 1:length(.type)){  
-   if (.type[i] %in% c("VaR", "VaR ES", "user", "prob")){
-      if (.type[[i]] == "prob" && length(object$specs[[i]]$prob) > 1){
-      .specs <- plyr::rbind.fill(.specs, as.data.frame(t(unlist(object$specs[[i]]))))       
-      } else {
-      .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]], stringsAsFactors = FALSE)) 
-      }} else if (.type[i] %in% c("moment", "mean", "mean sd")){
-      k <- paste(object$specs[[i]]$k, collapse = " ")
-      .specs <- plyr::rbind.fill(.specs, as.data.frame(k))
-   } else stop("Object contains wrong type.")}
+   if (is.SWIM(object)){
+     for (i in 1:length(.type)){  
+       if (.type[i] %in% c("VaR", "VaR ES", "user", "prob")){
+         if (.type[[i]] == "prob" && length(object$specs[[i]]$prob) > 1){
+           .specs <- plyr::rbind.fill(.specs, as.data.frame(t(unlist(object$specs[[i]]))))       
+         } else {
+           .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]], stringsAsFactors = FALSE)) 
+         }
+       } else if (.type[i] %in% c("moment", "mean", "mean sd")){
+         k <- paste(object$specs[[i]]$k, collapse = " ")
+         .specs <- plyr::rbind.fill(.specs, as.data.frame(k))
+       } else stop("Object contains wrong type.")
+    }
+  } else {
+    # Wasserstein
+    for (i in 1:length(.type)){
+     if (.type[i] %in% c("RM", "RM mean sd", "HARA RM")){
+       .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]], stringsAsFactors = FALSE))
+     } else if (.type[i] %in% c("mean sd")){
+       k <- paste(object$specs[[i]]$k, collapse = " ")
+       .specs <- plyr::rbind.fill(.specs, as.data.frame(k))
+    } else stop("Object contains wrong type.")
+    }
+  }
+
    .type <- t(as.data.frame(.type))
    .specs <- cbind(.type, .specs)
    colnames(.specs)[1] <- "type"
