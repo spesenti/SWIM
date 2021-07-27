@@ -54,7 +54,7 @@
 #'     "mean sd", "RM mean sd", "HARA RM"}.
 #' @param ...     Arguments to be passed on, depending on \code{type}.
 #'                
-#' @return An object of class \code{SWIMw}, see \code{\link{SWIMw}} 
+#' @return An object of class \code{SWIMw}, see \code{\link{SWIM}} 
 #'     for details.
 #' 
 #' @examples 
@@ -64,11 +64,11 @@
 #'   "gamma" = rgamma(1000, shape = 2)))
 #' res <- stress_wass(type = "RM", x = x, 
 #'   alpha = 0.9, q_ratio = 1.05)
-#' summary(res)   
+#' summary.SWIM(res)   
 #' 
 #' @author Zhuomin Mao 
 #' @family stress functions
-#' @inherit SWIMw references 
+#' @inherit SWIM references 
 #' 
 #' @export
 #' 

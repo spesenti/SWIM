@@ -5,12 +5,19 @@
 \alias{VaR_stressed}
 \title{Value-at-Risk and Expected Shortfall of a Stressed Model}
 \usage{
-ES_stressed(object, alpha = 0.95, xCol = "all", wCol = 1, base = FALSE)
+ES_stressed(
+  object,
+  alpha = 0.95,
+  xCol = "all",
+  wCol = 1,
+  base = FALSE,
+  gamma = NULL
+)
 
 VaR_stressed(object, alpha = 0.95, xCol = "all", wCol = 1, base = FALSE)
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
 \item{alpha}{Numeric vector, the levels of the stressed VaR and ES
 (\code{default = 0.95}).}
@@ -26,11 +33,13 @@ of the \code{object} (\code{default = 1}).}
 are also returned (\code{default = "FALSE"}).}
 }
 \value{
-\code{ES_stressed}: Returns a matrix with the empirical ES's at level \code{alpha} of
+\code{ES_stressed}: Returns a matrix with the empirical or KDE 
+    ES's at level \code{alpha} of
     model components specified in \code{xCol}, under the scenario weights
     \code{wCol}.
 
-\code{VaR_stressed}: Returns a matrix with the empirical VaR's at level \code{alpha} of
+\code{VaR_stressed}: Returns a matrix with the empirical or KDE VaR's
+    at level \code{alpha} of
     model components specified in \code{xCol}, under the scenario weights
     \code{wCol}.
 }
@@ -89,7 +98,7 @@ ES_stressed(res1, alpha = seq(0.9, 0.99, 0.01), xCol = "all",
 }
 \seealso{
 See \code{quantile_stressed} for quantiles other than the
-    empirical quantiles and \code{cdf} for the empirical distribution
+    empirical quantiles and \code{cdf} for the empirical or KDE distribution
     function of a stressed model.
 }
 \author{

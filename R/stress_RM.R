@@ -12,16 +12,16 @@
 #'     A \code{SWIMw} object, where \code{x} corresponds to the
 #'     underlying data of the \code{SWIMw} object.
 #' @param k       Numeric, the column of \code{x} that is stressed
-#'     \code{(default = 1)}.
-#' @param alpha   Numeric vector, the levels of the stressed VaR.
+#'     \code{(default = 1)}.\cr
+#' @param alpha   Numeric vector, the levels of the stressed VaR.\cr
 #' @param q          Numeric, vector, the stressed ES at level
 #'                   \code{alpha}.\cr
 #' @param q_ratio    Numeric, vector, the ratio of the stressed ES to
 #'                   the baseline ES.\cr
 #' @param normalise Logical. If true, values of the columns to be stressed are linearly
-#'                  normalised to the unit interval.
+#'                  normalised to the unit interval.\cr
 #' @param h Function that defines the bandwidth used in KDE. If null,
-#' Silverman's rule will be used..
+#' Silverman's rule will be used.\cr
 #' @param gamma Function that defines the gamma of the risk measure. If null,
 #' the Expected Shortfall (ES) will be used.
 #'
@@ -34,8 +34,8 @@
 #'     \itemize{
 #'       \item \code{x}, a data.frame containing the data;
 #'       \item \code{h}, bandwidths;
-#'       \item \code{u}, vector containing the gridspace on [0, 1]
-#'       \item \code{lam}, vector containing the lambda's of the optimized model
+#'       \item \code{u}, vector containing the gridspace on [0, 1];
+#'       \item \code{lam}, vector containing the lambda's of the optimized model;
 #'       \item \code{str.fY}, function defining the densities of the stressed component;
 #'       \item \code{str.FY}, function defining the distribution of the stressed component;
 #'       \item \code{str.FY.inv}, function defining the quantiles of the stressed component;
@@ -48,7 +48,7 @@
 #'    a different stress and contains \code{k}, \code{alpha}, and
 #'    \code{q}.
 #'     }
-#'     See \code{\link{SWIMw}} for details.
+#'     See \code{\link{SWIM}} for details.
 #' @author Zhuomin Mao
 #'
 #' @examples
@@ -129,7 +129,7 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   
   # Run optimization
   init.lam <- stats::rnorm(1)
-  res <- stats::optim(init.lam, .objective_fn, method = "Nelder-Mead", lower=-100, upper=100)
+  res <- stats::optim(init.lam, .objective_fn, method = "Nelder-Mead")
   lam <- res$par
   
   # Get ell

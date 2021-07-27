@@ -14,7 +14,7 @@ quantile_stressed(
 )
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
 \item{probs}{Vector of probabilities with values 
 in \code{[0,1]} (\code{default = (0, 0.25, 

@@ -12,24 +12,22 @@
 #'     A \code{SWIMw} object, where \code{x} corresponds to the
 #'     underlying data of the \code{SWIMw} object.
 #' @param k       Numeric, the column of \code{x} that is stressed
-#'     \code{(default = 1)}.
-#' @param mean_ratio    Numeric, the ratio of the stressed mean to
-#'                   the baseline mean\cr
-#' @param std_ratio    Numeric, the ratio of the stressed std to
-#'                   the baseline std\cr
-#' @param normalise Logical. If true, values of the columns to be stressed are linearly
-#'                  normalised to the unit interval.
+#'     \code{(default = 1)}.\cr
+#' @param new_mean    Numeric, the stressed mean.\cr
+#' @param new_sd    Numeric, the stressed std.\cr
+#' @param normalise Logical. If true, values of the columns to be stressed are linearly\cr
+#'                  normalised to the unit interval.\cr
 #' @param h Function that defines the bandwidth used in KDEs. If null,
-#' Silverman's rule will be used..
+#' Silverman's rule will be used.\cr
 #' @param gamma Function that defines the gamma of the risk measure. If null,
-#' the Expected Shortfall (ES) will be used.
+#' the Expected Shortfall (ES) will be used.\cr
 #'
 #' @return A \code{SWIMw} object containing:
 #'     \itemize{
 #'       \item \code{x}, a data.frame containing the data;
 #'       \item \code{h}, bandwidths;
-#'       \item \code{u}, vector containing the gridspace on [0, 1]
-#'       \item \code{lam}, vector containing the lambda's of the optimized model
+#'       \item \code{u}, vector containing the gridspace on [0, 1];
+#'       \item \code{lam}, vector containing the lambda's of the optimized model;
 #'       \item \code{str.fY}, function defining the densities of the stressed component;
 #'       \item \code{str.FY}, function defining the distribution of the stressed component;
 #'       \item \code{str.FY.inv}, function defining the quantiles of the stressed component;
@@ -39,10 +37,10 @@
 #'   weights. Each component corresponds to a different stress;
 #'      \item \code{type = "mean sd"};
 #'      \item \code{specs}, a list, each component corresponds to
-#'    a different stress and contains \code{k}, \code{target.mean} 
-#'    and \code{target.sd}.
+#'    a different stress and contains \code{k}, \code{new_mean} 
+#'    and \code{new_sd}.
 #'     }
-#'     See \code{\link{SWIMw}} for details.
+#'     See \code{\link{SWIM}} for details.
 #'     
 #' @author Zhuomin Mao
 #'
@@ -51,21 +49,21 @@
 #' x <- as.data.frame(cbind(
 #'   "normal" = rnorm(1000),
 #'   "gamma" = rgamma(1000, shape = 2)))
-#' res1 <- stress_wass(type = "mean sd", x = x,
-#'   alpha = 0.9, mean_ratio=1.1, std_ratio=0.9)
+#' res1 <- stress_wass(type = "mean sd", x = x, k = 1,
+#'   alpha = 0.9, new_mean=1, new_sd=0.9)
 #'   summary.SWIM(res1)
 #'
 #' ## calling stress_RM_w directly
 #' ## stressing "gamma"
 #' res2 <- stress_mean_std_w(x = x, alpha = 0.9,
-#'   mean_ratio=1.1, std_ratio=0.9, k = 2)
+#'   new_mean=2.2, new_sd=1.5, k = 2)
 #' summary.SWIM(res2)
 #'
 #' @family stress functions
 #' @inherit SWIM references
 #' @export
 
-stress_mean_std_w <- function(x, mean_ratio, std_ratio, k = 1,
+stress_mean_std_w <- function(x, new_mean, new_sd, k = 1,
                         normalise = FALSE, h = NULL){
 
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
@@ -99,12 +97,10 @@ stress_mean_std_w <- function(x, mean_ratio, std_ratio, k = 1,
   
   # Calculate the mean and std
   mean.base <- .integrate(FY.inv.fn(u), u)
-  target.mean <- mean.base * mean_ratio
-  target.sd <- sqrt(.integrate((FY.inv.fn(u) - mean.base)^2, u)) * std_ratio
   
   .objective_fn <- function(par){
     # Get ell = F_inv + sum(lam[1] + lam[2]*mean)
-    ell.fn <- function(x){(FY.inv.fn(x) + par[1] + par[2]*target.mean)/(1 + par[2])}
+    ell.fn <- function(x){(FY.inv.fn(x) + par[1] + par[2]*new_mean)/(1 + par[2])}
     
     # Get isotonic projection of ell
     GY.inv <- stats::isoreg(u, ell.fn(u))$yf
@@ -112,8 +108,8 @@ stress_mean_std_w <- function(x, mean_ratio, std_ratio, k = 1,
     std.stress <- sqrt(.integrate((GY.inv - mean.stress)^2, u))
     
     # Return RM error
-    error <- sqrt(2) * sqrt((mean.stress - target.mean)^2 + 
-                              (std.stress - target.sd)^2)  # sqrt(2) normalization constant
+    error <- sqrt(2) * sqrt((mean.stress - new_mean)^2 + 
+                              (std.stress - new_sd)^2)  # sqrt(2) normalization constant
     return(error)
   }
   
@@ -123,7 +119,7 @@ stress_mean_std_w <- function(x, mean_ratio, std_ratio, k = 1,
   lam <- res$par
   
   # Get ell
-  ell.fn <- function(x){(FY.inv.fn(x) + lam[1] + lam[2]*target.mean)/(1 + lam[2])}
+  ell.fn <- function(x){(FY.inv.fn(x) + lam[1] + lam[2]*new_mean)/(1 + lam[2])}
   ell <- ell.fn(u)
 
   # Get GY_inv, y_grid
@@ -141,7 +137,7 @@ stress_mean_std_w <- function(x, mean_ratio, std_ratio, k = 1,
   gY.fn <- function(x){1/dG.inv.fn(GY.fn(x))}
   
   # Create SWIMw object
-  max_length <- max(length(mean_ratio), length(std_ratio))
+  max_length <- max(length(new_mean), length(new_sd))
   type <- rep(list("mean-std"), length.out = max_length)
 
   # Get weights
@@ -154,20 +150,20 @@ stress_mean_std_w <- function(x, mean_ratio, std_ratio, k = 1,
     sd.achieved <- sqrt(.integrate((GY.inv - mean.achieved)^2, u))
     
     # message if the achieved mean or std is different from the specified stress.
-    if(mean.achieved - target.mean > 1e-4) {
-      message(paste("Stressed mean specified was", round(target.mean, 4),", stressed mean achieved is", round(mean.achieved, 4)))
-      target.mean <- mean.achieved
+    if(mean.achieved - new_mean > 1e-4) {
+      message(paste("Stressed mean specified was", round(new_mean, 4),", stressed mean achieved is", round(mean.achieved, 4)))
+      new_mean <- mean.achieved
     }
-    if(sd.achieved - target.sd > 1e-4) {
-      message(paste("Stressed std specified was", round(target.sd, 4),", stressed std achieved is", round(sd.achieved, 4)))
-      target.sd <- sd.achieved
+    if(sd.achieved - new_sd > 1e-4) {
+      message(paste("Stressed std specified was", round(new_sd, 4),", stressed std achieved is", round(sd.achieved, 4)))
+      new_sd <- sd.achieved
     }
   }
   
   # Get constraints
-  target.mean <- rep(target.mean, length.out = max_length)
-  target.sd <- rep(target.sd, length.out = max_length)
-  constr_mean_std <- cbind("k" = rep(k, length.out = max_length), mean_ratio, std_ratio)
+  new_mean <- rep(new_mean, length.out = max_length)
+  new_sd <- rep(new_sd, length.out = max_length)
+  constr_mean_std <- cbind("k" = rep(k, length.out = max_length), new_mean, new_sd)
   
   constr <- list()
   for(i in 1:max_length){

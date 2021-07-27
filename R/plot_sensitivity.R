@@ -17,7 +17,6 @@
 #'
 #' @return If \code{displ = TRUE}, a plot displaying the sensitivity
 #'     measures of the stochastic model under the scenario weights.
-#'
 #'     If \code{displ = FALSE}, a data.frame for customised plotting with
 #'     \code{ggplot}. The data.frame
 #'     contains the columns: \code{stress} (the stresses), \code{type}

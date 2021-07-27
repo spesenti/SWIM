@@ -8,13 +8,14 @@ sensitivity(
   object,
   xCol = "all",
   wCol = "all",
-  type = c("Gamma", "Kolmogorov", "Wasserstein", "all"),
+  type = c("Gamma", "Kolmogorov", "Wasserstein", "reverse", "all"),
   f = NULL,
-  k = NULL
+  k = NULL,
+  s = NULL
 )
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
 \item{xCol}{Numeric or character vector, (names of) the columns
 of the underlying data of the \code{object}
@@ -26,7 +27,7 @@ of the \code{object} corresponding to different
 stresses (\code{default = "all"}).}
 
 \item{type}{Character, one of \code{"Gamma", "Kolmogorov",
-"Wasserstein", "all"}.}
+"Wasserstein", "reverse", "all"}.}
 
 \item{f}{A function, or list of functions, that, applied to
 \code{x}, constitute the transformation of the data
@@ -72,8 +73,15 @@ Provides sensitivity measures that compare the stressed and
       \code{Wasserstein}, the Wasserstein distance of order 1, defined
       for two distribution functions \code{F,G} by
       \deqn{Wasserstein = \int | F(x) - G(x)| dx.}
+    
+    \item
+      \code{reverse}, the \emph{General Reverse Sensitivity Measure}, defined
+      for a random variable \code{Y}, scenario weights \code{w}, and a function
+      \code{s:R -> R} by \deqn{epsilon = ( E(s(Y) * w) - E(s(Y)) ) / c,}
+      where \code{c} is a normalisation constant such that
+      \code{|epsilon| <= 1}.
     }
-
+    
     If \code{f} and \code{k} are provided, the sensitivity of the
     transformed data is returned.
 }

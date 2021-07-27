@@ -8,13 +8,14 @@ importance_rank(
   object,
   xCol = "all",
   wCol = "all",
-  type = c("Gamma", "Wasserstein", "all"),
+  type = c("Gamma", "Wasserstein", "reverse", "all"),
   f = NULL,
-  k = NULL
+  k = NULL,
+  s = NULL
 )
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
 \item{xCol}{Numeric or character vector, (names of) the columns
 of the underlying data of the \code{object}
@@ -25,7 +26,8 @@ the transformed data \code{f(x)} is considered.}
 of the \code{object} corresponding to different 
 stresses (\code{default = "all"}).}
 
-\item{type}{Character, one of \code{"Gamma", "Wasserstein", "all"}.}
+\item{type}{Character, one of \code{"Gamma", "Wasserstein", "Kolmogorov",
+"reverse", "all"}.}
 
 \item{f}{A function, or list of functions, that, applied to
 \code{x}, constitute the transformation of the data

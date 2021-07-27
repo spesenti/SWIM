@@ -12,11 +12,11 @@
 #'     A \code{SWIMw} object, where \code{x} corresponds to the
 #'     underlying data of the \code{SWIMw} object.
 #' @param k       Numeric, the column of \code{x} that is stressed
-#'     \code{(default = 1)}.
-#' @param alpha   Numeric vector, the levels of the stressed VaR.
-#' @param a   Numeric vector, input to HARA utility function.
-#' @param b   Numeric vector, input to HARA utility function.
-#' @param eta   Numeric vector, input to HARA utility function.
+#'     \code{(default = 1)}.\cr
+#' @param alpha   Numeric vector, the levels of the stressed VaR.\cr
+#' @param a   Numeric vector, input to HARA utility function.\cr
+#' @param b   Numeric vector, input to HARA utility function.\cr
+#' @param eta   Numeric vector, input to HARA utility function.\cr
 #' @param q          Numeric, vector, the stressed ES at level
 #'                   \code{alpha}.\cr
 #' @param q_ratio    Numeric, vector, the ratio of the stressed ES to
@@ -26,9 +26,9 @@
 #' @param hu_ratio    Numeric, vector, the ratio of the HARA utility to the 
 #' baseline hara utility.\cr
 #' @param normalise Logical. If true, values of the columns to be stressed are linearly
-#'                  normalised to the unit interval.
+#'                  normalised to the unit interval.\cr
 #' @param h Function that defines the bandwidth used in KDEs. If null,
-#' Silverman's rule will be used..
+#' Silverman's rule will be used.\cr
 #' @param gamma Function that defines the gamma of the risk measure. If null,
 #' the Expected Shortfall (ES) will be used.
 #'
@@ -43,8 +43,8 @@
 #'     \itemize{
 #'       \item \code{x}, a data.frame containing the data;
 #'       \item \code{h}, bandwidths;
-#'       \item \code{u}, vector containing the gridspace on [0, 1]
-#'       \item \code{lam}, vector containing the lambda's of the optimized model
+#'       \item \code{u}, vector containing the gridspace on [0, 1];
+#'       \item \code{lam}, vector containing the lambda's of the optimized model;
 #'       \item \code{str.fY}, function defining the densities of the stressed component;
 #'       \item \code{str.FY}, function defining the distribution of the stressed component;
 #'       \item \code{str.FY.inv}, function defining the quantiles of the stressed component;
@@ -57,7 +57,7 @@
 #'    a different stress and contains \code{k}, \code{alpha}, \code{a}, \code{b},
 #'    \code{eta}, \code{q}, and \code{hu}.
 #'     }
-#'     See \code{\link{SWIMw}} for details.
+#'     See \code{\link{SWIM}} for details.
 #'     
 #' @author Zhuomin Mao
 #'

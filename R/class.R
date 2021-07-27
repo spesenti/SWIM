@@ -169,7 +169,7 @@
  #'         of the stresses with each row corresponding to a different 
  #'         stress. Only a selection of the specifications is returned; 
  #'         however, all input variables are stored in the \code{object}.
- #'         See also \code{\link{SWIM}} and \code{\link{SWIMw}}.
+ #'         See also \code{\link{SWIM}}.
  #' @export
 
   get_specs <- function(object){
@@ -283,7 +283,7 @@
   #'    a different stress and contains \code{k}, \code{alpha}, and
   #'    \code{q}.
   #'     }
-  #'     See \code{\link{SWIMw}} for details.
+  #'     See \code{\link{SWIM}} for details.
   #' @author Zhuomin Mao
   #'
   #' @export  

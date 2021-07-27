@@ -7,7 +7,7 @@
 \method{summary}{SWIM}(object, ..., xCol = "all", wCol = "all", base = FALSE)
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
 \item{...}{Additional arguments will be ignored.}
 
@@ -26,7 +26,7 @@ are also returned (\code{default = "FALSE"}).}
 \code{summary.SWIM} returns a list with components
     corresponding to different stresses. Components contain a
     summary statistic of each column of the data of the 
-    \code{SWIM} object:
+    \code{SWIM} or \code{SWIMw} object:
     \tabular{ll}{
       \code{mean}        \tab The sample mean.\cr
       \code{sd}          \tab The sample standard deviation. \cr
@@ -39,7 +39,7 @@ are also returned (\code{default = "FALSE"}).}
 }
 \description{
 This function is a \code{\link[utils]{methods}} for an object of class 
-    \code{SWIM}. Provides summary statistics of the stochastic model, 
+    \code{SWIM} or \code{SWIMw}. Provides summary statistics of the stochastic model, 
     stressed using the scenario weights.
 }
 \examples{
