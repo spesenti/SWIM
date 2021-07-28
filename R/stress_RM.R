@@ -1,9 +1,9 @@
 #' Stressing Risk Measure
 #'
 #' Provides weights on simulated scenarios from a baseline stochastic
-#'     model, such that a stressed model component (random variable) fulfils a
-#'     constraint on its risk measure defined by a \code{gamma} function, 
-#'     evaluated at a given level. Scenario weights are
+#'     model, such that a stressed model component (random variable) fulfills a
+#'     constraint on its risk measure defined by a \code{gamma} function and 
+#'     evaluated at a given level \code{alpha}. Scenario weights are
 #'     selected by constrained minimisation of the Wasserstein distance to the
 #'     baseline model.
 #' @param x       A vector, matrix or data frame

@@ -82,9 +82,10 @@ A \code{SWIMw} object containing:
 }
 \description{
 Provides weights on simulated scenarios from a baseline stochastic
-    model, such that a stressed model component (random variable) fulfils a
-    constraint on its risk measure and HARA utility
-    evaluated at a given level. Scenario weights are
+    model, such that a stressed model component (random variable) fulfills a
+    constraint on its HARA utility defined by \code{a}, \code{b} and 
+    \code{eta} parameter and risk measure defined by a \code{gamma} 
+    function and evaluated at a given level \code{alpha}. Scenario weights are
     selected by constrained minimisation of the Wasserstein distance to the
     baseline model.
 }
@@ -93,7 +94,7 @@ The ES at level \code{alpha} of a random variable with distribution
     function F is defined by:
     \deqn{ES_{alpha} = 1 / (1 - alpha) * \int_{alpha}^1 VaR_u d u.}
     The HARA Utility is defined by 
-    \deqn{u(x) = \frac{1-\eta}{\eta}(\frac{ax}{1 - \eta} + b)^\eta}.
+    \deqn{u(x) = \frac{1-eta}{eta}(\frac{ax}{1 - eta} + b)^eta}.
 }
 \examples{
 set.seed(0)

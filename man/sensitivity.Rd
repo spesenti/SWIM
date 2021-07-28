@@ -38,6 +38,9 @@ indicating which columns of \code{x} each function
 in \code{f} operates on.\cr
 When \code{f} is a list, \code{k[[i]]} corresponds
 to the input variables of \code{f[[i]]}.}
+
+\item{s}{A function that, applied to \code{x}, defines the reverse
+sensitivity measure.}
 }
 \value{
 A data.frame containing the sensitivity measures of the
@@ -72,7 +75,7 @@ Provides sensitivity measures that compare the stressed and
     \item
       \code{Wasserstein}, the Wasserstein distance of order 1, defined
       for two distribution functions \code{F,G} by
-      \deqn{Wasserstein = \int | F(x) - G(x)| dx.}
+      \deqn{Wasserstein = \int |F(x) - G(x)| dx.}
     
     \item
       \code{reverse}, the \emph{General Reverse Sensitivity Measure}, defined

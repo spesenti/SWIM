@@ -15,7 +15,7 @@ underlying data of the \code{SWIMw} object.}
 
 \item{new_mean}{Numeric, the stressed mean.\cr}
 
-\item{new_sd}{Numeric, the stressed std.\cr}
+\item{new_sd}{Numeric, the stressed standard deviation.\cr}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.\cr}
@@ -52,9 +52,9 @@ A \code{SWIMw} object containing:
 }
 \description{
 Provides weights on simulated scenarios from a baseline stochastic
-    model, such that a stressed model component (random variable) fulfils a
-    constraint on its mean and standard deviation
-    evaluated at a given level. Scenario weights are
+    model, such that a stressed model component (random variable) fulfills a
+    constraint on its mean and standard deviation.
+    Scenario weights are
     selected by constrained minimisation of the Wasserstein distance to the
     baseline model.
 }

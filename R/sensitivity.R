@@ -10,6 +10,8 @@
 #'                for which the sensitivity is calculated.
 #' @param type    Character, one of \code{"Gamma", "Kolmogorov",
 #'                "Wasserstein", "reverse", "all"}.
+#' @param s       A function that, applied to \code{x}, defines the reverse
+#'                sensitivity measure.
 #' @param xCol    Numeric or character vector, (names of) the columns
 #'                of the underlying data of the \code{object}
 #'                (\code{default = "all"}). If \code{xCol = NULL}, only
@@ -37,7 +39,7 @@
 #'     \item
 #'       \code{Wasserstein}, the Wasserstein distance of order 1, defined
 #'       for two distribution functions \code{F,G} by
-#'       \deqn{Wasserstein = \int | F(x) - G(x)| dx.}
+#'       \deqn{Wasserstein = \int |F(x) - G(x)| dx.}
 #'     
 #'     \item
 #'       \code{reverse}, the \emph{General Reverse Sensitivity Measure}, defined

@@ -58,7 +58,7 @@
  #' Extracting the data (realisations of the stochastic model), the 
  #'     scenario weights, the functions generating the scenario weights, 
  #'     or the specifications of the stress from an object of class 
- #'     \code{SWIM} of \code{SWIMw}. 
+ #'     \code{SWIM} or \code{SWIMw}. 
  #' 
  #' @param object    A \code{SWIM} or \code{SWIMw} object.
  #' @inheritParams   summary.SWIM
@@ -280,8 +280,8 @@
   #'   weights. Each component corresponds to a different stress;
   #'      \item \code{type}, specifies the stress type
   #'      \item \code{specs}, a list, each component corresponds to
-  #'    a different stress and contains \code{k}, \code{alpha}, and
-  #'    \code{q}.
+  #'    a different stressand contains a list with the specifications
+  #'   of what has been stressed.
   #'     }
   #'     See \code{\link{SWIM}} for details.
   #' @author Zhuomin Mao

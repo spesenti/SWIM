@@ -1,9 +1,9 @@
 #' Stressing Mean and Standard Deviation
 #'
 #' Provides weights on simulated scenarios from a baseline stochastic
-#'     model, such that a stressed model component (random variable) fulfils a
-#'     constraint on its mean and standard deviation
-#'     evaluated at a given level. Scenario weights are
+#'     model, such that a stressed model component (random variable) fulfills a
+#'     constraint on its mean and standard deviation.
+#'     Scenario weights are
 #'     selected by constrained minimisation of the Wasserstein distance to the
 #'     baseline model.
 #' @param x       A vector, matrix or data frame
@@ -14,7 +14,7 @@
 #' @param k       Numeric, the column of \code{x} that is stressed
 #'     \code{(default = 1)}.\cr
 #' @param new_mean    Numeric, the stressed mean.\cr
-#' @param new_sd    Numeric, the stressed std.\cr
+#' @param new_sd    Numeric, the stressed standard deviation.\cr
 #' @param normalise Logical. If true, values of the columns to be stressed are linearly\cr
 #'                  normalised to the unit interval.\cr
 #' @param h Function that defines the bandwidth used in KDEs. If null,

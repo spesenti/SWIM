@@ -47,7 +47,7 @@ of the \code{object} (\code{default = "all"}).}
 Extracting the data (realisations of the stochastic model), the 
     scenario weights, the functions generating the scenario weights, 
     or the specifications of the stress from an object of class 
-    \code{SWIM} of \code{SWIMw}.
+    \code{SWIM} or \code{SWIMw}.
 }
 \section{Functions}{
 \itemize{

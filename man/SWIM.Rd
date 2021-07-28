@@ -36,11 +36,11 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
     where \code{D(P | Q)} is the Kullback-Leibler divergence
     (relative entropy) between \code{P} and \code{Q}.
 
-    The approach of minimizing the Wasserstein distance solves, for a random
-    variable \code{Xi}:
-    \deqn{argmin{G} W2(G, F)}
+    The approach of minimizing the Wasserstein distance of order 2 solves, 
+    for a random variable \code{Xi}:
+    \deqn{argmin_{G} W_{2}(G, F)}
     s.t. constraints on the distribution \code{Xi} under \code{Q},
-    where \code{W2(G, F)} is the Wasserstein distance between \code{G} and
+    where \code{W_{2}(G, F)} is the Wasserstein distance between \code{G} and
     \code{F}, the distributions under \code{Q} and \code{P}, respectively.
 
    The solution is formed by the scenario weights representing the 
@@ -85,13 +85,13 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
     \tabular{ll}{
        \code{\link{stress_wass}}\tab calls one of the functions below by
     using \code{type}\cr
-      \code{\link{stress_RM}} \tab for stressing the RM
+      \code{\link{stress_RM_w}} \tab for stressing the RM
     (\code{type = "RM"})\cr
-      \code{\link{stress_mean_sd}} \tab for stressing mean and
+      \code{\link{stress_mean_sd_w}} \tab for stressing mean and
     standard deviation (\code{type = "mean sd"})\cr
-      \code{\link{stress_RM_mean_sd}} \tab for stressing the RM, mean and 
+      \code{\link{stress_RM_mean_sd_w}} \tab for stressing the RM, mean and 
       standard deviation (\code{type = "RM mean sd"})\cr
-      \code{\link{stress_HARA_RM}} \tab for stressing the HARA utility and RM
+      \code{\link{stress_HARA_RM_w}} \tab for stressing the HARA utility and RM
     (\code{type = "HARA RM"})
     }
 }

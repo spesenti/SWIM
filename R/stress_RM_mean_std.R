@@ -1,9 +1,10 @@
 #' Stressing Risk Measure, Mean and Standard Deviation
 #'
 #' Provides weights on simulated scenarios from a baseline stochastic
-#'     model, such that a stressed model component (random variable) fulfils a
-#'     constraint on its risk measure, mean, and standard deviation
-#'     evaluated at a given level. Scenario weights are
+#'     model, such that a stressed model component (random variable) fulfills a
+#'     constraint on its mean, standard deviation, and risk measure 
+#'     defined by a \code{gamma} function and 
+#'     evaluated at a given level \code{alpha}. Scenario weights are
 #'     selected by constrained minimisation of the Wasserstein distance to the
 #'     baseline model.
 #' @param x       A vector, matrix or data frame
@@ -19,7 +20,7 @@
 #' @param q_ratio    Numeric, vector, the ratio of the stressed ES to
 #'                   the baseline ES.\cr
 #' @param new_mean    Numeric, the stressed mean. \cr
-#' @param new_sd    Numeric, the stressed sd. \cr
+#' @param new_sd    Numeric, the stressed standard deviation. \cr
 #' @param normalise Logical. If true, values of the columns to be stressed are linearly
 #'                  normalised to the unit interval.
 #' @param h Function that defines the bandwidth used in KDEs. If null,
@@ -48,7 +49,7 @@
 #'      \item \code{type = "RM mean sd"};
 #'      \item \code{specs}, a list, each component corresponds to
 #'    a different stress and contains \code{k}, \code{alpha},
-#'    \code{q}, \code{new_mean}, \code{new_sd} and \code{gamma}.
+#'    \code{q}, \code{new_mean}, and \code{new_sd}.
 #'     }
 #'     See \code{\link{SWIM}} for details.
 #'     

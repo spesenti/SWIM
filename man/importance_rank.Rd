@@ -38,6 +38,9 @@ indicating which columns of \code{x} each function
 in \code{f} operates on.\cr
 When \code{f} is a list, \code{k[[i]]} corresponds
 to the input variables of \code{f[[i]]}.}
+
+\item{s}{A function that, applied to \code{x}, defines the reverse
+sensitivity measure.}
 }
 \value{
 A data.frame containing the importance ranks of the

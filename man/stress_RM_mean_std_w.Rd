@@ -28,7 +28,7 @@ underlying data of the \code{SWIMw} object.}
 
 \item{new_mean}{Numeric, the stressed mean. \cr}
 
-\item{new_sd}{Numeric, the stressed sd. \cr}
+\item{new_sd}{Numeric, the stressed standard deviation. \cr}
 
 \item{q_ratio}{Numeric, vector, the ratio of the stressed ES to
 the baseline ES.\cr}
@@ -65,15 +65,16 @@ A \code{SWIMw} object containing:
      \item \code{type = "RM mean sd"};
      \item \code{specs}, a list, each component corresponds to
    a different stress and contains \code{k}, \code{alpha},
-   \code{q}, \code{new_mean}, \code{new_sd} and \code{gamma}.
+   \code{q}, \code{new_mean}, and \code{new_sd}.
     }
     See \code{\link{SWIM}} for details.
 }
 \description{
 Provides weights on simulated scenarios from a baseline stochastic
-    model, such that a stressed model component (random variable) fulfils a
-    constraint on its risk measure, mean, and standard deviation
-    evaluated at a given level. Scenario weights are
+    model, such that a stressed model component (random variable) fulfills a
+    constraint on its mean, standard deviation, and risk measure 
+    defined by a \code{gamma} function and 
+    evaluated at a given level \code{alpha}. Scenario weights are
     selected by constrained minimisation of the Wasserstein distance to the
     baseline model.
 }

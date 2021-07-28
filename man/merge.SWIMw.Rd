@@ -27,8 +27,8 @@ A \code{SWIMw} object containing:
   weights. Each component corresponds to a different stress;
      \item \code{type}, specifies the stress type
      \item \code{specs}, a list, each component corresponds to
-   a different stress and contains \code{k}, \code{alpha}, and
-   \code{q}.
+   a different stressand contains a list with the specifications
+  of what has been stressed.
     }
     See \code{\link{SWIM}} for details.
 }

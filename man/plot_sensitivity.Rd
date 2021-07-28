@@ -40,6 +40,9 @@ in \code{f} operates on.\cr
 When \code{f} is a list, \code{k[[i]]} corresponds
 to the input variables of \code{f[[i]]}.}
 
+\item{s}{A function that, applied to \code{x}, defines the reverse
+sensitivity measure.}
+
 \item{displ}{Logical, if \code{TRUE} the plot is displayed,
 otherwise the data.frame for customised plotting with
 \code{ggplot} is returned (\code{default = TRUE}).}
