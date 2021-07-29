@@ -91,3 +91,6 @@ See \code{\link{cdf}} for the empirical or KDE distribution function
     of a stressed model and \code{\link{quantile_stressed}} for
     sample quantiles of a stressed model.
 }
+\author{
+Silvani M. Pesenti, Zhuomin Mao
+}

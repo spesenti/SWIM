@@ -22,25 +22,25 @@ correspond to random variables; OR\cr
 A \code{SWIMw} object, where \code{x} corresponds to the
 underlying data of the \code{SWIMw} object.}
 
-\item{alpha}{Numeric vector, the levels of the stressed VaR.\cr}
+\item{alpha}{Numeric vector, the levels of the stressed risk measure (RM).\cr}
 
-\item{q_ratio}{Numeric, vector, the ratio of the stressed ES to
-the baseline ES.\cr}
+\item{q_ratio}{Numeric, vector, the ratio of the stressed RM to
+the baseline RM.\cr}
 
-\item{q}{Numeric, vector, the stressed ES at level
+\item{q}{Numeric, vector, the stressed RM at level
 \code{alpha}.\cr}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.\cr}
 
 \item{normalise}{Logical. If true, values of the columns to be stressed are linearly
-normalised to the unit interval.\cr}
+normalised to the unit interval (\code{default = FALSE}).\cr}
 
-\item{h}{Function that defines the bandwidth used in KDE. If null,
-Silverman's rule will be used.\cr}
+\item{h}{Function that defines the bandwidth used in KDE (\code{default = }
+Silverman's rule).\cr}
 
-\item{gamma}{Function that defines the gamma of the risk measure. If null,
-the Expected Shortfall (ES) will be used.}
+\item{gamma}{Function that defines the gamma of the risk measure 
+(\code{default =} Expected Shortfall).}
 }
 \value{
 A \code{SWIMw} object containing:
@@ -49,9 +49,9 @@ A \code{SWIMw} object containing:
       \item \code{h}, bandwidths;
       \item \code{u}, vector containing the gridspace on [0, 1];
       \item \code{lam}, vector containing the lambda's of the optimized model;
-      \item \code{str.fY}, function defining the densities of the stressed component;
-      \item \code{str.FY}, function defining the distribution of the stressed component;
-      \item \code{str.FY.inv}, function defining the quantiles of the stressed component;
+      \item \code{str_fY}, function defining the densities of the stressed component;
+      \item \code{str_FY}, function defining the distribution of the stressed component;
+      \item \code{str_FY_inv}, function defining the quantiles of the stressed component;
       \item \code{gamma}, function defining the risk measure;
       \item \code{new_weights}, a list of functions, that applied to
   the \code{k}th column of \code{x}, generates the vectors of scenario
@@ -72,7 +72,17 @@ Provides weights on simulated scenarios from a baseline stochastic
     baseline model.
 }
 \details{
-The ES at level \code{alpha} of a random variable with distribution
+This function implements stresses on distortion risk measures.
+    Distortion risk measures are defined by a square-integrable function
+    \code{gamma} where
+    \deqn{\int_0^1 gamma(u) du = 1.}
+    
+    The distortion risk measure for some \code{gamma} and distribution 
+    \code{G} is calculated as:
+    \deqn{\rho_{gamma}(G) = \int_0^1 \breve(G)(u) gamma(u) du.}
+
+    Expected Shortfall (ES) is an example of a distortion risk measure.
+    The ES at level \code{alpha} of a random variable with distribution
     function F is defined by:
     \deqn{ES_{alpha} = 1 / (1 - alpha) * \int_{alpha}^1 VaR_u d u.}
 }
@@ -83,13 +93,13 @@ x <- as.data.frame(cbind(
   "gamma" = rgamma(1000, shape = 2)))
 res1 <- stress_wass(type = "RM", x = x,
   alpha = 0.9, q_ratio = 1.05)
-  summary.SWIM(res1)
+  summary(res1)
 
 ## calling stress_RM_w directly
 ## stressing "gamma"
 res2 <- stress_RM_w(x = x, alpha = 0.9,
   q_ratio = 1.05, k = 2)
-summary.SWIM(res2)
+summary(res2)
 
 }
 \references{

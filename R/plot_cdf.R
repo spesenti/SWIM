@@ -53,6 +53,8 @@
 #' plot_cdf(res1, xCol = 1, wCol = 1:2, base = TRUE,
 #'   x_limits = c(0, 5), y_limits = c(0.5, 1))
 #'
+#' @author Silvani M. Pesenti, Zhuomin Mao
+#'
 #' @seealso See \code{\link{cdf}} for the empirical or KDE distribution function
 #'     of a stressed model and \code{\link{quantile_stressed}} for
 #'     sample quantiles of a stressed model.
@@ -100,8 +102,10 @@
       else if(!is.character(k)) k_name <- colnames(get_data(object))[k]
       
       if(k_name == x_name){
-         G.fn <- object$str.FY
+         # Get stressed distribution
+         G.fn <- object$str_FY
       } else{
+         # Get KDE
          G.fn <- function(x){
             return(sum(w * pnorm((x - x_data)/h)/length(x_data)))
          }
@@ -112,6 +116,7 @@
       names(plot.data) <- c(x_name, paste("stress", wCol, sep = " "))
       
       if (base == TRUE){
+         # Get KDE
          F.fn <- function(x){
             return(sum(pnorm((x - x_data)/h)/length(x_data)))
          }

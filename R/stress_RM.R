@@ -13,19 +13,29 @@
 #'     underlying data of the \code{SWIMw} object.
 #' @param k       Numeric, the column of \code{x} that is stressed
 #'     \code{(default = 1)}.\cr
-#' @param alpha   Numeric vector, the levels of the stressed VaR.\cr
-#' @param q          Numeric, vector, the stressed ES at level
+#' @param alpha   Numeric vector, the levels of the stressed risk measure (RM).\cr
+#' @param q          Numeric, vector, the stressed RM at level
 #'                   \code{alpha}.\cr
-#' @param q_ratio    Numeric, vector, the ratio of the stressed ES to
-#'                   the baseline ES.\cr
+#' @param q_ratio    Numeric, vector, the ratio of the stressed RM to
+#'                   the baseline RM.\cr
 #' @param normalise Logical. If true, values of the columns to be stressed are linearly
-#'                  normalised to the unit interval.\cr
-#' @param h Function that defines the bandwidth used in KDE. If null,
-#' Silverman's rule will be used.\cr
-#' @param gamma Function that defines the gamma of the risk measure. If null,
-#' the Expected Shortfall (ES) will be used.
+#'                  normalised to the unit interval (\code{default = FALSE}).\cr
+#' @param h Function that defines the bandwidth used in KDE (\code{default = }
+#' Silverman's rule).\cr
+#' @param gamma Function that defines the gamma of the risk measure 
+#' (\code{default =} Expected Shortfall).
 #'
-#' @details The ES at level \code{alpha} of a random variable with distribution
+#' @details This function implements stresses on distortion risk measures.
+#'     Distortion risk measures are defined by a square-integrable function
+#'     \code{gamma} where
+#'     \deqn{\int_0^1 gamma(u) du = 1.}
+#'     
+#'     The distortion risk measure for some \code{gamma} and distribution 
+#'     \code{G} is calculated as:
+#'     \deqn{\rho_{gamma}(G) = \int_0^1 \breve(G)(u) gamma(u) du.}
+#' 
+#'     Expected Shortfall (ES) is an example of a distortion risk measure.
+#'     The ES at level \code{alpha} of a random variable with distribution
 #'     function F is defined by:
 #'     \deqn{ES_{alpha} = 1 / (1 - alpha) * \int_{alpha}^1 VaR_u d u.}
 #'
@@ -36,9 +46,9 @@
 #'       \item \code{h}, bandwidths;
 #'       \item \code{u}, vector containing the gridspace on [0, 1];
 #'       \item \code{lam}, vector containing the lambda's of the optimized model;
-#'       \item \code{str.fY}, function defining the densities of the stressed component;
-#'       \item \code{str.FY}, function defining the distribution of the stressed component;
-#'       \item \code{str.FY.inv}, function defining the quantiles of the stressed component;
+#'       \item \code{str_fY}, function defining the densities of the stressed component;
+#'       \item \code{str_FY}, function defining the distribution of the stressed component;
+#'       \item \code{str_FY_inv}, function defining the quantiles of the stressed component;
 #'       \item \code{gamma}, function defining the risk measure;
 #'       \item \code{new_weights}, a list of functions, that applied to
 #'   the \code{k}th column of \code{x}, generates the vectors of scenario
@@ -58,13 +68,13 @@
 #'   "gamma" = rgamma(1000, shape = 2)))
 #' res1 <- stress_wass(type = "RM", x = x,
 #'   alpha = 0.9, q_ratio = 1.05)
-#'   summary.SWIM(res1)
+#'   summary(res1)
 #'
 #' ## calling stress_RM_w directly
 #' ## stressing "gamma"
 #' res2 <- stress_RM_w(x = x, alpha = 0.9,
 #'   q_ratio = 1.05, k = 2)
-#' summary.SWIM(res2)
+#' summary(res2)
 #'
 #' @family stress functions
 #' @inherit SWIM references
@@ -99,69 +109,69 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   }
   hY <- h(x_data[,k])
   
-  fY.fn <- function(y){
+  fY_fn <- function(y){
     return(sum(dnorm((y - x_data[,k])/hY)/hY/length(x_data[,k])))
   }
-  fY.fn <- Vectorize(fY.fn)
-  FY.fn <- function(y){
+  fY_fn <- Vectorize(fY_fn)
+  FY_fn <- function(y){
     return(sum(pnorm((y - x_data[,k])/hY)/length(x_data[,k])))
   }
-  FY.fn <- Vectorize(FY.fn)
-  lower.bracket = min(x_data[,k])-(max(x_data[,k])-min(x_data[,k]))*0.1
-  upper.bracket = max(x_data[,k])+(max(x_data[,k])-min(x_data[,k]))*0.1
-  FY.inv.fn <- Vectorize(.inverse(FY.fn, lower.bracket, upper.bracket))
+  FY_fn <- Vectorize(FY_fn)
+  lower_bracket = min(x_data[,k])-(max(x_data[,k])-min(x_data[,k]))*0.1
+  upper_bracket = max(x_data[,k])+(max(x_data[,k])-min(x_data[,k]))*0.1
+  FY_inv_fn <- Vectorize(.inverse(FY_fn, lower_bracket, upper_bracket))
   
   
   # Calculate the risk measure
-  if(is.null(q)){q <- .rm(FY.inv.fn(u), gamma(u), u) * q_ratio}
+  if(is.null(q)){q <- .rm(FY_inv_fn(u), gamma(u), u) * q_ratio}
   
   .objective_fn <- function(par){
     # Get ell = F_inv + sum(lam*gamma)
-    ell.fn <- function(x){FY.inv.fn(x) + par * gamma(x)}
+    ell_fn <- function(x){FY_inv_fn(x) + par * gamma(x)}
     
     # Get isotonic projection of ell
-    GY.inv <- stats::isoreg(u, ell.fn(u))$yf
-    rm.stress <- .rm(GY.inv, gamma(u), u)
+    GY_inv <- stats::isoreg(u, ell_fn(u))$yf
+    rm_stress <- .rm(GY_inv, gamma(u), u)
     
     # Return RM error
-    return(sqrt((q - rm.stress)^2))
+    return(sqrt((q - rm_stress)^2))
   }
   
   # Run optimization
-  init.lam <- stats::rnorm(1)
-  res <- stats::optim(init.lam, .objective_fn, method = "Nelder-Mead")
+  init_lam <- stats::rnorm(1)
+  res <- stats::optim(init_lam, .objective_fn, method = "Nelder-Mead")
   lam <- res$par
   
   # Get ell
-  ell.fn <- function(x){FY.inv.fn(x) + lam * gamma(x)}
-  ell <- ell.fn(u)
+  ell_fn <- function(x){FY_inv_fn(x) + lam * gamma(x)}
+  ell <- ell_fn(u)
 
   # Get GY_inv, y_grid
-  GY.inv <- stats::isoreg(u, ell)$yf
-  left <- min(min(x_data[,k]), GY.inv[4])
-  right <- max(max(x_data[,k]), GY.inv[length(GY.inv)-3])
-  GY.inv.fn <- stats::approxfun(u, GY.inv, yleft=left-1e-5, yright=right+1e-5)
-  y.grid <- seq(from=GY.inv[4], to=GY.inv[length(GY.inv)-3], length.out=500)
+  GY_inv <- stats::isoreg(u, ell)$yf
+  left <- min(min(x_data[,k]), GY_inv[4])
+  right <- max(max(x_data[,k]), GY_inv[length(GY_inv)-3])
+  GY_inv_fn <- stats::approxfun(u, GY_inv, yleft=left-1e-5, yright=right+1e-5)
+  y_grid <- seq(from=GY_inv[4], to=GY_inv[length(GY_inv)-3], length.out=500)
   
 
   # Get GY and gY
-  GY.fn <- Vectorize(.inverse(GY.inv.fn, lower=0, upper=1))
+  GY_fn <- Vectorize(.inverse(GY_inv_fn, lower=0, upper=1))
   
-  dG.inv <- (GY.inv[3:length(GY.inv)] - GY.inv[1:(length(GY.inv)-2)])/(u[3:length(u)] - u[1:(length(u)-2)])
-  dG.inv.fn <- stats::approxfun(0.5*(u[3:length(u)] + u[1:(length(u)-2)]), dG.inv, rule=2)
-  gY.fn <- function(x){1/dG.inv.fn(GY.fn(x))}
+  dG_inv <- (GY_inv[3:length(GY_inv)] - GY_inv[1:(length(GY_inv)-2)])/(u[3:length(u)] - u[1:(length(u)-2)])
+  dG_inv_fn <- stats::approxfun(0.5*(u[3:length(u)] + u[1:(length(u)-2)]), dG_inv, rule=2)
+  gY_fn <- function(x){1/dG_inv_fn(GY_fn(x))}
   
   # Create SWIMw object
   max_length <- max(length(q), length(alpha))
   type <- rep(list("RM"), length.out = max_length)
 
   # Get weights
-  new.weights <- .get_weights(x_data[,k], y.grid, gY.fn, fY.fn, hY)
-  names(new.weights) <- paste("stress", 1:max_length)
+  new_weights <- .get_weights(x_data[,k], y_grid, gY_fn, fY_fn, hY)
+  names(new_weights) <- paste("stress", 1:max_length)
   
   # achieved RM
   for(j in 1:max_length){
-    RM_achieved <- .rm(GY.inv.fn(u), gamma(u), u)
+    RM_achieved <- .rm(GY_inv_fn(u), gamma(u), u)
     # message if the achieved RM is different from the specified stress.
     if(q - RM_achieved > 1e-4) {
       message(paste("Stressed RM specified was", round(q, 4),", stressed RM achieved is", round(RM_achieved, 4)))
@@ -182,8 +192,8 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   }
   
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam, "gamma" = gamma, 
-                   "new_weights" = new.weights, "str.fY" = gY.fn, "str.FY" = GY.fn,
-                   "str.FY.inv" = GY.inv.fn, "type" = type, "specs" = constr)
+                   "new_weights" = new_weights, "str_fY" = gY_fn, "str_FY" = GY_fn,
+                   "str_FY_inv" = GY_inv_fn, "type" = type, "specs" = constr)
   
   return(my_list)
 }
@@ -209,16 +219,16 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
 
 .get_weights <- function(y_data, y_grid, gY_fn, fY_fn, hY){
   # Get dQ/dP
-  g.val <- gY_fn(y_grid)
+  g_val <- gY_fn(y_grid)
   # g.val[is.na(g.val)] <- 0
-  g.val <- g.val/.integrate(g.val, y_grid)
-  f.val <- fY_fn(y_grid)/.integrate(fY_fn(y_grid), y_grid)
-  dQ.dP <- g.val / f.val
+  g_val <- g_val/.integrate(g_val, y_grid)
+  f_val <- fY_fn(y_grid)/.integrate(fY_fn(y_grid), y_grid)
+  dQ_dP <- g_val / f_val
   
   # Get weights
   w <- vector()
   for(i in 1:length(y_data)){
-    w <- c(w, .integrate(dQ.dP*stats::dnorm((y_grid - y_data[i])/hY)/hY, y_grid))
+    w <- c(w, .integrate(dQ_dP*stats::dnorm((y_grid - y_data[i])/hY)/hY, y_grid))
   }
   # Normalize weights
   w <- w / sum(w) * length(y_data)

@@ -3,6 +3,7 @@
 S3method(merge,SWIM)
 S3method(merge,SWIMw)
 S3method(summary,SWIM)
+S3method(summary,SWIMw)
 export(ES_stressed)
 export(VaR_stressed)
 export(cdf)

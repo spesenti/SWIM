@@ -11,7 +11,8 @@
 #' @param type    Character, one of \code{"Gamma", "Kolmogorov",
 #'                "Wasserstein", "reverse", "all"}.
 #' @param s       A function that, applied to \code{x}, defines the reverse
-#'                sensitivity measure.
+#'                sensitivity measure. If \code{type = "reverse"} and 
+#'                \code{s = NULL}, defaults to \code{type = "Gamma"}.
 #' @param xCol    Numeric or character vector, (names of) the columns
 #'                of the underlying data of the \code{object}
 #'                (\code{default = "all"}). If \code{xCol = NULL}, only
@@ -46,7 +47,8 @@
 #'       for a random variable \code{Y}, scenario weights \code{w}, and a function
 #'       \code{s:R -> R} by \deqn{epsilon = ( E(s(Y) * w) - E(s(Y)) ) / c,}
 #'       where \code{c} is a normalisation constant such that
-#'       \code{|epsilon| <= 1}.
+#'       \code{|epsilon| <= 1}. \code{Gamma} is a special instance of
+#'       the reverse sensitivity measure when \code{s} is the identity function.
 #'     }
 #'     
 #'     If \code{f} and \code{k} are provided, the sensitivity of the
@@ -99,6 +101,8 @@
 #' plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma")
 #' importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
 #' }
+#' 
+#' @author Silvana M. Pesenti, Zhuomin Mao
 #'
 #' @seealso See \code{\link{importance_rank}} for ranking of random
 #'     variables according to their sensitivities,
@@ -128,7 +132,7 @@
      if (!is.function(s)) stop("s must be a function")
    }
    if ((type == 'reverse' | type == 'all') && is.null(s)){
-     warning("No s passed in. Using identity")
+     warning("No s passed in. Using Gamma sensitivity instead.")
      s <- function(x) x
    }
    if (!is.null(xCol)){
@@ -232,7 +236,8 @@
     return(wasser_sens)
   }
   
-  # comparison between input vectors for a given stress
+  # help function Reverse Sensitivity
+  # comparison between input vectors for a given stress and function s
   .reverse <- function(z, s, w){
     w <- as.numeric(w)
     

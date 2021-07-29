@@ -18,9 +18,9 @@ A \code{SWIMw} object containing:
       \item \code{h}, bandwidths;
       \item \code{u}, vector containing the gridspace on [0, 1]
       \item \code{lam}, vector containing the lambda's of the optimized model
-      \item \code{str.fY}, function defining the densities of the stressed component;
-      \item \code{str.FY}, function defining the distribution of the stressed component;
-      \item \code{str.FY.inv}, function defining the quantiles of the stressed component;
+      \item \code{str_fY}, function defining the densities of the stressed component;
+      \item \code{str_FY}, function defining the distribution of the stressed component;
+      \item \code{str_FY_inv}, function defining the quantiles of the stressed component;
       \item \code{gamma}, function defining the risk measure;
       \item \code{new_weights}, a list of functions, that applied to
   the \code{k}th column of \code{x}, generates the vectors of scenario

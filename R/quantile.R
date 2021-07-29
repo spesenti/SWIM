@@ -13,7 +13,7 @@
 #' @param wCol    Numeric, the column of the scenario weights 
 #'                of the \code{object} (\code{default = 1}).
 #' @param type    Character, one of \code{"quantile","(i-1)/(n-1)",
-#'                "i/(n+1)","i/n"}, with \code{default  = "quantile"}. 
+#'                "i/(n+1)","i/n"}, (\code{default  = "quantile"}). 
 #'                See details below. 
 #' 
 #' @details \code{type} defines the choice of algorithm used for 
@@ -26,7 +26,8 @@
 #'     cumulative weight and \code{T} the total weight (usually total 
 #'     sample size). See \code{\link[Hmisc]{wtd.quantile}} 
 #'     for further details on \code{type}, on which
-#'     \code{quantile_stressed} is based.
+#'     \code{quantile_stressed} is based. \code{type} is ignored for 
+#'     when evaluating quantiles for \code{SWIMw} objects.
 #'     
 #' @return Returns a matrix with estimates of the distribution quantiles
 #'     at the probabilities, \code{probs}, under the scenario weights 
@@ -48,6 +49,8 @@
 #'   alpha = c(0.9, 0.95), q_ratio = 1.05)
 #' ## stressed sample quantiles  
 #' quantile_stressed(res1, probs = seq(0.9, 0.99, 0.01), wCol = 2)    
+#'     
+#' @author Silvana M. Pesenti, Zhuomin Mao
 #'     
 #' @export
 
@@ -71,6 +74,7 @@ new_weights <- get_weights(object)[ , wCol]
 x_data <- as.matrix(get_data(object)[ , xCol])
 
 if (is.SWIM(object)){
+   # K-L Divergence
    quantile_w <- as.matrix(apply(X = as.matrix(x_data), MARGIN = 2, FUN = Hmisc::wtd.quantile, weights = new_weights, probs = probs, type = type))
    if (length(probs) == 1 && length(cname) > 1) quantile_w <- matrix(quantile_w, nrow = 1)
    colnames(quantile_w) <- cname
@@ -85,15 +89,11 @@ if (is.SWIM(object)){
    
    return(quantile_w)
 } else {
-   if (type != "quantile"){
-      stop("Type must be quantile.")
-   }
-   
    # Wasserstein Distance
    w <- get_weights(object)[ , wCol]
    x_data <- get_data(object)[, xCol]
    h <- object$h(x_data)
-   
+
    k <- object$specs$'stress 1'$k
    if(is.character(k)) k_name <- k
    if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
@@ -102,27 +102,30 @@ if (is.SWIM(object)){
    quantile_w <- c()
    col_names <- c()
    for (c in cname){
-      lower.bracket = min(x_data[, c])#-(max(x_data[, c])-min(x_data[, c]))*0.1
-      upper.bracket = max(x_data[, c])#+(max(x_data[, c])-min(x_data[, c]))*0.1
+      lower_bracket = min(x_data[, c])
+      upper_bracket = max(x_data[, c])
       
       if(k_name == c){
-         G.inv.fn <- Vectorize(object$str.FY.inv)
+         # Get stressed quantile function
+         G.inv.fn <- Vectorize(object$str_FY_inv)
       } else{
+         # Get KDE
          G.fn <- function(x){
             return(sum(w * pnorm((x - x_data[,c])/h)/length(x_data[,c])))
          }
          G.fn <- Vectorize(G.fn)
-         G.inv.fn <- Vectorize(.inverse(G.fn, lower.bracket, upper.bracket))
+         G.inv.fn <- Vectorize(.inverse(G.fn, lower_bracket, upper_bracket))
       }
       quantile_w <- cbind(quantile_w, G.inv.fn(probs))
       col_names <- cbind(col_names, c)
       
       if (base == TRUE){
+         # Get base KDEs
          F.fn <- function(x){
             return(sum(pnorm((x - x_data[, c])/h)/length(x_data[, c])))
          }
          F.fn <- Vectorize(F.fn)
-         F.inv.fn <- Vectorize(.inverse(F.fn, lower.bracket, upper.bracket))
+         F.inv.fn <- Vectorize(.inverse(F.fn, lower_bracket, upper_bracket))
          quantile_w <- cbind(quantile_w, F.inv.fn(probs))
          col_names <- cbind(col_names, paste("base", c, sep=" "))
       }

@@ -64,7 +64,7 @@
 #'   "gamma" = rgamma(1000, shape = 2)))
 #' res <- stress_wass(type = "RM", x = x, 
 #'   alpha = 0.9, q_ratio = 1.05)
-#' summary.SWIM(res)   
+#' summary(res)   
 #' 
 #' @author Zhuomin Mao 
 #' @family stress functions

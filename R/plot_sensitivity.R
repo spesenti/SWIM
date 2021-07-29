@@ -58,6 +58,8 @@
 #'     \code{\link{importance_rank}} for ranking of random
 #'     variables according to their sensitivities.
 #'
+#' @author Silvana M. Pesenti
+#'
 #' @export
 
   plot_sensitivity <- function(object, xCol = "all", wCol = "all", type =
@@ -69,7 +71,7 @@
      if (!is.function(s)) stop("s must be a function")
   }
   if ((type == 'reverse' | type == 'all') && is.null(s)){
-     warning("No s passed in. Using identity")
+     warning("No s passed in. Using Gamma sensitivity instead.")
      s <- function(x) x
   }
    sens <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f, k, s=s)

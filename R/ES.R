@@ -29,6 +29,7 @@ ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FAL
   }
 
   if (is.SWIM(object)){
+    # K-L Divergence
     VaR <- VaR_stressed(object, alpha = alpha, xCol = xCol, wCol = wCol, base = base)
     ES <- matrix(nrow = dim(VaR)[1], ncol = dim(VaR)[2])
     for (i in 1:dim(VaR)[2]){
@@ -36,6 +37,7 @@ ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FAL
     }
     
   } else {
+    # Wasserstein Distance
     
     k <- object$specs$'stress 1'$k
     if(is.character(k)) k_name <- k
@@ -49,26 +51,29 @@ ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FAL
     ES <- c()
     for (c in xCol){
       h <- object$h(x_data[, c])
-      lower.bracket = min(x_data[, c])#-(max(x_data[, c])-min(x_data[, c]))*0.1
-      upper.bracket = max(x_data[, c])#+(max(x_data[, c])-min(x_data[, c]))*0.1
+      lower_bracket = min(x_data[, c])#-(max(x_data[, c])-min(x_data[, c]))*0.1
+      upper_bracket = max(x_data[, c])#+(max(x_data[, c])-min(x_data[, c]))*0.1
       
       if(k_name == colnames(get_data(object))[c]){
-        G.inv.fn <- Vectorize(object$str.FY.inv)
+        # Get stressed quantile
+        G.inv.fn <- Vectorize(object$str_FY_inv)
       } else{
+        # Get KDE
         G.fn <- function(x){
           return(sum(w * pnorm((x - x_data[,c])/h)/length(x_data[,c])))
         }
         G.fn <- Vectorize(G.fn)
-        G.inv.fn <- Vectorize(.inverse(G.fn, lower.bracket, upper.bracket))
+        G.inv.fn <- Vectorize(.inverse(G.fn, lower_bracket, upper_bracket))
       }
       ES <- cbind(ES, .rm(G.inv.fn(u), gamma(u), u))
       
       if (base == TRUE){
+        # Get KDE
         F.fn <- function(x){
           return(sum(pnorm((x - x_data[, c])/h)/length(x_data[, c])))
         }
         F.fn <- Vectorize(F.fn)
-        F.inv.fn <- Vectorize(.inverse(F.fn, lower.bracket, upper.bracket))
+        F.inv.fn <- Vectorize(.inverse(F.fn, lower_bracket, upper_bracket))
         ES <- cbind(ES, .rm(F.inv.fn(u), gamma(u), u))
       }
     }

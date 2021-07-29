@@ -40,7 +40,8 @@ When \code{f} is a list, \code{k[[i]]} corresponds
 to the input variables of \code{f[[i]]}.}
 
 \item{s}{A function that, applied to \code{x}, defines the reverse
-sensitivity measure.}
+sensitivity measure. If \code{type = "reverse"} and 
+\code{s = NULL}, defaults to \code{type = "Gamma"}.}
 }
 \value{
 A data.frame containing the sensitivity measures of the
@@ -82,7 +83,8 @@ Provides sensitivity measures that compare the stressed and
       for a random variable \code{Y}, scenario weights \code{w}, and a function
       \code{s:R -> R} by \deqn{epsilon = ( E(s(Y) * w) - E(s(Y)) ) / c,}
       where \code{c} is a normalisation constant such that
-      \code{|epsilon| <= 1}.
+      \code{|epsilon| <= 1}. \code{Gamma} is a special instance of
+      the reverse sensitivity measure when \code{s} is the identity function.
     }
     
     If \code{f} and \code{k} are provided, the sensitivity of the
@@ -141,4 +143,7 @@ See \code{\link{importance_rank}} for ranking of random
     \code{\link{plot_sensitivity}} for plotting
     sensitivity measures and \code{\link{summary}} for
     summary statistics of a stressed model.
+}
+\author{
+Silvana M. Pesenti, Zhuomin Mao
 }

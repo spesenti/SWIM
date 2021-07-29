@@ -85,7 +85,7 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
     \tabular{ll}{
        \code{\link{stress_wass}}\tab calls one of the functions below by
     using \code{type}\cr
-      \code{\link{stress_RM_w}} \tab for stressing the RM
+      \code{\link{stress_RM_w}} \tab for stressing the distortion risk measure (RM)
     (\code{type = "RM"})\cr
       \code{\link{stress_mean_sd_w}} \tab for stressing mean and
     standard deviation (\code{type = "mean sd"})\cr
@@ -157,13 +157,20 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
    generates the vectors of scenario weights;
     \item \code{type}: a list, each component corresponds to a
    different stress and specifies the type of the stress;
-    \item \code{h}: bandwidths;
-    \item \code{u}: vector containing the gridspace on [0, 1];
-    \item \code{lam}: vector containing the lambda's of the optimized model;
-    \item \code{str.fY}: function defining the densities of the stressed component;
-    \item \code{str.FY}: function defining the distribution of the stressed component;
-    \item \code{str.FY.inv}: function defining the quantiles of the stressed component;
-    \item \code{gamma}: function defining the risk measure;
+    \item \code{h}: a list, each component corresponds to a different stress
+    and specifies the bandwidth;
+    \item \code{u}: a list, each component corresponds to a different stress
+    and is a vector containing the gridspace on [0, 1];
+    \item \code{lam}: a list, each component corresponds to a different stress
+    and is vector containing the lambda's of the optimized model;
+    \item \code{str_fY}: a list, each component corresponds to a different 
+    stress and is a function defining the densities of the stressed component;
+    \item \code{str_FY}: a list, each component corresponds to a different 
+    stress and is a function defining the distribution of the stressed component;
+    \item \code{str_FY_inv}: a list, each component corresponds to a different 
+    stress and is a function defining the quantiles of the stressed component;
+    \item \code{gamma}: a list, each component corresponds to a different 
+    stress and is a function defining the risk measure;
     \item \code{specs}: a list, each component corresponds to
   a different stress and contains a list with the specifications
   of what has been stressed.
@@ -171,7 +178,7 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
     \itemize{
       \item \code{type = "RM"}: \code{k}, the column of \code{x}
     on which the stress is applied to; \code{alpha}, the level of
-    the stressed risk measure (RM); \code{q}, the stressed RM at level
+    the RM; \code{q}, the stressed RM at level
       \code{alpha}.
       \item \code{type = "mean sd"}: \code{k}, the columns of \code{x}
     on which the stress is applied to; \code{new_mean}, the

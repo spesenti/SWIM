@@ -28,9 +28,9 @@
 #'       \item \code{h}, bandwidths;
 #'       \item \code{u}, vector containing the gridspace on [0, 1];
 #'       \item \code{lam}, vector containing the lambda's of the optimized model;
-#'       \item \code{str.fY}, function defining the densities of the stressed component;
-#'       \item \code{str.FY}, function defining the distribution of the stressed component;
-#'       \item \code{str.FY.inv}, function defining the quantiles of the stressed component;
+#'       \item \code{str_fY}, function defining the densities of the stressed component;
+#'       \item \code{str_FY}, function defining the distribution of the stressed component;
+#'       \item \code{str_FY_inv}, function defining the quantiles of the stressed component;
 #'       \item \code{gamma}, function defining the risk measure;
 #'       \item \code{new_weights}, a list of functions, that applied to
 #'   the \code{k}th column of \code{x}, generates the vectors of scenario
@@ -51,13 +51,13 @@
 #'   "gamma" = rgamma(1000, shape = 2)))
 #' res1 <- stress_wass(type = "mean sd", x = x, k = 1,
 #'   alpha = 0.9, new_mean=1, new_sd=0.9)
-#'   summary.SWIM(res1)
+#'   summary(res1)
 #'
 #' ## calling stress_RM_w directly
 #' ## stressing "gamma"
 #' res2 <- stress_mean_std_w(x = x, alpha = 0.9,
 #'   new_mean=2.2, new_sd=1.5, k = 2)
-#' summary.SWIM(res2)
+#' summary(res2)
 #'
 #' @family stress functions
 #' @inherit SWIM references
@@ -83,80 +83,77 @@ stress_mean_std_w <- function(x, new_mean, new_sd, k = 1,
   }
   hY <- h(x_data[,k])
   
-  fY.fn <- function(y){
+  fY_fn <- function(y){
     return(sum(dnorm((y - x_data[,k])/hY)/hY/length(x_data[,k])))
   }
-  fY.fn <- Vectorize(fY.fn)
-  FY.fn <- function(y){
+  fY_fn <- Vectorize(fY_fn)
+  FY_fn <- function(y){
     return(sum(pnorm((y - x_data[,k])/hY)/length(x_data[,k])))
   }
-  FY.fn <- Vectorize(FY.fn)
-  lower.bracket = min(x_data[,k])-(max(x_data[,k])-min(x_data[,k]))*0.1
-  upper.bracket = max(x_data[,k])+(max(x_data[,k])-min(x_data[,k]))*0.1
-  FY.inv.fn <- Vectorize(.inverse(FY.fn, lower.bracket, upper.bracket))
-  
-  # Calculate the mean and std
-  mean.base <- .integrate(FY.inv.fn(u), u)
+  FY_fn <- Vectorize(FY_fn)
+  lower_bracket = min(x_data[,k])-(max(x_data[,k])-min(x_data[,k]))*0.1
+  upper_bracket = max(x_data[,k])+(max(x_data[,k])-min(x_data[,k]))*0.1
+  FY_inv_fn <- Vectorize(.inverse(FY_fn, lower_bracket, upper_bracket))
   
   .objective_fn <- function(par){
     # Get ell = F_inv + sum(lam[1] + lam[2]*mean)
-    ell.fn <- function(x){(FY.inv.fn(x) + par[1] + par[2]*new_mean)/(1 + par[2])}
+    ell_fn <- function(x){(FY_inv_fn(x) + par[1] + par[2]*new_mean)/(1 + par[2])}
     
     # Get isotonic projection of ell
-    GY.inv <- stats::isoreg(u, ell.fn(u))$yf
-    mean.stress <- .integrate(GY.inv, u)
-    std.stress <- sqrt(.integrate((GY.inv - mean.stress)^2, u))
+    GY_inv <- stats::isoreg(u, ell_fn(u))$yf
+    mean_stress <- .integrate(GY_inv, u)
+    std_stress <- sqrt(.integrate((GY_inv - mean_stress)^2, u))
     
     # Return RM error
-    error <- sqrt(2) * sqrt((mean.stress - new_mean)^2 + 
-                              (std.stress - new_sd)^2)  # sqrt(2) normalization constant
+    error <- sqrt(2) * sqrt((mean_stress - new_mean)^2 + 
+                              (std_stress - new_sd)^2)  # sqrt(2) normalization constant
     return(error)
   }
   
   # Run optimization
-  init.lam <- stats::rnorm(2)
-  res <- stats::optim(init.lam, .objective_fn, method = "Nelder-Mead")
+  init_lam <- stats::rnorm(2)
+  res <- stats::optim(init_lam, .objective_fn, method = "Nelder-Mead")
   lam <- res$par
   
   # Get ell
-  ell.fn <- function(x){(FY.inv.fn(x) + lam[1] + lam[2]*new_mean)/(1 + lam[2])}
-  ell <- ell.fn(u)
+  ell_fn <- function(x){(FY_inv_fn(x) + lam[1] + lam[2]*new_mean)/(1 + lam[2])}
+  ell <- ell_fn(u)
 
   # Get GY_inv, y_grid
-  GY.inv <- stats::isoreg(u, ell)$yf
-  left <- min(min(x_data[,k]), GY.inv[4])
-  right <- max(max(x_data[,k]), GY.inv[length(GY.inv)-3])
-  GY.inv.fn <- stats::approxfun(u, GY.inv, yleft=left-1e-5, yright=right+1e-5)
-  y.grid <- seq(from=GY.inv[4], to=GY.inv[length(GY.inv)-3], length.out=500)
+  GY_inv <- stats::isoreg(u, ell)$yf
+  left <- min(min(x_data[,k]), GY_inv[4])
+  right <- max(max(x_data[,k]), GY_inv[length(GY_inv)-3])
+  GY_inv_fn <- stats::approxfun(u, GY_inv, yleft=left-1e-5, yright=right+1e-5)
+  y_grid <- seq(from=GY_inv[4], to=GY_inv[length(GY_inv)-3], length.out=500)
   
   # Get GY and gY
-  GY.fn <- .inverse(GY.inv.fn, lower=0, upper=1)
-  GY.fn <- Vectorize(GY.fn)
-  dG.inv <- (GY.inv[3:length(GY.inv)] - GY.inv[1:(length(GY.inv)-2)])/(u[3:length(u)] - u[1:(length(u)-2)])
-  dG.inv.fn <- stats::approxfun(0.5*(u[3:length(u)] + u[1:(length(u)-2)]), dG.inv, rule=2)
-  gY.fn <- function(x){1/dG.inv.fn(GY.fn(x))}
+  GY_fn <- .inverse(GY_inv_fn, lower=0, upper=1)
+  GY_fn <- Vectorize(GY_fn)
+  dG_inv <- (GY_inv[3:length(GY_inv)] - GY_inv[1:(length(GY_inv)-2)])/(u[3:length(u)] - u[1:(length(u)-2)])
+  dG_inv_fn <- stats::approxfun(0.5*(u[3:length(u)] + u[1:(length(u)-2)]), dG_inv, rule=2)
+  gY_fn <- function(x){1/dG_inv_fn(GY_fn(x))}
   
   # Create SWIMw object
   max_length <- max(length(new_mean), length(new_sd))
-  type <- rep(list("mean-std"), length.out = max_length)
+  type <- rep(list("mean sd"), length.out = max_length)
 
   # Get weights
-  new.weights <- .get_weights(x_data[,k], y.grid, gY.fn, fY.fn, hY)
-  names(new.weights) <- paste("stress", 1:max_length)
+  new_weights <- .get_weights(x_data[,k], y_grid, gY_fn, fY_fn, hY)
+  names(new_weights) <- paste("stress", 1:max_length)
   
   # achieved mean and std
   for(j in 1:max_length){
-    mean.achieved <- .integrate(GY.inv, u)
-    sd.achieved <- sqrt(.integrate((GY.inv - mean.achieved)^2, u))
+    mean_achieved <- .integrate(GY_inv, u)
+    sd_achieved <- sqrt(.integrate((GY_inv - mean_achieved)^2, u))
     
     # message if the achieved mean or std is different from the specified stress.
-    if(mean.achieved - new_mean > 1e-4) {
-      message(paste("Stressed mean specified was", round(new_mean, 4),", stressed mean achieved is", round(mean.achieved, 4)))
-      new_mean <- mean.achieved
+    if(mean_achieved - new_mean > 1e-4) {
+      message(paste("Stressed mean specified was", round(new_mean, 4),", stressed mean achieved is", round(mean_achieved, 4)))
+      new_mean <- mean_achieved
     }
-    if(sd.achieved - new_sd > 1e-4) {
-      message(paste("Stressed std specified was", round(new_sd, 4),", stressed std achieved is", round(sd.achieved, 4)))
-      new_sd <- sd.achieved
+    if(sd_achieved - new_sd > 1e-4) {
+      message(paste("Stressed std specified was", round(new_sd, 4),", stressed std achieved is", round(sd_achieved, 4)))
+      new_sd <- sd_achieved
     }
   }
   
@@ -173,8 +170,8 @@ stress_mean_std_w <- function(x, new_mean, new_sd, k = 1,
   }
   
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam,
-                   "new_weights" = new.weights, "str.fY" = gY.fn, "str.FY" = GY.fn,
-                   "str.FY.inv" = GY.inv.fn, "type" = type, "specs" = constr)
+                   "new_weights" = new_weights, "str_fY" = gY_fn, "str_FY" = GY_fn,
+                   "str_FY_inv" = GY_inv_fn, "type" = type, "specs" = constr)
   
   return(my_list)
 }
@@ -196,16 +193,16 @@ stress_mean_std_w <- function(x, new_mean, new_sd, k = 1,
 
 .get_weights <- function(y_data, y_grid, gY_fn, fY_fn, hY){
   # Get dQ/dP
-  g.val <- gY_fn(y_grid)
+  g_val <- gY_fn(y_grid)
   # g.val[is.na(g.val)] <- 0
-  g.val <- g.val/.integrate(g.val, y_grid)
-  f.val <- fY_fn(y_grid)/.integrate(fY_fn(y_grid), y_grid)
-  dQ.dP <- g.val / f.val
+  g_val <- g_val/.integrate(g_val, y_grid)
+  f_val <- fY_fn(y_grid)/.integrate(fY_fn(y_grid), y_grid)
+  dQ_dP <- g_val / f_val
   
   # Get weights
   w <- vector()
   for(i in 1:length(y_data)){
-    w <- c(w, .integrate(dQ.dP*stats::dnorm((y_grid - y_data[i])/hY)/hY, y_grid))
+    w <- c(w, .integrate(dQ_dP*stats::dnorm((y_grid - y_data[i])/hY)/hY, y_grid))
   }
   # Normalize weights
   w <- w / sum(w) * length(y_data)

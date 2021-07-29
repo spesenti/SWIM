@@ -41,7 +41,8 @@ When \code{f} is a list, \code{k[[i]]} corresponds
 to the input variables of \code{f[[i]]}.}
 
 \item{s}{A function that, applied to \code{x}, defines the reverse
-sensitivity measure.}
+sensitivity measure. If \code{type = "reverse"} and 
+\code{s = NULL}, defaults to \code{type = "Gamma"}.}
 
 \item{displ}{Logical, if \code{TRUE} the plot is displayed,
 otherwise the data.frame for customised plotting with
@@ -104,4 +105,7 @@ See \code{\link{sensitivity}} for the values of the
     sensitivity measures of a stressed model and
     \code{\link{importance_rank}} for ranking of random
     variables according to their sensitivities.
+}
+\author{
+Silvana M. Pesenti
 }

@@ -49,5 +49,5 @@ See \code{\link{plot_cdf}} for plotting the empirical or KDE
     a stressed model.
 }
 \author{
-Silvana M. Pesenti
+Silvana M. Pesenti, Zhuomin Mao
 }

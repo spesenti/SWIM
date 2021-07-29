@@ -80,3 +80,6 @@ See \code{\link{quantile_stressed}} for sample quantiles of a
     stressed model and \code{\link{plot_cdf}} for plotting empirical or KDE 
     distribution functions under scenario weights.
 }
+\author{
+Silvani M. Pesenti, Zhuomin Mao
+}

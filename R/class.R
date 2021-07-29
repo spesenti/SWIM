@@ -10,7 +10,7 @@
       # one of ("VaR", "VaR ES", "prob", "moment", "mean", "mean sd", "user")
    specs = specs # a list with elements called "stress i".
       #
-      # all input varaibles of the stress and constraints according
+      # all input variables of the stress and constraints according
       # to the stress. For example a stress on 
       # the VaR contains: k, alpha, q
    )   
@@ -24,27 +24,27 @@
 
  # Defines the class "SWIMw"
   SWIMw <- function(x = "x", h = "h", u="u", lam = "lam", new_weights = "new_weights", 
-                    str.fY = 'str.fY', str.FY = 'str.FY', str.FY.inv = 'str.FY.inv',
+                    str_fY = 'str_fY', str_FY = 'str_FY', str_FY_inv = 'str_FY_inv',
                     gamma = 'gamma', type = "type", specs = "specs"){
      mymodel <- list(
         x = x, # vector, matrix or dataframe containing the underlying data
         h = h, # function, that applied to x, provide the bandwidths for KDE estimation
         u = u, # vector containing the gridspace on [0,1]
         lam = lam, # optimized lambda value(s)
-        str.fY = str.fY, # function, that applied to the stressed column, provides the density
-        str.FY = str.FY, # function, when applied to the stressed column, provides the cdf
-        str.FY.inv = str.FY.inv, # function, when applied to the stressed column, provides the quantile
+        str_fY = str_fY, # function, that applied to the stressed column, provides the density
+        str_FY = str_FY, # function, when applied to the stressed column, provides the cdf
+        str_FY_inv = str_FY_inv, # function, when applied to the stressed column, provides the quantile
         gamma = gamma, # function that provides gamma used to calculate the risk measure (if applicable);
         new_weights = new_weights, # list of either functions, that applied 
         # to the k-th column of x providing the scenario weights; OR a 
         # vector containing the new_weights
         type  = type, # a list of characters each corresponding to a stress
-        # one of ("VaR", "VaR ES", "prob", "moment", "mean", "mean sd", "user")
+        # one of ("RM", "mean sd", "RM mean sd", "HARA RM")
         specs = specs # a list with elements called "stress i".
         #
         # all input variables of the stress and constraints according
         # to the stress. For example a stress on 
-        # the VaR contains: k, alpha, q
+        # the RM contains: k, alpha, q
      )   
      ## Name of the class
      attr(mymodel, "class") <- "SWIMw"
@@ -271,9 +271,9 @@
   #'       \item \code{h}, bandwidths;
   #'       \item \code{u}, vector containing the gridspace on [0, 1]
   #'       \item \code{lam}, vector containing the lambda's of the optimized model
-  #'       \item \code{str.fY}, function defining the densities of the stressed component;
-  #'       \item \code{str.FY}, function defining the distribution of the stressed component;
-  #'       \item \code{str.FY.inv}, function defining the quantiles of the stressed component;
+  #'       \item \code{str_fY}, function defining the densities of the stressed component;
+  #'       \item \code{str_FY}, function defining the distribution of the stressed component;
+  #'       \item \code{str_FY_inv}, function defining the quantiles of the stressed component;
   #'       \item \code{gamma}, function defining the risk measure;
   #'       \item \code{new_weights}, a list of functions, that applied to
   #'   the \code{k}th column of \code{x}, generates the vectors of scenario
@@ -294,9 +294,9 @@
     h <- c(x$h, y$h)
     u <- c(x$u, y$u)
     lam <- c(x$lam, y$lam)
-    str.fY <- c(x$str.fY, y$str.fY)
-    str.FY <- c(x$str.FY, y$str.FY)
-    str.FY.inv <- c(x$str.FY.inv, y$str.FY.inv)
+    str_fY <- c(x$str_fY, y$str_fY)
+    str_FY <- c(x$str_FY, y$str_FY)
+    str_FY_inv <- c(x$str_FY_inv, y$str_FY_inv)
     gamma <- c(x$gamma, y$gamma)
     m <- length(type)
     new_weights <- c(x$new_weights, y$new_weights)
@@ -304,7 +304,7 @@
     specs <- c(x$specs, y$specs)
     names(specs) <- paste("stress", 1:m)
     xy <- SWIMw("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs,
-                "str.fY" = str.fY, "str.FY" = str.FY, "str.FY.inv" = str.FY.inv,
+                "str_fY" = str_fY, "str_FY" = str_FY, "str_FY_inv" = str_FY_inv,
                 "u" = u, "h" = h, "lam"=lam, "gamma"=gamma)
     return(xy)
   }

@@ -36,9 +36,9 @@ A \code{SWIMw} object containing:
       \item \code{h}, bandwidths;
       \item \code{u}, vector containing the gridspace on [0, 1];
       \item \code{lam}, vector containing the lambda's of the optimized model;
-      \item \code{str.fY}, function defining the densities of the stressed component;
-      \item \code{str.FY}, function defining the distribution of the stressed component;
-      \item \code{str.FY.inv}, function defining the quantiles of the stressed component;
+      \item \code{str_fY}, function defining the densities of the stressed component;
+      \item \code{str_FY}, function defining the distribution of the stressed component;
+      \item \code{str_FY_inv}, function defining the quantiles of the stressed component;
       \item \code{gamma}, function defining the risk measure;
       \item \code{new_weights}, a list of functions, that applied to
   the \code{k}th column of \code{x}, generates the vectors of scenario
@@ -65,13 +65,13 @@ x <- as.data.frame(cbind(
   "gamma" = rgamma(1000, shape = 2)))
 res1 <- stress_wass(type = "mean sd", x = x, k = 1,
   alpha = 0.9, new_mean=1, new_sd=0.9)
-  summary.SWIM(res1)
+  summary(res1)
 
 ## calling stress_RM_w directly
 ## stressing "gamma"
 res2 <- stress_mean_std_w(x = x, alpha = 0.9,
   new_mean=2.2, new_sd=1.5, k = 2)
-summary.SWIM(res2)
+summary(res2)
 
 }
 \references{

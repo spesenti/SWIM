@@ -29,7 +29,7 @@
 #' ## baseline empirical distribution function
 #' ecdf(x$normal)(grid)
 #' 
-#' @author Silvana M. Pesenti 
+#' @author Silvana M. Pesenti, Zhuomin Mao
 #' 
 #' @seealso See \code{\link{plot_cdf}} for plotting the empirical or KDE 
 #'     distribution function of the stressed model and 
@@ -47,11 +47,12 @@ cdf <- function(object, xCol = 1, wCol = 1){
   w <- get_weights(object)[ , wCol]
   x_data <- get_data(object)[ , xCol]
   if (is.SWIM(object)){
-
+    # K-L Divergence
     cdf <- .cdf(x = x_data, w = w)
     return(cdf)    
     
   } else {
+    # Wasserstein Distance
     k <- object$specs$'stress 1'$k
     h <- object$h(x_data)
     if(is.character(k)) k_name <- k
@@ -60,8 +61,10 @@ cdf <- function(object, xCol = 1, wCol = 1){
     
     x_name <- colnames(get_data(object))[xCol]
     if(k_name == x_name){
-      G.fn <- object$str.FY
+      # Get stressed distribution
+      G.fn <- object$str_FY
     } else{
+      # Get KDE estimate
       G.fn <- function(x){
         return(sum(w * pnorm((x - x_data)/h)/length(x_data)))
       }

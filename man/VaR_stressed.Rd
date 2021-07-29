@@ -102,5 +102,5 @@ See \code{quantile_stressed} for quantiles other than the
     function of a stressed model.
 }
 \author{
-Silvana M. Pesenti
+Silvana M. Pesenti, Zhuomin Mao
 }

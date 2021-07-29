@@ -36,6 +36,8 @@
 #'     sensitivity measures and \code{\link{summary}} for a
 #'     summary statistic of a stressed model.
 #'
+#' @author Silvana M. Pesenti
+#'
 #' @export
 
   importance_rank <- function(object, xCol = "all", wCol = "all",
@@ -50,7 +52,7 @@
       if (sapply(s, is.function)) stop("s must be a function")
    }
    if ((type == 'reverse' | type == 'all') && is.null(s)){
-      warning("No s passed in. Using identity")
+      warning("No s passed in. Using Gamma sensitivity instead.")
       s <- function(x) x
    }
    

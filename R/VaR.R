@@ -25,7 +25,7 @@
 #'      the function \code{quantile_stressed} calculates quantiles of model
 #'      components with different interpolations.
 #'
-#' @author Silvana M. Pesenti
+#' @author Silvana M. Pesenti, Zhuomin Mao
 #' @describeIn VaR_stressed Value-at-Risk of a stressed model.
 #'
 #' @seealso See \code{quantile_stressed} for quantiles other than the
@@ -61,6 +61,7 @@
    if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
 
    if (is.SWIM(object)){
+      # K-L Divergence
       VaR <- quantile_stressed(object, probs = alpha, xCol = xCol, wCol = wCol, type = "i/n")
       if (base == TRUE) {
          VaR_base <- as.matrix(apply(X = as.matrix(get_data(object = object, xCol = xCol)), MARGIN = 2,
@@ -69,6 +70,7 @@
          VaR <- cbind(VaR, VaR_base)
       } 
    } else {
+      # Wasserstein Distance
       VaR <- quantile_stressed(object, probs = alpha, xCol = xCol, wCol = wCol, type = "quantile", base=base)
    }
 

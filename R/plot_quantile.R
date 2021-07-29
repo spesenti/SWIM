@@ -34,6 +34,8 @@
 #' plot_quantile(res1, xCol = 1, wCol = 1:2, base = TRUE, x_limits = c(0.8, 1), 
 #'               y_limits = c(0, 5))
 #'
+#' @author Silvani M. Pesenti, Zhuomin Mao
+#'
 #' @seealso See \code{\link{quantile_stressed}} for sample quantiles of a 
 #'     stressed model and \code{\link{plot_cdf}} for plotting empirical or KDE 
 #'     distribution functions under scenario weights.
@@ -51,6 +53,7 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
     
   if (is.SWIM(object)){
+    # K-L Divergence
     grid <- seq(0, 1, length.out = n)
     quant_data <- cbind(grid, sapply(wCol, FUN = quantile_stressed, object = object, probs = grid, xCol = xCol,type = c("quantile")))
     colnames(quant_data) <- c("grid", paste("stress", wCol, sep = " "))
@@ -84,27 +87,30 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
     if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
     else if(!is.character(k)) k_name <- colnames(get_data(object))[k]
     
-    lower.bracket = min(x_data)-(max(x_data)-min(x_data))*0.1
-    upper.bracket = max(x_data)+(max(x_data)-min(x_data))*0.1
+    lower_bracket = min(x_data)-(max(x_data)-min(x_data))*0.1
+    upper_bracket = max(x_data)+(max(x_data)-min(x_data))*0.1
     
     if(k_name == x_name){
-      G.inv.fn <- Vectorize(object$str.FY.inv)
+      # Get stressed distribution
+      G.inv.fn <- Vectorize(object$str_FY_inv)
     } else{
+      # Get KDE
       G.fn <- function(x){
         return(sum(w * pnorm((x - x_data)/h)/length(x_data)))
       }
       G.fn <- Vectorize(G.fn)
-      G.inv.fn <- Vectorize(.inverse(G.fn, lower.bracket, upper.bracket))
+      G.inv.fn <- Vectorize(.inverse(G.fn, lower_bracket, upper_bracket))
     }
 
     quant_data <- cbind(grid, G.inv.fn(grid))
     colnames(quant_data) <- c("grid", paste("stress", wCol, sep = " "))
     if (base == TRUE){
+      # Get KDE
       F.fn <- function(x){
         return(sum(pnorm((x - x_data)/h)/length(x_data)))
       }
       F.fn <- Vectorize(F.fn)
-      F.inv.fn <- Vectorize(.inverse(F.fn, lower.bracket, upper.bracket))
+      F.inv.fn <- Vectorize(.inverse(F.fn, lower_bracket, upper_bracket))
       quant_data <- cbind(quant_data, base = F.inv.fn(grid))
     }
     
