@@ -26,6 +26,8 @@ have a mean of 1.}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.}
+
+\item{names}{Character vector, the names of stressed models}
 }
 \value{
 A \code{SWIM} object containing:

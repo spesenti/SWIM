@@ -23,7 +23,7 @@
  #'                baseline VaR.\cr
  #'                If \code{alpha} and \code{q_ratio} are vectors, they
  #'                must have the same length.
- #' @param name    Character vector, the names of stressed models
+ #' @param names   Character vector, the names of stressed models
  #'
  #' @return A \code{SWIM} object containing:
  #'     \itemize{
