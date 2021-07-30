@@ -51,7 +51,7 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
 
   quant_data <- cbind(grid, sapply(wCol, FUN = quantile_stressed, object = object, probs = grid, xCol = xCol,type = c("quantile")))
-  colnames(quant_data) <- c("grid", paste("stress", wCol, sep = " "))
+  colnames(quant_data) <- c("grid", names(object$specs)[wCol])
   if (base == TRUE){
     quant_data <- cbind(quant_data, base = as.numeric(stats::quantile(get_data(object)[, xCol], grid)))
   }

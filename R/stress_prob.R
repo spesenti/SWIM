@@ -87,13 +87,17 @@
    
    # Name stresses
    if (is.null(names)) {
-      names <- paste("stress", 1)
+      temp <- paste("stress", 1)
+   } else {
+      temp <- names
    }
-   names(new_weights) <- names
+   if (length(temp) != 1) stop("length of names are not the same as the number of models")
+   
+   names(new_weights) <- temp
    
    constr_prob <- list("k" = k, "prob" = prob, "upper" = upper, "lower" = lower)
    constr <- list(constr_prob)
-   names(constr) <- names
+   names(constr) <- temp
    type <- list("prob")
    my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr)
    if (is.SWIM(x)) my_list <- merge(x, my_list)

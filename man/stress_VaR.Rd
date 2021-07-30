@@ -27,6 +27,8 @@ have the same length.}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.}
+
+\item{name}{Character vector, the names of stressed models}
 }
 \value{
 A \code{SWIM} object containing:

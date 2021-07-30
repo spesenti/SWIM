@@ -115,8 +115,6 @@
      new_weights[, i] <- object$new_weights[[i]](x_data[, k])
     }
    }
-   # colnames(new_weights) <- paste("stress", 1:m)
-   # colnames(new_weights) <- object$names   
    colnames(new_weights) <- names(object$specs)
    return(new_weights)
   }
@@ -166,21 +164,17 @@
    .type <- t(as.data.frame(.type))
    .specs <- cbind(.type, .specs)
    colnames(.specs)[1] <- "type"
-   # rownames(.specs) <- object$names    
+   rownames(.specs) <- names(object$specs)
    return(.specs)
   }
 
-  get_names <- function(object){
-     if (!is.SWIM(object)) stop("Object not of class SWIM")
-     return (object$names)
-  }
   
-  set_names <- function(object, new_names){
+  renamed_model <- function(object, new_names){
      if (!is.SWIM(object)) stop("Object not of class SWIM")
-     # object$names <- new_names
      names(object$new_weights) <- new_names
      names(object$specs) <- new_names
-     # return(object)
+     object <- object
+     return(object)
   }
   
  #' Merging Two Stressed Models
@@ -213,24 +207,24 @@
  #'
  #' @export
 
-  merge.SWIM <- function(x, y, names = NULL, ...){
+  merge.SWIM <- function(x, y, ...){
   if (!is.SWIM(x) | !is.SWIM(y)) stop("x and y are not of class SWIM.")
   if (!identical(get_data(x), get_data(y))) stop("x and y are not based on the same data")
   type <- c(x$type, y$type)
   m <- length(type)
   new_weights <- c(x$new_weights, y$new_weights)
   
-  # names(new_weights) <- object$names   
-  # names(specs) <- object$names
-  
   specs <- c(x$specs, y$specs)
   
-  # Name stresses
-  if (is.null(names)) {
+  # Check if there are duplicate names for stresses
+  x_name <- names(x$specs)
+  y_name <- names(y$specs)
+  
+  if (intersect(x_name, y_name) != 0) {
      names(new_weights) <- paste("stress", 1:m)
      names(specs) <- paste("stress", 1:m)
-     } 
-  
+  }
+
   xy <- SWIM("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs)
   return(xy)
   }

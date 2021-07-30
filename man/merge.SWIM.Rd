@@ -4,7 +4,7 @@
 \alias{merge.SWIM}
 \title{Merging Two Stressed Models}
 \usage{
-\method{merge}{SWIM}(x, y, names = NULL, ...)
+\method{merge}{SWIM}(x, y, ...)
 }
 \arguments{
 \item{x, y}{Objects of class \code{SWIM}.}

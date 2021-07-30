@@ -116,17 +116,19 @@ stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, names = N
   if (sol$termcd != 1) warning(paste("nleqslv terminated with code ", sol$termcd))
   constr_moment <- list("k" = k, "m" = m, "f" = f)
   constr <- list(constr_moment)
-  # names(constr) <- paste("stress", 1)
 
   # Name stresses
   if (is.null(names)) {
-    names <- paste("stress", 1)
+    temp <- paste("stress", 1)
+  } else {
+    temp <- names
   }
-  names(constr) <- names  
+  if (length(temp) != 1) stop("length of names are not the same as the number of models")
+  names(constr) <- temp
 
   if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
   new_weights = list()
-  new_weights[[names]] <- as.vector(exp(z %*% sol$x))
+  new_weights[[temp]] <- as.vector(exp(z %*% sol$x))
 
   type <- list("moment")
   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr)

@@ -66,15 +66,18 @@ stress_user <- function(x, new_weights = NULL, new_weightsfun = NULL, k = 1, nam
   
   # Name stresses
   if (is.null(names)) {
-    names <- paste("stress", 1:max_length)
+    temp <- paste("stress", 1:max_length)
+  } else {
+    temp <- names
   }
   
-  names(nweights) <- names
+  if (length(temp) != max_length) stop("length of names are not the same as the number of models")
+  names(nweights) <- temp
   
   type <- rep(list("user"), length.out = max_length)
   constr_user <- list("k" = k)
   constr <- rep(list(constr_user), length.out = max_length)
-  names(constr) <- names
+  names(constr) <- temp
   my_list <- SWIM("x" = x_data, "new_weights" = nweights, "type" = type, "specs" = constr)
   if (is.SWIM(x)) my_list <- merge(x, my_list)
   return(my_list)

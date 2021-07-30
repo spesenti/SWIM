@@ -138,16 +138,19 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   
   # Name stresses
   if (is.null(names)) {
-    names <- paste(rep("stress", max_length), 1:max_length)
+    temp <- paste(rep("stress", max_length), 1:max_length)
+  } else {
+    temp <- names
   }
-  names(new_weights) <- names
+  if (length(temp) != max_length) stop("length of names are not the same as the number of models")
+  names(new_weights) <- temp
 
   type <- rep(list("VaR ES"), length.out = max_length)
   constr1 <- cbind("k" = rep(k, length.out = max_length), constr)
   constr_ES <- list()
   for(s in 1:max_length){
     temp_list <- list(as.list(constr1[s, ]))
-    names(temp_list) <- names[s]
+    names(temp_list) <- temp[s]
     constr_ES <- c(constr_ES, temp_list)
   }
   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr_ES)

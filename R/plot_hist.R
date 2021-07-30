@@ -51,7 +51,7 @@
    hist_data <- data.frame(x_data, get_weights(object)[ , wCol])
    if(is.character(xCol)) x_name <- xCol
    if(is.null(colnames(get_data(object)))) x_name <- paste("X", xCol, sep = "") else if(!is.character(xCol)) x_name <- colnames(get_data(object))[xCol]
-   names(hist_data) <- c(x_name, paste("stress", wCol, sep = " "))
+   names(hist_data) <- c(x_name, names(object$specs)[wCol])
    if (base == TRUE){
     hist_data <- cbind(hist_data, "base" = rep(1, length(x_data)))
    }

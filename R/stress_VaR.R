@@ -23,7 +23,20 @@
  #'                baseline VaR.\cr
  #'                If \code{alpha} and \code{q_ratio} are vectors, they
  #'                must have the same length.
+ #' @param name    Character vector, the names of stressed models
  #'
+ #' @return A \code{SWIM} object containing:
+ #'     \itemize{
+ #'       \item \code{x}, a data.frame containing the data;
+ #'       \item \code{new_weights}, a list of functions, that applied to
+ #'   the \code{k}th column of \code{x}, generates the vectors of scenario
+ #'   weights. Each component corresponds to a different stress;
+ #'      \item \code{type = "VaR"};
+ #'      \item \code{specs}, a list, each component corresponds to
+ #'    a different stress and contains \code{k},
+ #'     \code{alpha} and \code{q}.
+ #'     }
+ #'     See \code{\link{SWIM}} for details.
  #' @details The stressed VaR is the quantile of the chosen model component,
  #'      subject to the calculated scenario weights.
  #'      The VaR at level \code{alpha} of a random variable with
@@ -40,18 +53,6 @@
  #'    case, \code{stress_VaR} will display a \code{message} and the \code{specs} contain
  #'    the achieved VaR.
  #'
- #' @return A \code{SWIM} object containing:
- #'     \itemize{
- #'       \item \code{x}, a data.frame containing the data;
- #'       \item \code{new_weights}, a list of functions, that applied to
- #'   the \code{k}th column of \code{x}, generates the vectors of scenario
- #'   weights. Each component corresponds to a different stress;
- #'      \item \code{type = "VaR"};
- #'      \item \code{specs}, a list, each component corresponds to
- #'    a different stress and contains \code{k},
- #'     \code{alpha} and \code{q}.
- #'     }
- #'     See \code{\link{SWIM}} for details.
  #' @author Silvana M. Pesenti
  #'
  #' @examples
@@ -109,17 +110,20 @@
     
     # Name stresses
     if (is.null(names)) {
-      names <- paste("stress", 1:max_length)
+      temp <- paste("stress", 1:max_length)
+    } else {
+      temp <- names
     }
-
-    names(new_weights) <- names
+    
+    if (length(temp) != max_length) stop("length of names are not the same as the number of models")
+    names(new_weights) <- temp
 
     type <- rep(list("VaR"), length.out = max_length)
     constr1 <- cbind("k" = rep(k, length.out = max_length), constr)
     constr_VaR <- list()
     for(s in 1:max_length){
       temp_list <- list(as.list(constr1[s, ]))
-      names(temp_list) <- names[s]
+      names(temp_list) <- temp[s]
       constr_VaR <- c(constr_VaR, temp_list)
     }
     my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr_VaR)
