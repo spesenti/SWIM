@@ -167,7 +167,7 @@ stress_RM_mean_std_w <- function(x, alpha, new_mean, new_sd, q_ratio = NULL, q =
   GY_fn <- Vectorize(.inverse(GY_inv_fn, lower=min(u), upper=max(u)))
   
   dG_inv <- (GY_inv[3:length(GY_inv)] - GY_inv[1:(length(GY_inv)-2)])/(u[3:length(u)] - u[1:(length(u)-2)])
-  dG_inv_fn <- stats::approxfun(0.5*(u[3:length(u)] + u[1:(length(u)-2)]), dG_inv)
+  dG_inv_fn <- stats::approxfun(0.5*(u[3:length(u)] + u[1:(length(u)-2)]), dG_inv, rule=2)
   gY_fn <- function(x){1/dG_inv_fn(GY_fn(x))}
   
   # Create SWIMw object
