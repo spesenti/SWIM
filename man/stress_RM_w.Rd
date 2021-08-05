@@ -22,13 +22,13 @@ correspond to random variables; OR\cr
 A \code{SWIMw} object, where \code{x} corresponds to the
 underlying data of the \code{SWIMw} object.}
 
-\item{alpha}{Numeric vector, the levels of the stressed risk measure (RM).\cr}
+\item{alpha}{Numeric, vector, the levels of the stressed risk measure (RM).\cr}
 
 \item{q_ratio}{Numeric, vector, the ratio of the stressed RM to
-the baseline RM.\cr}
+the baseline RM (must be same length as \code{alpha}).\cr}
 
 \item{q}{Numeric, vector, the stressed RM at level
-\code{alpha}.\cr}
+\code{alpha} (must be same length as \code{alpha}).\cr}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.\cr}
@@ -39,8 +39,8 @@ normalised to the unit interval (\code{default = FALSE}).\cr}
 \item{h}{Function that defines the bandwidth used in KDE (\code{default = }
 Silverman's rule).\cr}
 
-\item{gamma}{Function that defines the gamma of the risk measure 
-(\code{default =} Expected Shortfall).}
+\item{gamma}{Function that defines the gamma of the risk measure which takes in 
+\code{alpha} as an argument (\code{default Expected Shortfall}).}
 }
 \value{
 A \code{SWIMw} object containing:

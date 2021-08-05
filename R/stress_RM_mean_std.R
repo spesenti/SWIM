@@ -14,11 +14,11 @@
 #'     underlying data of the \code{SWIMw} object.
 #' @param k       Numeric, the column of \code{x} that is stressed
 #'     \code{(default = 1)}.
-#' @param alpha   Numeric vector, the levels of the stressed risk measure (RM).\cr
+#' @param alpha   Numeric, vector, the levels of the stressed risk measure (RM).\cr
 #' @param q          Numeric, vector, the stressed RM at level
-#'                   \code{alpha}.\cr
+#'                   \code{alpha} (must be same length as \code{alpha}).\cr
 #' @param q_ratio    Numeric, vector, the ratio of the stressed RM to
-#'                   the baseline RM.\cr
+#'                   the baseline RM (must be same length as \code{alpha}).\cr
 #' @param new_mean    Numeric, the stressed mean. \cr
 #' @param new_sd    Numeric, the stressed standard deviation. \cr
 #' @param normalise Logical. If true, values of the columns to be stressed are linearly
@@ -91,11 +91,13 @@ stress_RM_mean_std_w <- function(x, alpha, new_mean, new_sd, q_ratio = NULL, q =
   if (anyNA(x_data)) warning("x contains NA")
   if (!is.null(q) && !is.null(q_ratio)) stop("Only provide q or q_ratio")
   if (is.null(q) && is.null(q_ratio)) stop("no q or q_ratio defined")
+  if (!is.null(q) && (length(q) != length(alpha))) stop("q and alpha must have the same length")
+  if (!is.null(q_ratio) && (length(q_ratio) != length(alpha))) stop("q_ratio and alpha must have the same length")
   if (!is.null(gamma)){
     if (!is.function(gamma)) stop("gamma must be a function")
   } else{
     warning("No gamma passed. Using expected shortfall.")
-    gamma <- function(x){as.numeric((x >= alpha) / (1 - alpha))}
+    gamma <- function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))}
   }
   
   n <- length(x_data[, k])
@@ -126,34 +128,58 @@ stress_RM_mean_std_w <- function(x, alpha, new_mean, new_sd, q_ratio = NULL, q =
   
   # Calculate the mean and std
   mean.base <- .integrate(FY_inv_fn(u), u)
+
   # Calculate the risk measure
-  if(is.null(q)){q <- .rm(FY_inv_fn(u), gamma(u), u) * q_ratio}
+  if(is.null(q)){
+    q = c()
+    for (i in 1:length(q_ratio)){
+      q <- append(q, .rm(FY_inv_fn(u), gamma(u, alpha[i]), u) * q_ratio[i])
+    }
+  }
   
   .objective_fn <- function(par){
     # Get ell = 1/(1 + lambda2) * (F_inv(u) + lambda_1 + lambda_2 * m + sum{lambda_{k+2} + gamma_k(u)})
-    ell_fn <- function(x){(FY_inv_fn(x) + par[1] + par[2]*new_mean + par[3]*gamma(x))/(1 + par[2])}
+    ell_fn <- function(x){
+      ell <- FY_inv_fn(x) + par[1] + par[2]*new_mean
+      for (i in 1:(length(par)-2)){
+        ell <- ell + par[i+2]*gamma(x, alpha[i])
+      }
+      ell <- ell / (1 + par[2])
+      return(ell)
+    }
     
     # Get isotonic projection of ell
     GY_inv <- stats::isoreg(u, ell_fn(u))$yf
-    mean.stress <- .integrate(GY_inv, u)
-    std.stress <- sqrt(.integrate((GY_inv - mean.stress)^2, u))
-    rm.stress <- .rm(GY_inv, gamma(u), u)
+    mean_stress <- .integrate(GY_inv, u)
+    std_stress <- sqrt(.integrate((GY_inv - mean_stress)^2, u))
+    rm_stress <-c()
+    for (i in 1:length(alpha)){
+      rm_stress <- append(rm_stress, .rm(GY_inv, gamma(u, alpha[i]), u))
+    }
     
-    # Return RM error
-    error <- sqrt(2*(mean.stress - new_mean)^2 + 
-                  2*(std.stress - new_sd)^2 +
-                  (q - rm.stress)^2)
+    # Return error
+    error <- sqrt(2*(mean_stress - new_mean)^2 + 
+                  2*(std_stress - new_sd)^2 +
+                  sum((q - rm_stress)^2))
     # sqrt(2) normalization constant
     return(error)
   }
   
   # Run optimization
-  init_lam <- stats::rnorm(3)
+  max_length <- length(q)
+  init_lam <- stats::rnorm(2+max_length)
   res <- stats::optim(init_lam, .objective_fn, method = "Nelder-Mead")
   lam <- res$par
   
   # Get ell
-  ell_fn <- function(x){(FY_inv_fn(x) + lam[1] + lam[2]*new_mean + lam[3]*gamma(x))/(1 + lam[2])}
+  ell_fn <- function(x){
+    ell <- FY_inv_fn(x) + lam[1] + lam[2]*new_mean
+    for (i in 1:(length(lam)-2)){
+      ell <- ell + lam[i+2]*gamma(x, alpha[i])
+    }
+    ell <- ell / (1 + lam[2])
+    return(ell)
+  }
   ell <- ell_fn(u)
 
   # Get GY_inv, y_grid
@@ -171,49 +197,41 @@ stress_RM_mean_std_w <- function(x, alpha, new_mean, new_sd, q_ratio = NULL, q =
   gY_fn <- function(x){1/dG_inv_fn(GY_fn(x))}
   
   # Create SWIMw object
-  max_length <- max(length(new_mean), length(new_sd), length(q), length(alpha))
-  type <- rep(list("RM mean sd"), length.out = max_length)
+  type <- list("RM mean sd")
 
   # Get weights
   new_weights <- .get_weights(x_data[,k], y_grid, gY_fn, fY_fn, hY)
-  names(new_weights) <- paste("stress", 1:max_length)
+  names(new_weights) <- 'stress 1'
   
   # achieved mean and std
   for(j in 1:max_length){
     mean_achieved <- .integrate(GY_inv, u)
     sd_achieved <- sqrt(.integrate((GY_inv - mean_achieved)^2, u))
-    RM_achieved <- .rm(GY_inv_fn(u), gamma(u), u)
+    
+    RM_achieved <-c()
+    for (i in 1:length(alpha)){
+      RM_achieved <- append(RM_achieved, .rm(GY_inv_fn(u), gamma(u, alpha[i]), u))
+    }
     
     # message if the achieved RM is different from the specified stress.
-    if(q - RM_achieved > 1e-4) {
-      message(paste("Stressed RM specified was", round(q, 4),", stressed RM achieved is", round(RM_achieved, 4)))
+    if(any(q - RM_achieved > 1e-4)) {
+      message(paste("Stressed RM specified was ", round(q, 4),", stressed RM achieved is ", round(RM_achieved, 4)))
       q <- RM_achieved
     }
     
     # message if the achieved mean or std is different from the specified stress.
     if(mean_achieved - new_mean > 1e-4) {
-      message(paste("Stressed mean specified was", round(new_mean, 4),", stressed mean achieved is", round(mean_achieved, 4)))
+      message(paste("Stressed mean specified was ", round(new_mean, 4),", stressed mean achieved is ", round(mean_achieved, 4)))
       new_mean <- mean_achieved
     }
     if(sd_achieved - new_sd > 1e-4) {
-      message(paste("Stressed std specified was", round(new_sd, 4),", stressed std achieved is", round(sd_achieved, 4)))
+      message(paste("Stressed std specified was ", round(new_sd, 4),", stressed std achieved is ", round(sd_achieved, 4)))
       new_sd <- sd_achieved
     }
   }
   
   # Get constraints
-  new_mean <- rep(new_mean, length.out = max_length)
-  new_sd <- rep(new_sd, length.out = max_length)
-  q <- rep(q, length.out = max_length)
-  alpha <- rep(alpha, length.out = max_length)
-  constr_RM_mean_std <- cbind("k" = rep(k, length.out = max_length), alpha, q, new_mean, new_sd)
-  
-  constr <- list()
-  for(i in 1:max_length){
-    temp_list <- list(as.list(constr_RM_mean_std[i, ]))
-    names(temp_list) <- paste("stress", i)
-    constr <- c(constr, temp_list)
-  }
+  constr <- list("stress 1" = list("k"=k, "q"=q, "alpha"=alpha, "new_mean"=new_mean, "new_sd" = new_sd))
   
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam, "gamma" = gamma,
                    "new_weights" = new_weights, "str_fY" = gY_fn, "str_FY" = GY_fn,

@@ -14,14 +14,14 @@
 #'     underlying data of the \code{SWIMw} object.
 #' @param k       Numeric, the column of \code{x} that is stressed
 #'     \code{(default = 1)}.\cr
-#' @param alpha   Numeric vector, the levels of the stressed risk measure (RM).\cr
+#' @param alpha   Numeric, vector, the levels of the stressed risk measure (RM).\cr
 #' @param a   Numeric vector, input to HARA utility function.\cr
 #' @param b   Numeric vector, input to HARA utility function.\cr
 #' @param eta   Numeric vector, input to HARA utility function.\cr
 #' @param q          Numeric, vector, the stressed RM at level
-#'                   \code{alpha}.\cr
+#'                   \code{alpha} (must be same length as \code{alpha}).\cr
 #' @param q_ratio    Numeric, vector, the ratio of the stressed RM to
-#'                   the baseline RM.\cr
+#'                   the baseline RM (must be same length as \code{alpha}).\cr
 #' @param hu          Numeric, vector, the stressed HARA utility with parameters
 #' \code{a}, \code{b} and \code{eta}.\cr
 #' @param hu_ratio    Numeric, vector, the ratio of the HARA utility to the 
@@ -104,11 +104,13 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   if (is.null(q) && is.null(q_ratio)) stop("No q or q_ratio defined")
   if (!is.null(hu) && !is.null(hu_ratio)) stop("Only provide one of hu or hu_ratio")
   if (is.null(hu) && is.null(hu_ratio)) stop("No hu or hu_ratio defined")
+  if (!is.null(q) && (length(q) != length(alpha))) stop("q and alpha must have the same length")
+  if (!is.null(q_ratio) && (length(q_ratio) != length(alpha))) stop("q_ratio and alpha must have the same length")
   if (!is.null(gamma)){
     if (!is.function(gamma)) stop("gamma must be a function")
   } else{
     warning("No gamma passed. Using expected shortfall.")
-    gamma <- function(x){as.numeric((x >= alpha) / (1 - alpha))}
+    gamma <- function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))}
   }
 
   n <- length(x_data[, k])
@@ -138,35 +140,55 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   FY_inv_fn <- Vectorize(.inverse(FY_fn, lower_bracket, upper_bracket))
   
   # Calculate the risk measure and hara utility
-  if(is.null(q)){q <- .rm(FY_inv_fn(u), gamma(u), u) * q_ratio}
+  if(is.null(q)){
+    q = c()
+    for (i in 1:length(q_ratio)){
+      q <- append(q, .rm(FY_inv_fn(u), gamma(u, alpha[i]), u) * q_ratio[i])
+    }
+  }
   if(is.null(hu)){hu <- .hara_utility(a, b, eta, u, FY_inv_fn(u)) * hu_ratio}
   
   .objective_fn <- function(par){
     # Get ell = F_inv + sum(lam*gamma)
-    ell_fn <- function(x){FY_inv_fn(x) + par[2] * gamma(x)}
-    
+    ell_fn <- function(x){
+      ell <- FY_inv_fn(x)
+      for (i in 1:(length(par)-1)){
+        ell <- ell + par[i+1]*gamma(x, alpha[i])
+      }
+      return(ell)
+    }
     # Get isotonic projection of ell
     iso_g <- stats::isoreg(u, ell_fn(u))$yf
     
     # Get Utransform
     GY_inv <- .utransform(a, b, eta, u, iso_g, exp(par[1]), 600)
 
-    rm_stress <- .rm(GY_inv, gamma(u), u)
+    rm_stress <-c ()
+    for (i in 1:length(alpha)){
+      rm_stress <- append(rm_stress, .rm(GY_inv, gamma(u, alpha[i]), u))
+    }
     hara_stress <- .hara_utility(a, b, eta, u, GY_inv)
     
     # Return RM error
-    return(sqrt((q - rm_stress)^2 + (hara_stress - hu)^2))
+    return(sqrt(sum(q - rm_stress)^2 + (hara_stress - hu)^2))
   }
   
   # Run optimization
   # May require loop to have random reinitializations of init_lam if result of 
   # optim is not good enough
-  init_lam <- stats::rnorm(2)
+  max_length <- length(q)
+  init_lam <- stats::rnorm(1+max_length)
   res <- stats::optim(init_lam, .objective_fn, method = "Nelder-Mead")
   lam <- res$par
   
   # Get ell
-  ell_fn <- function(x){FY_inv_fn(x) + lam[2] * gamma(x)}
+  ell_fn <- function(x){
+    ell <- FY_inv_fn(x)
+    for (i in 1:(length(lam)-1)){
+      ell <- ell + lam[i+1]*gamma(x, alpha[i])
+    }
+    return(ell)
+  }
   ell <- ell_fn(u)
 
   # Get GY_inv, y_grid
@@ -185,44 +207,35 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   gY_fn <- function(x){1/dG_inv_fn(GY_fn(x))}
   
   # Create SWIMw object
-  max_length <- max(length(q), length(alpha))
-  type <- rep(list("RM"), length.out = max_length)
+  # Create SWIMw object
+  type <- list("HARA RM")
 
   # Get weights
   new_weights <- .get_weights(x_data[,k], y_grid, gY_fn, fY_fn, hY)
-  names(new_weights) <- paste("stress", 1:max_length)
+  names(new_weights) <- "stress 1"
   
   # achieved RM
   for(j in 1:max_length){
-    RM_achieved <- .rm(GY_inv_fn(u), gamma(u), u)
+    RM_achieved <-c()
+    for (i in 1:length(alpha)){
+      RM_achieved <- append(RM_achieved, .rm(GY_inv_fn(u), gamma(u, alpha[i]), u))
+    }
     # message if the achieved RM is different from the specified stress.
-    if(q - RM_achieved > 1e-4) {
-      message(paste("Stressed RM specified was", round(q, 4),", stressed RM achieved is", round(RM_achieved, 4)))
+    if(any(q - RM_achieved > 1e-4)) {
+      message(paste("Stressed RM specified was ", round(q, 4),", stressed RM achieved is ", round(RM_achieved, 4)))
       q <- RM_achieved
     }
     hara_achieved <- .hara_utility(a, b, eta, u, GY_inv)
     # message if the achieved hara utility is different from the specified utility.
     if(hu - hara_achieved > 1e-4) {
-      message(paste("Stressed HARA Utility specified was", round(hu, 4),", stressed HARA Utility achieved is", round(hara_achieved, 4)))
+      message(paste("Stressed HARA Utility specified was ", round(hu, 4),", stressed HARA Utility achieved is ", round(hara_achieved, 4)))
       hu <- hara_achieved
     }
   }
   
   # Get constraints
-  q <- rep(q, length.out = max_length)
-  hu <- rep(hu, length.out = max_length)
-  alpha <- rep(alpha, length.out = max_length)
-  a <- rep(a, length.out = max_length)
-  b <- rep(b, length.out = max_length)
-  eta <- rep(eta, length.out = max_length)
-  constr_HARA <- cbind("k" = rep(k, length.out = max_length), alpha, q, hu, a, b, eta)
-  
-  constr <- list()
-  for(i in 1:max_length){
-    temp_list <- list(as.list(constr_HARA[i, ]))
-    names(temp_list) <- paste("stress", i)
-    constr <- c(constr, temp_list)
-  }
+  constr <- list("stress 1" = list("k"=k, "q"=q, "alpha"=alpha, "hu"=hu, 
+                 "a"=a, "b"=b, "eta"=eta))
   
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam, "gamma"=gamma,
                    "new_weights" = new_weights, "str_fY" = gY_fn, "str_FY" = GY_fn,

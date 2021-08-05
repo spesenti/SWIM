@@ -27,7 +27,7 @@ correspond to random variables; OR\cr
 A \code{SWIMw} object, where \code{x} corresponds to the
 underlying data of the \code{SWIMw} object.}
 
-\item{alpha}{Numeric vector, the levels of the stressed risk measure (RM).\cr}
+\item{alpha}{Numeric, vector, the levels of the stressed risk measure (RM).\cr}
 
 \item{a}{Numeric vector, input to HARA utility function.\cr}
 
@@ -36,10 +36,10 @@ underlying data of the \code{SWIMw} object.}
 \item{eta}{Numeric vector, input to HARA utility function.\cr}
 
 \item{q_ratio}{Numeric, vector, the ratio of the stressed RM to
-the baseline RM.\cr}
+the baseline RM (must be same length as \code{alpha}).\cr}
 
 \item{q}{Numeric, vector, the stressed RM at level
-\code{alpha}.\cr}
+\code{alpha} (must be same length as \code{alpha}).\cr}
 
 \item{hu_ratio}{Numeric, vector, the ratio of the HARA utility to the 
 baseline hara utility.\cr}

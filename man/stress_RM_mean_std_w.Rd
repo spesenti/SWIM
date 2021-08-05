@@ -24,17 +24,17 @@ correspond to random variables; OR\cr
 A \code{SWIMw} object, where \code{x} corresponds to the
 underlying data of the \code{SWIMw} object.}
 
-\item{alpha}{Numeric vector, the levels of the stressed risk measure (RM).\cr}
+\item{alpha}{Numeric, vector, the levels of the stressed risk measure (RM).\cr}
 
 \item{new_mean}{Numeric, the stressed mean. \cr}
 
 \item{new_sd}{Numeric, the stressed standard deviation. \cr}
 
 \item{q_ratio}{Numeric, vector, the ratio of the stressed RM to
-the baseline RM.\cr}
+the baseline RM (must be same length as \code{alpha}).\cr}
 
 \item{q}{Numeric, vector, the stressed RM at level
-\code{alpha}.\cr}
+\code{alpha} (must be same length as \code{alpha}).\cr}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.}

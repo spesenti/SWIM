@@ -13,17 +13,17 @@
 #'     underlying data of the \code{SWIMw} object.
 #' @param k       Numeric, the column of \code{x} that is stressed
 #'     \code{(default = 1)}.\cr
-#' @param alpha   Numeric vector, the levels of the stressed risk measure (RM).\cr
+#' @param alpha   Numeric, vector, the levels of the stressed risk measure (RM).\cr
 #' @param q          Numeric, vector, the stressed RM at level
-#'                   \code{alpha}.\cr
+#'                   \code{alpha} (must be same length as \code{alpha}).\cr
 #' @param q_ratio    Numeric, vector, the ratio of the stressed RM to
-#'                   the baseline RM.\cr
+#'                   the baseline RM (must be same length as \code{alpha}).\cr
 #' @param normalise Logical. If true, values of the columns to be stressed are linearly
 #'                  normalised to the unit interval (\code{default = FALSE}).\cr
 #' @param h Function that defines the bandwidth used in KDE (\code{default = }
 #' Silverman's rule).\cr
-#' @param gamma Function that defines the gamma of the risk measure 
-#' (\code{default =} Expected Shortfall).
+#' @param gamma Function that defines the gamma of the risk measure which takes in 
+#' \code{alpha} as an argument (\code{default Expected Shortfall}).
 #'
 #' @details This function implements stresses on distortion risk measures.
 #'     Distortion risk measures are defined by a square-integrable function
@@ -82,19 +82,21 @@
 #'
 stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
                         normalise = FALSE, h = NULL, gamma = NULL){
-
+  
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
   if (!is.null(q) && !is.null(q_ratio)) stop("Only provide q or q_ratio")
   if (is.null(q) && is.null(q_ratio)) stop("no q or q_ratio defined")
+  if (!is.null(q) && (length(q) != length(alpha))) stop("q and alpha must have the same length")
+  if (!is.null(q_ratio) && (length(q_ratio) != length(alpha))) stop("q_ratio and alpha must have the same length")
   if (!is.null(gamma)){
     if (!is.function(gamma)) stop("gamma must be a function")
   } else{
     warning("No gamma passed. Using expected shortfall.")
-    gamma <- function(x){as.numeric((x >= alpha) / (1 - alpha))}
+    gamma <- function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))}
   }
-
+  
   n <- length(x_data[, k])
   
   # Create grid u in [0,1]
@@ -123,29 +125,51 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   
   
   # Calculate the risk measure
-  if(is.null(q)){q <- .rm(FY_inv_fn(u), gamma(u), u) * q_ratio}
+  if(is.null(q)){
+    q = c()
+    for (i in 1:length(q_ratio)){
+      q <- append(q, .rm(FY_inv_fn(u), gamma(u, alpha[i]), u) * q_ratio[i])
+    }
+  }
+  
   
   .objective_fn <- function(par){
     # Get ell = F_inv + sum(lam*gamma)
-    ell_fn <- function(x){FY_inv_fn(x) + par * gamma(x)}
+    ell_fn <- function(x){
+      ell <- FY_inv_fn(x)
+      for (i in 1:length(par)){
+        ell <- ell + par[i]*gamma(x, alpha[i])
+      }
+      return(ell)
+    }
     
     # Get isotonic projection of ell
     GY_inv <- stats::isoreg(u, ell_fn(u))$yf
-    rm_stress <- .rm(GY_inv, gamma(u), u)
     
     # Return RM error
-    return(sqrt((q - rm_stress)^2))
+    rm_stress <-c ()
+    for (i in 1:length(alpha)){
+      rm_stress <- append(rm_stress, .rm(GY_inv, gamma(u, alpha[i]), u))
+    }
+    return(sqrt(sum(q - rm_stress)^2))
   }
   
   # Run optimization
-  init_lam <- stats::rnorm(1)
+  max_length <- length(q)
+  init_lam <- stats::rnorm(max_length)
   res <- stats::optim(init_lam, .objective_fn, method = "Nelder-Mead")
   lam <- res$par
   
   # Get ell
-  ell_fn <- function(x){FY_inv_fn(x) + lam * gamma(x)}
+  ell_fn <- function(x){
+    ell <- FY_inv_fn(x)
+    for (i in 1:length(lam)){
+      ell <- ell + lam[i]*gamma(x, alpha[i])
+    }
+    return(ell)
+  }
   ell <- ell_fn(u)
-
+  
   # Get GY_inv, y_grid
   GY_inv <- stats::isoreg(u, ell)$yf
   left <- min(min(x_data[,k]), GY_inv[4])
@@ -153,7 +177,7 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   GY_inv_fn <- stats::approxfun(u, GY_inv, yleft=left-1e-5, yright=right+1e-5)
   y_grid <- seq(from=GY_inv[4], to=GY_inv[length(GY_inv)-3], length.out=500)
   
-
+  
   # Get GY and gY
   GY_fn <- Vectorize(.inverse(GY_inv_fn, lower=0, upper=1))
   
@@ -162,36 +186,29 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   gY_fn <- function(x){1/dG_inv_fn(GY_fn(x))}
   
   # Create SWIMw object
-  max_length <- max(length(q), length(alpha))
-  type <- rep(list("RM"), length.out = max_length)
-
+  type <- list("RM")
+  
   # Get weights
   new_weights <- .get_weights(x_data[,k], y_grid, gY_fn, fY_fn, hY)
-  names(new_weights) <- paste("stress", 1:max_length)
+  names(new_weights) <- "stress 1"
   
   # achieved RM
   for(j in 1:max_length){
-    RM_achieved <- .rm(GY_inv_fn(u), gamma(u), u)
+    RM_achieved <-c()
+    for (i in 1:length(alpha)){
+      RM_achieved <- append(RM_achieved, .rm(GY_inv_fn(u), gamma(u, alpha[i]), u))
+    }
     # message if the achieved RM is different from the specified stress.
-    if(q - RM_achieved > 1e-4) {
-      message(paste("Stressed RM specified was", round(q, 4),", stressed RM achieved is", round(RM_achieved, 4)))
+    if(any(q - RM_achieved > 1e-4)) {
+      message(paste("Stressed RM specified was ", round(q, 4),", stressed RM achieved is ", round(RM_achieved, 4)))
       q <- RM_achieved
     }
   }
   
   # Get constraints
-  q <- rep(q, length.out = max_length)
-  alpha <- rep(alpha, length.out = max_length)
-  constr_RM <- cbind("k" = rep(k, length.out = max_length), alpha, q)
-
-  constr <- list()
-  for(i in 1:max_length){
-    temp_list <- list(as.list(constr_RM[i, ]))
-    names(temp_list) <- paste("stress", i)
-    constr <- c(constr, temp_list)
-  }
+  constr <- list("stress 1" = list("k"=k, "q"=q, "alpha"=alpha))
   
-  my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam, "gamma" = gamma, 
+  my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam, "gamma" = gamma,
                    "new_weights" = new_weights, "str_fY" = gY_fn, "str_FY" = GY_fn,
                    "str_FY_inv" = GY_inv_fn, "type" = type, "specs" = constr)
   
