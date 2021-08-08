@@ -90,7 +90,7 @@
 #' @inherit SWIM references
 #' @export
 
-stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, names = NULL, ...){
+stress_moment <- function(x, f, k, m, normalise = TRUE, show = FALSE, names = NULL, ...){
   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (is.function(f)) f <- list(f)
@@ -205,7 +205,7 @@ stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, names = N
 #' @inherit SWIM references
 #' @export
 
-stress_mean <- function(x, k, new_means, normalise = FALSE, ...)
+stress_mean <- function(x, k, new_means, normalise = TRUE, ...)
 {
   means <- rep(list(function(x)x), length(k))
   res <- stress_moment(x = x, f = means, k = as.list(k), m = new_means, normalise = normalise, ...)
@@ -276,7 +276,7 @@ stress_mean <- function(x, k, new_means, normalise = FALSE, ...)
 
 # k, new_means, new_sd have to be the same length
 # one can only stress the mean and sd together.
-stress_mean_sd <- function(x, k, new_means, new_sd, normalise = FALSE, ...)
+stress_mean_sd <- function(x, k, new_means, new_sd, normalise = TRUE, ...)
 {
   means <- rep(list(function(x)x), length(k))
   second_moments <- rep(list(function(x)x ^ 2), length(k))

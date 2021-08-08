@@ -4,7 +4,7 @@
 \alias{stress_moment}
 \title{Stressing Moments}
 \usage{
-stress_moment(x, f, k, m, normalise = FALSE, show = FALSE, names = NULL, ...)
+stress_moment(x, f, k, m, normalise = TRUE, show = FALSE, names = NULL, ...)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame

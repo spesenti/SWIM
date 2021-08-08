@@ -168,11 +168,45 @@
    return(.specs)
   }
 
+  #' Rename Stressed Models
+  #'     
+  #' @details Get a new \code{SWIM} object with desired \code{names}
+  #' 
+  #' @param object A \code{SWIM} object
+  #' @param names   Character vector, the names of stressed models
+  #'  
+  #' @return An renamed object of class \code{SWIM} containing:
+  #'   \itemize{
+  #'     \item \code{x}, a data.frame containing the data;
+  #'     \item \code{new_weights}, a list, each component corresponds to 
+  #'    a different stress and is either a vector of scenario weights or a
+  #'    function, that applied to a column of \code{x}, generates the 
+  #'    vectors of scenario weights; 
+  #'     \item \code{type}, a list, each component corresponds to a 
+  #'    different stress and specifies the type of the stress;
+  #'     \item \code{specs}, a list, each component corresponds to 
+  #'    a different stress and contains a list with the specifications 
+  #'    of what has been stressed.
+  #'   }
+  #' See \code{\link{SWIM}} for details.
+  #' 
+  #' @examples
+  #' set.seed(0)
+  #' x <- as.data.frame(cbind(
+  #'   "normal" = rnorm(1000),
+  #'   "gamma" = rgamma(1000, shape = 2)))
+  #' res1 <- stress(type = "VaR", x = x,
+  #'   alpha = 0.9, q_ratio = 1.05)
+  #' rename_SWIM(res1, c("A", "B"))
+  #' 
+  #' @author Kent Wu 
+  #'
+  #' @export
   
-  renamed_model <- function(object, new_names){
+  rename_SWIM <- function(object, names){
      if (!is.SWIM(object)) stop("Object not of class SWIM")
-     names(object$new_weights) <- new_names
-     names(object$specs) <- new_names
+     names(object$new_weights) <- names
+     names(object$specs) <- names
      object <- object
      return(object)
   }
@@ -220,7 +254,7 @@
   x_name <- names(x$specs)
   y_name <- names(y$specs)
   
-  if (intersect(x_name, y_name) != 0) {
+  if (length(intersect(x_name, y_name)) >= 1) {
      names(new_weights) <- paste("stress", 1:m)
      names(specs) <- paste("stress", 1:m)
   }
