@@ -189,8 +189,11 @@
  # stress have the same Kolmogorov distance.
   .kolmogorov <- function(z, w){
     n <- length(z)
-    xw_cdf <- cumsum(w[order(z)])
-    kol_sense <- max(abs(xw_cdf - 1:n)) / n
+    # print(length(z))
+    # print(length(w))
+    # print(n)
+    xw_cdf <- cumsum(w[order(z)])[1:(n-1)]
+    kol_sense <- max(abs(xw_cdf - 1:(n-1))) / n
     return(kol_sense)
   }
 
@@ -198,11 +201,11 @@
  # x   vector
  # w   vector of weights
 
-  .wasserstein <- function(z, w){
+  .wasserstein <- function(z, w, p = 1){
     n <- length(z)
     x_sort <- sort(z)
     w_cdf <- cumsum(w[order(z)])[1:(n - 1)]
     x_diff <- diff(x_sort, lag = 1)
-    wasser_sens <- sum(abs(w_cdf - 1:(n-1)) * x_diff)/n
+    wasser_sens <- (sum(abs(w_cdf - 1:(n-1))^(p) * x_diff) / n)^(1/p)
     return(wasser_sens)
   }
