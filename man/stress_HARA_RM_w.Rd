@@ -118,7 +118,7 @@ res1 <- stress_wass(type = "HARA RM", x = x, a=1, b=5, eta=0.5, alpha=0.95,
 
 ## calling stress_RM_w directly
 ## stressing "gamma"
-res2 <- stress_HARA_RM_w(type = "HARA RM", x = x, a=1, b=5, eta=0.5, alpha=0.95,
+res2 <- stress_HARA_RM_w(x = x, a=1, b=5, eta=0.5, alpha=0.95,
  q_ratio=1.05, hu_ratio=1.05, k=2)
 summary(res2)
 

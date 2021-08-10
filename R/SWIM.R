@@ -60,8 +60,8 @@
  #'     ES jointly (\code{type = "VaR ES"})\cr
  #'       \code{\link{stress_mean}}\tab for stressing means
  #'     (\code{type = "mean"}) \cr
- #'       \code{\link{stress_mean_sd}} \tab for stressing means and
- #'     standard deviations (\code{type = "mean sd"})\cr
+ #'       \code{\link{stress_mean_std}} \tab for stressing means and
+ #'     standard deviations (\code{type = "mean std"})\cr
  #'       \code{\link{stress_moment}} \tab for stressing moments
  #'     (\code{type = "moment"})\cr
  #'       \code{\link{stress_prob}} \tab for stressing the probabilities
