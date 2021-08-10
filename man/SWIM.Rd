@@ -67,7 +67,7 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
     ES jointly (\code{type = "VaR ES"})\cr
       \code{\link{stress_mean}}\tab for stressing means
     (\code{type = "mean"}) \cr
-      \code{\link{stress_mean_std}} \tab for stressing means and
+      \code{\link{stress_mean_sd}} \tab for stressing means and
     standard deviations (\code{type = "mean std"})\cr
       \code{\link{stress_moment}} \tab for stressing moments
     (\code{type = "moment"})\cr
@@ -87,9 +87,9 @@ The \code{SWIM} (Scenario Weights for Importance Measurement)
     using \code{type}\cr
       \code{\link{stress_RM_w}} \tab for stressing the distortion risk measure (RM)
     (\code{type = "RM"})\cr
-      \code{\link{stress_mean_sd_w}} \tab for stressing mean and
+      \code{\link{stress_mean_std_w}} \tab for stressing mean and
     standard deviation (\code{type = "mean sd"})\cr
-      \code{\link{stress_RM_mean_sd_w}} \tab for stressing the RM, mean and 
+      \code{\link{stress_RM_mean_std_w}} \tab for stressing the RM, mean and 
       standard deviation (\code{type = "RM mean sd"})\cr
       \code{\link{stress_HARA_RM_w}} \tab for stressing the HARA utility and RM
     (\code{type = "HARA RM"})
