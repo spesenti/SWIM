@@ -94,6 +94,7 @@ This function implements stresses on distortion risk measures.
     \deqn{ES_{alpha} = 1 / (1 - alpha) * \int_{alpha}^1 VaR_u d u.}
 }
 \examples{
+\donttest{
 set.seed(0)
 x <- as.data.frame(cbind(
   "normal" = rnorm(1000),
@@ -107,6 +108,7 @@ res1 <- stress_wass(type = "RM mean sd", x = x,
 res2 <- stress_RM_mean_std_w(x = x, alpha = 0.9,
   q_ratio = 1.05, new_mean=2.2, new_sd=1.5, k = 2)
 summary(res2)
+}
 
 }
 \references{

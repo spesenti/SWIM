@@ -108,6 +108,7 @@ This function implements stresses on distortion risk measures.
     \deqn{u(x) = \frac{1-eta}{eta}(\frac{ax}{1 - eta} + b)^eta}.
 }
 \examples{
+\donttest{
 set.seed(0)
 x <- as.data.frame(cbind(
   "normal" = rnorm(1000),
@@ -121,6 +122,7 @@ res1 <- stress_wass(type = "HARA RM", x = x, a=1, b=5, eta=0.5, alpha=0.95,
 res2 <- stress_HARA_RM_w(x = x, a=1, b=5, eta=0.5, alpha=0.95,
  q_ratio=1.05, hu_ratio=1.05, k=2)
 summary(res2)
+}
 
 }
 \references{

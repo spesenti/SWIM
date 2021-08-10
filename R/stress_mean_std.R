@@ -43,19 +43,21 @@
 #' @author Zhuomin Mao
 #'
 #' @examples
+#' \donttest{
 #' set.seed(0)
 #' x <- as.data.frame(cbind(
 #'   "normal" = rnorm(1000),
 #'   "gamma" = rgamma(1000, shape = 2)))
 #' res1 <- stress_wass(type = "mean sd", x = x, k = 1,
-#'   alpha = 0.9, new_mean=1, new_sd=0.9)
+#'   new_mean=1, new_sd=0.9)
 #'   summary(res1)
 #'
 #' ## calling stress_RM_w directly
 #' ## stressing "gamma"
-#' res2 <- stress_mean_std_w(x = x, alpha = 0.9,
+#' res2 <- stress_mean_std_w(x = x, 
 #'   new_mean=2.2, new_sd=1.5, k = 2)
 #' summary(res2)
+#' }
 #'
 #' @family stress functions
 #' @inherit SWIM references

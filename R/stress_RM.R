@@ -62,6 +62,7 @@
 #' @author Zhuomin Mao
 #'
 #' @examples
+#' \donttest{
 #' set.seed(0)
 #' x <- as.data.frame(cbind(
 #'   "normal" = rnorm(1000),
@@ -75,6 +76,7 @@
 #' res2 <- stress_RM_w(x = x, alpha = 0.9,
 #'   q_ratio = 1.05, k = 2)
 #' summary(res2)
+#' }
 #'
 #' @family stress functions
 #' @inherit SWIM references
