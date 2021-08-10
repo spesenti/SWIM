@@ -8,6 +8,8 @@
 #'                (\code{default = 0.95}).
 #' @param wCol    Numeric, the column of the scenario weights
 #'                of the \code{object} (\code{default = 1}).
+#' @param gamma Function that defines the gamma of the risk measure. If null,
+#' the Expected Shortfall (ES) will be used.\cr
 #'
 #' @return \code{VaR_stressed}: Returns a matrix with the empirical or KDE VaR's
 #'     at level \code{alpha} of

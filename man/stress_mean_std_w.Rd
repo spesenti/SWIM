@@ -25,9 +25,6 @@ normalised to the unit interval.\cr}
 
 \item{h}{Function that defines the bandwidth used in KDEs. If null,
 Silverman's rule will be used.\cr}
-
-\item{gamma}{Function that defines the gamma of the risk measure. If null,
-the Expected Shortfall (ES) will be used.\cr}
 }
 \value{
 A \code{SWIMw} object containing:

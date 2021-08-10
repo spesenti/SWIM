@@ -31,6 +31,9 @@ of the \code{object} (\code{default = 1}).}
 
 \item{base}{Logical, if \code{TRUE}, statistics under the baseline 
 are also returned (\code{default = "FALSE"}).}
+
+\item{gamma}{Function that defines the gamma of the risk measure. If null,
+the Expected Shortfall (ES) will be used.\cr}
 }
 \value{
 \code{ES_stressed}: Returns a matrix with the empirical or KDE 
