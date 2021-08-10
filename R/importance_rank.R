@@ -47,7 +47,6 @@
    if (anyNA(object$x)) warning("x contains NA")
    if (missing(type)) type <- "all"
    if (is.SWIM(object) && type == "Kolmogorov") stop("The Kolmogorov distance is the same for all model components.")
-   if (is.SWIMw(object) && type == "Wasserstein") stop("The Wasserstein distance is the same for all model components.")
    if (!is.null(s)){
       if (sapply(s, is.function)) stop("s must be a function")
    }

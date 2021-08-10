@@ -111,16 +111,27 @@ stress_mean_std_w <- function(x, new_mean, new_sd, k = 1,
   }
   
   # Run optimization
-  init_lam <- stats::rnorm(2)
-  res <- stats::optim(init_lam, .objective_fn, method = "Nelder-Mead")
-  lam <- res$par
-  
-  # Get ell
-  ell_fn <- function(x){(FY_inv_fn(x) + lam[1] + lam[2]*new_mean)/(1 + lam[2])}
-  ell <- ell_fn(u)
+  for(i in range(1:5)){
+    init_lam <- stats::rnorm(2)
+    res <- stats::optim(init_lam, .objective_fn, method = "Nelder-Mead")
+    lam <- res$par
+    
+    # Get ell
+    ell_fn <- function(x){(FY_inv_fn(x) + lam[1] + lam[2]*new_mean)/(1 + lam[2])}
+    ell <- ell_fn(u)
+    
+    # Get GY_inv
+    GY_inv <- stats::isoreg(u, ell)$yf
+    
+    # achieved mean and std
+    mean_achieved <- .integrate(GY_inv, u)
+    sd_achieved <- sqrt(.integrate((GY_inv - mean_achieved)^2, u))
+    if((mean_achieved - new_mean < 1e-4) && (sd_achieved - new_sd < 1e-4)){
+      break
+    }
+  }
 
-  # Get GY_inv, y_grid
-  GY_inv <- stats::isoreg(u, ell)$yf
+  # Get GY_inv_fn, y_grid
   left <- min(min(x_data[,k]), GY_inv[4])
   right <- max(max(x_data[,k]), GY_inv[length(GY_inv)-3])
   GY_inv_fn <- stats::approxfun(u, GY_inv, yleft=left-1e-5, yright=right+1e-5)
@@ -142,19 +153,17 @@ stress_mean_std_w <- function(x, new_mean, new_sd, k = 1,
   names(new_weights) <- paste("stress", 1:max_length)
   
   # achieved mean and std
-  for(j in 1:max_length){
-    mean_achieved <- .integrate(GY_inv, u)
-    sd_achieved <- sqrt(.integrate((GY_inv - mean_achieved)^2, u))
-    
-    # message if the achieved mean or std is different from the specified stress.
-    if(mean_achieved - new_mean > 1e-4) {
-      message(paste("Stressed mean specified was", round(new_mean, 4),", stressed mean achieved is", round(mean_achieved, 4)))
-      new_mean <- mean_achieved
-    }
-    if(sd_achieved - new_sd > 1e-4) {
-      message(paste("Stressed std specified was", round(new_sd, 4),", stressed std achieved is", round(sd_achieved, 4)))
-      new_sd <- sd_achieved
-    }
+  mean_achieved <- .integrate(GY_inv, u)
+  sd_achieved <- sqrt(.integrate((GY_inv - mean_achieved)^2, u))
+  
+  # message if the achieved mean or std is different from the specified stress.
+  if(mean_achieved - new_mean > 1e-4) {
+    message(paste("Stressed mean specified was", round(new_mean, 4),", stressed mean achieved is", round(mean_achieved, 4)))
+    new_mean <- mean_achieved
+  }
+  if(sd_achieved - new_sd > 1e-4) {
+    message(paste("Stressed std specified was", round(new_sd, 4),", stressed std achieved is", round(sd_achieved, 4)))
+    new_sd <- sd_achieved
   }
   
   # Get constraints
@@ -198,7 +207,7 @@ stress_mean_std_w <- function(x, new_mean, new_sd, k = 1,
   g_val <- g_val/.integrate(g_val, y_grid)
   f_val <- fY_fn(y_grid)/.integrate(fY_fn(y_grid), y_grid)
   dQ_dP <- g_val / f_val
-  
+
   # Get weights
   w <- vector()
   for(i in 1:length(y_data)){
