@@ -8,8 +8,11 @@
 #'                (\code{default = 0.95}).
 #' @param wCol    Numeric, the column of the scenario weights
 #'                of the \code{object} (\code{default = 1}).
+#' @param gamma Function that defines the gamma of the risk measure. If null,
+#' the Expected Shortfall (ES) will be used.\cr
 #'
-#' @return \code{VaR_stressed}: Returns a matrix with the empirical VaR's at level \code{alpha} of
+#' @return \code{VaR_stressed}: Returns a matrix with the empirical or KDE VaR's
+#'     at level \code{alpha} of
 #'     model components specified in \code{xCol}, under the scenario weights
 #'     \code{wCol}.
 #'
@@ -24,11 +27,11 @@
 #'      the function \code{quantile_stressed} calculates quantiles of model
 #'      components with different interpolations.
 #'
-#' @author Silvana M. Pesenti
+#' @author Silvana M. Pesenti, Zhuomin Mao
 #' @describeIn VaR_stressed Value-at-Risk of a stressed model.
 #'
 #' @seealso See \code{quantile_stressed} for quantiles other than the
-#'     empirical quantiles and \code{cdf} for the empirical distribution
+#'     empirical quantiles and \code{cdf} for the empirical or KDE distribution
 #'     function of a stressed model.
 #'
 #' @examples
@@ -56,16 +59,23 @@
 #' @export
 
   VaR_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FALSE) {
-   if (!is.SWIM(object)) stop("Wrong object")
+   if (!is.SWIM(object) && !is.SWIMw(object)) stop("Wrong object")
    if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
 
-   VaR <- quantile_stressed(object, probs = alpha, xCol = xCol, wCol = wCol, type = "i/n")
-   if (base == TRUE) {
-      VaR_base <- as.matrix(apply(X = as.matrix(get_data(object = object, xCol = xCol)), MARGIN = 2,
-                        FUN = stats::quantile, probs = alpha, type= 1))
-      colnames(VaR_base) <- paste("base", colnames(get_data(object = object, xCol = xCol)))
-      VaR <- cbind(VaR, VaR_base)
+   if (is.SWIM(object)){
+      # K-L Divergence
+      VaR <- quantile_stressed(object, probs = alpha, xCol = xCol, wCol = wCol, type = "i/n")
+      if (base == TRUE) {
+         VaR_base <- as.matrix(apply(X = as.matrix(get_data(object = object, xCol = xCol)), MARGIN = 2,
+                                     FUN = stats::quantile, probs = alpha, type= 1))
+         colnames(VaR_base) <- paste("base", colnames(get_data(object = object, xCol = xCol)))
+         VaR <- cbind(VaR, VaR_base)
+      } 
+   } else {
+      # Wasserstein Distance
+      VaR <- quantile_stressed(object, probs = alpha, xCol = xCol, wCol = wCol, type = "quantile", base=base)
    }
+
    return(VaR)
 }
 

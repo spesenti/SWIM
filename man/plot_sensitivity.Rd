@@ -8,14 +8,15 @@ plot_sensitivity(
   object,
   xCol = "all",
   wCol = "all",
-  type = c("Gamma", "Kolmogorov", "Wasserstein"),
+  type = c("Gamma", "Kolmogorov", "Wasserstein", "reverse"),
   f = NULL,
   k = NULL,
+  s = NULL,
   displ = TRUE
 )
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
 \item{xCol}{Numeric or character vector, (names of) the columns
 of the underlying data of the \code{object}
@@ -27,7 +28,7 @@ of the \code{object} corresponding to different
 stresses (\code{default = "all"}).}
 
 \item{type}{Character, one of \code{"Gamma", "Kolmogorov",
-"Wasserstein", "all"}.}
+"Wasserstein", "reverse", "all"}.}
 
 \item{f}{A function, or list of functions, that, applied to
 \code{x}, constitute the transformation of the data
@@ -39,6 +40,10 @@ in \code{f} operates on.\cr
 When \code{f} is a list, \code{k[[i]]} corresponds
 to the input variables of \code{f[[i]]}.}
 
+\item{s}{A function that, applied to \code{x}, defines the reverse
+sensitivity measure. If \code{type = "reverse"} and 
+\code{s = NULL}, defaults to \code{type = "Gamma"}.}
+
 \item{displ}{Logical, if \code{TRUE} the plot is displayed,
 otherwise the data.frame for customised plotting with
 \code{ggplot} is returned (\code{default = TRUE}).}
@@ -46,7 +51,6 @@ otherwise the data.frame for customised plotting with
 \value{
 If \code{displ = TRUE}, a plot displaying the sensitivity
     measures of the stochastic model under the scenario weights.
-
     If \code{displ = FALSE}, a data.frame for customised plotting with
     \code{ggplot}. The data.frame
     contains the columns: \code{stress} (the stresses), \code{type}
@@ -66,8 +70,8 @@ For the definition of the sensitivity
     measures (\code{type}), see \code{\link{sensitivity}}.
 
     Note that the Kolmogorov distance is the same for all inputs under
-    the same stress. Thus, it should only be used to compare different
-    stresses, not individual components.
+    the same stress for a SWIM object. Thus, it should only be used to 
+    compare different stresses, not individual components.
 }
 \examples{
 ## Consider the portfolio Y = X1 + X2 + X3 + X4 + X5,
@@ -101,4 +105,7 @@ See \code{\link{sensitivity}} for the values of the
     sensitivity measures of a stressed model and
     \code{\link{importance_rank}} for ranking of random
     variables according to their sensitivities.
+}
+\author{
+Silvana M. Pesenti
 }

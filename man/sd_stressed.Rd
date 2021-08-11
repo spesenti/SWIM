@@ -10,7 +10,7 @@ sd_stressed(object, xCol = "all", wCol = "all", base = FALSE)
 var_stressed(object, xCol = "all", wCol = "all", base = FALSE)
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
 \item{xCol}{Vector, or character vector,(names of) the columns
 of the underlying data of the \code{object}

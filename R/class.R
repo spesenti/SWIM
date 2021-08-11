@@ -3,14 +3,14 @@
                        type = "type", specs = "specs"){
    mymodel <- list(
    x = x, # vector, matrix or dataframe containing the underlying data
-   new_weights = new_weights, # list of eithter functions, that applied 
+   new_weights = new_weights, # list of either functions, that applied 
       # to the kth column of x providing the scenario weights; OR a 
-      # vector containting the new_weights
+      # vector containing the new_weights
    type  = type, # a list of characters each corresponding to a stress
       # one of ("VaR", "VaR ES", "prob", "moment", "mean", "mean sd", "user")
    specs = specs # a list with elements called "stress i".
       #
-      # all input varaibles of the stress and constraints according
+      # all input variables of the stress and constraints according
       # to the stress. For example a stress on 
       # the VaR contains: k, alpha, q
    )   
@@ -22,14 +22,45 @@
   
   is.SWIM <- function(object) inherits(object, "SWIM")
 
+ # Defines the class "SWIMw"
+  SWIMw <- function(x = "x", h = "h", u="u", lam = "lam", new_weights = "new_weights", 
+                    str_fY = 'str_fY', str_FY = 'str_FY', str_FY_inv = 'str_FY_inv',
+                    gamma = 'gamma', type = "type", specs = "specs"){
+     mymodel <- list(
+        x = x, # vector, matrix or dataframe containing the underlying data
+        h = h, # function, that applied to x, provide the bandwidths for KDE estimation
+        u = u, # vector containing the gridspace on [0,1]
+        lam = lam, # optimized lambda value(s)
+        str_fY = str_fY, # function, that applied to the stressed column, provides the density
+        str_FY = str_FY, # function, when applied to the stressed column, provides the cdf
+        str_FY_inv = str_FY_inv, # function, when applied to the stressed column, provides the quantile
+        gamma = gamma, # function that provides gamma used to calculate the risk measure (if applicable);
+        new_weights = new_weights, # list of either functions, that applied 
+        # to the k-th column of x providing the scenario weights; OR a 
+        # vector containing the new_weights
+        type  = type, # a list of characters each corresponding to a stress
+        # one of ("RM", "mean sd", "RM mean sd", "HARA RM")
+        specs = specs # a list with elements called "stress i".
+        #
+        # all input variables of the stress and constraints according
+        # to the stress. For example a stress on 
+        # the RM contains: k, alpha, q
+     )   
+     ## Name of the class
+     attr(mymodel, "class") <- "SWIMw"
+     return(mymodel)
+  }
+  
+  is.SWIMw <- function(object) inherits(object, "SWIMw")
+  
  #' Extracting from a Stressed Model
  #'
  #' Extracting the data (realisations of the stochastic model), the 
  #'     scenario weights, the functions generating the scenario weights, 
  #'     or the specifications of the stress from an object of class 
- #'     \code{SWIM}. 
+ #'     \code{SWIM} or \code{SWIMw}. 
  #' 
- #' @param object    A \code{SWIM} object.
+ #' @param object    A \code{SWIM} or \code{SWIMw} object.
  #' @inheritParams   summary.SWIM
  #'  
  #' @return \code{get_data}: A data.frame containing the realisations of 
@@ -42,7 +73,7 @@
  #' @export
 
   get_data <- function(object, xCol = "all"){
-   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
    if (length(xCol) ==1 && xCol == "all") {
       xdata <- as.matrix(object$x[, 1:ncol(object$x)])
       if(is.character(colnames(object$x)) | is.null(colnames(object$x))) colnames(xdata) <- colnames(object$x)
@@ -98,7 +129,7 @@
  #' @export
 
   get_weights <- function(object){
-   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
    x_data <- get_data(object)
    m <- length(object$type)
    new_weights <- matrix(0, nrow = nrow(x_data), ncol = m)
@@ -126,7 +157,7 @@
  #' @export
 
   get_weightsfun <- function(object){
-   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
    if (!is.function(object$new_weights[[1]]))
       stop("New_weights is not a function, use get_weights() instead.") 
    return(object$new_weights)
@@ -142,19 +173,34 @@
  #' @export
 
   get_specs <- function(object){
-   if (!is.SWIM(object)) stop("Object not of class SWIM")
+   if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw.")
    .type <- object$type 
    .specs <- data.frame()
-   for (i in 1:length(.type)){  
-   if (.type[i] %in% c("VaR", "VaR ES", "user", "prob")){
-      if (.type[[i]] == "prob" && length(object$specs[[i]]$prob) > 1){
-      .specs <- plyr::rbind.fill(.specs, as.data.frame(t(unlist(object$specs[[i]]))))       
-      } else {
-      .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]], stringsAsFactors = FALSE)) 
-      }} else if (.type[i] %in% c("moment", "mean", "mean sd")){
-      k <- paste(object$specs[[i]]$k, collapse = " ")
-      .specs <- plyr::rbind.fill(.specs, as.data.frame(k))
-   } else stop("Object contains wrong type.")}
+   if (is.SWIM(object)){
+     for (i in 1:length(.type)){  
+       if (.type[i] %in% c("VaR", "VaR ES", "user", "prob")){
+         if (.type[[i]] == "prob" && length(object$specs[[i]]$prob) > 1){
+           .specs <- plyr::rbind.fill(.specs, as.data.frame(t(unlist(object$specs[[i]]))))       
+         } else {
+           .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]], stringsAsFactors = FALSE)) 
+         }
+       } else if (.type[i] %in% c("moment", "mean", "mean sd")){
+         k <- paste(object$specs[[i]]$k, collapse = " ")
+         .specs <- plyr::rbind.fill(.specs, as.data.frame(k))
+       } else stop("Object contains wrong type.")
+    }
+  } else {
+    # Wasserstein
+    for (i in 1:length(.type)){
+     if (.type[i] %in% c("RM", "RM mean sd", "HARA RM")){
+       .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]], stringsAsFactors = FALSE))
+     } else if (.type[i] %in% c("mean sd")){
+       k <- paste(object$specs[[i]]$k, collapse = " ")
+       .specs <- plyr::rbind.fill(.specs, as.data.frame(k))
+    } else stop("Object contains wrong type.")
+    }
+  }
+
    .type <- t(as.data.frame(.type))
    .specs <- cbind(.type, .specs)
    colnames(.specs)[1] <- "type"
@@ -206,4 +252,59 @@
   names(specs) <- paste("stress", 1:m)
   xy <- SWIM("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs)
   return(xy)
+  }
+
+  #' Merging Two Stressed Models
+  #'
+  #' This function is a \code{method} for an object of class 
+  #'     \code{SWIMw}.
+  #'     
+  #' @details Merges two objects of class \code{SWIMw}, that 
+  #'     are based on the same data. \cr 
+  #' 
+  #' @param x,y    Objects of class \code{SWIMw}.
+  #' @param ...    Additional arguments will be ignored.
+  #'  
+  #' @return A \code{SWIMw} object containing:
+  #'     \itemize{
+  #'       \item \code{x}, a data.frame containing the data;
+  #'       \item \code{h}, bandwidths;
+  #'       \item \code{u}, vector containing the gridspace on [0, 1]
+  #'       \item \code{lam}, vector containing the lambda's of the optimized model
+  #'       \item \code{str_fY}, function defining the densities of the stressed component;
+  #'       \item \code{str_FY}, function defining the distribution of the stressed component;
+  #'       \item \code{str_FY_inv}, function defining the quantiles of the stressed component;
+  #'       \item \code{gamma}, function defining the risk measure;
+  #'       \item \code{new_weights}, a list of functions, that applied to
+  #'   the \code{k}th column of \code{x}, generates the vectors of scenario
+  #'   weights. Each component corresponds to a different stress;
+  #'      \item \code{type}, specifies the stress type
+  #'      \item \code{specs}, a list, each component corresponds to
+  #'    a different stressand contains a list with the specifications
+  #'   of what has been stressed.
+  #'     }
+  #'     See \code{\link{SWIM}} for details.
+  #' @author Zhuomin Mao
+  #'
+  #' @export  
+  merge.SWIMw <- function(x, y, ...){
+    if (!is.SWIMw(x) | !is.SWIMw(y)) stop("x and y are not of class SWIMw.")
+    if (!identical(get_data(x), get_data(y))) stop("x and y are not based on the same data")
+    type <- c(x$type, y$type)
+    h <- c(x$h, y$h)
+    u <- c(x$u, y$u)
+    lam <- c(x$lam, y$lam)
+    str_fY <- c(x$str_fY, y$str_fY)
+    str_FY <- c(x$str_FY, y$str_FY)
+    str_FY_inv <- c(x$str_FY_inv, y$str_FY_inv)
+    gamma <- c(x$gamma, y$gamma)
+    m <- length(type)
+    new_weights <- c(x$new_weights, y$new_weights)
+    names(new_weights) <- paste("stress", 1:m)
+    specs <- c(x$specs, y$specs)
+    names(specs) <- paste("stress", 1:m)
+    xy <- SWIMw("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs,
+                "str_fY" = str_fY, "str_FY" = str_FY, "str_FY_inv" = str_FY_inv,
+                "u" = u, "h" = h, "lam"=lam, "gamma"=gamma)
+    return(xy)
   }

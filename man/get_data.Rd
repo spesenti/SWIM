@@ -16,7 +16,7 @@ get_weightsfun(object)
 get_specs(object)
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
 \item{xCol}{Numeric or character vector, (names of) the columns of 
 the underlying data 
@@ -47,7 +47,7 @@ of the \code{object} (\code{default = "all"}).}
 Extracting the data (realisations of the stochastic model), the 
     scenario weights, the functions generating the scenario weights, 
     or the specifications of the stress from an object of class 
-    \code{SWIM}.
+    \code{SWIM} or \code{SWIMw}.
 }
 \section{Functions}{
 \itemize{
