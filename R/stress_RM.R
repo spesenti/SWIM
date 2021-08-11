@@ -62,7 +62,7 @@
 #' @author Zhuomin Mao
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' set.seed(0)
 #' x <- as.data.frame(cbind(
 #'   "normal" = rnorm(1000),

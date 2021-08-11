@@ -108,7 +108,7 @@ This function implements stresses on distortion risk measures.
     \deqn{u(x) = \frac{1-eta}{eta}(\frac{ax}{1 - eta} + b)^eta}.
 }
 \examples{
-\donttest{
+\dontrun{
 set.seed(0)
 x <- as.data.frame(cbind(
   "normal" = rnorm(1000),

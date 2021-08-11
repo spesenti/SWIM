@@ -87,7 +87,7 @@ This function implements stresses on distortion risk measures.
     \deqn{ES_{alpha} = 1 / (1 - alpha) * \int_{alpha}^1 VaR_u d u.}
 }
 \examples{
-\donttest{
+\dontrun{
 set.seed(0)
 x <- as.data.frame(cbind(
   "normal" = rnorm(1000),

@@ -56,7 +56,7 @@ Provides weights on simulated scenarios from a baseline stochastic
     baseline model.
 }
 \examples{
-\donttest{
+\dontrun{
 set.seed(0)
 x <- as.data.frame(cbind(
   "normal" = rnorm(1000),
