@@ -4,7 +4,17 @@
 \alias{stress_moment}
 \title{Stressing Moments}
 \usage{
-stress_moment(x, f, k, m, normalise = TRUE, show = FALSE, names = NULL, ...)
+stress_moment(
+  x,
+  f,
+  k,
+  m,
+  normalise = TRUE,
+  show = FALSE,
+  names = NULL,
+  log = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame
@@ -33,6 +43,8 @@ scaled to the unit interval.}
 \code{\link[nleqslv]{nleqslv}}.}
 
 \item{names}{Character vector, the names of stressed models}
+
+\item{log}{Boolean, the option to print weights' statistics}
 
 \item{...}{Additional arguments to be passed to
 \code{\link[nleqslv]{nleqslv}}.}

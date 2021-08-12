@@ -197,7 +197,7 @@
   #'   "gamma" = rgamma(1000, shape = 2)))
   #' res1 <- stress(type = "VaR", x = x,
   #'   alpha = 0.9, q_ratio = 1.05)
-  #' rename_SWIM(res1, c("A", "B"))
+  #' rename_SWIM(res1, "A")
   #' 
   #' @author Kent Wu 
   #'

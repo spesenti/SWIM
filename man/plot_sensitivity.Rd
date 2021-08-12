@@ -11,7 +11,8 @@ plot_sensitivity(
   type = c("Gamma", "Kolmogorov", "Wasserstein"),
   f = NULL,
   k = NULL,
-  displ = TRUE
+  displ = TRUE,
+  p = 1
 )
 }
 \arguments{
@@ -42,6 +43,8 @@ to the input variables of \code{f[[i]]}.}
 \item{displ}{Logical, if \code{TRUE} the plot is displayed,
 otherwise the data.frame for customised plotting with
 \code{ggplot} is returned (\code{default = TRUE}).}
+
+\item{p}{Numeric, the p-th moment of Wasserstein distance.}
 }
 \value{
 If \code{displ = TRUE}, a plot displaying the sensitivity

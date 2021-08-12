@@ -41,3 +41,22 @@
    if (type == "user") SWIM <- stress_user(...)
    return(SWIM)
   }
+  
+  
+  .gini <- function(w) mean(outer(X = w, Y = w, FUN = function(x, y)abs(x - y))) / 2
+  .entropy <- function(freqs) -sum(freqs * log2(freqs))
+  
+  .log <- function(SWIM){
+     table <- list()
+     for (i in 1:ncol(get_weights(SWIM))){
+        w <- get_weights(SWIM)[, i]
+        freqs <- w / length(w)
+        sub_table <- t(matrix(c(min(w), max(w), stats::sd(w), .gini(w), .entropy(freqs))))
+        colnames(sub_table) <- c("min", "max", "sd", "gini coef", "entropy")
+        name <- names(SWIM$specs)[i]
+        table[[name]] <- sub_table
+     }
+     print(table)
+  }
+     
+  

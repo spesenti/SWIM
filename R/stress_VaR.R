@@ -24,6 +24,7 @@
  #'                If \code{alpha} and \code{q_ratio} are vectors, they
  #'                must have the same length.
  #' @param names   Character vector, the names of stressed models
+ #' @param log     Boolean, the option to print weights' statistics
  #'
  #' @return A \code{SWIM} object containing:
  #'     \itemize{
@@ -74,7 +75,7 @@
  #' @inherit SWIM references
  #' @export
  #'
-  stress_VaR <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1, names = NULL){
+  stress_VaR <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1, names = NULL, log = FALSE){
    if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
    if (anyNA(x_data)) warning("x contains NA")
    if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
@@ -140,6 +141,11 @@
     }
 
     if (is.SWIM(x)) my_list <- merge(x, my_list)
+    
+    if (log) {
+      .log(my_list)
+    }
+  
     return(my_list)
   }
 

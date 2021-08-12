@@ -13,7 +13,8 @@ stress_VaR_ES(
   s = NULL,
   k = 1,
   normalise = FALSE,
-  names = NULL
+  names = NULL,
+  log = FALSE
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ the same length.}
 normalised to the unit interval.}
 
 \item{names}{Character vector, the names of stressed models}
+
+\item{log}{Boolean, the option to print weights' statistics}
 }
 \value{
 A \code{SWIM} object containing:

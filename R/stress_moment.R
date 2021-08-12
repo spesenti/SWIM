@@ -90,7 +90,7 @@
 #' @inherit SWIM references
 #' @export
 
-stress_moment <- function(x, f, k, m, normalise = TRUE, show = FALSE, names = NULL, ...){
+stress_moment <- function(x, f, k, m, normalise = TRUE, show = FALSE, names = NULL, log = FALSE, ...){
   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (is.function(f)) f <- list(f)
@@ -143,6 +143,11 @@ stress_moment <- function(x, f, k, m, normalise = TRUE, show = FALSE, names = NU
   rel.err <- (err / m) * (m != 0)
   outcome <- data.frame(cols = as.character(k), required_moment = m, achieved_moment = m.ac, abs_error = err, rel_error = rel.err)
   print(outcome)
+  
+  if (log) {
+    .log(my_list)
+  }
+  
   return(my_list)
   }
 

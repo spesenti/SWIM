@@ -74,7 +74,7 @@
 #' @export
 
 stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
-                          s_ratio = NULL, q = NULL, s = NULL, k = 1, normalise = FALSE, names = NULL){
+                          s_ratio = NULL, q = NULL, s = NULL, k = 1, normalise = FALSE, names = NULL, log = FALSE){
 
   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -155,6 +155,11 @@ stress_VaR_ES <- function(x, alpha, q_ratio = NULL,
   }
   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr_ES)
   if (is.SWIM(x)) my_list <- merge(x, my_list)
+  
+  if (log) {
+    .log(my_list)
+  }
+  
   return(my_list)
 }
 

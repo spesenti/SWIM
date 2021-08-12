@@ -10,7 +10,8 @@ sensitivity(
   wCol = "all",
   type = c("Gamma", "Kolmogorov", "Wasserstein", "all"),
   f = NULL,
-  k = NULL
+  k = NULL,
+  p = 1
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ indicating which columns of \code{x} each function
 in \code{f} operates on.\cr
 When \code{f} is a list, \code{k[[i]]} corresponds
 to the input variables of \code{f[[i]]}.}
+
+\item{p}{Numeric, the p-th moment of Wasserstein distance.}
 }
 \value{
 A data.frame containing the sensitivity measures of the

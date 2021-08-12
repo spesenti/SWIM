@@ -39,7 +39,7 @@
 #' @inherit SWIM references
 #' @export
 
-stress_user <- function(x, new_weights = NULL, new_weightsfun = NULL, k = 1, names = NULL){
+stress_user <- function(x, new_weights = NULL, new_weightsfun = NULL, k = 1, names = NULL, log = FALSE){
   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (is.null(colnames(x_data))) colnames(x_data) <- paste("X", 1:ncol(x_data), sep = "")
@@ -80,5 +80,9 @@ stress_user <- function(x, new_weights = NULL, new_weightsfun = NULL, k = 1, nam
   names(constr) <- temp
   my_list <- SWIM("x" = x_data, "new_weights" = nweights, "type" = type, "specs" = constr)
   if (is.SWIM(x)) my_list <- merge(x, my_list)
+  
+  if (log) {
+    .log(my_list)
+  }
   return(my_list)
   }

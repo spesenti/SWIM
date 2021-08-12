@@ -14,6 +14,7 @@
 #'                of the underlying data of the \code{object}
 #'                (\code{default = "all"}). If \code{xCol = NULL}, only
 #'                the transformed data \code{f(x)} is considered.
+#' @param p       Numeric, the p-th moment of Wasserstein distance. 
 #'
 #' @details Provides sensitivity measures that compare the stressed and
 #'     the baseline model. Implemented sensitivity measures:
@@ -103,7 +104,7 @@
 #'
 
   sensitivity <- function(object, xCol = "all", wCol = "all",
-                          type = c("Gamma", "Kolmogorov", "Wasserstein", "all"), f = NULL, k = NULL){
+                          type = c("Gamma", "Kolmogorov", "Wasserstein", "all"), f = NULL, k = NULL, p = 1){
    if (!is.SWIM(object)) stop("Wrong object")
    if (anyNA(object$x)) warning("x contains NA")
    if (missing(type)) type <- "all"
@@ -157,7 +158,7 @@
    }
 
    if (type == "Wasserstein" || type == "all"){
-    sens_wasser_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .wasserstein, z = z)
+    sens_wasser_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .wasserstein, z = z, p = p)
     sens_ww <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_wasser_w)
     if (length(wCol) == 1) sens_ww <- as.matrix(t(sens_ww))
     if (length(xCol) == 1) colnames(sens_ww) <- cname
