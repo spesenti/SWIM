@@ -9,12 +9,12 @@
 #'                \code{x}, constitute the transformation of the data
 #'                for which the sensitivity is calculated.
 #' @param type    Character, one of \code{"Gamma", "Kolmogorov",
-#'                "Wasserstein", "all"}.
+#'                "Wasserstein", "all"} (\code{default = "all"}).
 #' @param xCol    Numeric or character vector, (names of) the columns
 #'                of the underlying data of the \code{object}
 #'                (\code{default = "all"}). If \code{xCol = NULL}, only
 #'                the transformed data \code{f(x)} is considered.
-#' @param p       Numeric, the p-th moment of Wasserstein distance. 
+#' @param p       Numeric vector, the p-th moment of Wasserstein distance (\code{default = 1}). 
 #'
 #' @details Provides sensitivity measures that compare the stressed and
 #'     the baseline model. Implemented sensitivity measures:
@@ -158,13 +158,20 @@
    }
 
    if (type == "Wasserstein" || type == "all"){
-    sens_wasser_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .wasserstein, z = z, p = p)
-    sens_ww <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_wasser_w)
-    if (length(wCol) == 1) sens_ww <- as.matrix(t(sens_ww))
-    if (length(xCol) == 1) colnames(sens_ww) <- cname
-    sens_w <- rbind(sens_w, data.frame(stress = names(object$specs)[wCol], type = rep("Wasserstein", length.out = length(wCol)), sens_ww))
+    for (p_value in c(p)) {
+      sens_wasser_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .wasserstein, z = z, p = p_value)
+      sens_ww <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_wasser_w)
+      if (length(wCol) == 1) sens_ww <- as.matrix(t(sens_ww))
+      if (length(xCol) == 1) colnames(sens_ww) <- cname
+      sens_w <- rbind(sens_w, data.frame(stress = names(object$specs)[wCol], type = rep("Wasserstein", length.out = length(wCol)), sens_ww))
+      
+      # Paste p to Wasserstein
+      idx <- sens_w["type"] == "Wasserstein"
+      sens_w[idx, "type"] <- paste("Wasserstein", "p =", p_value) 
     }
+   }
    rownames(sens_w) <- NULL
+   
    return(sens_w)
   }
 

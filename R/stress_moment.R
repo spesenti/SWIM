@@ -145,7 +145,7 @@ stress_moment <- function(x, f, k, m, normalise = TRUE, show = FALSE, names = NU
   print(outcome)
   
   if (log) {
-    .log(my_list)
+    summary_weights(my_list)
   }
   
   return(my_list)

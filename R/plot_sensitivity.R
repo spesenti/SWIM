@@ -68,10 +68,6 @@
    if (anyNA(object$x)) warning("x contains NA")
    sens <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f, k, p)
    
-   # Paste p to Wasserstein
-   idx <- sens["type"] == "Wasserstein"
-   sens[idx, "type"] <- paste("Wasserstein", "p =", p)
-   
    sens <- reshape2::melt(sens, id.var = c("stress", "type"), variable.name = "X_all")
    if (displ == TRUE){
      ggplot2::ggplot(sens, ggplot2::aes_(x = ~X_all, y = ~value)) +

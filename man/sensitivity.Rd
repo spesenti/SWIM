@@ -27,7 +27,7 @@ of the \code{object} corresponding to different
 stresses (\code{default = "all"}).}
 
 \item{type}{Character, one of \code{"Gamma", "Kolmogorov",
-"Wasserstein", "all"}.}
+"Wasserstein", "all"} (\code{default = "all"}).}
 
 \item{f}{A function, or list of functions, that, applied to
 \code{x}, constitute the transformation of the data
@@ -39,7 +39,7 @@ in \code{f} operates on.\cr
 When \code{f} is a list, \code{k[[i]]} corresponds
 to the input variables of \code{f[[i]]}.}
 
-\item{p}{Numeric, the p-th moment of Wasserstein distance.}
+\item{p}{Numeric vector, the p-th moment of Wasserstein distance (\code{default = 1}).}
 }
 \value{
 A data.frame containing the sensitivity measures of the

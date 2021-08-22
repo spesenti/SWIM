@@ -52,9 +52,9 @@ the same length.}
 \item{normalise}{Logical. If true, values of the columns to be stressed are linearly
 normalised to the unit interval.}
 
-\item{names}{Character vector, the names of stressed models}
+\item{names}{Character vector, the names of stressed models.}
 
-\item{log}{Boolean, the option to print weights' statistics}
+\item{log}{Boolean, the option to print weights' statistics.}
 }
 \value{
 A \code{SWIM} object containing:

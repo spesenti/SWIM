@@ -42,9 +42,9 @@ scaled to the unit interval.}
 \item{show}{Logical. If true, print the result of the call to
 \code{\link[nleqslv]{nleqslv}}.}
 
-\item{names}{Character vector, the names of stressed models}
+\item{names}{Character vector, the names of stressed models.}
 
-\item{log}{Boolean, the option to print weights' statistics}
+\item{log}{Boolean, the option to print weights' statistics.}
 
 \item{...}{Additional arguments to be passed to
 \code{\link[nleqslv]{nleqslv}}.}

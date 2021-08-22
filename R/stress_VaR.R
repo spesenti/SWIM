@@ -23,8 +23,8 @@
  #'                baseline VaR.\cr
  #'                If \code{alpha} and \code{q_ratio} are vectors, they
  #'                must have the same length.
- #' @param names   Character vector, the names of stressed models
- #' @param log     Boolean, the option to print weights' statistics
+ #' @param names   Character vector, the names of stressed models.
+ #' @param log     Boolean, the option to print weights' statistics.
  #'
  #' @return A \code{SWIM} object containing:
  #'     \itemize{
@@ -143,7 +143,7 @@
     if (is.SWIM(x)) my_list <- merge(x, my_list)
     
     if (log) {
-      .log(my_list)
+      summary_weights(my_list)
     }
   
     return(my_list)

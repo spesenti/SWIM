@@ -125,6 +125,7 @@
  #'     when applied to a column of the data, generate the 
  #'     scenario weights of the \code{object}. The corresponding stressed 
  #'     columns can be obtained via \code{get_specs}.\cr
+ #'     
  #'     Use \code{\link{get_weights}} if the \code{SWIM} object only contains 
  #'     scenario weights and not a list of functions.
  #'         
@@ -262,3 +263,33 @@
   xy <- SWIM("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs)
   return(xy)
   }
+  
+  #' @describeIn get_data extracting summary statistics of scenario weights.
+  #'
+  #' @return \code{summary_weights}: print a list containing summary statistics 
+  #'         of the stresses with each element being a table for a different stress. 
+  #'         The summary statistics inclue minimum, maximum, standard deviation, 
+  #'         gini coefficient, and entropy. 
+  #'         
+  #'         Gini coefficient uses the formula \eqn{\frac{\sum_{i=1}^{n} \sum_{j=1}^{n}\left|x_{i}-x_{j}\right|}{2 n^{2} \bar{x}}}.
+  #' @export
+
+  summary_weights <- function(object, wCol = "all"){
+    table <- list()
+    if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
+    new_weights <- get_weights(object)[ ,wCol]
+    
+    for (i in wCol){
+      w <- get_weights(object)[, i]
+      freqs <- w / length(w)
+      sub_table <- t(matrix(c(min(w), max(w), stats::sd(w), .gini(w), .entropy(freqs))))
+      sub_table <- round(sub_table, 4)
+      colnames(sub_table) <- c("min", "max", "sd", "gini coef", "entropy")
+      name <- names(object$specs)[i]
+      table[[name]] <- sub_table
+    }
+    print(table)
+  }
+  
+  .gini <- function(w) mean(outer(X = w, Y = w, FUN = function(x, y)abs(x - y))) / 2
+  .entropy <- function(freqs) -sum(freqs * log2(freqs))

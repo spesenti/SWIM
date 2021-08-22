@@ -82,7 +82,7 @@ stress_user <- function(x, new_weights = NULL, new_weightsfun = NULL, k = 1, nam
   if (is.SWIM(x)) my_list <- merge(x, my_list)
   
   if (log) {
-    .log(my_list)
+    summary_weights(my_list)
   }
   return(my_list)
   }

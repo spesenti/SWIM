@@ -103,7 +103,7 @@
    if (is.SWIM(x)) my_list <- merge(x, my_list)
    
    if (log) {
-      .log(my_list)
+      summary_weights(my_list)
    }
    
    return(my_list)  

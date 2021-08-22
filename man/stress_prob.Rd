@@ -24,9 +24,9 @@ the intervals defined through \code{lower} and
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.}
 
-\item{names}{Character vector, the names of stressed models}
+\item{names}{Character vector, the names of stressed models.}
 
-\item{log}{Boolean, the option to print weights' statistics}
+\item{log}{Boolean, the option to print weights' statistics.}
 }
 \value{
 A \code{SWIM} object containing:

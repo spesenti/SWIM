@@ -5,6 +5,7 @@
 \alias{get_weights}
 \alias{get_weightsfun}
 \alias{get_specs}
+\alias{summary_weights}
 \title{Extracting from a Stressed Model}
 \usage{
 get_data(object, xCol = "all")
@@ -14,6 +15,8 @@ get_weights(object)
 get_weightsfun(object)
 
 get_specs(object)
+
+summary_weights(object, wCol = "all")
 }
 \arguments{
 \item{object}{A \code{SWIM} object.}
@@ -21,6 +24,10 @@ get_specs(object)
 \item{xCol}{Numeric or character vector, (names of) the columns of 
 the underlying data 
 of the \code{object} (\code{default = "all"}).}
+
+\item{wCol}{Vector, the columns of the scenario weights 
+of the \code{object} corresponding to different 
+stresses (\code{default = "all"}).}
 }
 \value{
 \code{get_data}: A data.frame containing the realisations of 
@@ -34,6 +41,7 @@ of the \code{object} (\code{default = "all"}).}
     when applied to a column of the data, generate the 
     scenario weights of the \code{object}. The corresponding stressed 
     columns can be obtained via \code{get_specs}.\cr
+    
     Use \code{\link{get_weights}} if the \code{SWIM} object only contains 
     scenario weights and not a list of functions.
 
@@ -42,6 +50,13 @@ of the \code{object} (\code{default = "all"}).}
         stress. Only a selection of the specifications is returned; 
         however, all input variables are stored in the \code{object}.
         See also \code{\link{SWIM}}.
+
+\code{summary_weights}: print a list containing summary statistics 
+        of the stresses with each element being a table for a different stress. 
+        The summary statistics inclue minimum, maximum, standard deviation, 
+        gini coefficient, and entropy. 
+        
+        Gini coefficient uses the formula \eqn{\frac{\sum_{i=1}^{n} \sum_{j=1}^{n}\left|x_{i}-x_{j}\right|}{2 n^{2} \bar{x}}}.
 }
 \description{
 Extracting the data (realisations of the stochastic model), the 
@@ -58,6 +73,8 @@ Extracting the data (realisations of the stochastic model), the
 \item \code{get_weightsfun}: extracting weight functions.
 
 \item \code{get_specs}: extracting information of the stress.
+
+\item \code{summary_weights}: extracting summary statistics of scenario weights.
 }}
 
 \examples{
