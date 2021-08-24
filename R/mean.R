@@ -3,9 +3,6 @@
 #' Provides the mean of stressed model components (random variables) under the scenario weights. 
 #' 
 #' @inheritParams summary.SWIM 
-#' @param xCol    Vector, (names of) the columns
-#'                of the underlying data of the \code{object}
-#'                (\code{default = "all"}). 
 #' 
 #' @return A matrix containing the means of the \code{xCol}
 #'     components of the stressed model with weights \code{wCol}.
@@ -44,13 +41,13 @@ mean_stressed <- function(object, xCol = "all", wCol = "all", base=FALSE){
   n <- dim(x_data)[1]
   mean <- t(new_weights) %*% x_data / n
   colnames(mean) <- cname
-  rownames(mean) <- paste("stress", wCol)
+  rownames(mean) <- names(object$specs)[wCol]
   
   if (base == TRUE){
     old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)
     mean_base <- t(old_weights) %*% x_data / n
     mean <- rbind(mean_base, mean)
-    rownames(mean) <- c("base", paste("stress", wCol))
+    rownames(mean) <- c("base", names(object$specs)[wCol])
   }
 
   return(mean)

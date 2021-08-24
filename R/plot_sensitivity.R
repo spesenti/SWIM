@@ -63,10 +63,11 @@
 
   plot_sensitivity <- function(object, xCol = "all", wCol = "all", type =
                                c("Gamma",  "Kolmogorov", "Wasserstein"),
-                               f = NULL, k = NULL, displ = TRUE){
+                               f = NULL, k = NULL, displ = TRUE, p = 1){
    if (!is.SWIM(object)) stop("Object not of class SWIM")
    if (anyNA(object$x)) warning("x contains NA")
-   sens <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f, k)
+   sens <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f, k, p)
+   
    sens <- reshape2::melt(sens, id.var = c("stress", "type"), variable.name = "X_all")
    if (displ == TRUE){
      ggplot2::ggplot(sens, ggplot2::aes_(x = ~X_all, y = ~value)) +

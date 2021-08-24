@@ -39,7 +39,7 @@
 #' @inherit SWIM references
 #' @export
 
-stress_user <- function(x, new_weights = NULL, new_weightsfun = NULL, k = 1){
+stress_user <- function(x, new_weights = NULL, new_weightsfun = NULL, k = 1, names = NULL, log = FALSE){
   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (is.null(colnames(x_data))) colnames(x_data) <- paste("X", 1:ncol(x_data), sep = "")
@@ -62,12 +62,27 @@ stress_user <- function(x, new_weights = NULL, new_weightsfun = NULL, k = 1){
        nweights[[i]] <- function(x) new_weightsfun[[i]](x) / mean(new_weightsfun[[i]](x))
      }
   }
-  names(nweights) <- paste("stress", 1: length(nweights), sep = " ")
+  # names(nweights) <- paste("stress", 1: length(nweights), sep = " ")
+  
+  # Name stresses
+  if (is.null(names)) {
+    temp <- paste("stress", 1:max_length)
+  } else {
+    temp <- names
+  }
+  
+  if (length(temp) != max_length) stop("length of names are not the same as the number of models")
+  names(nweights) <- temp
+  
   type <- rep(list("user"), length.out = max_length)
   constr_user <- list("k" = k)
   constr <- rep(list(constr_user), length.out = max_length)
-  names(constr) <- paste("stress", 1:max_length)
+  names(constr) <- temp
   my_list <- SWIM("x" = x_data, "new_weights" = nweights, "type" = type, "specs" = constr)
   if (is.SWIM(x)) my_list <- merge(x, my_list)
+  
+  if (log) {
+    summary_weights(my_list)
+  }
   return(my_list)
   }

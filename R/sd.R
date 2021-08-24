@@ -4,9 +4,6 @@
 #'     model components (random variables) under the scenario weights. 
 #' 
 #' @inheritParams mean_stressed
-#' @param xCol    Vector, or character vector,(names of) the columns
-#'                of the underlying data of the \code{object}
-#'                (\code{default = "all"}). 
 #' 
 #' @return \code{sd_stressed}: Return the standard deviation of the \code{xCol}
 #'     component of the stressed model with weights \code{wCol}.

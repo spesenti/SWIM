@@ -41,3 +41,8 @@
    if (type == "user") SWIM <- stress_user(...)
    return(SWIM)
   }
+  
+  
+
+     
+  

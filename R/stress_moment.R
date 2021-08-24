@@ -90,7 +90,7 @@
 #' @inherit SWIM references
 #' @export
 
-stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, ...){
+stress_moment <- function(x, f, k, m, normalise = TRUE, show = FALSE, names = NULL, log = FALSE, ...){
   if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (is.function(f)) f <- list(f)
@@ -116,9 +116,20 @@ stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, ...){
   if (sol$termcd != 1) warning(paste("nleqslv terminated with code ", sol$termcd))
   constr_moment <- list("k" = k, "m" = m, "f" = f)
   constr <- list(constr_moment)
-  names(constr) <- paste("stress", 1)
+
+  # Name stresses
+  if (is.null(names)) {
+    temp <- paste("stress", 1)
+  } else {
+    temp <- names
+  }
+  if (length(temp) != 1) stop("length of names are not the same as the number of models")
+  names(constr) <- temp
+
   if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
-  new_weights <- list("stress 1" = as.vector(exp(z %*% sol$x)))
+  new_weights = list()
+  new_weights[[temp]] <- as.vector(exp(z %*% sol$x))
+
   type <- list("moment")
   my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr)
   if (is.SWIM(x)) my_list <- merge(x, my_list)
@@ -132,6 +143,11 @@ stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, ...){
   rel.err <- (err / m) * (m != 0)
   outcome <- data.frame(cols = as.character(k), required_moment = m, achieved_moment = m.ac, abs_error = err, rel_error = rel.err)
   print(outcome)
+  
+  if (log) {
+    summary_weights(my_list)
+  }
+  
   return(my_list)
   }
 
@@ -194,7 +210,7 @@ stress_moment <- function(x, f, k, m, normalise = FALSE, show = FALSE, ...){
 #' @inherit SWIM references
 #' @export
 
-stress_mean <- function(x, k, new_means, normalise = FALSE, ...)
+stress_mean <- function(x, k, new_means, normalise = TRUE, ...)
 {
   means <- rep(list(function(x)x), length(k))
   res <- stress_moment(x = x, f = means, k = as.list(k), m = new_means, normalise = normalise, ...)
@@ -265,7 +281,7 @@ stress_mean <- function(x, k, new_means, normalise = FALSE, ...)
 
 # k, new_means, new_sd have to be the same length
 # one can only stress the mean and sd together.
-stress_mean_sd <- function(x, k, new_means, new_sd, normalise = FALSE, ...)
+stress_mean_sd <- function(x, k, new_means, new_sd, normalise = TRUE, ...)
 {
   means <- rep(list(function(x)x), length(k))
   second_moments <- rep(list(function(x)x ^ 2), length(k))

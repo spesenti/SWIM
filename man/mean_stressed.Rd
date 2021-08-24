@@ -9,9 +9,9 @@ mean_stressed(object, xCol = "all", wCol = "all", base = FALSE)
 \arguments{
 \item{object}{A \code{SWIM} object.}
 
-\item{xCol}{Vector, (names of) the columns
-of the underlying data of the \code{object}
-(\code{default = "all"}).}
+\item{xCol}{Numeric or character vector, (names of) the columns of 
+the underlying data 
+of the \code{object} (\code{default = "all"}).}
 
 \item{wCol}{Vector, the columns of the scenario weights 
 of the \code{object} corresponding to different 

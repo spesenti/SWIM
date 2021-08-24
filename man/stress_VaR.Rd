@@ -4,7 +4,15 @@
 \alias{stress_VaR}
 \title{Stressing Value-at-Risk}
 \usage{
-stress_VaR(x, alpha, q_ratio = NULL, q = NULL, k = 1)
+stress_VaR(
+  x,
+  alpha,
+  q_ratio = NULL,
+  q = NULL,
+  k = 1,
+  names = NULL,
+  log = FALSE
+)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame
@@ -27,6 +35,10 @@ have the same length.}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.}
+
+\item{names}{Character vector, the names of stressed models.}
+
+\item{log}{Boolean, the option to print weights' statistics.}
 }
 \value{
 A \code{SWIM} object containing:

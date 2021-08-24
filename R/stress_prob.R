@@ -55,7 +55,7 @@
 #' @export
 #' 
 
-  stress_prob <- function(x, prob, lower= NULL, upper, k = 1){
+  stress_prob <- function(x, prob, lower= NULL, upper, k = 1, names = NULL, log = FALSE){
    if (is.SWIM(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
    if (anyNA(x_data)) warning("x contains NA")
    if (any(prob < 0) | any(prob > 1) | (is.null(lower) && sum(prob) > 1)) stop("Invalid prob argument")
@@ -83,14 +83,29 @@
    if (any(prob_old == 0)) stop("Not enough data points.")
    new_weights <- list(function(y) .rn_prob(y, constraints = cbind(lower, upper)) %*% as.matrix(prob_new / prob_old))
    if (is.null(colnames(x_data))) colnames(x_data) <-  paste("X", 1:ncol(x_data), sep = "")
-   names(new_weights) <- paste("stress", 1)
+   # names(new_weights) <- paste("stress", 1)
+   
+   # Name stresses
+   if (is.null(names)) {
+      temp <- paste("stress", 1)
+   } else {
+      temp <- names
+   }
+   if (length(temp) != 1) stop("length of names are not the same as the number of models")
+   
+   names(new_weights) <- temp
    
    constr_prob <- list("k" = k, "prob" = prob, "upper" = upper, "lower" = lower)
    constr <- list(constr_prob)
-   names(constr) <- paste("stress", 1)
+   names(constr) <- temp
    type <- list("prob")
    my_list <- SWIM("x" = x_data, "new_weights" = new_weights, "type" = type, "specs" = constr)
    if (is.SWIM(x)) my_list <- merge(x, my_list)
+   
+   if (log) {
+      summary_weights(my_list)
+   }
+   
    return(my_list)  
   }
 
