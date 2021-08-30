@@ -9,6 +9,7 @@
 #'                \code{x}, constitute the transformation of the data
 #'                for which the sensitivity is calculated.
 #' @param type    Character, one of \code{"Gamma", "Kolmogorov",
+#'                "Wasserstein", "all"} (\code{default = "all"}).
 #'                "Wasserstein", "reverse", "all"}.
 #' @param s       A function that, applied to \code{x}, defines the reverse
 #'                sensitivity measure. If \code{type = "reverse"} and 
@@ -17,6 +18,7 @@
 #'                of the underlying data of the \code{object}
 #'                (\code{default = "all"}). If \code{xCol = NULL}, only
 #'                the transformed data \code{f(x)} is considered.
+#' @param p       Numeric vector, the p-th moment of Wasserstein distance (\code{default = 1}). 
 #'
 #' @details Provides sensitivity measures that compare the stressed and
 #'     the baseline model. Implemented sensitivity measures:
@@ -117,7 +119,7 @@
 
   sensitivity <- function(object, xCol = "all", wCol = "all",
                           type = c("Gamma", "Kolmogorov", "Wasserstein", "reverse", "all"),
-                          f = NULL, k = NULL, s = NULL){
+                          f = NULL, k = NULL, s = NULL, p = 1){
    if (!is.SWIM(object) && !is.SWIMw(object)) stop("Wrong object")
    if (anyNA(object$x)) warning("x contains NA")
    if (missing(type)) type <- "all"
@@ -166,7 +168,7 @@
     sens_gw <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_gamma_w)
     if (length(wCol) == 1) sens_gw <- as.matrix(t(sens_gw))
     if (length(xCol) == 1) colnames(sens_gw) <- cname
-    sens_w <- rbind(sens_w, data.frame(stress = paste("stress", wCol, sep = " "), type = rep("Gamma", length.out = length(wCol)), sens_gw))
+    sens_w <- rbind(sens_w, data.frame(stress = names(object$specs)[wCol], type = rep("Gamma", length.out = length(wCol)), sens_gw))
    }
 
    if (type == "Kolmogorov" || type == "all"){
@@ -174,15 +176,21 @@
     sens_kw <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_kolmogorov_w)
     if (length(wCol) == 1) sens_kw <- as.matrix(t(sens_kw))
     if (length(xCol) == 1) colnames(sens_kw) <- cname
-    sens_w <- rbind(sens_w, data.frame(stress = paste("stress", wCol, sep = " "), type = rep("Kolmogorov", length.out = length(wCol)), sens_kw))
+    sens_w <- rbind(sens_w, data.frame(stress = names(object$specs)[wCol], type = rep("Kolmogorov", length.out = length(wCol)), sens_kw))
    }
 
    if (type == "Wasserstein" || type == "all"){
-    sens_wasser_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .wasserstein, z = z)
-    sens_ww <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_wasser_w)
-    if (length(wCol) == 1) sens_ww <- as.matrix(t(sens_ww))
-    if (length(xCol) == 1) colnames(sens_ww) <- cname
-    sens_w <- rbind(sens_w, data.frame(stress = paste("stress", wCol, sep = " "), type = rep("Wasserstein", length.out = length(wCol)), sens_ww))
+    for (p_value in c(p)) {
+      sens_wasser_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .wasserstein, z = z, p = p_value))
+      sens_ww <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_wasser_w)
+      if (length(wCol) == 1) sens_ww <- as.matrix(t(sens_ww))
+      if (length(xCol) == 1) colnames(sens_ww) <- cname
+      sens_w <- rbind(sens_w, data.frame(stress = names(object$specs)[wCol], type = rep("Wasserstein", length.out = length(wCol)), sens_ww))
+     
+      # Paste p to Wasserstein
+      idx <- sens_w["type"] == "Wasserstein"
+      sens_w[idx, "type"] <- paste("Wasserstein", "p =", p_value) 
+      }
    }
    
    if (type == "reverse" || type == "all"){
@@ -192,7 +200,9 @@
      if (length(xCol) == 1) colnames(sens_rw) <- cname
      sens_w <- rbind(sens_w, data.frame(stress = paste("stress", wCol, sep = " "), type = rep("Reverse", length.out = length(wCol)), sens_rw))
    }
+   
    rownames(sens_w) <- NULL
+   
    return(sens_w)
   }
 
@@ -218,8 +228,11 @@
  # stress have the same Kolmogorov distance.
   .kolmogorov <- function(z, w){
     n <- length(z)
-    xw_cdf <- cumsum(w[order(z)])
-    kol_sense <- max(abs(xw_cdf - 1:n)) / n
+    # print(length(z))
+    # print(length(w))
+    # print(n)
+    xw_cdf <- cumsum(w[order(z)])[1:(n-1)]
+    kol_sense <- max(abs(xw_cdf - 1:(n-1))) / n
     return(kol_sense)
   }
 
@@ -227,12 +240,12 @@
  # x   vector
  # w   vector of weights
 
-  .wasserstein <- function(z, w){
+  .wasserstein <- function(z, w, p = 1){
     n <- length(z)
     x_sort <- sort(z)
     w_cdf <- cumsum(w[order(z)])[1:(n - 1)]
     x_diff <- diff(x_sort, lag = 1)
-    wasser_sens <- sum(abs(w_cdf - 1:(n-1)) * x_diff)/n
+    wasser_sens <- (sum(abs(w_cdf - 1:(n-1))^(p) * x_diff) / n)^(1/p)
     return(wasser_sens)
   }
   

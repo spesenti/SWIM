@@ -102,16 +102,26 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
       G.inv.fn <- Vectorize(.inverse(G.fn, lower_bracket, upper_bracket))
     }
 
-    quant_data <- cbind(grid, G.inv.fn(grid))
-    colnames(quant_data) <- c("grid", paste("stress", wCol, sep = " "))
-    if (base == TRUE){
-      # Get KDE
-      F.fn <- function(x){
-        return(sum(pnorm((x - x_data)/h)/length(x_data)))
+    if (is.SWIMw(object){
+      quant_data <- cbind(grid, G.inv.fn(grid))
+      colnames(quant_data) <- c("grid", paste("stress", wCol, sep = " "))
+      if (base == TRUE){
+        # Get KDE
+        F.fn <- function(x){
+          return(sum(pnorm((x - x_data)/h)/length(x_data)))
+        }
+        F.fn <- Vectorize(F.fn)
+        F.inv.fn <- Vectorize(.inverse(F.fn, lower_bracket, upper_bracket))
+        quant_data <- cbind(quant_data, base = F.inv.fn(grid))
       }
-      F.fn <- Vectorize(F.fn)
-      F.inv.fn <- Vectorize(.inverse(F.fn, lower_bracket, upper_bracket))
-      quant_data <- cbind(quant_data, base = F.inv.fn(grid))
+    }
+      
+    if (is.SWIM(object){
+      quant_data <- cbind(grid, sapply(wCol, FUN = quantile_stressed, object = object, probs = grid, xCol = xCol,type = c("quantile")))
+      colnames(quant_data) <- c("grid", names(object$specs)[wCol])
+      if (base == TRUE){
+        quant_data <- cbind(quant_data, base = as.numeric(stats::quantile(get_data(object)[, xCol], grid)))
+      }
     }
     
     plot_data <- reshape2::melt(as.data.frame(quant_data), id.var = "grid", variable.name = "stress", value.name = "value")
@@ -127,9 +137,7 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
         ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
     } else {
       return(plot_data)
-    }
-  }
-  
+    }  
 }
 
 # helper

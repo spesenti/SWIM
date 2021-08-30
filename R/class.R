@@ -2,18 +2,23 @@
   SWIM <- function(x = "x", new_weights = "new_weights", 
                        type = "type", specs = "specs"){
    mymodel <- list(
-   x = x, # vector, matrix or dataframe containing the underlying data
-   new_weights = new_weights, # list of either functions, that applied 
+      x = x, 
+      # vector, matrix or dataframe containing the underlying data
+      new_weights = new_weights, 
+      # list of eithter functions, that applied 
       # to the kth column of x providing the scenario weights; OR a 
-      # vector containing the new_weights
-   type  = type, # a list of characters each corresponding to a stress
+      # vector containting the new_weights
+      type  = type,
+      # a list of characters each corresponding to a stress
       # one of ("VaR", "VaR ES", "prob", "moment", "mean", "mean sd", "user")
-   specs = specs # a list with elements called "stress i".
-      #
-      # all input variables of the stress and constraints according
+      specs = specs
+      # a list with elements called "stress i".
+      # all input varaibles of the stress and constraints according
       # to the stress. For example a stress on 
       # the VaR contains: k, alpha, q
+      # names = names
    )   
+   
    ## Name of the class
    attr(mymodel, "class") <- "SWIM"
    return(mymodel)
@@ -141,7 +146,7 @@
      new_weights[, i] <- object$new_weights[[i]](x_data[, k])
     }
    }
-   colnames(new_weights) <- paste("stress", 1:m)
+   colnames(new_weights) <- names(object$specs)
    return(new_weights)
   }
 
@@ -151,6 +156,7 @@
  #'     when applied to a column of the data, generate the 
  #'     scenario weights of the \code{object}. The corresponding stressed 
  #'     columns can be obtained via \code{get_specs}.\cr
+ #'     
  #'     Use \code{\link{get_weights}} if the \code{SWIM} object only contains 
  #'     scenario weights and not a list of functions.
  #'         
@@ -200,16 +206,55 @@
     } else stop("Object contains wrong type.")
     }
   }
-
    .type <- t(as.data.frame(.type))
    .specs <- cbind(.type, .specs)
    colnames(.specs)[1] <- "type"
-   rownames(.specs) <- paste("stress", 1:length(.type), sep = " ")      
+   rownames(.specs) <- names(object$specs)
    return(.specs)
   }
 
+  #' Rename Stressed Models
+  #'     
+  #' @details Get a new \code{SWIM} object with desired \code{names}
+  #' 
+  #' @param object A \code{SWIM} object
+  #' @param names   Character vector, the names of stressed models
+  #'  
+  #' @return An renamed object of class \code{SWIM} containing:
+  #'   \itemize{
+  #'     \item \code{x}, a data.frame containing the data;
+  #'     \item \code{new_weights}, a list, each component corresponds to 
+  #'    a different stress and is either a vector of scenario weights or a
+  #'    function, that applied to a column of \code{x}, generates the 
+  #'    vectors of scenario weights; 
+  #'     \item \code{type}, a list, each component corresponds to a 
+  #'    different stress and specifies the type of the stress;
+  #'     \item \code{specs}, a list, each component corresponds to 
+  #'    a different stress and contains a list with the specifications 
+  #'    of what has been stressed.
+  #'   }
+  #' See \code{\link{SWIM}} for details.
+  #' 
+  #' @examples
+  #' set.seed(0)
+  #' x <- as.data.frame(cbind(
+  #'   "normal" = rnorm(1000),
+  #'   "gamma" = rgamma(1000, shape = 2)))
+  #' res1 <- stress(type = "VaR", x = x,
+  #'   alpha = 0.9, q_ratio = 1.05)
+  #' rename_SWIM(res1, "A")
+  #' 
+  #' @author Kent Wu 
+  #'
+  #' @export
   
-  
+  rename_SWIM <- function(object, names){
+     if (!is.SWIM(object)) stop("Object not of class SWIM")
+     names(object$new_weights) <- names
+     names(object$specs) <- names
+     object <- object
+     return(object)
+  }
   
  #' Merging Two Stressed Models
  #'
@@ -247,9 +292,18 @@
   type <- c(x$type, y$type)
   m <- length(type)
   new_weights <- c(x$new_weights, y$new_weights)
-  names(new_weights) <- paste("stress", 1:m)
+  
   specs <- c(x$specs, y$specs)
-  names(specs) <- paste("stress", 1:m)
+  
+  # Check if there are duplicate names for stresses
+  x_name <- names(x$specs)
+  y_name <- names(y$specs)
+  
+  if (length(intersect(x_name, y_name)) >= 1) {
+     names(new_weights) <- paste("stress", 1:m)
+     names(specs) <- paste("stress", 1:m)
+  }
+
   xy <- SWIM("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs)
   return(xy)
   }
@@ -303,8 +357,39 @@
     names(new_weights) <- paste("stress", 1:m)
     specs <- c(x$specs, y$specs)
     names(specs) <- paste("stress", 1:m)
+     
     xy <- SWIMw("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs,
                 "str_fY" = str_fY, "str_FY" = str_FY, "str_FY_inv" = str_FY_inv,
                 "u" = u, "h" = h, "lam"=lam, "gamma"=gamma)
     return(xy)
   }
+  
+  #' @describeIn get_data extracting summary statistics of scenario weights.
+  #'
+  #' @return \code{summary_weights}: print a list containing summary statistics 
+  #'         of the stresses with each element being a table for a different stress. 
+  #'         The summary statistics inclue minimum, maximum, standard deviation, 
+  #'         gini coefficient, and entropy. 
+  #'         
+  #'         Gini coefficient uses the formula \eqn{\frac{\sum_{i=1}^{n} \sum_{j=1}^{n}\left|x_{i}-x_{j}\right|}{2 n^{2} \bar{x}}}.
+  #' @export
+
+  summary_weights <- function(object, wCol = "all"){
+    table <- list()
+    if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
+    new_weights <- get_weights(object)[ ,wCol]
+    
+    for (i in wCol){
+      w <- get_weights(object)[, i]
+      freqs <- w / length(w)
+      sub_table <- t(matrix(c(min(w), max(w), stats::sd(w), .gini(w), .entropy(freqs))))
+      sub_table <- round(sub_table, 4)
+      colnames(sub_table) <- c("min", "max", "sd", "gini coef", "entropy")
+      name <- names(object$specs)[i]
+      table[[name]] <- sub_table
+    }
+    print(table)
+  }
+  
+  .gini <- function(w) mean(outer(X = w, Y = w, FUN = function(x, y)abs(x - y))) / 2
+  .entropy <- function(freqs) -sum(freqs * log2(freqs))

@@ -12,6 +12,7 @@ sensitivity(
   f = NULL,
   k = NULL,
   s = NULL
+  p = 1
 )
 }
 \arguments{
@@ -27,7 +28,7 @@ of the \code{object} corresponding to different
 stresses (\code{default = "all"}).}
 
 \item{type}{Character, one of \code{"Gamma", "Kolmogorov",
-"Wasserstein", "reverse", "all"}.}
+"Wasserstein", "reverse", "all"} (\code{default = "all"}).}
 
 \item{f}{A function, or list of functions, that, applied to
 \code{x}, constitute the transformation of the data
@@ -42,6 +43,7 @@ to the input variables of \code{f[[i]]}.}
 \item{s}{A function that, applied to \code{x}, defines the reverse
 sensitivity measure. If \code{type = "reverse"} and 
 \code{s = NULL}, defaults to \code{type = "Gamma"}.}
+\item{p}{Numeric vector, the p-th moment of Wasserstein distance (\code{default = 1}).}
 }
 \value{
 A data.frame containing the sensitivity measures of the

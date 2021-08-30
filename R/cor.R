@@ -58,7 +58,7 @@ cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "Pearson
   
   corr_w <- apply(X = as.matrix(new_weights), MARGIN = 2, 
                   FUN = .cor_helper, x_data = x_data, method = method)
-  names(corr_w) <- paste("stress", wCol)
+  names(corr_w) <- names(object$specs)[wCol]
   
   if (base == TRUE){
     old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)

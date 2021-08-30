@@ -12,7 +12,8 @@ plot_sensitivity(
   f = NULL,
   k = NULL,
   s = NULL,
-  displ = TRUE
+  displ = TRUE,
+  p = 1
 )
 }
 \arguments{
@@ -28,7 +29,7 @@ of the \code{object} corresponding to different
 stresses (\code{default = "all"}).}
 
 \item{type}{Character, one of \code{"Gamma", "Kolmogorov",
-"Wasserstein", "reverse", "all"}.}
+"Wasserstein", "reverse", "all"} (\code{default = "all"}).}
 
 \item{f}{A function, or list of functions, that, applied to
 \code{x}, constitute the transformation of the data
@@ -47,6 +48,8 @@ sensitivity measure. If \code{type = "reverse"} and
 \item{displ}{Logical, if \code{TRUE} the plot is displayed,
 otherwise the data.frame for customised plotting with
 \code{ggplot} is returned (\code{default = TRUE}).}
+
+\item{p}{Numeric vector, the p-th moment of Wasserstein distance (\code{default = 1}).}
 }
 \value{
 If \code{displ = TRUE}, a plot displaying the sensitivity

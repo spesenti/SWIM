@@ -4,7 +4,7 @@
 \alias{stress_mean}
 \title{Stressing Means}
 \usage{
-stress_mean(x, k, new_means, normalise = FALSE, ...)
+stress_mean(x, k, new_means, normalise = TRUE, ...)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame
