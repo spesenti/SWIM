@@ -87,12 +87,17 @@ res2 <- stress_mean_sd(x = x, k = 1, new_means = 0.1,
 }
 \seealso{
 Other stress functions: 
+\code{\link{stress_HARA_RM_w}()},
+\code{\link{stress_RM_mean_std_w}()},
+\code{\link{stress_RM_w}()},
 \code{\link{stress_VaR_ES}()},
 \code{\link{stress_VaR}()},
+\code{\link{stress_mean_std_w}()},
 \code{\link{stress_mean}()},
 \code{\link{stress_moment}()},
 \code{\link{stress_prob}()},
 \code{\link{stress_user}()},
+\code{\link{stress_wass}()},
 \code{\link{stress}()}
 }
 \concept{stress functions}

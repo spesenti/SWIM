@@ -29,7 +29,7 @@
 #' @export
 
 mean_stressed <- function(object, xCol = "all", wCol = "all", base=FALSE){
-  if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
+  if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class 'SWIM' or 'SWIMw'")
   if (anyNA(object$x)) warning("x contains NA")
   
   if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
