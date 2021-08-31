@@ -123,18 +123,18 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   # Get the KDE estimates for fY, FY
   if (is.null(h)){
     # Use Silverman's Rule
-    h <- function(y){1.06 * sd(y) * length(y)^(-1/5)}
+    h <- function(y){1.06 * stats::sd(y) * length(y)^(-1/5)}
   } else if (!is.function(h)) {
     stop("Please pass a function calculating the bandwidth, or use the default bandwidth (pass NULL to h)")
   }
   hY <- h(x_data[,k])
   
   fY_fn <- function(y){
-    return(sum(dnorm((y - x_data[,k])/hY)/hY/length(x_data[,k])))
+    return(sum(stats::dnorm((y - x_data[,k])/hY)/hY/length(x_data[,k])))
   }
   fY_fn <- Vectorize(fY_fn)
   FY_fn <- function(y){
-    return(sum(pnorm((y - x_data[,k])/hY)/length(x_data[,k])))
+    return(sum(stats::pnorm((y - x_data[,k])/hY)/length(x_data[,k])))
   }
   FY_fn <- Vectorize(FY_fn)
   lower_bracket = min(x_data[,k])-(max(x_data[,k])-min(x_data[,k]))*0.1

@@ -147,7 +147,6 @@ summary.SWIM <- function(object, ..., xCol = "all", wCol = "all", base = FALSE){
     return(summary_w)
   }
   
-  
   # help function, calculates summary when new_weights is a vector 
   .summary <- function(x_data, cname, new_weights, base){
     .temp <- function(y, w) apply(X = y, FUN = .moments, MARGIN = 2, w = w)
@@ -173,27 +172,4 @@ summary.SWIM <- function(object, ..., xCol = "all", wCol = "all", base = FALSE){
   }
   
   
-  # help function, calculates summary when new_weights is a vector 
-  .summary <- function(x_data, cname, new_weights, base){
-    .temp <- function(y, w) apply(X = y, FUN = .moments, MARGIN = 2, w = w)
-    moments_W <- .temp(x_data, new_weights)
-    colnames(moments_W) <- cname
-    rownames(moments_W) <- c("mean", "sd", "skewness", "ex kurtosis", "1st Qu.", "Median", "3rd Qu.")
-    return(data.frame(moments_W))
-  } 
-  
-  # help function calculates weighted moments, mean, sd, skewness, excess kurtosis, quartiles
-  # x   numeric vector of observations 
-  # w   numeric vector of weights
-  
-  .moments <- function(x, w){
-    n <- length(as.vector(x))
-    mean_w <- stats::weighted.mean(x = x, w = w)
-    sd_w <- sqrt(mean(w * (x - mean_w)^2) * n / (n-1)) 
-    skew_w <- mean(w * (x - mean_w)^3) / (sd_w^3) * n^2 / ((n-1) * (n-2))
-    ex_kurt_w <- mean(w * (x - mean_w)^4) / (sd_w^4) - 3
-    quartile_w <- as.matrix(Hmisc::wtd.quantile(x, weights = w, probs = c(0.25, 0.5, 0.75)))
-    moments_w <- rbind(mean_w, sd_w, skew_w, ex_kurt_w, quartile_w)
-    return(moments_w)
-  }
   

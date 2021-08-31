@@ -354,9 +354,18 @@
     gamma <- c(x$gamma, y$gamma)
     m <- length(type)
     new_weights <- c(x$new_weights, y$new_weights)
-    names(new_weights) <- paste("stress", 1:m)
     specs <- c(x$specs, y$specs)
-    names(specs) <- paste("stress", 1:m)
+    # names(new_weights) <- paste("stress", 1:m)
+    # names(specs) <- paste("stress", 1:m)
+    
+    # Check if there are duplicate names for stresses
+    x_name <- names(x$specs)
+    y_name <- names(y$specs)
+    
+    if (length(intersect(x_name, y_name)) >= 1) {
+      names(new_weights) <- paste("stress", 1:m)
+      names(specs) <- paste("stress", 1:m)
+      }
      
     xy <- SWIMw("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs,
                 "str_fY" = str_fY, "str_FY" = str_FY, "str_FY_inv" = str_FY_inv,

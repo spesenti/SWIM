@@ -66,7 +66,7 @@ cdf <- function(object, xCol = 1, wCol = 1){
     } else{
       # Get KDE estimate
       G.fn <- function(x){
-        return(sum(w * pnorm((x - x_data)/h)/length(x_data)))
+        return(sum(w * stats::pnorm((x - x_data)/h)/length(x_data)))
       }
       G.fn <- Vectorize(G.fn)
     }

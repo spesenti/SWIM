@@ -60,7 +60,7 @@ ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FAL
       } else{
         # Get KDE
         G.fn <- function(x){
-          return(sum(w * pnorm((x - x_data[,c])/h)/length(x_data[,c])))
+          return(sum(w * stats::pnorm((x - x_data[,c])/h)/length(x_data[,c])))
         }
         G.fn <- Vectorize(G.fn)
         G.inv.fn <- Vectorize(.inverse(G.fn, lower_bracket, upper_bracket))
@@ -70,7 +70,7 @@ ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FAL
       if (base == TRUE){
         # Get KDE
         F.fn <- function(x){
-          return(sum(pnorm((x - x_data[, c])/h)/length(x_data[, c])))
+          return(sum(stats::pnorm((x - x_data[, c])/h)/length(x_data[, c])))
         }
         F.fn <- Vectorize(F.fn)
         F.inv.fn <- Vectorize(.inverse(F.fn, lower_bracket, upper_bracket))

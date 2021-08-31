@@ -9,8 +9,7 @@
 #'                \code{x}, constitute the transformation of the data
 #'                for which the sensitivity is calculated.
 #' @param type    Character, one of \code{"Gamma", "Kolmogorov",
-#'                "Wasserstein", "all"} (\code{default = "all"}).
-#'                "Wasserstein", "reverse", "all"}.
+#'                "Wasserstein", "reverse", "all"} (\code{default = "all"}).
 #' @param s       A function that, applied to \code{x}, defines the reverse
 #'                sensitivity measure. If \code{type = "reverse"} and 
 #'                \code{s = NULL}, defaults to \code{type = "Gamma"}.
@@ -181,7 +180,7 @@
 
    if (type == "Wasserstein" || type == "all"){
     for (p_value in c(p)) {
-      sens_wasser_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .wasserstein, z = z, p = p_value))
+      sens_wasser_w <- function(z) apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .wasserstein, z = z, p = p_value)
       sens_ww <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_wasser_w)
       if (length(wCol) == 1) sens_ww <- as.matrix(t(sens_ww))
       if (length(xCol) == 1) colnames(sens_ww) <- cname

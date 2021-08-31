@@ -5,7 +5,7 @@ set.seed(0)
 x <- data.frame(cbind(
   "normal" = rnorm(1000), 
   "gamma" = rgamma(1000, shape = 2))) 
-  
+
 ################ stress via function ################
 new_weightsfun <- function(x)x^2
 k <- 1
@@ -19,7 +19,7 @@ test_that("specs", {
   expect_named(get_specs(res1), c("type", "k"))
   expect_equal(res1$type[[1]], "user")
   expect_type(get_weightsfun(res1), "list")
-  })
+})
 
 ################ stress via scenraio weights ################
 new_weights <- cbind(exp(2 * sqrt(seq(1:nrow(x)))), rep(1, nrow(x)))

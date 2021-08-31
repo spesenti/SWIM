@@ -111,7 +111,7 @@ if (is.SWIM(object)){
       } else{
          # Get KDE
          G.fn <- function(x){
-            return(sum(w * pnorm((x - x_data[,c])/h)/length(x_data[,c])))
+            return(sum(w * stats::pnorm((x - x_data[,c])/h)/length(x_data[,c])))
          }
          G.fn <- Vectorize(G.fn)
          G.inv.fn <- Vectorize(.inverse(G.fn, lower_bracket, upper_bracket))
@@ -122,7 +122,7 @@ if (is.SWIM(object)){
       if (base == TRUE){
          # Get base KDEs
          F.fn <- function(x){
-            return(sum(pnorm((x - x_data[, c])/h)/length(x_data[, c])))
+            return(sum(stats::pnorm((x - x_data[, c])/h)/length(x_data[, c])))
          }
          F.fn <- Vectorize(F.fn)
          F.inv.fn <- Vectorize(.inverse(F.fn, lower_bracket, upper_bracket))

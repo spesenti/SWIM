@@ -107,7 +107,7 @@
       } else{
          # Get KDE
          G.fn <- function(x){
-            return(sum(w * pnorm((x - x_data)/h)/length(x_data)))
+            return(sum(w * stats::pnorm((x - x_data)/h)/length(x_data)))
          }
          G.fn <- Vectorize(G.fn)
       }
@@ -118,7 +118,7 @@
       if (base == TRUE){
          # Get KDE
          F.fn <- function(x){
-            return(sum(pnorm((x - x_data)/h)/length(x_data)))
+            return(sum(stats::pnorm((x - x_data)/h)/length(x_data)))
          }
          F.fn <- Vectorize(F.fn)
          plot.data <- cbind(plot.data, base = F.fn(x_data))

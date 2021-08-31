@@ -96,19 +96,19 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
     } else{
       # Get KDE
       G.fn <- function(x){
-        return(sum(w * pnorm((x - x_data)/h)/length(x_data)))
+        return(sum(w * stats::pnorm((x - x_data)/h)/length(x_data)))
       }
       G.fn <- Vectorize(G.fn)
       G.inv.fn <- Vectorize(.inverse(G.fn, lower_bracket, upper_bracket))
     }
 
-    if (is.SWIMw(object){
+    if (is.SWIMw(object)){
       quant_data <- cbind(grid, G.inv.fn(grid))
       colnames(quant_data) <- c("grid", paste("stress", wCol, sep = " "))
       if (base == TRUE){
         # Get KDE
         F.fn <- function(x){
-          return(sum(pnorm((x - x_data)/h)/length(x_data)))
+          return(sum(stats::pnorm((x - x_data)/h)/length(x_data)))
         }
         F.fn <- Vectorize(F.fn)
         F.inv.fn <- Vectorize(.inverse(F.fn, lower_bracket, upper_bracket))
@@ -116,7 +116,7 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
       }
     }
       
-    if (is.SWIM(object){
+    if (is.SWIM(object)){
       quant_data <- cbind(grid, sapply(wCol, FUN = quantile_stressed, object = object, probs = grid, xCol = xCol,type = c("quantile")))
       colnames(quant_data) <- c("grid", names(object$specs)[wCol])
       if (base == TRUE){
@@ -137,10 +137,13 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
         ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
     } else {
       return(plot_data)
-    }  
+    }
+  }
 }
 
 # helper
 .inverse <- function(f, lower = -100, upper = 100){
-  return(function(y){stats::uniroot((function(x){f(x) - y}), lower = lower, upper = upper, extendInt = 'yes')$root})
+  return(function(y){
+    stats::uniroot((function(x){f(x) - y}), lower = lower, upper = upper, extendInt = 'yes')$root
+    })
 }

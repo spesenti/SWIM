@@ -11,7 +11,7 @@ sensitivity(
   type = c("Gamma", "Kolmogorov", "Wasserstein", "reverse", "all"),
   f = NULL,
   k = NULL,
-  s = NULL
+  s = NULL,
   p = 1
 )
 }
@@ -43,6 +43,7 @@ to the input variables of \code{f[[i]]}.}
 \item{s}{A function that, applied to \code{x}, defines the reverse
 sensitivity measure. If \code{type = "reverse"} and 
 \code{s = NULL}, defaults to \code{type = "Gamma"}.}
+
 \item{p}{Numeric vector, the p-th moment of Wasserstein distance (\code{default = 1}).}
 }
 \value{
