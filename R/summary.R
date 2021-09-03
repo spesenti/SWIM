@@ -49,14 +49,7 @@
 summary.SWIM <- function(object, ..., xCol = "all", wCol = "all", base = FALSE){
   if (!is.SWIM(object)) stop("Wrong object")
   if (anyNA(object$x)) warning("x contains NA")
-#  if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
-#  if (is.null(colnames(get_data(object)))){
-#    cname <-  paste("X", as.character(xCol), sep = "")
-#  } else if (!is.character(xCol)){
-#    cname <- colnames(get_data(object))[xCol]
-#  } else {
-#    cname <- xCol
-#  }
+
   x_data <- as.matrix(get_data(object, xCol = xCol))
   cname <- colnames(x_data)
   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
@@ -123,21 +116,14 @@ summary.SWIM <- function(object, ..., xCol = "all", wCol = "all", base = FALSE){
   summary.SWIMw <- function(object, ..., xCol = "all", wCol = "all", base = FALSE){
     if (!is.SWIMw(object)) stop("Wrong object")
     if (anyNA(object$x)) warning("x contains NA")
-    #  if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
-    #  if (is.null(colnames(get_data(object)))){
-    #    cname <-  paste("X", as.character(xCol), sep = "")
-    #  } else if (!is.character(xCol)){
-    #    cname <- colnames(get_data(object))[xCol]
-    #  } else {
-    #    cname <- xCol
-    #  }
+
     x_data <- as.matrix(get_data(object, xCol = xCol))
     cname <- colnames(x_data)
     if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
     new_weights <- get_weights(object)[ ,wCol]  
     
     summary_w <- apply(X = as.matrix(new_weights), MARGIN = 2, FUN = .summary, x_data = x_data, cname = cname, base = base)
-    names(summary_w) <- paste("stress", wCol)
+    names(summary_w) <- names(object$specs)[wCol]  
     
     if (base == TRUE){
       old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)

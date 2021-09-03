@@ -14,7 +14,9 @@ stress_RM_mean_std_w(
   k = 1,
   normalise = FALSE,
   h = NULL,
-  gamma = NULL
+  gamma = NULL,
+  names = NULL,
+  log = FALSE
 )
 }
 \arguments{

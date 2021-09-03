@@ -249,11 +249,12 @@
   #' @export
   
   rename_SWIM <- function(object, names){
-     if (!is.SWIM(object)) stop("Object not of class SWIM")
-     names(object$new_weights) <- names
-     names(object$specs) <- names
-     object <- object
-     return(object)
+    if (!is.SWIM(object) & !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
+    if (length(names) != names(object$new_weights)) stop("The number of names is not consistent with SWIM or SWIMw object")
+    names(object$new_weights) <- names
+    names(object$specs) <- names
+    object <- object
+    return(object)
   }
   
  #' Merging Two Stressed Models

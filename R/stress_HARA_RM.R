@@ -97,7 +97,7 @@
 
 stress_HARA_RM_w <- function(x, alpha, a, b, eta, 
                         q_ratio = NULL, q = NULL, hu_ratio = NULL, hu=NULL,
-                        k = 1, normalise = FALSE, h = NULL, gamma = NULL){
+                        k = 1, normalise = FALSE, h = NULL, gamma = NULL, names = NULL, log = FALSE){
 
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -214,7 +214,15 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
 
   # Get weights
   new_weights <- .get_weights(x_data[,k], y_grid, gY_fn, fY_fn, hY)
-  names(new_weights) <- "stress 1"
+  
+  # Name stresses
+  if (is.null(names)) {
+    temp <- paste("stress", 1)
+  } else {
+    temp <- names
+  }
+  if (length(temp) != 1) stop("length of names are not the same as the number of models")
+  names(new_weights) <- temp  
   
   # achieved RM
   for(j in 1:max_length){
@@ -236,13 +244,19 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   }
   
   # Get constraints
-  constr <- list("stress 1" = list("k"=k, "q"=q, "alpha"=alpha, "hu"=hu, 
-                 "a"=a, "b"=b, "eta"=eta))
+  constr <- list(list("k"=k, "q"=q, "alpha"=alpha, "hu"=hu, "a"=a, "b"=b, "eta"=eta))
+  names(constr) <- temp
   
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam, "gamma"=gamma,
                    "new_weights" = new_weights, "str_fY" = gY_fn, "str_FY" = GY_fn,
                    "str_FY_inv" = GY_inv_fn, "type" = type, "specs" = constr)
   
+  if (is.SWIMw(x)) my_list <- merge(x, my_list)
+  
+  if (log) {
+    summary_weights(my_list)
+  }
+    
   return(my_list)
 }
 

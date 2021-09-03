@@ -17,7 +17,9 @@ stress_HARA_RM_w(
   k = 1,
   normalise = FALSE,
   h = NULL,
-  gamma = NULL
+  gamma = NULL,
+  names = NULL,
+  log = FALSE
 )
 }
 \arguments{

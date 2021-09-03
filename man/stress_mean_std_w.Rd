@@ -4,7 +4,16 @@
 \alias{stress_mean_std_w}
 \title{Stressing Mean and Standard Deviation}
 \usage{
-stress_mean_std_w(x, new_mean, new_sd, k = 1, normalise = FALSE, h = NULL)
+stress_mean_std_w(
+  x,
+  new_mean,
+  new_sd,
+  k = 1,
+  normalise = FALSE,
+  h = NULL,
+  names = NULL,
+  log = FALSE
+)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame

@@ -87,7 +87,7 @@
 #' @export
 #'
 stress_RM_mean_std_w <- function(x, alpha, new_mean, new_sd, q_ratio = NULL, q = NULL, k = 1,
-                        normalise = FALSE, h = NULL, gamma = NULL){
+                        normalise = FALSE, h = NULL, gamma = NULL, names = NULL, log = FALSE){
 
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -203,7 +203,15 @@ stress_RM_mean_std_w <- function(x, alpha, new_mean, new_sd, q_ratio = NULL, q =
 
   # Get weights
   new_weights <- .get_weights(x_data[,k], y_grid, gY_fn, fY_fn, hY)
-  names(new_weights) <- 'stress 1'
+
+  # Name stresses
+  if (is.null(names)) {
+    temp <- paste("stress", 1)
+  } else {
+    temp <- names
+  }
+  if (length(temp) != 1) stop("length of names are not the same as the number of models")
+  names(new_weights) <- temp
   
   # achieved mean and std
   for(j in 1:max_length){
@@ -233,11 +241,19 @@ stress_RM_mean_std_w <- function(x, alpha, new_mean, new_sd, q_ratio = NULL, q =
   }
   
   # Get constraints
-  constr <- list("stress 1" = list("k"=k, "q"=q, "alpha"=alpha, "new_mean"=new_mean, "new_sd" = new_sd))
+  constr <- list(list("k"=k, "q"=q, "alpha"=alpha, "new_mean"=new_mean, "new_sd" = new_sd))
+  names(constr) <- temp
   
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam, "gamma" = gamma,
                    "new_weights" = new_weights, "str_fY" = gY_fn, "str_FY" = GY_fn,
                    "str_FY_inv" = GY_inv_fn, "type" = type, "specs" = constr)
+  
+  if (is.SWIMw(x)) my_list <- merge(x, my_list)
+  
+  if (log) {
+    summary_weights(my_list)
+  }
+  
   return(my_list)
 }
 
