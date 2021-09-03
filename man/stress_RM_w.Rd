@@ -43,6 +43,10 @@ Silverman's rule).\cr}
 
 \item{gamma}{Function that defines the gamma of the risk measure which takes in 
 \code{alpha} as an argument (\code{default Expected Shortfall}).}
+
+\item{names}{Character vector, the names of stressed models.}
+
+\item{log}{Boolean, the option to print weights' statistics.}
 }
 \value{
 A \code{SWIMw} object containing:

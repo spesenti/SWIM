@@ -34,6 +34,10 @@ normalised to the unit interval.\cr}
 
 \item{h}{Function that defines the bandwidth used in KDEs. If null,
 Silverman's rule will be used.\cr}
+
+\item{names}{Character vector, the names of stressed models.}
+
+\item{log}{Boolean, the option to print weights' statistics.}
 }
 \value{
 A \code{SWIMw} object containing:

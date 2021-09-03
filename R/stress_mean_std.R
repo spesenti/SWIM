@@ -19,6 +19,8 @@
 #'                  normalised to the unit interval.\cr
 #' @param h Function that defines the bandwidth used in KDEs. If null,
 #' Silverman's rule will be used.\cr
+#' @param names   Character vector, the names of stressed models.
+#' @param log     Boolean, the option to print weights' statistics.
 #'
 #' @return A \code{SWIMw} object containing:
 #'     \itemize{

@@ -32,6 +32,8 @@
 #' Silverman's rule).\cr
 #' @param gamma Function that defines the gamma of the risk measure 
 #' (\code{default =} Expected Shortfall).
+#' @param names   Character vector, the names of stressed models.
+#' @param log     Boolean, the option to print weights' statistics.
 #'
 #' @details This function implements stresses on distortion risk measures.
 #'     Distortion risk measures are defined by a square-integrable function

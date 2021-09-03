@@ -250,7 +250,7 @@
   
   rename_SWIM <- function(object, names){
     if (!is.SWIM(object) & !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
-    if (length(names) != names(object$new_weights)) stop("The number of names is not consistent with SWIM or SWIMw object")
+    if (length(names) != length(names(object$new_weights))) stop("The number of names is not consistent with SWIM or SWIMw object")
     names(object$new_weights) <- names
     names(object$specs) <- names
     object <- object
