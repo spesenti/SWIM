@@ -249,9 +249,9 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   constr <- list(list("k"=k, "q"=q, "alpha"=alpha, "hu"=hu, "a"=a, "b"=b, "eta"=eta))
   names(constr) <- temp
   
-  my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam, "gamma"=gamma,
-                   "new_weights" = new_weights, "str_fY" = gY_fn, "str_FY" = GY_fn,
-                   "str_FY_inv" = GY_inv_fn, "type" = type, "specs" = constr)
+  my_list <- SWIMw("x" = x_data, "u"=u, "h"=list(h), "lam"=list(lam), "gamma" = list(gamma),
+                   "new_weights" = new_weights, "str_fY" = list(gY_fn), "str_FY" = list(GY_fn),
+                   "str_FY_inv" = list(GY_inv_fn), "type" = type, "specs" = constr)
   
   if (is.SWIMw(x)) my_list <- merge(x, my_list)
   

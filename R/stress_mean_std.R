@@ -188,9 +188,9 @@ stress_mean_std_w <- function(x, new_mean, new_sd, k = 1,
     constr <- c(constr, temp_list)
   }
   
-  my_list <- SWIMw("x" = x_data, "u"=u, "h"=h, "lam"=lam,
-                   "new_weights" = new_weights, "str_fY" = gY_fn, "str_FY" = GY_fn,
-                   "str_FY_inv" = GY_inv_fn, "type" = type, "specs" = constr)
+  my_list <- SWIMw("x" = x_data, "u"=u, "h"=list(h), "lam"=list(lam), "gamma" = list(gamma),
+                   "new_weights" = new_weights, "str_fY" = list(gY_fn), "str_FY" = list(GY_fn),
+                   "str_FY_inv" = list(GY_inv_fn), "type" = type, "specs" = constr)
 
   if (is.SWIMw(x)) my_list <- merge(x, my_list)
   

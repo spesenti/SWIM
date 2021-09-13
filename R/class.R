@@ -345,9 +345,10 @@
   merge.SWIMw <- function(x, y, ...){
     if (!is.SWIMw(x) | !is.SWIMw(y)) stop("x and y are not of class SWIMw.")
     if (!identical(get_data(x), get_data(y))) stop("x and y are not based on the same data")
+    if (!identical(get_data(x), get_data(y))) stop("x and y are not based on the same gridspace")
+    
     type <- c(x$type, y$type)
     h <- c(x$h, y$h)
-    u <- c(x$u, y$u)
     lam <- c(x$lam, y$lam)
     str_fY <- c(x$str_fY, y$str_fY)
     str_FY <- c(x$str_FY, y$str_FY)
@@ -370,7 +371,7 @@
      
     xy <- SWIMw("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs,
                 "str_fY" = str_fY, "str_FY" = str_FY, "str_FY_inv" = str_FY_inv,
-                "u" = u, "h" = h, "lam"=lam, "gamma"=gamma)
+                "u" = x$u, "h" = h, "lam"=lam, "gamma"=gamma)
     return(xy)
   }
   
