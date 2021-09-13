@@ -36,7 +36,7 @@
 #' @export
 
 cor_stressed <- function(object, xCol = c(1, 2), wCol = "all", method = "Pearson", base=FALSE){
-  if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
+  if (!is.SWIM(object) && !is.SWIMw(object)) stop("Wrong object")
   if (anyNA(object$x)) warning("x contains NA")
   if (!(method %in% c("Pearson", "Spearman", "Kendall"))) stop("Method must be one of Pearson, Spearman and Kendall")
   

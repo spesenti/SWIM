@@ -25,7 +25,7 @@ ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FAL
   if (!is.null(gamma)){
     if (!all(sapply(gamma, is.function))) stop("gamma must be a function")
   } else{
-    gamma <- function(x){as.numeric((x >= alpha) / (1 - alpha))}
+    gamma <- function(x, alpha_i){as.numeric((x >= alpha_i) / (1 - alpha_i))}
   }
 
   if (is.SWIM(object)){
@@ -38,7 +38,6 @@ ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FAL
     
   } else {
     # Wasserstein Distance
-    
     k <- object$specs$'stress 1'$k
     if(is.character(k)) k_name <- k
     if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
@@ -50,13 +49,13 @@ ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FAL
     VaR <- VaR_stressed(object, alpha = alpha, xCol = xCol, wCol = wCol, base = base)
     ES <- c()
     for (c in xCol){
-      h <- object$h(x_data[, c])
+      h <- object$h[[wCol]](x_data[, c])
       lower_bracket = min(x_data[, c])#-(max(x_data[, c])-min(x_data[, c]))*0.1
       upper_bracket = max(x_data[, c])#+(max(x_data[, c])-min(x_data[, c]))*0.1
       
       if(k_name == colnames(get_data(object))[c]){
         # Get stressed quantile
-        G.inv.fn <- Vectorize(object$str_FY_inv)
+        G.inv.fn <- Vectorize(object$str_FY_inv[[wCol]])
       } else{
         # Get KDE
         G.fn <- function(x){
@@ -65,7 +64,9 @@ ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FAL
         G.fn <- Vectorize(G.fn)
         G.inv.fn <- Vectorize(.inverse(G.fn, lower_bracket, upper_bracket))
       }
-      ES <- cbind(ES, .rm(G.inv.fn(u), gamma(u), u))
+      temp <- c()
+      for (alpha_i in alpha) {temp <- c(temp, .rm(G.inv.fn(u), gamma(u, alpha_i), u))}
+      ES <- cbind(ES, temp)
       
       if (base == TRUE){
         # Get KDE
@@ -74,11 +75,13 @@ ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FAL
         }
         F.fn <- Vectorize(F.fn)
         F.inv.fn <- Vectorize(.inverse(F.fn, lower_bracket, upper_bracket))
-        ES <- cbind(ES, .rm(F.inv.fn(u), gamma(u), u))
+        
+        temp <- c()
+        for (alpha_i in alpha) {temp <- c(temp, .rm(G.inv.fn(u), gamma(u, alpha_i), u))}
+        ES <- cbind(ES, temp)
       }
     }
   }
-  
   rownames(ES) <- rownames(VaR)
   colnames(ES) <- colnames(VaR)
   return(ES)

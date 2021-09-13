@@ -91,9 +91,9 @@ if (is.SWIM(object)){
 } else {
    # Wasserstein Distance
    w <- get_weights(object)[ , wCol]
-   x_data <- get_data(object)[, xCol]
-   h <- object$h(x_data)
-
+   x_data <- get_data(object)
+   h <- object$h[[wCol]](x_data)
+   
    k <- object$specs$'stress 1'$k
    if(is.character(k)) k_name <- k
    if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
@@ -101,13 +101,15 @@ if (is.SWIM(object)){
    
    quantile_w <- c()
    col_names <- c()
+   
    for (c in cname){
       lower_bracket = min(x_data[, c])
       upper_bracket = max(x_data[, c])
       
+      
       if(k_name == c){
          # Get stressed quantile function
-         G.inv.fn <- Vectorize(object$str_FY_inv)
+         G.inv.fn <- Vectorize(object$str_FY_inv[[wCol]])
       } else{
          # Get KDE
          G.fn <- function(x){

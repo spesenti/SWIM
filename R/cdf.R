@@ -54,7 +54,7 @@ cdf <- function(object, xCol = 1, wCol = 1){
   } else {
     # Wasserstein Distance
     k <- object$specs$'stress 1'$k
-    h <- object$h(x_data)
+    h <- object$h[[wCol]](x_data)
     if(is.character(k)) k_name <- k
     if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
     else if(!is.character(k)) k_name <- colnames(get_data(object))[k]
@@ -62,7 +62,7 @@ cdf <- function(object, xCol = 1, wCol = 1){
     x_name <- colnames(get_data(object))[xCol]
     if(k_name == x_name){
       # Get stressed distribution
-      G.fn <- object$str_FY
+      G.fn <- object$str_FY[[wCol]]
     } else{
       # Get KDE estimate
       G.fn <- function(x){
