@@ -3,13 +3,12 @@
 #' Provides the empirical distribution of a stressed model component (random variable) under the scenario weights
 #' 
 #' @inheritParams sensitivity 
-#' @param xCol    Vector or characters, (names of) the columns of the underlying data 
-#'                of the \code{object} (\code{default = "all"}). 
-#' @param wCol    Numeric, the columns of the scenario weights 
-#'                of the \code{object} (\code{default = 1}).
-#' @param grid    A matrix containing the empirical distribution of the xCol components 
-#'                of the stressed model with weights wCol. The empirical distribution 
-#'                function can be evaluated at a vector valued xCol.
+#' @param xCol    Numeric, (name of) the column of the underlying data 
+#'                of the \code{object} (\code{default = 1}). 
+#' @param wCol    Vector or characters, the columns of the scenario weights 
+#'                of the \code{object} (\code{default = "all"}).
+#' @param grid    Vecto, rthe empirical distribution of the xCol component
+#'                of the stressed model with weights wCol. 
 #' @param base    Logical, if TRUE, statistics under the baseline are also returned (default = "FALSE").]
 #' 
 #' @details The \code{cdf_stressed} returns the values of the empirical distribution function 
@@ -29,10 +28,9 @@
 #'   "gamma" = rgamma(1000, shape = 2)))
 #' res1 <- stress(type = "VaR", x = x, 
 #'   alpha = c(0.9, 0.95), q_ratio = 1.05)
-#' grid <- cbind(seq(min(x$normal), max(x$normal), length.out = 5), 
-#'               seq(min(x$gamma), max(x$gamma), length.out = 5))
+#' grid <- seq(min(x$normal), max(x$normal), length.out = 5)
 #' ## stressed empirical distribution function
-#' cdf_stressed(res1, xCol = "all", wCol = 1, grid = grid)
+#' cdf_stressed(res1, xCol = 1, wCol = "all", grid = grid)
 #' 
 #' @author Kent Wu
 #' 
@@ -42,45 +40,29 @@
 #' @export
 #' 
 
-cdf_stressed <- function(object, xCol = "all", wCol = 1, grid, base=FALSE){
-  if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
+cdf_stressed <- function(object, xCol = 1, wCol = "all", grid, base=FALSE){
+  if (!is.SWIM(object) && !is.SWIMw(object)) stop("Wrong object")
   if (anyNA(object$x)) warning("x contains NA")
+  
+  if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
+  new_weights <- get_weights(object)[ , wCol]
 
-  if (length(wCol) > 1 || wCol == "all") stop("Input wCol has dimension larger than 1")
-  if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
+  if (length(xCol) > 1 || xCol == "all") stop("Input xCol has dimension larger than 1")
   x_data <- as.matrix(get_data(object, xCol = xCol))
-  new_weights <- as.matrix(get_weights(object)[ , wCol]) # single weight
+
+  # loop over the selected weights
+  res <- matrix(NA, ncol=length(grid), nrow=length(wCol))
+  for (i in 1:length(wCol)) {res[i, ] <- cdf(object, xCol = xCol, wCol = wCol[i])(grid)}
   
-  if (ncol(as.matrix(x_data)) != ncol(as.matrix(grid))) stop("The number of model components does match with input dimension of grid")
-  cdf <- .cdf_stressed(x = x_data, w = new_weights, grid = grid)
-  
-  if (is.null(colnames(get_data(object)))){
-    cname <-  paste("X", as.character(xCol), sep = "")
-  } else if (!is.character(xCol)){
-    cname <- colnames(get_data(object))[xCol]
-  } else {
-    cname <- xCol   
-  }
-  colnames(cdf) <- cname
+  rownames(res) <- names(object$specs)[wCol]
   
   if (base == TRUE){
-    old_weights <- as.matrix(rep(1, length(x_data[,1])), ncol = 1)
-    cdf_base <- .cdf_stressed(x = x_data, w = old_weights, grid = grid)
-    colnames(cdf_base) <- paste("base", cname, sep=' ')
-    cdf <- cbind(cdf, cdf_base)
+    base <- (stats::ecdf(x_data[, xCol])(grid))
+    res <- rbind(res, base)
   }
-  return(cdf)
-}
-
-
-# help function 
-# x    numeric vector  
-# w    numeric vector with weights
-.cdf_stressed <- function(x, w, grid){
-  d <- ncol(x)
-  t <- as.matrix(grid)
   
-  res <- matrix(NA, ncol=d, nrow=nrow(t))
-  for (i in 1:d) {res[, i] <- t(w) %*% sapply(t[, i], FUN = function(s) x[, i] <= s) / nrow(x)}
+  colnames(res) <-round(grid, 4)
   return(res)
 }
+
+
