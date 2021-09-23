@@ -38,7 +38,8 @@ ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FAL
     
   } else {
     # Wasserstein Distance
-    k <- object$specs$'stress 1'$k
+    index <- names(object$specs)[wCol]
+    k <- object$specs[[index]]$k
     if(is.character(k)) k_name <- k
     if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
     else if(!is.character(k)) k_name <- colnames(get_data(object))[k]
@@ -48,7 +49,7 @@ ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FAL
     
     VaR <- VaR_stressed(object, alpha = alpha, xCol = xCol, wCol = wCol, base = base)
     ES <- c()
-    for (c in xCol){
+    for (c in 1:length(xCol)){
       h <- object$h[[wCol]](x_data[, c])
       lower_bracket = min(x_data[, c])#-(max(x_data[, c])-min(x_data[, c]))*0.1
       upper_bracket = max(x_data[, c])#+(max(x_data[, c])-min(x_data[, c]))*0.1

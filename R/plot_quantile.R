@@ -82,7 +82,8 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
     x_data <- get_data(object)[, xCol]
     h <- object$h(x_data)
     
-    k <- object$specs$'stress 1'$k
+    index <- names(object$specs)[wCol]
+    k <- object$specs[[index]]$k
     if(is.character(k)) k_name <- k
     if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
     else if(!is.character(k)) k_name <- colnames(get_data(object))[k]

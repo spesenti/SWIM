@@ -53,7 +53,8 @@ cdf <- function(object, xCol = 1, wCol = 1){
     
   } else {
     # Wasserstein Distance
-    k <- object$specs$'stress 1'$k
+    index <- names(object$specs)[wCol]
+    k <- object$specs[[index]]$k
     h <- object$h[[wCol]](x_data)
     if(is.character(k)) k_name <- k
     if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
