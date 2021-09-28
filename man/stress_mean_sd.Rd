@@ -4,7 +4,16 @@
 \alias{stress_mean_sd}
 \title{Stressing Mean and Standard Deviation}
 \usage{
-stress_mean_sd(x, k, new_means, new_sd, normalise = TRUE, ...)
+stress_mean_sd(
+  x,
+  k,
+  new_means,
+  new_sd,
+  normalise = TRUE,
+  names = NULL,
+  log = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame
@@ -24,6 +33,10 @@ containing the stressed standard deviations.}
 
 \item{normalise}{Logical. If true, values of \code{f(x)} are linearly
 scaled to the unit interval.}
+
+\item{names}{Character vector, the names of stressed models.}
+
+\item{log}{Boolean, the option to print weights' statistics.}
 
 \item{...}{Additional arguments to be passed to
 \code{\link[nleqslv]{nleqslv}} or

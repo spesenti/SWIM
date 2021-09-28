@@ -4,7 +4,7 @@
 \alias{stress_mean}
 \title{Stressing Means}
 \usage{
-stress_mean(x, k, new_means, normalise = TRUE, ...)
+stress_mean(x, k, new_means, normalise = TRUE, names = NULL, log = FALSE, ...)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame
@@ -21,6 +21,10 @@ containing the stressed means.}
 
 \item{normalise}{Logical. If true, values of \code{f(x)} are linearly
 scaled to the unit interval.}
+
+\item{names}{Character vector, the names of stressed models.}
+
+\item{log}{Boolean, the option to print weights' statistics.}
 
 \item{...}{Additional arguments to be passed to
 \code{\link[nleqslv]{nleqslv}} or
