@@ -16,7 +16,7 @@ plot_hist(
 )
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
 \item{xCol}{Numeric or character, (name of) the column of the underlying data
 of the \code{object} (\code{default = 1}).}

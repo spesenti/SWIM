@@ -36,7 +36,7 @@
 #' @export
 
 sd_stressed <- function(object, xCol = "all", wCol = "all", base=FALSE){
-  if (!is.SWIM(object)) stop("Object not of class 'SWIM'")
+  if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class 'SWIM' or 'SWIMw'")
   
   mean_w <- mean_stressed(object, xCol, wCol, base)
   cname <- colnames(mean_w)

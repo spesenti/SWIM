@@ -4,20 +4,19 @@
 \alias{cdf_stressed}
 \title{Empirical Distribution Function of a Stressed Model}
 \usage{
-cdf_stressed(object, xCol = "all", wCol = 1, grid, base = FALSE)
+cdf_stressed(object, xCol = 1, wCol = "all", grid, base = FALSE)
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
-\item{xCol}{Vector or characters, (names of) the columns of the underlying data 
-of the \code{object} (\code{default = "all"}).}
-
-\item{wCol}{Numeric, the columns of the scenario weights 
+\item{xCol}{Numeric, (name of) the column of the underlying data 
 of the \code{object} (\code{default = 1}).}
 
-\item{grid}{A matrix containing the empirical distribution of the xCol components 
-of the stressed model with weights wCol. The empirical distribution 
-function can be evaluated at a vector valued xCol.}
+\item{wCol}{Vector or characters, the columns of the scenario weights 
+of the \code{object} (\code{default = "all"}).}
+
+\item{grid}{Vecto, rthe empirical distribution of the xCol component
+of the stressed model with weights wCol.}
 
 \item{base}{Logical, if TRUE, statistics under the baseline are also returned (default = "FALSE").]}
 }
@@ -44,10 +43,9 @@ x <- as.data.frame(cbind(
   "gamma" = rgamma(1000, shape = 2)))
 res1 <- stress(type = "VaR", x = x, 
   alpha = c(0.9, 0.95), q_ratio = 1.05)
-grid <- cbind(seq(min(x$normal), max(x$normal), length.out = 5), 
-              seq(min(x$gamma), max(x$gamma), length.out = 5))
+grid <- seq(min(x$normal), max(x$normal), length.out = 5)
 ## stressed empirical distribution function
-cdf_stressed(res1, xCol = "all", wCol = 1, grid = grid)
+cdf_stressed(res1, xCol = 1, wCol = "all", grid = grid)
 
 }
 \seealso{

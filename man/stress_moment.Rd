@@ -130,12 +130,17 @@ See \code{\link{stress_mean}} for stressing means and
     deviation jointly.
 
 Other stress functions: 
+\code{\link{stress_HARA_RM_w}()},
+\code{\link{stress_RM_mean_std_w}()},
+\code{\link{stress_RM_w}()},
 \code{\link{stress_VaR_ES}()},
 \code{\link{stress_VaR}()},
 \code{\link{stress_mean_sd}()},
+\code{\link{stress_mean_std_w}()},
 \code{\link{stress_mean}()},
 \code{\link{stress_prob}()},
 \code{\link{stress_user}()},
+\code{\link{stress_wass}()},
 \code{\link{stress}()}
 }
 \concept{stress functions}
