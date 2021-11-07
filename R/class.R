@@ -215,10 +215,11 @@
 
   #' Rename Stressed Models
   #'     
-  #' @details Get a new \code{SWIM} object with desired \code{names}
+  #' @details Get a new \code{SWIM} object with desired \code{name}
   #' 
   #' @param object A \code{SWIM} object
-  #' @param names   Character vector, the names of stressed models
+  #' @param name   Character, the new name of k-th stressed model.
+  #' @param k   Numeric, the k-th stressed model of object to rename. (\code{default = 1}).
   #'  
   #' @return An renamed object of class \code{SWIM} containing:
   #'   \itemize{
@@ -242,17 +243,18 @@
   #'   "gamma" = rgamma(1000, shape = 2)))
   #' res1 <- stress(type = "VaR", x = x,
   #'   alpha = 0.9, q_ratio = 1.05)
-  #' rename_SWIM(res1, "A")
+  #' rename_SWIM(res1, "A", 1)
   #' 
   #' @author Kent Wu 
   #'
   #' @export
   
-  rename_SWIM <- function(object, names){
+  rename_SWIM <- function(object, name, k=1){
     if (!is.SWIM(object) & !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
-    if (length(names) != length(names(object$new_weights))) stop("The number of names is not consistent with SWIM or SWIMw object")
-    names(object$new_weights) <- names
-    names(object$specs) <- names
+    temp <- names(object$new_weights)
+    temp[k] <- name
+    names(object$new_weights) <- temp
+    names(object$specs) <- temp
     object <- object
     return(object)
   }
@@ -404,3 +406,42 @@
   
   .gini <- function(w) mean(outer(X = w, Y = w, FUN = function(x, y)abs(x - y))) / 2
   .entropy <- function(freqs) -sum(freqs * log2(freqs))
+
+  
+  #' Convert SWIMw to SWIM 
+  #'     
+  #' @details Convert a SWIMw object into a SWIM object
+  #' 
+  #' @param object A \code{SWIMw} object
+  #'  
+  #' @return A \code{SWIM} object containing:
+  #'     \itemize{
+  #'       \item \code{x}, a data.frame containing the data;
+  #'       \item \code{new_weights}, a list of functions, that applied to
+  #'   the \code{k}th column of \code{x}, generates the vectors of scenario
+  #'   weights. Each component corresponds to a different stress;
+  #'      \item \code{type = "VaR"};
+  #'      \item \code{specs}, a list, each component corresponds to
+  #'    a different stress and contains \code{k},
+  #'     \code{alpha} and \code{q}.
+  #'     }
+  #'     See \code{\link{SWIM}} for details.
+  #' 
+  #' @examples
+  #' set.seed(0)
+  #' x <- as.data.frame(cbind(
+  #'   "normal" = rnorm(1000),
+  #'   "gamma" = rgamma(1000, shape = 2)))
+  #' res1 <- stress(type = "VaR", x = x,
+  #'   alpha = 0.9, q_ratio = 1.05)
+  #' convert_SWIMw_to_SWIM(res1)
+  #' 
+  #' @author Kent Wu 
+  #'
+  #' @export
+
+  convert_SWIMw_to_SWIM <- function(object) {
+    if (!is.SWIMw(object)) stop("Object not of class SWIMw")
+    my_list <- SWIM("x" = object$x, "new_weights" = object$x, "type" = object$type, "specs" = object$specs)
+    return (my_list)
+  }

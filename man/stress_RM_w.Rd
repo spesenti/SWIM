@@ -22,7 +22,7 @@ stress_RM_w(
 containing realisations of random variables. Columns of \code{x}
 correspond to random variables; OR\cr
 A \code{SWIMw} object, where \code{x} corresponds to the
-underlying data of the \code{SWIMw} object.}
+underlying data of the \code{SWIMw} object. The stressed random component is assumed continuously distributed.}
 
 \item{alpha}{Numeric, vector, the levels of the stressed risk measure (RM).\cr}
 

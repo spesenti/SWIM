@@ -4,12 +4,14 @@
 \alias{rename_SWIM}
 \title{Rename Stressed Models}
 \usage{
-rename_SWIM(object, names)
+rename_SWIM(object, name, k = 1)
 }
 \arguments{
 \item{object}{A \code{SWIM} object}
 
-\item{names}{Character vector, the names of stressed models}
+\item{name}{Character, the new name of k-th stressed model.}
+
+\item{k}{Numeric, the k-th stressed model of object to rename. (\code{default = 1}).}
 }
 \value{
 An renamed object of class \code{SWIM} containing:
@@ -31,7 +33,7 @@ See \code{\link{SWIM}} for details.
 Rename Stressed Models
 }
 \details{
-Get a new \code{SWIM} object with desired \code{names}
+Get a new \code{SWIM} object with desired \code{name}
 }
 \examples{
 set.seed(0)
@@ -40,7 +42,7 @@ x <- as.data.frame(cbind(
   "gamma" = rgamma(1000, shape = 2)))
 res1 <- stress(type = "VaR", x = x,
   alpha = 0.9, q_ratio = 1.05)
-rename_SWIM(res1, "A")
+rename_SWIM(res1, "A", 1)
 
 }
 \author{

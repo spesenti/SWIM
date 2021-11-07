@@ -8,7 +8,7 @@ plot_sensitivity(
   object,
   xCol = "all",
   wCol = "all",
-  type = c("Gamma", "Kolmogorov", "Wasserstein", "reverse"),
+  type = c("Gamma", "Kolmogorov", "Wasserstein", "reverse", "all"),
   f = NULL,
   k = NULL,
   s = NULL,
