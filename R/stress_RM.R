@@ -134,8 +134,8 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   }
   FY_fn <- Vectorize(FY_fn)
   
-  fY_fn <- kde_f(y)[[1]]
-  FY_fn <- kde_f(y)[[2]]
+  # fY_fn <- kde_f(y)[[1]]
+  # FY_fn <- kde_f(y)[[2]]
   
   lower_bracket = min(x_data[,k])-(max(x_data[,k])-min(x_data[,k]))*0.1
   upper_bracket = max(x_data[,k])+(max(x_data[,k])-min(x_data[,k]))*0.1
