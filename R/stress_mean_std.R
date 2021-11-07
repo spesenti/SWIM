@@ -6,11 +6,8 @@
 #'     Scenario weights are
 #'     selected by constrained minimisation of the Wasserstein distance to the
 #'     baseline model.
-#' @param x       A vector, matrix or data frame
-#'     containing realisations of random variables. Columns of \code{x}
-#'     correspond to random variables; OR\cr
-#'     A \code{SWIMw} object, where \code{x} corresponds to the
-#'     underlying data of the \code{SWIMw} object.
+#'     
+#' @inheritParams    stress_RM_w
 #' @param k       Numeric, the column of \code{x} that is stressed
 #'     \code{(default = 1)}.\cr
 #' @param new_mean    Numeric, the stressed mean.\cr
@@ -77,6 +74,7 @@ stress_mean_std_w <- function(x, new_mean, new_sd, k = 1,
   u <- c(.ab_grid(1e-4, 0.05, 100), .ab_grid(0.05, 0.99, 500), .ab_grid(0.99, 1-1e-4, 100))
   
   # Get the KDE estimates for fY, FY
+  print("Get the KDE estimates for fY, FY")
   if (is.null(h)){
     # Use Silverman's Rule
     h <- function(y){1.06 * stats::sd(y) * length(y)^(-1/5)}
@@ -96,6 +94,7 @@ stress_mean_std_w <- function(x, new_mean, new_sd, k = 1,
   lower_bracket = min(x_data[,k])-(max(x_data[,k])-min(x_data[,k]))*0.1
   upper_bracket = max(x_data[,k])+(max(x_data[,k])-min(x_data[,k]))*0.1
   FY_inv_fn <- Vectorize(.inverse(FY_fn, lower_bracket, upper_bracket))
+  print("Done calculating KDE")
   
   .objective_fn <- function(par){
     # Get ell = F_inv + sum(lam[1] + lam[2]*mean)
@@ -113,6 +112,7 @@ stress_mean_std_w <- function(x, new_mean, new_sd, k = 1,
   }
   
   # Run optimization
+  print("Run optimization")
   for(i in range(1:5)){
     init_lam <- stats::rnorm(2)
     res <- stats::optim(init_lam, .objective_fn, method = "Nelder-Mead")
@@ -132,14 +132,17 @@ stress_mean_std_w <- function(x, new_mean, new_sd, k = 1,
       break
     }
   }
+  print("Optimization converged")
 
   # Get GY_inv_fn, y_grid
-  left <- min(min(x_data[,k]), GY_inv[4])
+  print("Calculate optimal quantile function")
+    left <- min(min(x_data[,k]), GY_inv[4])
   right <- max(max(x_data[,k]), GY_inv[length(GY_inv)-3])
   GY_inv_fn <- stats::approxfun(u, GY_inv, yleft=left-1e-5, yright=right+1e-5)
   y_grid <- seq(from=GY_inv[4], to=GY_inv[length(GY_inv)-3], length.out=500)
   
   # Get GY and gY
+  print("Calculate optimal cdf and density")
   GY_fn <- .inverse(GY_inv_fn, lower=0, upper=1)
   GY_fn <- Vectorize(GY_fn)
   dG_inv <- (GY_inv[3:length(GY_inv)] - GY_inv[1:(length(GY_inv)-2)])/(u[3:length(u)] - u[1:(length(u)-2)])
@@ -199,38 +202,4 @@ stress_mean_std_w <- function(x, new_mean, new_sd, k = 1,
   }
   
   return(my_list)
-}
-
-# helper functions
-.ab_grid <- function(a, b, N){
-  eps <- 0.002
-  u_eps <- 10^(seq(from=-10, to=log10(eps), length.out=10)) - 1e-11
-  return(c(a + u_eps, seq(from=a + eps, to=b - eps, length.out=N), b - rev(u_eps)))
-}
-
-.inverse <- function(f, lower = -100, upper = 100){
-  return(function(y){stats::uniroot((function(x){f(x) - y}), lower = lower, upper = upper, extendInt = 'yes')$root})
-}
-
-.integrate <- function(f, x){
-  return(sum(0.5*(f[1:length(f) - 1] + f[2:length(f)])*diff(x)))
-}
-
-.get_weights <- function(y_data, y_grid, gY_fn, fY_fn, hY){
-  # Get dQ/dP
-  g_val <- gY_fn(y_grid)
-  # g.val[is.na(g.val)] <- 0
-  g_val <- g_val/.integrate(g_val, y_grid)
-  f_val <- fY_fn(y_grid)/.integrate(fY_fn(y_grid), y_grid)
-  dQ_dP <- g_val / f_val
-
-  # Get weights
-  w <- vector()
-  for(i in 1:length(y_data)){
-    w <- c(w, .integrate(dQ_dP*stats::dnorm((y_grid - y_data[i])/hY)/hY, y_grid))
-  }
-  # Normalize weights
-  w <- w / sum(w) * length(y_data)
-  
-  return(list(w))
 }

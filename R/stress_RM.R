@@ -10,7 +10,7 @@
 #'     containing realisations of random variables. Columns of \code{x}
 #'     correspond to random variables; OR\cr
 #'     A \code{SWIMw} object, where \code{x} corresponds to the
-#'     underlying data of the \code{SWIMw} object.
+#'     underlying data of the \code{SWIMw} object. The stressed random component is assumed continuously distributed.
 #' @param k       Numeric, the column of \code{x} that is stressed
 #'     \code{(default = 1)}.\cr
 #' @param alpha   Numeric, vector, the levels of the stressed risk measure (RM).\cr
@@ -86,7 +86,7 @@
 #'
 stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
                         normalise = FALSE, h = NULL, gamma = NULL, names = NULL, log = FALSE){
-  
+  t0 <- Sys.time()
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
@@ -107,6 +107,7 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   u <- c(.ab_grid(1e-4, 0.05, 100), .ab_grid(0.05, 0.99, 500), .ab_grid(0.99, 1-1e-4, 100))
   
   # Get the KDE estimates for fY, FY
+  print("Get the KDE estimates for fY, FY")
   if (is.null(h)){
     # Use Silverman's Rule
     h <- function(y){1.06 * stats::sd(y) * length(y)^(-1/5)}
@@ -115,27 +116,41 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   }
   hY <- h(x_data[,k])
   
+  # kde_f <- function(y) {
+  #   fY_fn_wrapper <- function(y) snpar::kde(x_data[,k], hY, y)$fhat
+  #   fY_fn_wrapper <- Vectorize(fY_fn_wrapper)
+  #   FY_fn_wrapper <- function(y) snpar::kde(x_data[,k], hY, y)$Fhat
+  #   FY_fn_wrapper <- Vectorize(FY_fn_wrapper)
+  #   return (list(fY_fn_wrapper, FY_fn_wrapper))
+  # }
+  
   fY_fn <- function(y){
     return(sum(stats::dnorm((y - x_data[,k])/hY)/hY/length(x_data[,k])))
   }
   fY_fn <- Vectorize(fY_fn)
+
   FY_fn <- function(y){
     return(sum(stats::pnorm((y - x_data[,k])/hY)/length(x_data[,k])))
   }
   FY_fn <- Vectorize(FY_fn)
+  
+  fY_fn <- kde_f(y)[[1]]
+  FY_fn <- kde_f(y)[[2]]
+  
   lower_bracket = min(x_data[,k])-(max(x_data[,k])-min(x_data[,k]))*0.1
   upper_bracket = max(x_data[,k])+(max(x_data[,k])-min(x_data[,k]))*0.1
   FY_inv_fn <- Vectorize(.inverse(FY_fn, lower_bracket, upper_bracket))
-  
+  print(Sys.time() - t0)
+  print("Done calculating KDE")
   
   # Calculate the risk measure
+  print("Calculate the risk measure")
   if(is.null(q)){
     q = c()
     for (i in 1:length(q_ratio)){
       q <- append(q, .rm(FY_inv_fn(u), gamma(u, alpha[i]), u) * q_ratio[i])
     }
   }
-  
   
   .objective_fn <- function(par){
     # Get ell = F_inv + sum(lam*gamma)
@@ -151,18 +166,22 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
     GY_inv <- stats::isoreg(u, ell_fn(u))$yf
     
     # Return RM error
-    rm_stress <-c ()
+    rm_stress <- c()
     for (i in 1:length(alpha)){
       rm_stress <- append(rm_stress, .rm(GY_inv, gamma(u, alpha[i]), u))
     }
     return(sqrt(sum(q - rm_stress)^2))
   }
-  
+  print(Sys.time() - t0)
+
   # Run optimization
+  print("Run optimization")
   max_length <- length(q)
   init_lam <- stats::rnorm(max_length)
   res <- stats::optim(init_lam, .objective_fn, method = "Nelder-Mead")
   lam <- res$par
+  print(Sys.time() - t0)
+  print("Optimization converged")
   
   # Get ell
   ell_fn <- function(x){
@@ -175,19 +194,22 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   ell <- ell_fn(u)
   
   # Get GY_inv, y_grid
+  print("Calculate optimal quantile function")
   GY_inv <- stats::isoreg(u, ell)$yf
   left <- min(min(x_data[,k]), GY_inv[4])
   right <- max(max(x_data[,k]), GY_inv[length(GY_inv)-3])
   GY_inv_fn <- stats::approxfun(u, GY_inv, yleft=left-1e-5, yright=right+1e-5)
   y_grid <- seq(from=GY_inv[4], to=GY_inv[length(GY_inv)-3], length.out=500)
-  
+  print(Sys.time() - t0)
   
   # Get GY and gY
+  print("Calculate optimal cdf and density")
   GY_fn <- Vectorize(.inverse(GY_inv_fn, lower=0, upper=1))
   
   dG_inv <- (GY_inv[3:length(GY_inv)] - GY_inv[1:(length(GY_inv)-2)])/(u[3:length(u)] - u[1:(length(u)-2)])
   dG_inv_fn <- stats::approxfun(0.5*(u[3:length(u)] + u[1:(length(u)-2)]), dG_inv, rule=2)
   gY_fn <- function(x){1/dG_inv_fn(GY_fn(x))}
+  print(Sys.time() - t0)
   
   # Create SWIMw object
   type <- list("RM")
@@ -224,7 +246,12 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=list(h), "lam"=list(lam), "gamma" = list(gamma),
                    "new_weights" = new_weights, "str_fY" = list(gY_fn), "str_FY" = list(GY_fn),
                    "str_FY_inv" = list(GY_inv_fn), "type" = type, "specs" = constr)
-
+  
+  ## use for plotting the different kdes
+  # plot(GY_inv_fn, lim = c(-3,3))
+  # axis(side=2, at=seq(-3, 3, by=1))
+  # return (list(GY_inv_fn))
+  
   if (is.SWIMw(x)) my_list <- merge(x, my_list)
   
   if (log) {
@@ -234,40 +261,3 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   return(my_list)
 }
 
-# helper functions
-.ab_grid <- function(a, b, N){
-  eps <- 0.002
-  u_eps <- 10^(seq(from=-10, to=log10(eps), length.out=10)) - 1e-11
-  return(c(a + u_eps, seq(from=a + eps, to=b - eps, length.out=N), b - rev(u_eps)))
-}
-
-.inverse <- function(f, lower = -100, upper = 100){
-  return(function(y){stats::uniroot((function(x){f(x) - y}), lower = lower, upper = upper, extendInt = 'yes')$root})
-}
-
-.rm <- function(F_inv, gamma, u){
-  return(.integrate(F_inv*gamma, u))
-}
-
-.integrate <- function(f, x){
-  return(sum(0.5*(f[1:length(f) - 1] + f[2:length(f)])*diff(x)))
-}
-
-.get_weights <- function(y_data, y_grid, gY_fn, fY_fn, hY){
-  # Get dQ/dP
-  g_val <- gY_fn(y_grid)
-  # g.val[is.na(g.val)] <- 0
-  g_val <- g_val/.integrate(g_val, y_grid)
-  f_val <- fY_fn(y_grid)/.integrate(fY_fn(y_grid), y_grid)
-  dQ_dP <- g_val / f_val
-  
-  # Get weights
-  w <- vector()
-  for(i in 1:length(y_data)){
-    w <- c(w, .integrate(dQ_dP*stats::dnorm((y_grid - y_data[i])/hY)/hY, y_grid))
-  }
-  # Normalize weights
-  w <- w / sum(w) * length(y_data)
-  
-  return(list(w))
-}
