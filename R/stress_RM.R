@@ -117,13 +117,13 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   hY <- h(x_data[,k])
   
   # kde_f <- function(y) {
-  #   fY_fn_wrapper <- function(y) snpar::kde(x_data[,k], hY, y)$fhat
+  #   fY_fn_wrapper <- function(y) snpar::kde(x_data[,k], hY, y, kernel = "gaus")$fhat
   #   fY_fn_wrapper <- Vectorize(fY_fn_wrapper)
-  #   FY_fn_wrapper <- function(y) snpar::kde(x_data[,k], hY, y)$Fhat
+  #   FY_fn_wrapper <- function(y) snpar::kde(x_data[,k], hY, y, kernel = "gaus")$Fhat
   #   FY_fn_wrapper <- Vectorize(FY_fn_wrapper)
   #   return (list(fY_fn_wrapper, FY_fn_wrapper))
   # }
-  
+
   fY_fn <- function(y){
     return(sum(stats::dnorm((y - x_data[,k])/hY)/hY/length(x_data[,k])))
   }
@@ -151,7 +151,7 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
       q <- append(q, .rm(FY_inv_fn(u), gamma(u, alpha[i]), u) * q_ratio[i])
     }
   }
-  
+
   .objective_fn <- function(par){
     # Get ell = F_inv + sum(lam*gamma)
     ell_fn <- function(x){
@@ -164,12 +164,13 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
     
     # Get isotonic projection of ell
     GY_inv <- stats::isoreg(u, ell_fn(u))$yf
-    
+
     # Return RM error
     rm_stress <- c()
     for (i in 1:length(alpha)){
       rm_stress <- append(rm_stress, .rm(GY_inv, gamma(u, alpha[i]), u))
     }
+    # print(Sys.time() - t0)
     return(sqrt(sum(q - rm_stress)^2))
   }
   print(Sys.time() - t0)
@@ -227,6 +228,7 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
   names(new_weights) <- temp
   
   # achieved RM
+  m <- q
   for(j in 1:max_length){
     RM_achieved <-c()
     for (i in 1:length(alpha)){
@@ -238,6 +240,13 @@ stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
       q <- RM_achieved
     }
   }
+  
+  # Compare constraint and achieved stress
+  m.ac <- RM_achieved
+  err <- m - m.ac
+  rel.err <- (err / m) * (m != 0)
+  outcome <- data.frame(cols = as.character(k), required_RM = m, achieved_RM = m.ac, abs_error = err, rel_error = rel.err)
+  print(outcome)  
   
   # Get constraints
   constr <- list(list("k"=k, "q"=q, "alpha"=alpha))

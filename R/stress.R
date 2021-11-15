@@ -74,8 +74,8 @@
 #' 
   stress_wass <- function(type = c("RM", "mean sd", "RM mean sd", "HARA RM"), ...){
      if (type == "RM") SWIMw <- stress_RM_w(...)
-     if (type == "mean sd") SWIMw <- stress_mean_std_w(...)
-     if (type == "RM mean sd") SWIMw <- stress_RM_mean_std_w(...)
+     if (type == "mean sd") SWIMw <- stress_mean_sd_w(...)
+     if (type == "RM mean sd") SWIMw <- stress_RM_mean_sd_w(...)
      if (type == "HARA RM") SWIMw <- stress_HARA_RM_w(...)
      if (type == "mean") SWIMw <- stress_mean_w(...)
      return(SWIMw)

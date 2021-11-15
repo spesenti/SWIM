@@ -233,17 +233,35 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
     for (i in 1:length(alpha)){
       RM_achieved <- append(RM_achieved, .rm(GY_inv_fn(u), gamma(u, alpha[i]), u))
     }
-    # message if the achieved RM is different from the specified stress.
-    if(any(q - RM_achieved > 1e-4)) {
-      message(paste("Stressed RM specified was ", round(q, 4),", stressed RM achieved is ", round(RM_achieved, 4)))
-      q <- RM_achieved
-    }
-    hara_achieved <- .hara_utility(a, b, eta, u, GY_inv)
-    # message if the achieved hara utility is different from the specified utility.
-    if(hu - hara_achieved > 1e-4) {
-      message(paste("Stressed HARA Utility specified was ", round(hu, 4),", stressed HARA Utility achieved is ", round(hara_achieved, 4)))
-      hu <- hara_achieved
-    }
+  }
+  
+  # Compare constraint and achieved stress
+  m <- q
+  m.ac <- RM_achieved
+  err <- m - m.ac
+  rel.err <- (err / m) * (m != 0)
+  outcome <- data.frame(cols = as.character(k), required_RM = m, achieved_RM = m.ac, abs_error = err, rel_error = rel.err)
+  print(outcome)  
+  
+  # message if the achieved RM is different from the specified stress.
+  if(any(q - RM_achieved > 1e-4)) {
+    message(paste("Stressed RM specified was ", round(q, 4),", stressed RM achieved is ", round(RM_achieved, 4)))
+    q <- RM_achieved
+  }
+  
+  # Compare constraint and achieved stress
+  hara_achieved <- .hara_utility(a, b, eta, u, GY_inv)
+  m <- hu
+  m.ac <- hara_achieved
+  err <- m - m.ac
+  rel.err <- (err / m) * (m != 0)
+  outcome <- data.frame(cols = as.character(k), required_RM = m, achieved_moment = m.ac, abs_error = err, rel_error = rel.err)
+  print(outcome)  
+  
+  # message if the achieved hara utility is different from the specified utility.
+  if(hu - hara_achieved > 1e-4) {
+    message(paste("Stressed HARA Utility specified was ", round(hu, 4),", stressed HARA Utility achieved is ", round(hara_achieved, 4)))
+    hu <- hara_achieved
   }
   
   # Get constraints

@@ -6,12 +6,13 @@
 \usage{
 stress_mean_w(
   x,
-  new_mean,
+  new_means,
   k = 1,
   normalise = FALSE,
   h = NULL,
   names = NULL,
-  log = FALSE
+  log = FALSE,
+  ...
 )
 }
 \arguments{
@@ -21,7 +22,7 @@ correspond to random variables; OR\cr
 A \code{SWIMw} object, where \code{x} corresponds to the
 underlying data of the \code{SWIMw} object. The stressed random component is assumed continuously distributed.}
 
-\item{new_mean}{Numeric, the stressed mean.\cr}
+\item{new_means}{Numeric, the stressed mean.\cr}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.\cr}
@@ -35,6 +36,9 @@ Silverman's rule will be used.\cr}
 \item{names}{Character vector, the names of stressed models.}
 
 \item{log}{Boolean, the option to print weights' statistics.}
+
+\item{...}{Additional arguments to be passed to
+\code{\link[nleqslv]{nleqslv}}.}
 }
 \value{
 A \code{SWIMw} object containing:
@@ -52,7 +56,7 @@ A \code{SWIMw} object containing:
   weights. Each component corresponds to a different stress;
      \item \code{type = "mean"};
      \item \code{specs}, a list, each component corresponds to
-   a different stress and contains \code{k} and \code{new_mean}.
+   a different stress and contains \code{k} and \code{new_means}.
     }
     See \code{\link{SWIM}} for details.
 }
@@ -71,13 +75,13 @@ x <- as.data.frame(cbind(
   "normal" = rnorm(1000),
   "gamma" = rgamma(1000, shape = 2)))
 res1 <- stress_wass(type = "mean", x = x, k = 1,
-  new_mean=1)
+  new_means=1)
   summary(res1)
 
 ## calling stress_RM_w directly
 ## stressing "gamma"
 res2 <- stress_mean_w(x = x, 
-  new_mean=2.2, k = 2)
+  new_means=2.2, k = 2)
 summary(res2)
 }
 
@@ -92,12 +96,12 @@ summary(res2)
 \seealso{
 Other stress functions: 
 \code{\link{stress_HARA_RM_w}()},
-\code{\link{stress_RM_mean_std_w}()},
+\code{\link{stress_RM_mean_sd_w}()},
 \code{\link{stress_RM_w}()},
 \code{\link{stress_VaR_ES}()},
 \code{\link{stress_VaR}()},
+\code{\link{stress_mean_sd_w}()},
 \code{\link{stress_mean_sd}()},
-\code{\link{stress_mean_std_w}()},
 \code{\link{stress_mean}()},
 \code{\link{stress_moment}()},
 \code{\link{stress_prob}()},

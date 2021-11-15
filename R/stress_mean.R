@@ -10,13 +10,15 @@
 #' @inheritParams    stress_RM_w
 #' @param k       Numeric, the column of \code{x} that is stressed
 #'     \code{(default = 1)}.\cr
-#' @param new_mean    Numeric, the stressed mean.\cr
+#' @param new_means    Numeric, the stressed mean.\cr
 #' @param normalise Logical. If true, values of the columns to be stressed are linearly\cr
 #'                  normalised to the unit interval.\cr
 #' @param h Function that defines the bandwidth used in KDEs. If null,
 #' Silverman's rule will be used.\cr
 #' @param names   Character vector, the names of stressed models.
 #' @param log     Boolean, the option to print weights' statistics.
+#' @param ...       Additional arguments to be passed to
+#'                  \code{\link[nleqslv]{nleqslv}}.
 #'
 #' @return A \code{SWIMw} object containing:
 #'     \itemize{
@@ -33,7 +35,7 @@
 #'   weights. Each component corresponds to a different stress;
 #'      \item \code{type = "mean"};
 #'      \item \code{specs}, a list, each component corresponds to
-#'    a different stress and contains \code{k} and \code{new_mean}.
+#'    a different stress and contains \code{k} and \code{new_means}.
 #'     }
 #'     See \code{\link{SWIM}} for details.
 #'     
@@ -46,13 +48,13 @@
 #'   "normal" = rnorm(1000),
 #'   "gamma" = rgamma(1000, shape = 2)))
 #' res1 <- stress_wass(type = "mean", x = x, k = 1,
-#'   new_mean=1)
+#'   new_means=1)
 #'   summary(res1)
 #'
 #' ## calling stress_RM_w directly
 #' ## stressing "gamma"
 #' res2 <- stress_mean_w(x = x, 
-#'   new_mean=2.2, k = 2)
+#'   new_means=2.2, k = 2)
 #' summary(res2)
 #' }
 #'
@@ -60,8 +62,8 @@
 #' @inherit SWIM references
 #' @export
 
-stress_mean_w <- function(x, new_mean, k = 1,
-                              normalise = FALSE, h = NULL, names = NULL, log = FALSE){
+stress_mean_w <- function(x, new_means, k = 1,
+                              normalise = FALSE, h = NULL, names = NULL, log = FALSE, ...){
   
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -96,7 +98,7 @@ stress_mean_w <- function(x, new_mean, k = 1,
   
   .objective_fn <- function(par){
     # Get ell = F_inv + sum(lam[1] + lam[2]*mean)
-    ell_fn <- function(x){(FY_inv_fn(x) + par[1] + par[2]*new_mean)/(1 + par[2])}
+    ell_fn <- function(x){(FY_inv_fn(x) + par[1] + par[2]*new_means)/(1 + par[2])}
     
     # Get isotonic projection of ell
     GY_inv <- stats::isoreg(u, ell_fn(u))$yf
@@ -104,7 +106,7 @@ stress_mean_w <- function(x, new_mean, k = 1,
     std_stress <- sqrt(.integrate((GY_inv - mean_stress)^2, u))
     
     # Return RM error
-    error <- sqrt(2) * sqrt((mean_stress - new_mean)^2)  # sqrt(2) normalization constant
+    error <- sqrt(2) * sqrt((mean_stress - new_means)^2)  # sqrt(2) normalization constant
     return(error)
   }
   
@@ -116,7 +118,7 @@ stress_mean_w <- function(x, new_mean, k = 1,
     lam <- res$par
     
     # Get ell
-    ell_fn <- function(x){(FY_inv_fn(x) + lam[1] + lam[2]*new_mean)/(1 + lam[2])}
+    ell_fn <- function(x){(FY_inv_fn(x) + lam[1] + lam[2]*new_means)/(1 + lam[2])}
     ell <- ell_fn(u)
     
     # Get GY_inv
@@ -125,7 +127,7 @@ stress_mean_w <- function(x, new_mean, k = 1,
     # achieved mean and std
     mean_achieved <- .integrate(GY_inv, u)
     sd_achieved <- sqrt(.integrate((GY_inv - mean_achieved)^2, u))
-    if((mean_achieved - new_mean < 1e-4)){
+    if((mean_achieved - new_means < 1e-4)){
       break
     }
   }
@@ -147,7 +149,7 @@ stress_mean_w <- function(x, new_mean, k = 1,
   gY_fn <- function(x){1/dG_inv_fn(GY_fn(x))}
   
   # Create SWIMw object
-  max_length <- max(length(new_mean))
+  max_length <- max(length(new_means))
   type <- rep(list("mean"), length.out = max_length)
   
   # Get weights
@@ -166,15 +168,44 @@ stress_mean_w <- function(x, new_mean, k = 1,
   mean_achieved <- .integrate(GY_inv, u)
   sd_achieved <- sqrt(.integrate((GY_inv - mean_achieved)^2, u))
   
+  # Compare constraint and achieved stress
+  f <- rep(list(function(x)x), length(k))
+  m <- new_means
+  z <- matrix(0, ncol = length(f), nrow = nrow(x_data))
+  for (i in 1:length(f)){
+    z[, i] <- apply(X = x_data[, k[[i]], drop = FALSE], MARGIN = 1, FUN = f[[i]])
+  }
+  min.fz <- apply(z, 2, min)
+  max.fz <- apply(z, 2, max)
+  if (any(m < min.fz) || any(m > max.fz)) stop("Values in m must be in the range of x")
+  if (normalise == TRUE){
+    z <- apply(z, 2, .scale)
+    m <- (m - min.fz) / (max.fz - min.fz)
+  }
+  z <- cbind(1, z)
+  moments <- function(x)colMeans(z * as.vector(exp(z %*% x))) - c(1, m)
+  sol <- nleqslv::nleqslv(rep(0, length.out = length(f) + 1), moments, ...)
+  if (sol$termcd != 1) warning(paste("nleqslv terminated with code ", sol$termcd))
+
+  m.ac <- colMeans(z * as.vector(exp(z %*% sol$x)))[-1]
+  if (normalise == TRUE){
+    m <- min.fz + (max.fz - min.fz) * m
+    m.ac <- min.fz + (max.fz - min.fz) * m.ac
+  }
+  err <- m - m.ac
+  rel.err <- (err / m) * (m != 0)
+  outcome <- data.frame(cols = as.character(k), required_moment = m, achieved_moment = m.ac, abs_error = err, rel_error = rel.err)
+  print(outcome)  
+  
   # message if the achieved mean or std is different from the specified stress.
-  if(mean_achieved - new_mean > 1e-4) {
-    message(paste("Stressed mean specified was", round(new_mean, 4),", stressed mean achieved is", round(mean_achieved, 4)))
-    new_mean <- mean_achieved
+  if(mean_achieved - new_means > 1e-4) {
+    message(paste("Stressed mean specified was", round(new_means, 4),", stressed mean achieved is", round(mean_achieved, 4)))
+    new_means <- mean_achieved
   }
   
   # Get constraints
-  new_mean <- rep(new_mean, length.out = max_length)
-  constr_mean_std <- cbind("k" = rep(k, length.out = max_length), new_mean)
+  new_means <- rep(new_means, length.out = max_length)
+  constr_mean_std <- cbind("k" = rep(k, length.out = max_length), new_means)
   
   constr <- list()
   for(i in 1:max_length){
