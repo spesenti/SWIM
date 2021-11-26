@@ -138,7 +138,7 @@ stress_mean_sd_w <- function(x, new_means, new_sd, k = 1,
 
   # Get GY_inv_fn, y_grid
   print("Calculate optimal quantile function")
-    left <- min(min(x_data[,k]), GY_inv[4])
+  left <- min(min(x_data[,k]), GY_inv[4])
   right <- max(max(x_data[,k]), GY_inv[length(GY_inv)-3])
   GY_inv_fn <- stats::approxfun(u, GY_inv, yleft=left-1e-5, yright=right+1e-5)
   y_grid <- seq(from=GY_inv[4], to=GY_inv[length(GY_inv)-3], length.out=500)
