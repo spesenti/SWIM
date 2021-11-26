@@ -197,11 +197,10 @@
      sens_rw <- apply(X = as.matrix(x_data), MARGIN = 2, FUN = sens_reverse_w)
      if (length(wCol) == 1) sens_rw <- as.matrix(t(sens_rw))
      if (length(xCol) == 1) colnames(sens_rw) <- cname
-     sens_w <- rbind(sens_w, data.frame(stress = paste("stress", wCol, sep = " "), type = rep("Reverse", length.out = length(wCol)), sens_rw))
+     sens_w <- rbind(sens_w, data.frame(stress = names(object$specs)[wCol], type = rep("Reverse", length.out = length(wCol)), sens_rw))
    }
    
    rownames(sens_w) <- NULL
-   
    return(sens_w)
   }
 

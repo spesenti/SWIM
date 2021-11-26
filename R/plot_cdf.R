@@ -73,7 +73,10 @@
    if (is.SWIM(object) ){
       # K-L Divergence
       plot_data <- data.frame(x_data, get_weights(object)[ , wCol])
-      names(plot_data) <- c(x_name, paste("stress", wCol, sep = " "))
+      
+      # Display components' names
+      names(plot_data) <- c(x_name, names(object$specs)[wCol])
+      
       if (base == TRUE){
          plot_data <- cbind(plot_data, base = rep(1, length(x_data)))
       }
@@ -94,8 +97,8 @@
    } else {
       # Wasserstein Distance
       w <- get_weights(object)[ , wCol]
-      h <- object$h(x_data)
-
+      h <- object$h[[wCol]](x_data)
+      
       index <- names(object$specs)[wCol]
       k <- object$specs[[index]]$k
       if(is.character(k)) k_name <- k
@@ -104,7 +107,7 @@
       
       if(k_name == x_name){
          # Get stressed distribution
-         G.fn <- object$str_FY
+         G.fn <- object$str_FY[[wCol]]
       } else{
          # Get KDE
          G.fn <- function(x){
@@ -114,7 +117,9 @@
       }
       
       plot.data <- data.frame(x_data, G.fn(x_data))
-      names(plot.data) <- c(x_name, paste("stress", wCol, sep = " "))
+      
+      # Display components' names
+      names(plot.data) <- c(x_name, names(object$specs)[wCol])
       
       if (base == TRUE){
          # Get KDE

@@ -105,11 +105,12 @@ summary(res2)
 \seealso{
 Other stress functions: 
 \code{\link{stress_HARA_RM_w}()},
-\code{\link{stress_RM_mean_std_w}()},
+\code{\link{stress_RM_mean_sd_w}()},
 \code{\link{stress_RM_w}()},
 \code{\link{stress_VaR_ES}()},
+\code{\link{stress_mean_sd_w}()},
 \code{\link{stress_mean_sd}()},
-\code{\link{stress_mean_std_w}()},
+\code{\link{stress_mean_w}()},
 \code{\link{stress_mean}()},
 \code{\link{stress_moment}()},
 \code{\link{stress_prob}()},

@@ -56,7 +56,7 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
     # K-L Divergence
     grid <- seq(0, 1, length.out = n)
     quant_data <- cbind(grid, sapply(wCol, FUN = quantile_stressed, object = object, probs = grid, xCol = xCol,type = c("quantile")))
-    colnames(quant_data) <- c("grid", paste("stress", wCol, sep = " "))
+    colnames(quant_data) <-  c("grid", names(object$specs)[wCol])
     if (base == TRUE){
       quant_data <- cbind(quant_data, base = as.numeric(stats::quantile(get_data(object)[, xCol], grid)))
     }
@@ -80,7 +80,7 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
     grid <- object$u
     w <- get_weights(object)[ , wCol]
     x_data <- get_data(object)[, xCol]
-    h <- object$h(x_data)
+    h <- object$h[[wCol]](x_data)
     
     index <- names(object$specs)[wCol]
     k <- object$specs[[index]]$k
@@ -93,7 +93,7 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
     
     if(k_name == x_name){
       # Get stressed distribution
-      G.inv.fn <- Vectorize(object$str_FY_inv)
+      G.inv.fn <- Vectorize(object$str_FY_inv[[wCol]])
     } else{
       # Get KDE
       G.fn <- function(x){
@@ -105,7 +105,7 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
 
     if (is.SWIMw(object)){
       quant_data <- cbind(grid, G.inv.fn(grid))
-      colnames(quant_data) <- c("grid", paste("stress", wCol, sep = " "))
+      colnames(quant_data) <-  c("grid", names(object$specs)[wCol])
       if (base == TRUE){
         # Get KDE
         F.fn <- function(x){
@@ -114,14 +114,6 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
         F.fn <- Vectorize(F.fn)
         F.inv.fn <- Vectorize(.inverse(F.fn, lower_bracket, upper_bracket))
         quant_data <- cbind(quant_data, base = F.inv.fn(grid))
-      }
-    }
-      
-    if (is.SWIM(object)){
-      quant_data <- cbind(grid, sapply(wCol, FUN = quantile_stressed, object = object, probs = grid, xCol = xCol,type = c("quantile")))
-      colnames(quant_data) <- c("grid", names(object$specs)[wCol])
-      if (base == TRUE){
-        quant_data <- cbind(quant_data, base = as.numeric(stats::quantile(get_data(object)[, xCol], grid)))
       }
     }
     

@@ -62,11 +62,12 @@
 #'
 #' @export
 
-  plot_sensitivity <- function(object, xCol = "all", wCol = "all", type =
-                               c("Gamma",  "Kolmogorov", "Wasserstein", "reverse"),
+  plot_sensitivity <- function(object, xCol = "all", wCol = "all", 
+                               type = c("Gamma", "Kolmogorov", "Wasserstein", "reverse", "all"),
                                f = NULL, k = NULL, s= NULL, displ = TRUE, p = 1){
   if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw.")
   if (anyNA(object$x)) warning("x contains NA")
+  if (missing(type)) type <- "all"
   if (!is.null(s)){
      if (!is.function(s)) stop("s must be a function")
   }

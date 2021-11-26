@@ -37,36 +37,92 @@
 
 sd_stressed <- function(object, xCol = "all", wCol = "all", base=FALSE){
   if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class 'SWIM' or 'SWIMw'")
+  if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
+  x_data <- as.matrix(get_data(object, xCol = xCol))
+  if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
+  new_weights <- as.matrix(get_weights(object)[ ,wCol])
+  if (anyNA(x_data)) warning("x contains NA")
   
   mean_w <- mean_stressed(object, xCol, wCol, base)
   cname <- colnames(mean_w)
   rname <- rownames(mean_w)
   
-  if (is.character(xCol) && xCol == "all") xCol <- 1:ncol(get_data(object))
-  x_data <- as.matrix(get_data(object, xCol = xCol))
-  if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
-  new_weights <- as.matrix(get_weights(object)[ ,wCol])
+  if (is.SWIM(object)){
+    # K-L Divergence
+    if (base == TRUE){
+      old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)
+      new_weights <- cbind(old_weights, new_weights)
+    }
+    
+    n <- dim(x_data)[1] # number of observations
+    m <- dim(mean_w)[1] # number of weights
+    d <- dim(mean_w)[2] # number of random variables
+    
+    temp <- do.call(rbind, lapply(1:m, function(i) (x_data - rep(mean_w[i,], each=n))^2))
+    dim(new_weights) <- c(n, m, 1)
+    dim(temp) <- c(n, m, d)
+    sd <- do.call(rbind, lapply(1:m, function(i) sqrt(t(new_weights[,i,]) %*% temp[,i,] /(n-1) )))
+
+  } else {
+    # Wasserstein Distance
+    u <- object$u
+    sd <- c()
+    
+    for (c in 1:length(xCol)){
+      temp <- c()
+      for (i in 1:length(wCol)){
+        index <- names(object$specs)[wCol[i]]
+        k <- object$specs[[index]]$k
+        if(is.character(k)) k_name <- k
+        if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
+        else if(!is.character(k)) k_name <- colnames(get_data(object))[k]
+    
+        w <- get_weights(object)[ , wCol[i]]
+        h <- object$h[[wCol[i]]](x_data[, c])
+        
+        lower_bracket = min(x_data[, c])#-(max(x_data[, c])-min(x_data[, c]))*0.1
+        upper_bracket = max(x_data[, c])#+(max(x_data[, c])-min(x_data[, c]))*0.1
+        
+        if(k_name == colnames(get_data(object))[c]){
+          # Get stressed quantile
+          G.inv.fn <- Vectorize(object$str_FY_inv[[wCol[i]]])
+        } else{
+          # Get KDE
+          G.fn <- function(x){
+            return(sum(w * stats::pnorm((x - x_data[,c])/h)/length(x_data[,c])))
+          }
+          G.fn <- Vectorize(G.fn)
+          G.inv.fn <- Vectorize(.inverse(G.fn, lower_bracket, upper_bracket))
+        }
+        
+        # achieved mean and sd
+        mean_achieved <- .integrate(G.inv.fn(u), u)
+        sd_achieved <- sqrt(.integrate((G.inv.fn(u) - mean_achieved)^2, u))
+        temp <- c(temp, sd_achieved)
+      }
+      
+      if (base == TRUE){
+        # Get KDE
+        F.fn <- function(x){
+          return(sum(stats::pnorm((x - x_data[, c])/h)/length(x_data[, c])))
+        }
+        F.fn <- Vectorize(F.fn)
+        F.inv.fn <- Vectorize(.inverse(F.fn, lower_bracket, upper_bracket))
+        
+        mean_achieved <- .integrate(F.inv.fn(u), u)
+        sd_achieved <- sqrt(.integrate((F.inv.fn(u) - mean_achieved)^2, u))
+        temp <- c(sd_achieved, temp)
+      }
+      
+      sd <- cbind(sd, temp)
+      }
+    }
   
-  if (anyNA(x_data)) warning("x contains NA")
-  
-  if (base == TRUE){
-    old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)
-    new_weights <- cbind(old_weights, new_weights)
-  }
-  
-  n <- dim(x_data)[1] # number of observations
-  m <- dim(mean_w)[1] # number of weights
-  d <- dim(mean_w)[2] # number of random variables
-  
-  temp <- do.call(rbind, lapply(1:m, function(i) (x_data - rep(mean_w[i,], each=n))^2))
-  dim(new_weights) <- c(n, m, 1)
-  dim(temp) <- c(n, m, d)
-  sd <- do.call(rbind, lapply(1:m, function(i) sqrt(t(new_weights[,i,]) %*% temp[,i,] /(n-1) )))
   colnames(sd) <- cname
   rownames(sd) <- rname
   
   return(sd)
-}
+  }
 
 #' @describeIn sd_stressed Sample variance of model components
 #' 

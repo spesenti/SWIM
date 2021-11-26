@@ -1,8 +1,8 @@
-#' Stressing Mean and Standard Deviation
+#' Stressing Mean
 #'
 #' Provides weights on simulated scenarios from a baseline stochastic
 #'     model, such that a stressed model component (random variable) fulfills a
-#'     constraint on its mean and standard deviation.
+#'     constraint on its mean.
 #'     Scenario weights are
 #'     selected by constrained minimisation of the Wasserstein distance to the
 #'     baseline model.
@@ -11,7 +11,6 @@
 #' @param k       Numeric, the column of \code{x} that is stressed
 #'     \code{(default = 1)}.\cr
 #' @param new_means    Numeric, the stressed mean.\cr
-#' @param new_sd    Numeric, the stressed standard deviation.\cr
 #' @param normalise Logical. If true, values of the columns to be stressed are linearly\cr
 #'                  normalised to the unit interval.\cr
 #' @param h Function that defines the bandwidth used in KDEs. If null,
@@ -34,10 +33,9 @@
 #'       \item \code{new_weights}, a list of functions, that applied to
 #'   the \code{k}th column of \code{x}, generates the vectors of scenario
 #'   weights. Each component corresponds to a different stress;
-#'      \item \code{type = "mean sd"};
+#'      \item \code{type = "mean"};
 #'      \item \code{specs}, a list, each component corresponds to
-#'    a different stress and contains \code{k}, \code{new_means} 
-#'    and \code{new_sd}.
+#'    a different stress and contains \code{k} and \code{new_means}.
 #'     }
 #'     See \code{\link{SWIM}} for details.
 #'     
@@ -49,14 +47,14 @@
 #' x <- as.data.frame(cbind(
 #'   "normal" = rnorm(1000),
 #'   "gamma" = rgamma(1000, shape = 2)))
-#' res1 <- stress_wass(type = "mean sd", x = x, k = 1,
-#'   new_means=1, new_sd=0.9)
+#' res1 <- stress_wass(type = "mean", x = x, k = 1,
+#'   new_means=1)
 #'   summary(res1)
 #'
 #' ## calling stress_RM_w directly
 #' ## stressing "gamma"
-#' res2 <- stress_mean_sd_w(x = x, 
-#'   new_means=2.2, new_sd=1.5, k = 2)
+#' res2 <- stress_mean_w(x = x, 
+#'   new_means=2.2, k = 2)
 #' summary(res2)
 #' }
 #'
@@ -64,12 +62,12 @@
 #' @inherit SWIM references
 #' @export
 
-stress_mean_sd_w <- function(x, new_means, new_sd, k = 1,
-                        normalise = FALSE, h = NULL, names = NULL, log = FALSE, ...){
-
+stress_mean_w <- function(x, new_means, k = 1,
+                              normalise = FALSE, h = NULL, names = NULL, log = FALSE, ...){
+  
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
-
+  
   n <- length(x_data[, k])
   
   # Create grid u in [0,1]
@@ -105,11 +103,10 @@ stress_mean_sd_w <- function(x, new_means, new_sd, k = 1,
     # Get isotonic projection of ell
     GY_inv <- stats::isoreg(u, ell_fn(u))$yf
     mean_stress <- .integrate(GY_inv, u)
-    sd_stress <- sqrt(.integrate((GY_inv - mean_stress)^2, u))
+    std_stress <- sqrt(.integrate((GY_inv - mean_stress)^2, u))
     
     # Return RM error
-    error <- sqrt(2) * sqrt((mean_stress - new_means)^2 + 
-                              (sd_stress - new_sd)^2)  # sqrt(2) normalization constant
+    error <- sqrt(2) * sqrt((mean_stress - new_means)^2)  # sqrt(2) normalization constant
     return(error)
   }
   
@@ -127,15 +124,15 @@ stress_mean_sd_w <- function(x, new_means, new_sd, k = 1,
     # Get GY_inv
     GY_inv <- stats::isoreg(u, ell)$yf
     
-    # achieved mean and sd
+    # achieved mean and std
     mean_achieved <- .integrate(GY_inv, u)
     sd_achieved <- sqrt(.integrate((GY_inv - mean_achieved)^2, u))
-    if((mean_achieved - new_means < 1e-4) && (sd_achieved - new_sd < 1e-4)){
+    if((mean_achieved - new_means < 1e-4)){
       break
     }
   }
   print("Optimization converged")
-
+  
   # Get GY_inv_fn, y_grid
   print("Calculate optimal quantile function")
   left <- min(min(x_data[,k]), GY_inv[4])
@@ -152,12 +149,12 @@ stress_mean_sd_w <- function(x, new_means, new_sd, k = 1,
   gY_fn <- function(x){1/dG_inv_fn(GY_fn(x))}
   
   # Create SWIMw object
-  max_length <- max(length(new_means), length(new_sd))
-  type <- rep(list("mean sd"), length.out = max_length)
-
+  max_length <- max(length(new_means))
+  type <- rep(list("mean"), length.out = max_length)
+  
   # Get weights
   new_weights <- .get_weights(x_data[,k], y_grid, gY_fn, fY_fn, hY)
-
+  
   # Name stresses
   if (is.null(names)) {
     temp <- paste("stress", 1:max_length)
@@ -167,7 +164,7 @@ stress_mean_sd_w <- function(x, new_means, new_sd, k = 1,
   if (length(temp) != max_length) stop("length of names are not the same as the number of models")
   names(new_weights) <- temp
   
-  # achieved mean and sd
+  # achieved mean and std
   mean_achieved <- .integrate(GY_inv, u)
   sd_achieved <- sqrt(.integrate((GY_inv - mean_achieved)^2, u))
   
@@ -189,7 +186,7 @@ stress_mean_sd_w <- function(x, new_means, new_sd, k = 1,
   moments <- function(x)colMeans(z * as.vector(exp(z %*% x))) - c(1, m)
   sol <- nleqslv::nleqslv(rep(0, length.out = length(f) + 1), moments, ...)
   if (sol$termcd != 1) warning(paste("nleqslv terminated with code ", sol$termcd))
-  
+
   m.ac <- colMeans(z * as.vector(exp(z %*% sol$x)))[-1]
   if (normalise == TRUE){
     m <- min.fz + (max.fz - min.fz) * m
@@ -197,34 +194,22 @@ stress_mean_sd_w <- function(x, new_means, new_sd, k = 1,
   }
   err <- m - m.ac
   rel.err <- (err / m) * (m != 0)
-  outcome <- data.frame(cols = as.character(k), required_mean = m, achieved_mean = m.ac, abs_error = err, rel_error = rel.err)
+  outcome <- data.frame(cols = as.character(k), required_moment = m, achieved_moment = m.ac, abs_error = err, rel_error = rel.err)
   print(outcome)  
   
-  m <- new_sd
-  m.ac <- sd_achieved
-  err <- m - m.ac
-  rel.err <- (err / m) * (m != 0)
-  outcome <- data.frame(cols = as.character(k), required_sd = m, achieved_sd = m.ac, abs_error = err, rel_error = rel.err)
-  print(outcome) 
-  
-  # message if the achieved mean or sd is different from the specified stress.
+  # message if the achieved mean or std is different from the specified stress.
   if(mean_achieved - new_means > 1e-4) {
     message(paste("Stressed mean specified was", round(new_means, 4),", stressed mean achieved is", round(mean_achieved, 4)))
     new_means <- mean_achieved
   }
-  if(sd_achieved - new_sd > 1e-4) {
-    message(paste("Stressed sd specified was", round(new_sd, 4),", stressed sd achieved is", round(sd_achieved, 4)))
-    new_sd <- sd_achieved
-  }
   
   # Get constraints
   new_means <- rep(new_means, length.out = max_length)
-  new_sd <- rep(new_sd, length.out = max_length)
-  constr_mean_sd <- cbind("k" = rep(k, length.out = max_length), new_means, new_sd)
+  constr_mean_std <- cbind("k" = rep(k, length.out = max_length), new_means)
   
   constr <- list()
   for(i in 1:max_length){
-    temp_list <- list(as.list(constr_mean_sd[i, ]))
+    temp_list <- list(as.list(constr_mean_std[i, ]))
     names(temp_list) <- temp[i]
     constr <- c(constr, temp_list)
   }
@@ -232,7 +217,7 @@ stress_mean_sd_w <- function(x, new_means, new_sd, k = 1,
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=list(h), "lam"=list(lam), "gamma" = list(gamma),
                    "new_weights" = new_weights, "str_fY" = list(gY_fn), "str_FY" = list(GY_fn),
                    "str_FY_inv" = list(GY_inv_fn), "type" = type, "specs" = constr)
-
+  
   if (is.SWIMw(x)) my_list <- merge(x, my_list)
   
   if (log) {
