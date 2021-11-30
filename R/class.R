@@ -218,7 +218,7 @@
   #' @details Get a new \code{SWIM} object with desired \code{name}
   #' 
   #' @param object A \code{SWIM} object
-  #' @param name   Character, the new name of k-th stressed model.
+  #' @param names   Character, the new names of k-th stressed model.
   #' @param k   Numeric, the k-th stressed model of object to rename. (\code{default = 1}).
   #'  
   #' @return An renamed object of class \code{SWIM} containing:
@@ -249,10 +249,10 @@
   #'
   #' @export
   
-  rename_SWIM <- function(object, name, k=1){
+  rename_SWIM <- function(object, `names`, k=1){
     if (!is.SWIM(object) & !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
     temp <- names(object$new_weights)
-    temp[k] <- name
+    temp[k] <- names
     names(object$new_weights) <- temp
     names(object$specs) <- temp
     object <- object

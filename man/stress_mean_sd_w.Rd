@@ -9,7 +9,6 @@ stress_mean_sd_w(
   new_means,
   new_sd,
   k = 1,
-  normalise = FALSE,
   h = NULL,
   names = NULL,
   log = FALSE,
@@ -29,9 +28,6 @@ underlying data of the \code{SWIMw} object. The stressed random component is ass
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.\cr}
-
-\item{normalise}{Logical. If true, values of the columns to be stressed are linearly\cr
-normalised to the unit interval.\cr}
 
 \item{h}{Function that defines the bandwidth used in KDEs. If null,
 Silverman's rule will be used.\cr}

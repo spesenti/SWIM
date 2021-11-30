@@ -11,8 +11,6 @@
 #' @param k       Numeric, the column of \code{x} that is stressed
 #'     \code{(default = 1)}.\cr
 #' @param new_means    Numeric, the stressed mean.\cr
-#' @param normalise Logical. If true, values of the columns to be stressed are linearly\cr
-#'                  normalised to the unit interval.\cr
 #' @param h Function that defines the bandwidth used in KDEs. If null,
 #' Silverman's rule will be used.\cr
 #' @param names   Character vector, the names of stressed models.
@@ -63,7 +61,7 @@
 #' @export
 
 stress_mean_w <- function(x, new_means, k = 1,
-                              normalise = FALSE, h = NULL, names = NULL, log = FALSE, ...){
+                          h = NULL, names = NULL, log = FALSE, ...){
   
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -178,20 +176,13 @@ stress_mean_w <- function(x, new_means, k = 1,
   min.fz <- apply(z, 2, min)
   max.fz <- apply(z, 2, max)
   if (any(m < min.fz) || any(m > max.fz)) stop("Values in m must be in the range of x")
-  if (normalise == TRUE){
-    z <- apply(z, 2, .scale)
-    m <- (m - min.fz) / (max.fz - min.fz)
-  }
+
   z <- cbind(1, z)
   moments <- function(x)colMeans(z * as.vector(exp(z %*% x))) - c(1, m)
   sol <- nleqslv::nleqslv(rep(0, length.out = length(f) + 1), moments, ...)
   if (sol$termcd != 1) warning(paste("nleqslv terminated with code ", sol$termcd))
 
   m.ac <- colMeans(z * as.vector(exp(z %*% sol$x)))[-1]
-  if (normalise == TRUE){
-    m <- min.fz + (max.fz - min.fz) * m
-    m.ac <- min.fz + (max.fz - min.fz) * m.ac
-  }
   err <- m - m.ac
   rel.err <- (err / m) * (m != 0)
   outcome <- data.frame(cols = as.character(k), required_moment = m, achieved_moment = m.ac, abs_error = err, rel_error = rel.err)

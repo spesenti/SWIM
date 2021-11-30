@@ -22,8 +22,6 @@
 #' \code{a}, \code{b} and \code{eta}.\cr
 #' @param hu_ratio    Numeric, vector, the ratio of the HARA utility to the 
 #' baseline hara utility.\cr
-#' @param normalise Logical. If true, values of the columns to be stressed are linearly
-#'                  normalised to the unit interval (\code{default = FALSE}).\cr
 #' @param h Function that defines the bandwidth used in KDE (\code{default = }
 #' Silverman's rule).\cr
 #' @param gamma Function that defines the gamma of the risk measure 
@@ -95,7 +93,7 @@
 
 stress_HARA_RM_w <- function(x, alpha, a, b, eta, 
                         q_ratio = NULL, q = NULL, hu_ratio = NULL, hu=NULL,
-                        k = 1, normalise = FALSE, h = NULL, gamma = NULL, names = NULL, log = FALSE){
+                        k = 1, h = NULL, gamma = NULL, names = NULL, log = FALSE){
 
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")

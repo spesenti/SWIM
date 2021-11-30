@@ -10,7 +10,6 @@ stress_RM_w(
   q_ratio = NULL,
   q = NULL,
   k = 1,
-  normalise = FALSE,
   h = NULL,
   gamma = NULL,
   names = NULL,
@@ -34,9 +33,6 @@ the baseline RM (must be same length as \code{alpha}).\cr}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.\cr}
-
-\item{normalise}{Logical. If true, values of the columns to be stressed are linearly
-normalised to the unit interval (\code{default = FALSE}).\cr}
 
 \item{h}{Function that defines the bandwidth used in KDE (\code{default = }
 Silverman's rule).\cr}

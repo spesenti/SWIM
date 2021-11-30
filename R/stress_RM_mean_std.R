@@ -17,8 +17,6 @@
 #'                   the baseline RM (must be same length as \code{alpha}).\cr
 #' @param new_means    Numeric, the stressed mean. \cr
 #' @param new_sd    Numeric, the stressed standard deviation. \cr
-#' @param normalise Logical. If true, values of the columns to be stressed are linearly
-#'                  normalised to the unit interval (\code{default = FALSE}).\cr
 #' @param h Function that defines the bandwidth used in KDE (\code{default = }
 #' Silverman's rule).\cr
 #' @param gamma Function that defines the gamma of the risk measure 
@@ -87,7 +85,7 @@
 #' @export
 #'
 stress_RM_mean_sd_w <- function(x, alpha, new_means, new_sd, q_ratio = NULL, q = NULL, k = 1,
-                        normalise = FALSE, h = NULL, gamma = NULL, names = NULL, log = FALSE, ...){
+                                h = NULL, gamma = NULL, names = NULL, log = FALSE, ...){
 
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -241,20 +239,13 @@ stress_RM_mean_sd_w <- function(x, alpha, new_means, new_sd, q_ratio = NULL, q =
   min.fz <- apply(z, 2, min)
   max.fz <- apply(z, 2, max)
   if (any(m < min.fz) || any(m > max.fz)) stop("Values in m must be in the range of x")
-  if (normalise == TRUE){
-    z <- apply(z, 2, .scale)
-    m <- (m - min.fz) / (max.fz - min.fz)
-  }
+
   z <- cbind(1, z)
   moments <- function(x)colMeans(z * as.vector(exp(z %*% x))) - c(1, m)
   sol <- nleqslv::nleqslv(rep(0, length.out = length(f) + 1), moments, ...)
   if (sol$termcd != 1) warning(paste("nleqslv terminated with code ", sol$termcd))
   
   m.ac <- colMeans(z * as.vector(exp(z %*% sol$x)))[-1]
-  if (normalise == TRUE){
-    m <- min.fz + (max.fz - min.fz) * m
-    m.ac <- min.fz + (max.fz - min.fz) * m.ac
-  }
   err <- m - m.ac
   rel.err <- (err / m) * (m != 0)
   outcome <- data.frame(cols = as.character(k), required_mean = m, achieved_mean = m.ac, abs_error = err, rel_error = rel.err)

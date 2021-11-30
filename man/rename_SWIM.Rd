@@ -4,12 +4,12 @@
 \alias{rename_SWIM}
 \title{Rename Stressed Models}
 \usage{
-rename_SWIM(object, name, k = 1)
+rename_SWIM(object, names, k = 1)
 }
 \arguments{
 \item{object}{A \code{SWIM} object}
 
-\item{name}{Character, the new name of k-th stressed model.}
+\item{names}{Character, the new names of k-th stressed model.}
 
 \item{k}{Numeric, the k-th stressed model of object to rename. (\code{default = 1}).}
 }

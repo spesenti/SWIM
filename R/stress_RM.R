@@ -18,8 +18,6 @@
 #'                   \code{alpha} (must be same length as \code{alpha}).\cr
 #' @param q_ratio    Numeric, vector, the ratio of the stressed RM to
 #'                   the baseline RM (must be same length as \code{alpha}).\cr
-#' @param normalise Logical. If true, values of the columns to be stressed are linearly
-#'                  normalised to the unit interval (\code{default = FALSE}).\cr
 #' @param h Function that defines the bandwidth used in KDE (\code{default = }
 #' Silverman's rule).\cr
 #' @param gamma Function that defines the gamma of the risk measure which takes in 
@@ -85,7 +83,7 @@
 #' @export
 #'
 stress_RM_w <- function(x, alpha, q_ratio = NULL, q = NULL, k = 1,
-                        normalise = FALSE, h = NULL, gamma = NULL, names = NULL, log = FALSE){
+                        h = NULL, gamma = NULL, names = NULL, log = FALSE){
   t0 <- Sys.time()
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
