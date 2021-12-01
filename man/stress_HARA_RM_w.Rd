@@ -15,7 +15,7 @@ stress_HARA_RM_w(
   hu_ratio = NULL,
   hu = NULL,
   k = 1,
-  h = NULL,
+  h = 1,
   gamma = NULL,
   names = NULL,
   log = FALSE
@@ -51,8 +51,7 @@ baseline hara utility.\cr}
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.\cr}
 
-\item{h}{Function that defines the bandwidth used in KDE (\code{default = }
-Silverman's rule).\cr}
+\item{h}{Numeric, a multiplier of the default bandwidth using Silverman’s rule (default \code{h = 1}).\cr}
 
 \item{gamma}{Function that defines the gamma of the risk measure 
 (\code{default =} Expected Shortfall).}
@@ -65,7 +64,7 @@ Silverman's rule).\cr}
 A \code{SWIMw} object containing:
     \itemize{
       \item \code{x}, a data.frame containing the data;
-      \item \code{h}, bandwidths;
+      \item \code{h}, h is a multiple of the silverman’s rule;
       \item \code{u}, vector containing the gridspace on [0, 1];
       \item \code{lam}, vector containing the lambda's of the optimized model;
       \item \code{str_fY}, function defining the densities of the stressed component;

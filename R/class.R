@@ -382,9 +382,12 @@
   #' @return \code{summary_weights}: print a list containing summary statistics 
   #'         of the stresses with each element being a table for a different stress. 
   #'         The summary statistics inclue minimum, maximum, standard deviation, 
-  #'         gini coefficient, and entropy. 
+  #'         gini coefficient, entropy and effective sample size. 
   #'         
   #'         Gini coefficient uses the formula \eqn{\frac{\sum_{i=1}^{n} \sum_{j=1}^{n}\left|x_{i}-x_{j}\right|}{2 n^{2} \bar{x}}}.
+  #'         
+  #'         Effective Sample Size is equal to n / (1+Var(W)), see 
+  #'         Equation (9.13) in Owen, Art B. "Monte Carlo theory, methods and examples." (2013).
   #' @export
 
   summary_weights <- function(object, wCol = "all"){
@@ -395,9 +398,9 @@
     for (i in wCol){
       w <- get_weights(object)[, i]
       freqs <- w / length(w)
-      sub_table <- t(matrix(c(min(w), max(w), stats::sd(w), .gini(w), .entropy(freqs))))
+      sub_table <- t(matrix(c(min(w), max(w), stats::sd(w), .gini(w), .entropy(freqs), length(w)/(1 + stats::var(w)))))
       sub_table <- round(sub_table, 4)
-      colnames(sub_table) <- c("min", "max", "sd", "gini coef", "entropy")
+      colnames(sub_table) <- c("min", "max", "sd", "gini coef", "entropy", "effective sample size")
       name <- names(object$specs)[i]
       table[[name]] <- sub_table
     }

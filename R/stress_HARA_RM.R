@@ -22,8 +22,6 @@
 #' \code{a}, \code{b} and \code{eta}.\cr
 #' @param hu_ratio    Numeric, vector, the ratio of the HARA utility to the 
 #' baseline hara utility.\cr
-#' @param h Function that defines the bandwidth used in KDE (\code{default = }
-#' Silverman's rule).\cr
 #' @param gamma Function that defines the gamma of the risk measure 
 #' (\code{default =} Expected Shortfall).
 #' @param names   Character vector, the names of stressed models.
@@ -50,7 +48,7 @@
 #' @return A \code{SWIMw} object containing:
 #'     \itemize{
 #'       \item \code{x}, a data.frame containing the data;
-#'       \item \code{h}, bandwidths;
+#'       \item \code{h}, h is a multiple of the silverman’s rule;
 #'       \item \code{u}, vector containing the gridspace on [0, 1];
 #'       \item \code{lam}, vector containing the lambda's of the optimized model;
 #'       \item \code{str_fY}, function defining the densities of the stressed component;
@@ -93,7 +91,7 @@
 
 stress_HARA_RM_w <- function(x, alpha, a, b, eta, 
                         q_ratio = NULL, q = NULL, hu_ratio = NULL, hu=NULL,
-                        k = 1, h = NULL, gamma = NULL, names = NULL, log = FALSE){
+                        k = 1, h = 1, gamma = NULL, names = NULL, log = FALSE){
 
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -117,14 +115,16 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   u <- c(.ab_grid(1e-4, 0.05, 100), .ab_grid(0.05, 0.99, 500), .ab_grid(0.99, 1-1e-4, 100))
   
   # Get the KDE estimates for fY, FY
-  print("Get the KDE estimates for fY, FY")
-  if (is.null(h)){
+  print("Get the KDE estimates")
+  if (is.numeric(h)){
     # Use Silverman's Rule
-    h <- function(y){1.06 * stats::sd(y) * length(y)^(-1/5)}
-  } else if (!is.function(h)) {
-    stop("Please pass a function calculating the bandwidth, or use the default bandwidth (pass NULL to h)")
+    .h <- function(y){
+      h * 1.06 * stats::sd(y) * length(y)^(-1/5)
+    }
+  } else {
+    stop("h must be numeric")
   }
-  hY <- h(x_data[,k])
+  hY <- .h(x_data[,k])
   
   fY_fn <- function(y){
     return(sum(stats::dnorm((y - x_data[,k])/hY)/hY/length(x_data[,k])))
@@ -137,10 +137,8 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   lower_bracket = min(x_data[,k])-(max(x_data[,k])-min(x_data[,k]))*0.1
   upper_bracket = max(x_data[,k])+(max(x_data[,k])-min(x_data[,k]))*0.1
   FY_inv_fn <- Vectorize(.inverse(FY_fn, lower_bracket, upper_bracket))
-  print("Done calculating KDE")
-  
+
   # Calculate the risk measure and hara utility
-  print("Calculate the risk measure")
   if(is.null(q)){
     q = c()
     for (i in 1:length(q_ratio)){
@@ -194,8 +192,8 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   }
   ell <- ell_fn(u)
 
+  print("Calculate optimal scenario weights")
   # Get GY_inv, y_grid
-  print("Calculate optimal quantile function")
   iso_g <- stats::isoreg(u, ell)$yf
   GY_inv <- .utransform(a, b, eta, u, iso_g, exp(lam[1]), 600)
   left <- min(min(x_data[,k]), GY_inv[4])
@@ -204,7 +202,6 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   y_grid <- seq(from=GY_inv[4], to=GY_inv[length(GY_inv)-3], length.out=500)
 
   # Get GY and gY
-  print("Calculate optimal cdf and density")
   GY_fn <- Vectorize(.inverse(GY_inv_fn, lower=min(u), upper=max(u)))
   dG_inv <- (GY_inv[3:length(GY_inv)] - GY_inv[1:(length(GY_inv)-2)])/(u[3:length(u)] - u[1:(length(u)-2)])
   dG_inv_fn <- stats::approxfun(0.5*(u[3:length(u)] + u[1:(length(u)-2)]), dG_inv, rule=2)
@@ -266,7 +263,7 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   constr <- list(list("k"=k, "q"=q, "alpha"=alpha, "hu"=hu, "a"=a, "b"=b, "eta"=eta))
   names(constr) <- temp
   
-  my_list <- SWIMw("x" = x_data, "u"=u, "h"=list(h), "lam"=list(lam), "gamma" = list(gamma),
+  my_list <- SWIMw("x" = x_data, "u"=u, "h"=list(.h), "lam"=list(lam), "gamma" = list(gamma),
                    "new_weights" = new_weights, "str_fY" = list(gY_fn), "str_FY" = list(GY_fn),
                    "str_FY_inv" = list(GY_inv_fn), "type" = type, "specs" = constr)
   

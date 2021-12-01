@@ -12,8 +12,6 @@
 #'     \code{(default = 1)}.\cr
 #' @param new_means    Numeric, the stressed mean.\cr
 #' @param new_sd    Numeric, the stressed standard deviation.\cr
-#' @param h Function that defines the bandwidth used in KDEs. If null,
-#' Silverman's rule will be used.\cr
 #' @param names   Character vector, the names of stressed models.
 #' @param log     Boolean, the option to print weights' statistics.
 #' @param ...       Additional arguments to be passed to
@@ -22,7 +20,7 @@
 #' @return A \code{SWIMw} object containing:
 #'     \itemize{
 #'       \item \code{x}, a data.frame containing the data;
-#'       \item \code{h}, bandwidths;
+#'       \item \code{h}, h is a multiple of the silverman’s rule;
 #'       \item \code{u}, vector containing the gridspace on [0, 1];
 #'       \item \code{lam}, vector containing the lambda's of the optimized model;
 #'       \item \code{str_fY}, function defining the densities of the stressed component;
@@ -63,7 +61,7 @@
 #' @export
 
 stress_mean_sd_w <- function(x, new_means, new_sd, k = 1,
-                             h = NULL, names = NULL, log = FALSE, ...){
+                             h = 1, names = NULL, log = FALSE, ...){
 
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -74,14 +72,16 @@ stress_mean_sd_w <- function(x, new_means, new_sd, k = 1,
   u <- c(.ab_grid(1e-4, 0.05, 100), .ab_grid(0.05, 0.99, 500), .ab_grid(0.99, 1-1e-4, 100))
   
   # Get the KDE estimates for fY, FY
-  print("Get the KDE estimates for fY, FY")
-  if (is.null(h)){
+  print("Get the KDE estimates")
+  if (is.numeric(h)){
     # Use Silverman's Rule
-    h <- function(y){1.06 * stats::sd(y) * length(y)^(-1/5)}
-  } else if (!is.function(h)) {
-    stop("Please pass a function calculating the bandwidth, or use the default bandwidth (pass NULL to h)")
+    .h <- function(y){
+      h * 1.06 * stats::sd(y) * length(y)^(-1/5)
+    }
+  } else {
+    stop("h must be numeric")
   }
-  hY <- h(x_data[,k])
+  hY <- .h(x_data[,k])
   
   fY_fn <- function(y){
     return(sum(stats::dnorm((y - x_data[,k])/hY)/hY/length(x_data[,k])))
@@ -94,8 +94,7 @@ stress_mean_sd_w <- function(x, new_means, new_sd, k = 1,
   lower_bracket = min(x_data[,k])-(max(x_data[,k])-min(x_data[,k]))*0.1
   upper_bracket = max(x_data[,k])+(max(x_data[,k])-min(x_data[,k]))*0.1
   FY_inv_fn <- Vectorize(.inverse(FY_fn, lower_bracket, upper_bracket))
-  print("Done calculating KDE")
-  
+
   .objective_fn <- function(par){
     # Get ell = F_inv + sum(lam[1] + lam[2]*mean)
     ell_fn <- function(x){(FY_inv_fn(x) + par[1] + par[2]*new_means)/(1 + par[2])}
@@ -134,15 +133,14 @@ stress_mean_sd_w <- function(x, new_means, new_sd, k = 1,
   }
   print("Optimization converged")
 
+  print("Calculate optimal scenario weights")
   # Get GY_inv_fn, y_grid
-  print("Calculate optimal quantile function")
   left <- min(min(x_data[,k]), GY_inv[4])
   right <- max(max(x_data[,k]), GY_inv[length(GY_inv)-3])
   GY_inv_fn <- stats::approxfun(u, GY_inv, yleft=left-1e-5, yright=right+1e-5)
   y_grid <- seq(from=GY_inv[4], to=GY_inv[length(GY_inv)-3], length.out=500)
   
   # Get GY and gY
-  print("Calculate optimal cdf and density")
   GY_fn <- .inverse(GY_inv_fn, lower=0, upper=1)
   GY_fn <- Vectorize(GY_fn)
   dG_inv <- (GY_inv[3:length(GY_inv)] - GY_inv[1:(length(GY_inv)-2)])/(u[3:length(u)] - u[1:(length(u)-2)])
@@ -220,7 +218,7 @@ stress_mean_sd_w <- function(x, new_means, new_sd, k = 1,
     constr <- c(constr, temp_list)
   }
   
-  my_list <- SWIMw("x" = x_data, "u"=u, "h"=list(h), "lam"=list(lam), "gamma" = list(gamma),
+  my_list <- SWIMw("x" = x_data, "u"=u, "h"=list(.h), "lam"=list(lam), "gamma" = list(gamma),
                    "new_weights" = new_weights, "str_fY" = list(gY_fn), "str_FY" = list(GY_fn),
                    "str_FY_inv" = list(GY_inv_fn), "type" = type, "specs" = constr)
 
