@@ -10,11 +10,11 @@
 \usage{
 get_data(object, xCol = "all")
 
-get_weights(object)
+get_weights(object, wCol = "all")
 
-get_weightsfun(object)
+get_weightsfun(object, wCol = "all")
 
-get_specs(object)
+get_specs(object, wCol = "all")
 
 summary_weights(object, wCol = "all")
 }

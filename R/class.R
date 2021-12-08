@@ -133,7 +133,7 @@
  #'                                                                                                 
  #' @export
 
-  get_weights <- function(object){
+  get_weights <- function(object, wCol = "all"){
    if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
    x_data <- get_data(object)
    m <- length(object$type)
@@ -147,7 +147,8 @@
     }
    }
    colnames(new_weights) <- names(object$specs)
-   return(new_weights)
+   if (is.character(wCol) && wCol == "all") return (new_weights)
+   return(new_weights[, wCol])
   }
 
  #' @describeIn get_data extracting weight functions.
@@ -162,11 +163,12 @@
  #'         
  #' @export
 
-  get_weightsfun <- function(object){
+  get_weightsfun <- function(object, wCol = "all"){
    if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
    if (!is.function(object$new_weights[[1]]))
       stop("New_weights is not a function, use get_weights() instead.") 
-   return(object$new_weights)
+   if (is.character(wCol) && wCol == "all") return (object$new_weights)
+   return(object$new_weights[wCol])
   }
 
  #' @describeIn get_data extracting information of the stress.
@@ -178,7 +180,7 @@
  #'         See also \code{\link{SWIM}}.
  #' @export
 
-  get_specs <- function(object){
+  get_specs <- function(object, wCol = "all"){
    if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw.")
    .type <- object$type 
    .specs <- data.frame()
@@ -198,9 +200,9 @@
   } else {
     # Wasserstein
     for (i in 1:length(.type)){
-     if (.type[i] %in% c("RM", "RM mean sd", "HARA RM")){
+     if (.type[i] %in% c("RM", "RM mean sd", "HARA RM") | any(startsWith(.type[[i]], c("ES", "ES mean sd", "HARA ES")))){
        .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]], stringsAsFactors = FALSE))
-     } else if (.type[i] %in% c("mean sd")){
+     } else if (.type[i] %in% c("mean sd", "mean")){
        k <- paste(object$specs[[i]]$k, collapse = " ")
        .specs <- plyr::rbind.fill(.specs, as.data.frame(k))
     } else stop("Object contains wrong type.")

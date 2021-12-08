@@ -13,7 +13,7 @@
 #'     underlying data of the \code{SWIMw} object. The stressed random component is assumed continuously distributed.
 #' @param k       Numeric, the column of \code{x} that is stressed
 #'     \code{(default = 1)}.\cr
-#' @param alpha   Numeric, vector, the level of the Expected Shortfall.\cr
+#' @param alpha   Numeric, vector, the level of the Expected Shortfall. (\code{default Expected Shortfall})\cr
 #' @param q          Numeric, vector, the stressed RM at level
 #'                   \code{alpha} (must be of the same length as alpha or gamma).\cr
 #' @param q_ratio    Numeric, vector, the ratio of the stressed RM to
@@ -200,7 +200,12 @@ stress_RM_w <- function(x, alpha = 0.8, q_ratio = NULL, q = NULL, k = 1,
   gY_fn <- function(x){1/dG_inv_fn(GY_fn(x))}
 
   # Create SWIMw object
-  type <- list("RM")
+  if (all.equal(.gamma, function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))})) {
+    type <- rep("ES", length.out = max_length)
+    type <- list(paste(type, alpha, collapse = " "))
+  } else {
+    type <- list("RM")
+  }
   
   # Get weights
   new_weights <- .get_weights(x_data[,k], y_grid, gY_fn, fY_fn, hY)
@@ -236,7 +241,7 @@ stress_RM_w <- function(x, alpha = 0.8, q_ratio = NULL, q = NULL, k = 1,
   print(outcome)  
   
   # Get constraints
-  constr <- list(list("k"=k, "q"=q, "alpha"=alpha))
+  constr <- list(list("k"=k, "alpha"=alpha, "q"=q))
   names(constr) <- temp
   
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=list(.h), "lam"=list(lam), "gamma" = list(.gamma),

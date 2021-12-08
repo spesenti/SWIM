@@ -6,12 +6,19 @@
 \usage{
 stress(
   type = c("VaR", "VaR ES", "mean", "mean sd", "moment", "prob", "user"),
+  x,
   ...
 )
 }
 \arguments{
 \item{type}{Type of stress, one of \code{"VaR", 
 "VaR ES", "mean", "mean sd", "moment", "prob", "user"}.}
+
+\item{x}{A vector, matrix or data frame
+containing realisations of random variables. Columns of \code{x}
+correspond to random variables; OR\cr
+A \code{SWIM} object, where \code{x} corresponds to the
+underlying data of the \code{SWIM} object.}
 
 \item{...}{Arguments to be passed on, depending on \code{type}.}
 }

@@ -23,7 +23,7 @@ correspond to random variables; OR\cr
 A \code{SWIMw} object, where \code{x} corresponds to the
 underlying data of the \code{SWIMw} object. The stressed random component is assumed continuously distributed.}
 
-\item{alpha}{Numeric, vector, the level of the Expected Shortfall.\cr}
+\item{alpha}{Numeric, vector, the level of the Expected Shortfall. (\code{default Expected Shortfall})\cr}
 
 \item{q_ratio}{Numeric, vector, the ratio of the stressed RM to
 the baseline RM (must be of the same length as alpha or gamma).\cr}

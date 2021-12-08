@@ -10,15 +10,12 @@
 #' @inheritParams    stress_RM_w
 #' @param k       Numeric, the column of \code{x} that is stressed
 #'     \code{(default = 1)}.
-#' @param alpha   Numeric, vector, the levels of the stressed risk measure (RM).\cr
 #' @param q          Numeric, vector, the stressed RM at level
 #'                   \code{alpha} (must be same length as \code{alpha}).\cr
 #' @param q_ratio    Numeric, vector, the ratio of the stressed RM to
 #'                   the baseline RM (must be same length as \code{alpha}).\cr
 #' @param new_means    Numeric, the stressed mean. \cr
 #' @param new_sd    Numeric, the stressed standard deviation. \cr
-#' @param gamma Function that defines the gamma of the risk measure 
-#' (\code{default =} Expected Shortfall).
 #' @param names   Character vector, the names of stressed models.
 #' @param log     Boolean, the option to print weights' statistics.
 #' @param ...       Additional arguments to be passed to
@@ -82,20 +79,26 @@
 #' @inherit SWIM references
 #' @export
 #'
-stress_RM_mean_sd_w <- function(x, alpha, new_means, new_sd, q_ratio = NULL, q = NULL, k = 1,
+stress_RM_mean_sd_w <- function(x, alpha = 0.8, new_means, new_sd, q_ratio = NULL, q = NULL, k = 1,
                                 h = 1, gamma = NULL, names = NULL, log = FALSE, ...){
 
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (!is.null(q) && !is.null(q_ratio)) stop("Only provide q or q_ratio")
   if (is.null(q) && is.null(q_ratio)) stop("no q or q_ratio defined")
-  if (!is.null(q) && (length(q) != length(alpha))) stop("q and alpha must have the same length")
-  if (!is.null(q_ratio) && (length(q_ratio) != length(alpha))) stop("q_ratio and alpha must have the same length")
+
   if (!is.null(gamma)){
     if (!is.function(gamma)) stop("gamma must be a function")
+    else {
+      # if (!is.null(alpha)) stop("Both gamma and alpha are provided")
+      .gamma <- function(x, alpha = NULL){gamma(x)}
+    }
   } else{
     warning("No gamma passed. Using expected shortfall.")
-    gamma <- function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))}
+    if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
+    if (!is.null(q) && (length(q) != length(alpha))) stop("q and alpha must have the same length")
+    if (!is.null(q_ratio) && (length(q_ratio) != length(alpha))) stop("q_ratio and alpha must have the same length")
+    .gamma <- function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))}
   }
   
   n <- length(x_data[, k])
@@ -134,7 +137,7 @@ stress_RM_mean_sd_w <- function(x, alpha, new_means, new_sd, q_ratio = NULL, q =
   if(is.null(q)){
     q = c()
     for (i in 1:length(q_ratio)){
-      q <- append(q, .rm(FY_inv_fn(u), gamma(u, alpha[i]), u) * q_ratio[i])
+      q <- append(q, .rm(FY_inv_fn(u), .gamma(u, alpha[i]), u) * q_ratio[i])
     }
   }
   
@@ -143,7 +146,7 @@ stress_RM_mean_sd_w <- function(x, alpha, new_means, new_sd, q_ratio = NULL, q =
     ell_fn <- function(x){
       ell <- FY_inv_fn(x) + par[1] + par[2]*new_means
       for (i in 1:(length(par)-2)){
-        ell <- ell + par[i+2]*gamma(x, alpha[i])
+        ell <- ell + par[i+2]*.gamma(x, alpha[i])
       }
       ell <- ell / (1 + par[2])
       return(ell)
@@ -155,7 +158,7 @@ stress_RM_mean_sd_w <- function(x, alpha, new_means, new_sd, q_ratio = NULL, q =
     sd_stress <- sqrt(.integrate((GY_inv - mean_stress)^2, u))
     rm_stress <-c()
     for (i in 1:length(alpha)){
-      rm_stress <- append(rm_stress, .rm(GY_inv, gamma(u, alpha[i]), u))
+      rm_stress <- append(rm_stress, .rm(GY_inv, .gamma(u, alpha[i]), u))
     }
     
     # Return error
@@ -178,7 +181,7 @@ stress_RM_mean_sd_w <- function(x, alpha, new_means, new_sd, q_ratio = NULL, q =
   ell_fn <- function(x){
     ell <- FY_inv_fn(x) + lam[1] + lam[2]*new_means
     for (i in 1:(length(lam)-2)){
-      ell <- ell + lam[i+2]*gamma(x, alpha[i])
+      ell <- ell + lam[i+2]*.gamma(x, alpha[i])
     }
     ell <- ell / (1 + lam[2])
     return(ell)
@@ -200,8 +203,13 @@ stress_RM_mean_sd_w <- function(x, alpha, new_means, new_sd, q_ratio = NULL, q =
   gY_fn <- function(x){1/dG_inv_fn(GY_fn(x))}
   
   # Create SWIMw object
-  type <- list("RM mean sd")
-
+  if (all.equal(.gamma, function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))})) {
+    type <- rep("ES mean sd", length.out = max_length)
+    type <- list(paste(type, alpha, collapse = " "))
+  } else {
+    type <- list("RM mean sd")
+  }
+  
   # Get weights
   new_weights <- .get_weights(x_data[,k], y_grid, gY_fn, fY_fn, hY)
 
@@ -221,7 +229,7 @@ stress_RM_mean_sd_w <- function(x, alpha, new_means, new_sd, q_ratio = NULL, q =
     
     RM_achieved <-c()
     for (i in 1:length(alpha)){
-      RM_achieved <- append(RM_achieved, .rm(GY_inv_fn(u), gamma(u, alpha[i]), u))
+      RM_achieved <- append(RM_achieved, .rm(GY_inv_fn(u), .gamma(u, alpha[i]), u))
     }
   }
   
@@ -278,10 +286,10 @@ stress_RM_mean_sd_w <- function(x, alpha, new_means, new_sd, q_ratio = NULL, q =
   }
   
   # Get constraints
-  constr <- list(list("k"=k, "q"=q, "alpha"=alpha, "new_means"=new_means, "new_sd" = new_sd))
+  constr <- list(list("k"=k, "alpha"=alpha, "q"=q))
   names(constr) <- temp
   
-  my_list <- SWIMw("x" = x_data, "u"=u, "h"=list(.h), "lam"=list(lam), "gamma" = list(gamma),
+  my_list <- SWIMw("x" = x_data, "u"=u, "h"=list(.h), "lam"=list(lam), "gamma" = list(.gamma),
                    "new_weights" = new_weights, "str_fY" = list(gY_fn), "str_FY" = list(GY_fn),
                    "str_FY_inv" = list(GY_inv_fn), "type" = type, "specs" = constr)
   

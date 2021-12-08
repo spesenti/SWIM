@@ -6,7 +6,7 @@
 \usage{
 stress_HARA_RM_w(
   x,
-  alpha,
+  alpha = 0.8,
   a,
   b,
   eta,
@@ -28,7 +28,7 @@ correspond to random variables; OR\cr
 A \code{SWIMw} object, where \code{x} corresponds to the
 underlying data of the \code{SWIMw} object. The stressed random component is assumed continuously distributed.}
 
-\item{alpha}{Numeric, vector, the levels of the stressed risk measure (RM).\cr}
+\item{alpha}{Numeric, vector, the level of the Expected Shortfall. (\code{default Expected Shortfall})\cr}
 
 \item{a}{Numeric vector, input to HARA utility function.\cr}
 
@@ -53,8 +53,7 @@ baseline hara utility.\cr}
 
 \item{h}{Numeric, a multiplier of the default bandwidth using Silverman’s rule (default \code{h = 1}).\cr}
 
-\item{gamma}{Function that defines the gamma of the risk measure 
-(\code{default =} Expected Shortfall).}
+\item{gamma}{Function of one variable, that defined the gamma of the risk measure. (\code{default Expected Shortfall}).}
 
 \item{names}{Character vector, the names of stressed models.}
 
