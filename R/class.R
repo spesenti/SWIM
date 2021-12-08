@@ -307,6 +307,13 @@
   if (length(intersect(x_name, y_name)) >= 1) {
      names(new_weights) <- paste("stress", 1:m)
      names(specs) <- paste("stress", 1:m)
+  } else {
+    original <- c(x_name, y_name)
+    for (i in 1:length(original)) {
+      if (startsWith(original[i], "stress ")) original[i] <- paste("stress", i, collapse = " ")
+    }
+    names(new_weights) <- original
+    names(specs) <- original
   }
 
   xy <- SWIM("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs)
