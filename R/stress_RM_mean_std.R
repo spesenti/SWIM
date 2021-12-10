@@ -205,7 +205,6 @@ stress_RM_mean_sd_w <- function(x, alpha = 0.8, new_means, new_sd, q_ratio = NUL
   # Create SWIMw object
   if (all.equal(.gamma, function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))})) {
     type <- rep("ES mean sd", length.out = max_length)
-    type <- list(paste(type, alpha, collapse = " "))
   } else {
     type <- list("RM mean sd")
   }

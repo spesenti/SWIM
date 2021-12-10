@@ -213,7 +213,6 @@ stress_HARA_RM_w <- function(x, alpha = 0.8, a, b, eta,
   # Create SWIMw object
   if (all.equal(.gamma, function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))})) {
     type <- rep("HARA ES", length.out = max_length)
-    type <- list(paste(type, alpha, collapse = " "))
   } else {
     type <- list("HARA RM")
   }
@@ -268,7 +267,7 @@ stress_HARA_RM_w <- function(x, alpha = 0.8, a, b, eta,
   }
   
   # Get constraints
-  constr <- list(list("k"=k, "alpha"=alpha, "q"=q, "hu"=hu, "a"=a, "b"=b, "eta"=eta))
+  constr <- list(list("k"=k, "alpha"=alpha, "q"=q))
   names(constr) <- temp
   
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=list(.h), "lam"=list(lam), "gamma" = list(.gamma),

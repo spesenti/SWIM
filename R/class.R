@@ -200,7 +200,7 @@
   } else {
     # Wasserstein
     for (i in 1:length(.type)){
-     if (.type[i] %in% c("RM", "RM mean sd", "HARA RM") | any(startsWith(.type[[i]], c("ES", "ES mean sd", "HARA ES")))){
+     if (.type[i] %in% c("RM", "RM mean sd", "HARA RM", "ES", "ES mean sd", "HARA ES")) {
        .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]], stringsAsFactors = FALSE))
      } else if (.type[i] %in% c("mean sd", "mean")){
        k <- paste(object$specs[[i]]$k, collapse = " ")

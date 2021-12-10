@@ -202,7 +202,6 @@ stress_RM_w <- function(x, alpha = 0.8, q_ratio = NULL, q = NULL, k = 1,
   # Create SWIMw object
   if (all.equal(.gamma, function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))})) {
     type <- rep("ES", length.out = max_length)
-    type <- list(paste(type, alpha, collapse = " "))
   } else {
     type <- list("RM")
   }
