@@ -133,7 +133,7 @@
  #'                                                                                                 
  #' @export
 
-  get_weights <- function(object){
+  get_weights <- function(object, wCol = "all"){
    if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
    x_data <- get_data(object)
    m <- length(object$type)
@@ -147,7 +147,8 @@
     }
    }
    colnames(new_weights) <- names(object$specs)
-   return(new_weights)
+   if (is.character(wCol) && wCol == "all") return (new_weights)
+   return(new_weights[, wCol])
   }
 
  #' @describeIn get_data extracting weight functions.
@@ -162,11 +163,12 @@
  #'         
  #' @export
 
-  get_weightsfun <- function(object){
+  get_weightsfun <- function(object, wCol = "all"){
    if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
    if (!is.function(object$new_weights[[1]]))
       stop("New_weights is not a function, use get_weights() instead.") 
-   return(object$new_weights)
+   if (is.character(wCol) && wCol == "all") return (object$new_weights)
+   return(object$new_weights[wCol])
   }
 
  #' @describeIn get_data extracting information of the stress.
@@ -178,7 +180,7 @@
  #'         See also \code{\link{SWIM}}.
  #' @export
 
-  get_specs <- function(object){
+  get_specs <- function(object, wCol = "all"){
    if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw.")
    .type <- object$type 
    .specs <- data.frame()
@@ -198,16 +200,16 @@
   } else {
     # Wasserstein
     for (i in 1:length(.type)){
-     if (.type[i] %in% c("RM", "RM mean sd", "HARA RM")){
+     if (.type[i] %in% c("RM", "RM mean sd", "HARA RM", "ES", "ES mean sd", "HARA ES")) {
        .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]], stringsAsFactors = FALSE))
-     } else if (.type[i] %in% c("mean sd")){
+     } else if (.type[i] %in% c("mean sd", "mean")){
        k <- paste(object$specs[[i]]$k, collapse = " ")
        .specs <- plyr::rbind.fill(.specs, as.data.frame(k))
     } else stop("Object contains wrong type.")
     }
   }
    .type <- t(as.data.frame(.type))
-   .specs <- cbind(.type, .specs)
+   .specs <- cbind(.type, .specs)[1:4] # Only include k, alpha, and q
    colnames(.specs)[1] <- "type"
    rownames(.specs) <- names(object$specs)
    return(.specs)
@@ -218,7 +220,7 @@
   #' @details Get a new \code{SWIM} object with desired \code{name}
   #' 
   #' @param object A \code{SWIM} object
-  #' @param name   Character, the new name of k-th stressed model.
+  #' @param names   Character, the new names of k-th stressed model.
   #' @param k   Numeric, the k-th stressed model of object to rename. (\code{default = 1}).
   #'  
   #' @return An renamed object of class \code{SWIM} containing:
@@ -249,10 +251,10 @@
   #'
   #' @export
   
-  rename_SWIM <- function(object, name, k=1){
+  rename_SWIM <- function(object, `names`, k=1){
     if (!is.SWIM(object) & !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
     temp <- names(object$new_weights)
-    temp[k] <- name
+    temp[k] <- names
     names(object$new_weights) <- temp
     names(object$specs) <- temp
     object <- object
@@ -305,6 +307,13 @@
   if (length(intersect(x_name, y_name)) >= 1) {
      names(new_weights) <- paste("stress", 1:m)
      names(specs) <- paste("stress", 1:m)
+  } else {
+    original <- c(x_name, y_name)
+    for (i in 1:length(original)) {
+      if (startsWith(original[i], "stress ")) original[i] <- paste("stress", i, collapse = " ")
+    }
+    names(new_weights) <- original
+    names(specs) <- original
   }
 
   xy <- SWIM("x" = get_data(x), "new_weights" = new_weights, "type" = type, "specs" = specs)
@@ -382,9 +391,12 @@
   #' @return \code{summary_weights}: print a list containing summary statistics 
   #'         of the stresses with each element being a table for a different stress. 
   #'         The summary statistics inclue minimum, maximum, standard deviation, 
-  #'         gini coefficient, and entropy. 
+  #'         gini coefficient, entropy and effective sample size. 
   #'         
   #'         Gini coefficient uses the formula \eqn{\frac{\sum_{i=1}^{n} \sum_{j=1}^{n}\left|x_{i}-x_{j}\right|}{2 n^{2} \bar{x}}}.
+  #'         
+  #'         Effective Sample Size is equal to n / (1+Var(W)), see 
+  #'         Equation (9.13) in Owen, Art B. "Monte Carlo theory, methods and examples." (2013).
   #' @export
 
   summary_weights <- function(object, wCol = "all"){
@@ -395,9 +407,9 @@
     for (i in wCol){
       w <- get_weights(object)[, i]
       freqs <- w / length(w)
-      sub_table <- t(matrix(c(min(w), max(w), stats::sd(w), .gini(w), .entropy(freqs))))
+      sub_table <- t(matrix(c(min(w), max(w), stats::sd(w), .gini(w), .entropy(freqs), length(w)/(1 + stats::var(w)))))
       sub_table <- round(sub_table, 4)
-      colnames(sub_table) <- c("min", "max", "sd", "gini coef", "entropy")
+      colnames(sub_table) <- c("min", "max", "sd", "gini coef", "entropy", "effective sample size")
       name <- names(object$specs)[i]
       table[[name]] <- sub_table
     }

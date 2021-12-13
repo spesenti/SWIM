@@ -6,12 +6,11 @@
 \usage{
 stress_RM_w(
   x,
-  alpha,
+  alpha = 0.8,
   q_ratio = NULL,
   q = NULL,
   k = 1,
-  normalise = FALSE,
-  h = NULL,
+  h = 1,
   gamma = NULL,
   names = NULL,
   log = FALSE
@@ -24,25 +23,20 @@ correspond to random variables; OR\cr
 A \code{SWIMw} object, where \code{x} corresponds to the
 underlying data of the \code{SWIMw} object. The stressed random component is assumed continuously distributed.}
 
-\item{alpha}{Numeric, vector, the levels of the stressed risk measure (RM).\cr}
+\item{alpha}{Numeric, vector, the level of the Expected Shortfall. (\code{default Expected Shortfall})\cr}
 
 \item{q_ratio}{Numeric, vector, the ratio of the stressed RM to
-the baseline RM (must be same length as \code{alpha}).\cr}
+the baseline RM (must be of the same length as alpha or gamma).\cr}
 
 \item{q}{Numeric, vector, the stressed RM at level
-\code{alpha} (must be same length as \code{alpha}).\cr}
+\code{alpha} (must be of the same length as alpha or gamma).\cr}
 
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.\cr}
 
-\item{normalise}{Logical. If true, values of the columns to be stressed are linearly
-normalised to the unit interval (\code{default = FALSE}).\cr}
+\item{h}{Numeric, a multiplier of the default bandwidth using Silverman’s rule (default \code{h = 1}).\cr}
 
-\item{h}{Function that defines the bandwidth used in KDE (\code{default = }
-Silverman's rule).\cr}
-
-\item{gamma}{Function that defines the gamma of the risk measure which takes in 
-\code{alpha} as an argument (\code{default Expected Shortfall}).}
+\item{gamma}{Function of one variable, that defined the gamma of the risk measure. (\code{default Expected Shortfall}).}
 
 \item{names}{Character vector, the names of stressed models.}
 
@@ -52,7 +46,7 @@ Silverman's rule).\cr}
 A \code{SWIMw} object containing:
     \itemize{
       \item \code{x}, a data.frame containing the data;
-      \item \code{h}, bandwidths;
+      \item \code{h}, h is a multiple of the silverman’s rule;
       \item \code{u}, vector containing the gridspace on [0, 1];
       \item \code{lam}, vector containing the lambda's of the optimized model;
       \item \code{str_fY}, function defining the densities of the stressed component;
@@ -70,12 +64,11 @@ A \code{SWIMw} object containing:
     See \code{\link{SWIM}} for details.
 }
 \description{
-Provides weights on simulated scenarios from a baseline stochastic
-    model, such that a stressed model component (random variable) fulfills a
-    constraint on its risk measure defined by a \code{gamma} function and 
-    evaluated at a given level \code{alpha}. Scenario weights are
-    selected by constrained minimisation of the Wasserstein distance to the
-    baseline model.
+Provides weights on simulated scenarios from a baseline 
+stochastic model, such that a stressed model component 
+(random variable) fulfills a constraint on its risk measure defined
+by a gamma function. The default risk measure is the Expected 
+Shortfall at level alpha.
 }
 \details{
 This function implements stresses on distortion risk measures.
@@ -107,8 +100,19 @@ res1 <- stress_wass(type = "RM", x = x,
 res2 <- stress_RM_w(x = x, alpha = 0.9,
   q_ratio = 1.05, k = 2)
 summary(res2)
-}
 
+# dual power distortion with beta = 3
+# gamma = beta * u^{beta - 1}, beta > 0 
+
+gamma <- function(u){
+  .res <- 3 * u^2
+  return(.res)
+}
+res3 <- stress_wass(type = "RM", x = x, 
+  gamma = gamma, q_ratio = 1.05)
+summary(res3)
+}
+ 
 }
 \references{
 \insertRef{Pesenti2019reverse}{SWIM}\cr

@@ -4,16 +4,7 @@
 \alias{stress_mean_w}
 \title{Stressing Mean}
 \usage{
-stress_mean_w(
-  x,
-  new_means,
-  k = 1,
-  normalise = FALSE,
-  h = NULL,
-  names = NULL,
-  log = FALSE,
-  ...
-)
+stress_mean_w(x, new_means, k = 1, h = 1, names = NULL, log = FALSE, ...)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame
@@ -27,11 +18,7 @@ underlying data of the \code{SWIMw} object. The stressed random component is ass
 \item{k}{Numeric, the column of \code{x} that is stressed
 \code{(default = 1)}.\cr}
 
-\item{normalise}{Logical. If true, values of the columns to be stressed are linearly\cr
-normalised to the unit interval.\cr}
-
-\item{h}{Function that defines the bandwidth used in KDEs. If null,
-Silverman's rule will be used.\cr}
+\item{h}{Numeric, a multiplier of the default bandwidth using Silverman’s rule (default \code{h = 1}).\cr}
 
 \item{names}{Character vector, the names of stressed models.}
 
@@ -44,7 +31,7 @@ Silverman's rule will be used.\cr}
 A \code{SWIMw} object containing:
     \itemize{
       \item \code{x}, a data.frame containing the data;
-      \item \code{h}, bandwidths;
+      \item \code{h}, h is a multiple of the silverman’s rule;
       \item \code{u}, vector containing the gridspace on [0, 1];
       \item \code{lam}, vector containing the lambda's of the optimized model;
       \item \code{str_fY}, function defining the densities of the stressed component;

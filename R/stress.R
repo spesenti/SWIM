@@ -9,6 +9,11 @@
  #'    
  #' @param type    Type of stress, one of \code{"VaR", 
  #'     "VaR ES", "mean", "mean sd", "moment", "prob", "user"}.
+ #' @param x       A vector, matrix or data frame
+ #'     containing realisations of random variables. Columns of \code{x}
+ #'     correspond to random variables; OR\cr
+ #'     A \code{SWIM} object, where \code{x} corresponds to the
+ #'     underlying data of the \code{SWIM} object.
  #' @param ...     Arguments to be passed on, depending on \code{type}.
  #'                
  #' @return An object of class \code{SWIM}, see \code{\link{SWIM}} 
@@ -30,14 +35,15 @@
  #' @export
  #' 
   stress <- function(type = c("VaR", "VaR ES", "mean", 
-                     "mean sd", "moment", "prob", "user"), ...){
-   if (type == "VaR") SWIM <- stress_VaR(...)
-   if (type == "VaR ES") SWIM <- stress_VaR_ES(...)
-   if (type == "mean") SWIM <- stress_mean(...)
-   if (type == "mean sd") SWIM <- stress_mean_sd(...)
-   if (type == "moment") SWIM <- stress_moment(...)
-   if (type == "prob") SWIM <- stress_prob(...)
-   if (type == "user") SWIM <- stress_user(...)
+                     "mean sd", "moment", "prob", "user"), x, ...){
+   if (is.SWIMw(x)) stop("Function cannot be a SWIMw object")
+   if (type == "VaR") SWIM <- stress_VaR(x, ...)
+   if (type == "VaR ES") SWIM <- stress_VaR_ES(x, ...)
+   if (type == "mean") SWIM <- stress_mean(x, ...)
+   if (type == "mean sd") SWIM <- stress_mean_sd(x, ...)
+   if (type == "moment") SWIM <- stress_moment(x, ...)
+   if (type == "prob") SWIM <- stress_prob(x, ...)
+   if (type == "user") SWIM <- stress_user(x, ...)
    return(SWIM)
   }
   
@@ -52,6 +58,11 @@
 #'    
 #' @param type    Type of stress, one of \code{"RM", 
 #'     "mean sd", "RM mean sd", "HARA RM"}.
+#' @param x       A vector, matrix or data frame
+#'     containing realisations of random variables. Columns of \code{x}
+#'     correspond to random variables; OR\cr
+#'     A \code{SWIMw} object, where \code{x} corresponds to the
+#'     underlying data of the \code{SWIMw} object.
 #' @param ...     Arguments to be passed on, depending on \code{type}.
 #'                
 #' @return An object of class \code{SWIMw}, see \code{\link{SWIM}} 
@@ -72,11 +83,12 @@
 #' 
 #' @export
 #' 
-  stress_wass <- function(type = c("RM", "mean sd", "RM mean sd", "HARA RM"), ...){
-     if (type == "RM") SWIMw <- stress_RM_w(...)
-     if (type == "mean sd") SWIMw <- stress_mean_sd_w(...)
-     if (type == "RM mean sd") SWIMw <- stress_RM_mean_sd_w(...)
-     if (type == "HARA RM") SWIMw <- stress_HARA_RM_w(...)
-     if (type == "mean") SWIMw <- stress_mean_w(...)
+  stress_wass <- function(type = c("RM", "mean sd", "RM mean sd", "HARA RM"), x, ...){
+     if (is.SWIM(x)) stop("Function cannot be a SWIM object")
+     if (type == "RM") SWIMw <- stress_RM_w(x, ...)
+     if (type == "mean sd") SWIMw <- stress_mean_sd_w(x, ...)
+     if (type == "RM mean sd") SWIMw <- stress_RM_mean_sd_w(x, ...)
+     if (type == "HARA RM") SWIMw <- stress_HARA_RM_w(x, ...)
+     if (type == "mean") SWIMw <- stress_mean_w(x, ...)
      return(SWIMw)
   }

@@ -10,11 +10,11 @@
 \usage{
 get_data(object, xCol = "all")
 
-get_weights(object)
+get_weights(object, wCol = "all")
 
-get_weightsfun(object)
+get_weightsfun(object, wCol = "all")
 
-get_specs(object)
+get_specs(object, wCol = "all")
 
 summary_weights(object, wCol = "all")
 }
@@ -54,9 +54,12 @@ stresses (\code{default = "all"}).}
 \code{summary_weights}: print a list containing summary statistics 
         of the stresses with each element being a table for a different stress. 
         The summary statistics inclue minimum, maximum, standard deviation, 
-        gini coefficient, and entropy. 
+        gini coefficient, entropy and effective sample size. 
         
         Gini coefficient uses the formula \eqn{\frac{\sum_{i=1}^{n} \sum_{j=1}^{n}\left|x_{i}-x_{j}\right|}{2 n^{2} \bar{x}}}.
+        
+        Effective Sample Size is equal to n / (1+Var(W)), see 
+        Equation (9.13) in Owen, Art B. "Monte Carlo theory, methods and examples." (2013).
 }
 \description{
 Extracting the data (realisations of the stochastic model), the 

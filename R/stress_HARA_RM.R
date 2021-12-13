@@ -10,7 +10,6 @@
 #' @inheritParams    stress_RM_w
 #' @param k       Numeric, the column of \code{x} that is stressed
 #'     \code{(default = 1)}.\cr
-#' @param alpha   Numeric, vector, the levels of the stressed risk measure (RM).\cr
 #' @param a   Numeric vector, input to HARA utility function.\cr
 #' @param b   Numeric vector, input to HARA utility function.\cr
 #' @param eta   Numeric vector, input to HARA utility function.\cr
@@ -22,12 +21,6 @@
 #' \code{a}, \code{b} and \code{eta}.\cr
 #' @param hu_ratio    Numeric, vector, the ratio of the HARA utility to the 
 #' baseline hara utility.\cr
-#' @param normalise Logical. If true, values of the columns to be stressed are linearly
-#'                  normalised to the unit interval (\code{default = FALSE}).\cr
-#' @param h Function that defines the bandwidth used in KDE (\code{default = }
-#' Silverman's rule).\cr
-#' @param gamma Function that defines the gamma of the risk measure 
-#' (\code{default =} Expected Shortfall).
 #' @param names   Character vector, the names of stressed models.
 #' @param log     Boolean, the option to print weights' statistics.
 #'
@@ -52,7 +45,7 @@
 #' @return A \code{SWIMw} object containing:
 #'     \itemize{
 #'       \item \code{x}, a data.frame containing the data;
-#'       \item \code{h}, bandwidths;
+#'       \item \code{h}, h is a multiple of the silverman’s rule;
 #'       \item \code{u}, vector containing the gridspace on [0, 1];
 #'       \item \code{lam}, vector containing the lambda's of the optimized model;
 #'       \item \code{str_fY}, function defining the densities of the stressed component;
@@ -93,9 +86,9 @@
 #' @export
 
 
-stress_HARA_RM_w <- function(x, alpha, a, b, eta, 
+stress_HARA_RM_w <- function(x, alpha = 0.8, a, b, eta, 
                         q_ratio = NULL, q = NULL, hu_ratio = NULL, hu=NULL,
-                        k = 1, normalise = FALSE, h = NULL, gamma = NULL, names = NULL, log = FALSE){
+                        k = 1, h = 1, gamma = NULL, names = NULL, log = FALSE){
 
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -104,13 +97,19 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   if (is.null(q) && is.null(q_ratio)) stop("No q or q_ratio defined")
   if (!is.null(hu) && !is.null(hu_ratio)) stop("Only provide one of hu or hu_ratio")
   if (is.null(hu) && is.null(hu_ratio)) stop("No hu or hu_ratio defined")
-  if (!is.null(q) && (length(q) != length(alpha))) stop("q and alpha must have the same length")
-  if (!is.null(q_ratio) && (length(q_ratio) != length(alpha))) stop("q_ratio and alpha must have the same length")
+
   if (!is.null(gamma)){
     if (!is.function(gamma)) stop("gamma must be a function")
+    else {
+      # if (!is.null(alpha)) stop("Both gamma and alpha are provided")
+      .gamma <- function(x, alpha = NULL){gamma(x)}
+    }
   } else{
     warning("No gamma passed. Using expected shortfall.")
-    gamma <- function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))}
+    if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
+    if (!is.null(q) && (length(q) != length(alpha))) stop("q and alpha must have the same length")
+    if (!is.null(q_ratio) && (length(q_ratio) != length(alpha))) stop("q_ratio and alpha must have the same length")
+    .gamma <- function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))}
   }
 
   n <- length(x_data[, k])
@@ -119,14 +118,16 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   u <- c(.ab_grid(1e-4, 0.05, 100), .ab_grid(0.05, 0.99, 500), .ab_grid(0.99, 1-1e-4, 100))
   
   # Get the KDE estimates for fY, FY
-  print("Get the KDE estimates for fY, FY")
-  if (is.null(h)){
+  print("Get the KDE estimates")
+  if (is.numeric(h)){
     # Use Silverman's Rule
-    h <- function(y){1.06 * stats::sd(y) * length(y)^(-1/5)}
-  } else if (!is.function(h)) {
-    stop("Please pass a function calculating the bandwidth, or use the default bandwidth (pass NULL to h)")
+    .h <- function(y){
+      h * 1.06 * stats::sd(y) * length(y)^(-1/5)
+    }
+  } else {
+    stop("h must be numeric")
   }
-  hY <- h(x_data[,k])
+  hY <- .h(x_data[,k])
   
   fY_fn <- function(y){
     return(sum(stats::dnorm((y - x_data[,k])/hY)/hY/length(x_data[,k])))
@@ -139,14 +140,12 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   lower_bracket = min(x_data[,k])-(max(x_data[,k])-min(x_data[,k]))*0.1
   upper_bracket = max(x_data[,k])+(max(x_data[,k])-min(x_data[,k]))*0.1
   FY_inv_fn <- Vectorize(.inverse(FY_fn, lower_bracket, upper_bracket))
-  print("Done calculating KDE")
-  
+
   # Calculate the risk measure and hara utility
-  print("Calculate the risk measure")
   if(is.null(q)){
     q = c()
     for (i in 1:length(q_ratio)){
-      q <- append(q, .rm(FY_inv_fn(u), gamma(u, alpha[i]), u) * q_ratio[i])
+      q <- append(q, .rm(FY_inv_fn(u), .gamma(u, alpha[i]), u) * q_ratio[i])
     }
   }
   if(is.null(hu)){hu <- .hara_utility(a, b, eta, u, FY_inv_fn(u)) * hu_ratio}
@@ -156,7 +155,7 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
     ell_fn <- function(x){
       ell <- FY_inv_fn(x)
       for (i in 1:(length(par)-1)){
-        ell <- ell + par[i+1]*gamma(x, alpha[i])
+        ell <- ell + par[i+1]*.gamma(x, alpha[i])
       }
       return(ell)
     }
@@ -168,7 +167,7 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
 
     rm_stress <-c ()
     for (i in 1:length(alpha)){
-      rm_stress <- append(rm_stress, .rm(GY_inv, gamma(u, alpha[i]), u))
+      rm_stress <- append(rm_stress, .rm(GY_inv, .gamma(u, alpha[i]), u))
     }
     hara_stress <- .hara_utility(a, b, eta, u, GY_inv)
     
@@ -190,14 +189,14 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   ell_fn <- function(x){
     ell <- FY_inv_fn(x)
     for (i in 1:(length(lam)-1)){
-      ell <- ell + lam[i+1]*gamma(x, alpha[i])
+      ell <- ell + lam[i+1]*.gamma(x, alpha[i])
     }
     return(ell)
   }
   ell <- ell_fn(u)
 
+  print("Calculate optimal scenario weights")
   # Get GY_inv, y_grid
-  print("Calculate optimal quantile function")
   iso_g <- stats::isoreg(u, ell)$yf
   GY_inv <- .utransform(a, b, eta, u, iso_g, exp(lam[1]), 600)
   left <- min(min(x_data[,k]), GY_inv[4])
@@ -206,14 +205,17 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   y_grid <- seq(from=GY_inv[4], to=GY_inv[length(GY_inv)-3], length.out=500)
 
   # Get GY and gY
-  print("Calculate optimal cdf and density")
   GY_fn <- Vectorize(.inverse(GY_inv_fn, lower=min(u), upper=max(u)))
   dG_inv <- (GY_inv[3:length(GY_inv)] - GY_inv[1:(length(GY_inv)-2)])/(u[3:length(u)] - u[1:(length(u)-2)])
   dG_inv_fn <- stats::approxfun(0.5*(u[3:length(u)] + u[1:(length(u)-2)]), dG_inv, rule=2)
   gY_fn <- function(x){1/dG_inv_fn(GY_fn(x))}
   
   # Create SWIMw object
-  type <- list("HARA RM")
+  if (all.equal(.gamma, function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))})) {
+    type <- rep("HARA ES", length.out = max_length)
+  } else {
+    type <- list("HARA RM")
+  }
 
   # Get weights
   new_weights <- .get_weights(x_data[,k], y_grid, gY_fn, fY_fn, hY)
@@ -231,7 +233,7 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   for(j in 1:max_length){
     RM_achieved <-c()
     for (i in 1:length(alpha)){
-      RM_achieved <- append(RM_achieved, .rm(GY_inv_fn(u), gamma(u, alpha[i]), u))
+      RM_achieved <- append(RM_achieved, .rm(GY_inv_fn(u), .gamma(u, alpha[i]), u))
     }
   }
   
@@ -265,10 +267,10 @@ stress_HARA_RM_w <- function(x, alpha, a, b, eta,
   }
   
   # Get constraints
-  constr <- list(list("k"=k, "q"=q, "alpha"=alpha, "hu"=hu, "a"=a, "b"=b, "eta"=eta))
+  constr <- list(list("k"=k, "alpha"=alpha, "q"=q, "hu"=hu, "a"=a, "b"=b, "eta"=eta))
   names(constr) <- temp
   
-  my_list <- SWIMw("x" = x_data, "u"=u, "h"=list(h), "lam"=list(lam), "gamma" = list(gamma),
+  my_list <- SWIMw("x" = x_data, "u"=u, "h"=list(.h), "lam"=list(lam), "gamma" = list(.gamma),
                    "new_weights" = new_weights, "str_fY" = list(gY_fn), "str_FY" = list(GY_fn),
                    "str_FY_inv" = list(GY_inv_fn), "type" = type, "specs" = constr)
   
