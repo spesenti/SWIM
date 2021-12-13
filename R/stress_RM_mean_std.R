@@ -285,7 +285,7 @@ stress_RM_mean_sd_w <- function(x, alpha = 0.8, new_means, new_sd, q_ratio = NUL
   }
   
   # Get constraints
-  constr <- list(list("k"=k, "alpha"=alpha, "q"=q))
+  constr <- list(list("k"=k, "alpha"=alpha, "q"=q, "new_means"=new_means, "new_sd"=new_sd))
   names(constr) <- temp
   
   my_list <- SWIMw("x" = x_data, "u"=u, "h"=list(.h), "lam"=list(lam), "gamma" = list(.gamma),

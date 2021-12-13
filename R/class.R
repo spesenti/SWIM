@@ -209,7 +209,7 @@
     }
   }
    .type <- t(as.data.frame(.type))
-   .specs <- cbind(.type, .specs)
+   .specs <- cbind(.type, .specs)[1:4] # Only include k, alpha, and q
    colnames(.specs)[1] <- "type"
    rownames(.specs) <- names(object$specs)
    return(.specs)
