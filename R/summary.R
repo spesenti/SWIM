@@ -130,6 +130,16 @@ summary.SWIM <- function(object, ..., xCol = "all", wCol = "all", base = FALSE){
       summary_base <- .summary(x_data = x_data, cname = cname, new_weights = old_weights)
       summary_w <- c(list("base" = summary_base), summary_w)
     }
+    
+    # Calculate the mean and standard deviation of SWIMw objects using integrals
+    sd <- sd_stressed(object, xCol, wCol, base)
+    mean <- mean_stressed(object, xCol, wCol, base)
+
+    for (i in 1:length(summary_w)){
+      summary_w[[i]][1, ] <- mean[i, ]
+      summary_w[[i]][2, ] <- sd[i, ]
+    }
+    
     return(summary_w)
   }
   

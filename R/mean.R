@@ -38,18 +38,75 @@ mean_stressed <- function(object, xCol = "all", wCol = "all", base=FALSE){
   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
   new_weights <- as.matrix(get_weights(object)[ ,wCol])  
   
-  n <- dim(x_data)[1]
-  mean <- t(new_weights) %*% x_data / n
-  colnames(mean) <- cname
-  rownames(mean) <- names(object$specs)[wCol]
-  
-  if (base == TRUE){
-    old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)
-    mean_base <- t(old_weights) %*% x_data / n
-    mean <- rbind(mean_base, mean)
-    rownames(mean) <- c("base", names(object$specs)[wCol])
+  if (is.SWIM(object)){
+    # K-L Divergence
+    n <- dim(x_data)[1]
+    mean <- t(new_weights) %*% x_data / n
+    colnames(mean) <- cname
+    rownames(mean) <- names(object$specs)[wCol]
+    
+    if (base == TRUE){
+      old_weights <- matrix(rep(1, length(x_data[,1])), ncol = 1)
+      mean_base <- t(old_weights) %*% x_data / n
+      mean <- rbind(mean_base, mean)
+      rownames(mean) <- c("base", names(object$specs)[wCol])
+    }
+    
+  } else {
+    # Wasserstein Distance
+    u <- object$u
+    mean <- c()
+    
+    for (c in 1:length(xCol)){
+      temp <- c()
+      for (i in 1:length(wCol)){
+        index <- names(object$specs)[wCol[i]]
+        k <- object$specs[[index]]$k
+        if(is.character(k)) k_name <- k
+        if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
+        else if(!is.character(k)) k_name <- colnames(get_data(object))[k]
+        
+        w <- get_weights(object)[ , wCol[i]]
+        h <- object$h[[wCol[i]]](x_data[, c])
+        
+        lower_bracket = min(x_data[, c])#-(max(x_data[, c])-min(x_data[, c]))*0.1
+        upper_bracket = max(x_data[, c])#+(max(x_data[, c])-min(x_data[, c]))*0.1
+        
+        if(k_name == colnames(get_data(object))[c]){
+          # Get stressed quantile
+          G.inv.fn <- Vectorize(object$str_FY_inv[[wCol[i]]])
+        } else{
+          # Get KDE
+          G.fn <- function(x){
+            return(sum(w * stats::pnorm((x - x_data[,c])/h)/length(x_data[,c])))
+          }
+          G.fn <- Vectorize(G.fn)
+          G.inv.fn <- Vectorize(.inverse(G.fn, lower_bracket, upper_bracket))
+        }
+        
+        # achieved mean and sd
+        mean_achieved <- .integrate(G.inv.fn(u), u)
+        temp <- c(temp, mean_achieved)
+      }
+      
+      if (base == TRUE){
+        # Get KDE
+        F.fn <- function(x){
+          return(sum(stats::pnorm((x - x_data[, c])/h)/length(x_data[, c])))
+        }
+        F.fn <- Vectorize(F.fn)
+        F.inv.fn <- Vectorize(.inverse(F.fn, lower_bracket, upper_bracket))
+        
+        mean_achieved <- .integrate(F.inv.fn(u), u)
+        temp <- c(mean_achieved, temp)
+      }
+      mean <- cbind(mean, temp)
+      
+    }
+    colnames(mean) <- cname
+    if (base == TRUE) rownames(mean) <- c("base", names(object$specs)[wCol]) else rownames(mean) <- names(object$specs)[wCol]
   }
-
+  
   return(mean)
-}
+  }
 

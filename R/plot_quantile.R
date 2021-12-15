@@ -78,43 +78,47 @@ plot_quantile <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,
   } else {
     # Wasserstein Distance
     grid <- object$u
-    w <- get_weights(object)[ , wCol]
-    x_data <- get_data(object)[, xCol]
-    h <- object$h[[wCol]](x_data)
-    
-    index <- names(object$specs)[wCol]
-    k <- object$specs[[index]]$k
-    if(is.character(k)) k_name <- k
-    if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
-    else if(!is.character(k)) k_name <- colnames(get_data(object))[k]
-    
-    lower_bracket = min(x_data)-(max(x_data)-min(x_data))*0.1
-    upper_bracket = max(x_data)+(max(x_data)-min(x_data))*0.1
-    
-    if(k_name == x_name){
-      # Get stressed distribution
-      G.inv.fn <- Vectorize(object$str_FY_inv[[wCol]])
-    } else{
-      # Get KDE
-      G.fn <- function(x){
-        return(sum(w * stats::pnorm((x - x_data)/h)/length(x_data)))
-      }
-      G.fn <- Vectorize(G.fn)
-      G.inv.fn <- Vectorize(.inverse(G.fn, lower_bracket, upper_bracket))
-    }
-
-    if (is.SWIMw(object)){
-      quant_data <- cbind(grid, G.inv.fn(grid))
-      colnames(quant_data) <-  c("grid", names(object$specs)[wCol])
-      if (base == TRUE){
+    quant_data <- data.frame(grid)
+    for (i in 1:length(wCol)) {
+      w <- get_weights(object)[ , i]
+      x_data <- get_data(object)[, i]
+      h <- object$h[[i]](x_data)
+      
+      index <- names(object$specs)[i]
+      k <- object$specs[[index]]$k
+      if(is.character(k)) k_name <- k
+      if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
+      else if(!is.character(k)) k_name <- colnames(get_data(object))[k]
+      
+      lower_bracket = min(x_data)-(max(x_data)-min(x_data))*0.1
+      upper_bracket = max(x_data)+(max(x_data)-min(x_data))*0.1
+      
+      if(k_name == x_name){
+        # Get stressed distribution
+        G.inv.fn <- Vectorize(object$str_FY_inv[[i]])
+      } else{
         # Get KDE
-        F.fn <- function(x){
-          return(sum(stats::pnorm((x - x_data)/h)/length(x_data)))
+        G.fn <- function(x){
+          return(sum(w * stats::pnorm((x - x_data)/h)/length(x_data)))
         }
-        F.fn <- Vectorize(F.fn)
-        F.inv.fn <- Vectorize(.inverse(F.fn, lower_bracket, upper_bracket))
-        quant_data <- cbind(quant_data, base = F.inv.fn(grid))
+        G.fn <- Vectorize(G.fn)
+        G.inv.fn <- Vectorize(.inverse(G.fn, lower_bracket, upper_bracket))
       }
+      
+      if (is.SWIMw(object)){
+        quant_data <- cbind(quant_data, G.inv.fn(grid))
+      }
+    }
+    colnames(quant_data) <-  c("grid", names(object$specs)[wCol])
+    
+    if (base == TRUE){
+      # Get KDE
+      F.fn <- function(x){
+        return(sum(stats::pnorm((x - x_data)/h)/length(x_data)))
+      }
+      F.fn <- Vectorize(F.fn)
+      F.inv.fn <- Vectorize(.inverse(F.fn, lower_bracket, upper_bracket))
+      quant_data <- cbind(quant_data, base = F.inv.fn(grid))
     }
     
     plot_data <- reshape2::melt(as.data.frame(quant_data), id.var = "grid", variable.name = "stress", value.name = "value")
