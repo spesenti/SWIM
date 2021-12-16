@@ -96,30 +96,34 @@
       }
    } else {
       # Wasserstein Distance
-      w <- get_weights(object)[ , wCol]
-      h <- object$h[[wCol]](x_data)
-      
-      index <- names(object$specs)[wCol]
-      k <- object$specs[[index]]$k
-      if(is.character(k)) k_name <- k
-      if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
-      else if(!is.character(k)) k_name <- colnames(get_data(object))[k]
-      
-      if(k_name == x_name){
-         # Get stressed distribution
-         G.fn <- object$str_FY[[wCol]]
-      } else{
-         # Get KDE
-         G.fn <- function(x){
-            return(sum(w * stats::pnorm((x - x_data)/h)/length(x_data)))
+      plot.data <- data.frame(row.names = 1:length(x_data))
+      for (i in 1:length(wCol)) {
+         w <- get_weights(object)[ , i]
+         h <- object$h[[i]](x_data)
+         
+         index <- names(object$specs)[i]
+         k <- object$specs[[index]]$k
+         if(is.character(k)) k_name <- k
+         if(is.null(colnames(get_data(object)))) k_name <- paste("X", k, sep = "") 
+         else if(!is.character(k)) k_name <- colnames(get_data(object))[k]
+         
+         if(k_name == x_name){
+            # Get stressed distribution
+            G.fn <- object$str_FY[[i]]
+         } else{
+            # Get KDE
+            G.fn <- function(x){
+               return(sum(w * stats::pnorm((x - x_data)/h)/length(x_data)))
+            }
+            G.fn <- Vectorize(G.fn)
          }
-         G.fn <- Vectorize(G.fn)
+         
+         # Display components' names
+         curr.data <- data.frame(x_data, G.fn(x_data))
+         names(curr.data) <- c(x_name, names(object$specs)[i])
+         plot.data <- cbind(plot.data, curr.data)
+         
       }
-      
-      plot.data <- data.frame(x_data, G.fn(x_data))
-      
-      # Display components' names
-      names(plot.data) <- c(x_name, names(object$specs)[wCol])
       
       if (base == TRUE){
          # Get KDE
@@ -139,7 +143,9 @@
             ggplot2::labs(x = x_name, y = "cdf") +
             ggplot2::coord_cartesian(xlim = x_limits, ylim = y_limits) +
             ggplot2::theme_minimal() +
-            ggplot2::theme(legend.title = ggplot2::element_blank(), legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10))
+            ggplot2::theme(legend.title = ggplot2::element_blank(), 
+                           legend.key = ggplot2::element_blank(), 
+                           legend.text = ggplot2::element_text(size = 10))
       } else {
          return(plot.data)
       }

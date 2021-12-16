@@ -200,7 +200,7 @@ stress_RM_w <- function(x, alpha = 0.8, q_ratio = NULL, q = NULL, k = 1,
   gY_fn <- function(x){1/dG_inv_fn(GY_fn(x))}
 
   # Create SWIMw object
-  if (all.equal(.gamma, function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))})) {
+  if (all.equal(.gamma, function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))}) == TRUE) {
     type <- rep("ES", length.out = max_length)
   } else {
     type <- list("RM")
