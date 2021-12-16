@@ -245,15 +245,17 @@
   #'   "gamma" = rgamma(1000, shape = 2)))
   #' res1 <- stress(type = "VaR", x = x,
   #'   alpha = 0.9, q_ratio = 1.05)
-  #' rename_SWIM(res1, "A", 1)
+  #' res1 <- rename(res1, "VaR_09", 1)
   #' 
   #' @author Kent Wu 
   #'
   #' @export
   
-  rename_SWIM <- function(object, `names`, k=1){
+  rename <- function(object, `names`, k=1){
     if (!is.SWIM(object) & !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
+    if (length(names) != k) stop("The number of names should be equal to k")
     temp <- names(object$new_weights)
+    if (length(temp) > k | length(temp) > length(names)) stop("The number of names or k exceeds the number of stressed models")
     temp[k] <- names
     names(object$new_weights) <- temp
     names(object$specs) <- temp
