@@ -42,7 +42,7 @@ x <- as.data.frame(cbind(
   "gamma" = rgamma(1000, shape = 2)))
 res1 <- stress(type = "VaR", x = x,
   alpha = 0.9, q_ratio = 1.05)
-rename(res1, "A", 1)
+res1 <- rename(res1, "VaR_09", 1)
 
 }
 \author{

@@ -201,7 +201,7 @@
     # Wasserstein
     for (i in 1:length(.type)){
      if (.type[i] %in% c("RM", "RM mean sd", "HARA RM", "ES", "ES mean sd", "HARA ES")) {
-       .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]], stringsAsFactors = FALSE))
+       .specs <- plyr::rbind.fill(.specs, as.data.frame(object$specs[[i]], stringsAsFactors = FALSE)[1:3]) # Only include k, alpha, and q
      } else if (.type[i] %in% c("mean sd", "mean")){
        k <- paste(object$specs[[i]]$k, collapse = " ")
        .specs <- plyr::rbind.fill(.specs, as.data.frame(k))
@@ -209,7 +209,7 @@
     }
   }
    .type <- t(as.data.frame(.type))
-   .specs <- cbind(.type, .specs)[1:4] # Only include k, alpha, and q
+   .specs <- cbind(.type, .specs) 
    colnames(.specs)[1] <- "type"
    rownames(.specs) <- names(object$specs)
    return(.specs)
