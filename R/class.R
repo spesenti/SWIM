@@ -219,9 +219,9 @@
   #'     
   #' @details Get a new \code{SWIM} object with desired \code{name}
   #' 
-  #' @param object A \code{SWIM} object
-  #' @param names   Character, the new names of k-th stressed model.
-  #' @param k   Numeric, the k-th stressed model of object to rename. (\code{default = 1}).
+  #' @param object A \code{SWIM} or \code{SWIMw} object
+  #' @param names   Character vector, the new names of k-th stressed model.
+  #' @param k   Numeric vector, the k-th stressed model of object to rename. (\code{default = 1}).
   #'  
   #' @return An renamed object of class \code{SWIM} containing:
   #'   \itemize{
@@ -253,9 +253,9 @@
   
   rename <- function(object, `names`, k=1){
     if (!is.SWIM(object) & !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
-    if (length(names) != k) stop("The number of names should be equal to k")
+    if (length(names) != length(k)) stop("The number of names should be equal to k")
     temp <- names(object$new_weights)
-    if (length(temp) > k | length(temp) > length(names)) stop("The number of names or k exceeds the number of stressed models")
+    if (length(temp) > length(k) | length(temp) > length(names)) stop("The number of names or k exceeds the number of stressed models")
     temp[k] <- names
     names(object$new_weights) <- temp
     names(object$specs) <- temp

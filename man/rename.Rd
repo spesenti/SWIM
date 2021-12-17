@@ -7,11 +7,11 @@
 rename(object, names, k = 1)
 }
 \arguments{
-\item{object}{A \code{SWIM} object}
+\item{object}{A \code{SWIM} or \code{SWIMw} object}
 
-\item{names}{Character, the new names of k-th stressed model.}
+\item{names}{Character vector, the new names of k-th stressed model.}
 
-\item{k}{Numeric, the k-th stressed model of object to rename. (\code{default = 1}).}
+\item{k}{Numeric vector, the k-th stressed model of object to rename. (\code{default = 1}).}
 }
 \value{
 An renamed object of class \code{SWIM} containing:
