@@ -12,6 +12,7 @@ stress_mean_sd_w(
   h = 1,
   names = NULL,
   log = FALSE,
+  method = "Nelder-Mead",
   ...
 )
 }
@@ -34,6 +35,8 @@ underlying data of the \code{SWIMw} object. The stressed random component is ass
 \item{names}{Character vector, the names of stressed models.}
 
 \item{log}{Boolean, the option to print weights' statistics.}
+
+\item{method}{The method to be used in \code{\link[optim]{stats::optim}}. (\code{default = Nelder-Mead}).}
 
 \item{...}{Additional arguments to be passed to
 \code{\link[nleqslv]{nleqslv}}.}

@@ -80,7 +80,7 @@
 #' @export
 #'
 stress_RM_mean_sd_w <- function(x, alpha = 0.8, new_means, new_sd, q_ratio = NULL, q = NULL, k = 1,
-                                h = 1, gamma = NULL, names = NULL, log = FALSE, ...){
+                                h = 1, gamma = NULL, names = NULL, log = FALSE, method = "Nelder-Mead", ...){
 
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -173,7 +173,7 @@ stress_RM_mean_sd_w <- function(x, alpha = 0.8, new_means, new_sd, q_ratio = NUL
   print("Run optimization")
   max_length <- length(q)
   init_lam <- stats::rnorm(2+max_length)
-  res <- stats::optim(init_lam, .objective_fn, method = "Nelder-Mead")
+  res <- stats::optim(init_lam, .objective_fn, method = method)
   lam <- res$par
   print("Optimization converged")
   

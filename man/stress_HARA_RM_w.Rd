@@ -18,7 +18,8 @@ stress_HARA_RM_w(
   h = 1,
   gamma = NULL,
   names = NULL,
-  log = FALSE
+  log = FALSE,
+  method = "Nelder-Mead"
 )
 }
 \arguments{
@@ -53,11 +54,13 @@ baseline hara utility.\cr}
 
 \item{h}{Numeric, a multiplier of the default bandwidth using Silverman’s rule (default \code{h = 1}).\cr}
 
-\item{gamma}{Function of one variable, that defined the gamma of the risk measure. (\code{default Expected Shortfall}).}
+\item{gamma}{Function of one variable, that defined the gamma of the risk measure. (\code{default Expected Shortfall}).\cr}
 
 \item{names}{Character vector, the names of stressed models.}
 
 \item{log}{Boolean, the option to print weights' statistics.}
+
+\item{method}{The method to be used in \code{\link[optim]{stats::optim}}. (\code{default = Nelder-Mead}).}
 }
 \value{
 A \code{SWIMw} object containing:

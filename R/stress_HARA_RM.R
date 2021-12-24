@@ -88,7 +88,7 @@
 
 stress_HARA_RM_w <- function(x, alpha = 0.8, a, b, eta, 
                         q_ratio = NULL, q = NULL, hu_ratio = NULL, hu=NULL,
-                        k = 1, h = 1, gamma = NULL, names = NULL, log = FALSE){
+                        k = 1, h = 1, gamma = NULL, names = NULL, log = FALSE, method = "Nelder-Mead"){
 
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -181,7 +181,7 @@ stress_HARA_RM_w <- function(x, alpha = 0.8, a, b, eta,
   print("Run optimization")
   max_length <- length(q)
   init_lam <- stats::rnorm(1+max_length)
-  res <- stats::optim(init_lam, .objective_fn, method = "Nelder-Mead")
+  res <- stats::optim(init_lam, .objective_fn, method = method)
   lam <- res$par
   print("Optimization converged")
   

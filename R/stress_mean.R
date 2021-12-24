@@ -59,7 +59,7 @@
 #' @export
 
 stress_mean_w <- function(x, new_means, k = 1,
-                          h = 1, names = NULL, log = FALSE, ...){
+                          h = 1, names = NULL, log = FALSE, method = "Nelder-Mead", ...){
   
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -111,7 +111,7 @@ stress_mean_w <- function(x, new_means, k = 1,
   print("Run optimization")
   for(i in range(1:5)){
     init_lam <- stats::rnorm(2)
-    res <- stats::optim(init_lam, .objective_fn, method = "Nelder-Mead")
+    res <- stats::optim(init_lam, .objective_fn, method = method)
     lam <- res$par
     
     # Get ell

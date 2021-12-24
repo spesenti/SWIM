@@ -19,9 +19,10 @@
 #' @param q_ratio    Numeric, vector, the ratio of the stressed RM to
 #'                   the baseline RM (must be of the same length as alpha or gamma).\cr
 #' @param h Numeric, a multiplier of the default bandwidth using Silverman’s rule (default \code{h = 1}).\cr
-#' @param gamma Function of one variable, that defined the gamma of the risk measure. (\code{default Expected Shortfall}).
-#' @param names   Character vector, the names of stressed models.
-#' @param log     Boolean, the option to print weights' statistics.
+#' @param gamma Function of one variable, that defined the gamma of the risk measure. (\code{default Expected Shortfall}).\cr
+#' @param names Character vector, the names of stressed models.\cr
+#' @param log Boolean, the option to print weights' statistics.\cr
+#' @param method The method to be used in \code{\link[optim]{stats::optim}}. (\code{default = Nelder-Mead}).
 #'
 #' @details This function implements stresses on distortion risk measures.
 #'     Distortion risk measures are defined by a square-integrable function
@@ -92,7 +93,7 @@
 #' @export
 #'
 stress_RM_w <- function(x, alpha = 0.8, q_ratio = NULL, q = NULL, k = 1,
-                        h = 1, gamma = NULL, names = NULL, log = FALSE){
+                        h = 1, gamma = NULL, names = NULL, log = FALSE, method = "Nelder-Mead"){
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
   if (!is.null(q) && !is.null(q_ratio)) stop("Only provide q or q_ratio")
@@ -171,7 +172,7 @@ stress_RM_w <- function(x, alpha = 0.8, q_ratio = NULL, q = NULL, k = 1,
   print("Run optimization")
   max_length <- length(q)
   init_lam <- stats::rnorm(max_length)
-  res <- stats::optim(init_lam, .objective_fn, method = "Nelder-Mead")
+  res <- stats::optim(init_lam, .objective_fn, method = method)
   lam <- res$par
   print("Optimization converged")
   

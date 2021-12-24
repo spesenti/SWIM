@@ -4,7 +4,16 @@
 \alias{stress_mean_w}
 \title{Stressing Mean}
 \usage{
-stress_mean_w(x, new_means, k = 1, h = 1, names = NULL, log = FALSE, ...)
+stress_mean_w(
+  x,
+  new_means,
+  k = 1,
+  h = 1,
+  names = NULL,
+  log = FALSE,
+  method = "Nelder-Mead",
+  ...
+)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame
@@ -23,6 +32,8 @@ underlying data of the \code{SWIMw} object. The stressed random component is ass
 \item{names}{Character vector, the names of stressed models.}
 
 \item{log}{Boolean, the option to print weights' statistics.}
+
+\item{method}{The method to be used in \code{\link[optim]{stats::optim}}. (\code{default = Nelder-Mead}).}
 
 \item{...}{Additional arguments to be passed to
 \code{\link[nleqslv]{nleqslv}}.}
