@@ -17,7 +17,7 @@
  #'     baseline model.
  #'
  #'     The \code{SWIM} package is based on the \emph{reverse sensitivity
- #'     framework} developed by \insertCite{Pesenti2019reverse}{SWIM}.
+ #'     framework} developed by (Pesenti et al. 2019) and \insertCite{Pesenti2021SSRN}{SWIM}.
  #'     
  #'     Consider the random vector \code{X = (X1,...,Xn)}. Let P
  #'     represent the probability measure under which all simulated
@@ -30,16 +30,18 @@
  #'     where \code{D(P | Q)} is the Kullback-Leibler divergence
  #'     (relative entropy) between \code{P} and \code{Q}.
  #'
- #'     The approach of minimizing the Wasserstein distance of order 2 solves, 
- #'     for a random variable \code{Xi}:
+ #'     The approach of minimizing the Wasserstein distance of order 2 proceeds 
+ #'     as follows: Let F be the distribution function of the random variable \code{Xi} 
+ #'     under \code{P}, then the package solves
  #'     \deqn{argmin_{G} W_{2}(G, F)}
- #'     subject to constraints on the distribution \code{Xi} under \code{Q},
- #'     where \code{W_{2}(G, F)} is the Wasserstein distance between \code{G} and
- #'     \code{F}, the distributions under \code{Q} and \code{P}, respectively.
+ #'     subject to constraints on \code{G}, \code{W_{2}(G, F)} is the 2-Wasserstein distance 
+ #'     between \code{G} and \code{F}. The solution to the above minimisation problem is the 
+ #'     distribution of \code{Xi} under \code{Q}. The current implementation of the Wasserstein 
+ #'     approach is based on Kernel density estimation with Gaussian kernels.
  #'
- #'    The solution is formed by the scenario weights representing the 
- #'    Radon-Nikodym derivative \code{dQ / dP}. The weighting generates a model
- #'    for which the joint distribution of \code{(X1,...,Xn)} is stressed.
+ #'    For both approaches, the scenario weights are then formed via the Radon-Nikodym 
+ #'    derivative \code{dQ / dP}. The weighting generates a model for which the joint distribution 
+ #'    of \code{(X1,...,Xn)} is stressed.
  #'
  #'     Different elements of \code{X} can be understood as
  #'     inputs or outputs of a model. For example, consider a model

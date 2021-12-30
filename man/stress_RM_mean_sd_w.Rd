@@ -50,7 +50,7 @@ the baseline RM (must be same length as \code{alpha}).\cr}
 
 \item{log}{Boolean, the option to print weights' statistics.}
 
-\item{method}{The method to be used in \code{\link[optim]{stats::optim}}. (\code{default = Nelder-Mead}).}
+\item{method}{The method to be used in [stats::optim()]. (\code{default = Nelder-Mead}).}
 
 \item{...}{Additional arguments to be passed to
 \code{\link[nleqslv]{nleqslv}}.}
@@ -123,7 +123,7 @@ summary(res2)
 
     \insertRef{Pesenti2020SSRN}{SWIM}\cr
 
-    \insertRef{Csiszar1975}{SWIM}
+    \insertRef{Pesenti2021SSRN}{SWIM}
 }
 \seealso{
 Other stress functions: 

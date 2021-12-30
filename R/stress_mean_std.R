@@ -57,7 +57,11 @@
 #' }
 #'
 #' @family stress functions
-#' @inherit SWIM references
+#' @references \insertRef{Pesenti2019reverse}{SWIM}\cr
+#'
+#'     \insertRef{Pesenti2020SSRN}{SWIM}\cr
+#'
+#'     \insertRef{Pesenti2021SSRN}{SWIM}
 #' @export
 
 stress_mean_sd_w <- function(x, new_means, new_sd, k = 1,

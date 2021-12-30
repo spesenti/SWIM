@@ -60,7 +60,7 @@ baseline hara utility.\cr}
 
 \item{log}{Boolean, the option to print weights' statistics.}
 
-\item{method}{The method to be used in \code{\link[optim]{stats::optim}}. (\code{default = Nelder-Mead}).}
+\item{method}{The method to be used in [stats::optim()]. (\code{default = Nelder-Mead}).}
 }
 \value{
 A \code{SWIMw} object containing:
@@ -133,7 +133,7 @@ summary(res2)
 
     \insertRef{Pesenti2020SSRN}{SWIM}\cr
 
-    \insertRef{Csiszar1975}{SWIM}
+    \insertRef{Pesenti2021SSRN}{SWIM}
 }
 \seealso{
 Other stress functions: 

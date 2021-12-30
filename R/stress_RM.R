@@ -22,7 +22,7 @@
 #' @param gamma Function of one variable, that defined the gamma of the risk measure. (\code{default Expected Shortfall}).\cr
 #' @param names Character vector, the names of stressed models.\cr
 #' @param log Boolean, the option to print weights' statistics.\cr
-#' @param method The method to be used in \code{\link[optim]{stats::optim}}. (\code{default = Nelder-Mead}).
+#' @param method The method to be used in [stats::optim()]. (\code{default = Nelder-Mead}).
 #'
 #' @details This function implements stresses on distortion risk measures.
 #'     Distortion risk measures are defined by a square-integrable function
@@ -89,7 +89,11 @@
 #' }
 #'  
 #' @family stress functions
-#' @inherit SWIM references
+#' @references \insertRef{Pesenti2019reverse}{SWIM}\cr
+#'
+#'     \insertRef{Pesenti2020SSRN}{SWIM}\cr
+#'
+#'     \insertRef{Pesenti2021SSRN}{SWIM}
 #' @export
 #'
 stress_RM_w <- function(x, alpha = 0.8, q_ratio = NULL, q = NULL, k = 1,
@@ -103,14 +107,14 @@ stress_RM_w <- function(x, alpha = 0.8, q_ratio = NULL, q = NULL, k = 1,
     if (!is.function(gamma)) stop("gamma must be a function")
     else {
       # if (!is.null(alpha)) stop("Both gamma and alpha are provided")
-      .gamma <- function(x, alpha = NULL){gamma(x)}
+      .gamma <- function(x, alpha = alpha){gamma(x)}
     }
   } else{
     warning("No gamma passed. Using expected shortfall.")
     if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
     if (!is.null(q) && (length(q) != length(alpha))) stop("q and alpha must have the same length")
     if (!is.null(q_ratio) && (length(q_ratio) != length(alpha))) stop("q_ratio and alpha must have the same length")
-    .gamma <- function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))}
+    .gamma <- function(x, alpha = alpha){as.numeric((x >= alpha) / (1 - alpha))}
   }
   
   n <- length(x_data[, k])
