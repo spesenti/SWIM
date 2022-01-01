@@ -3,6 +3,29 @@
 
 ## Major changes: Additional functions and features
 
+ - Wasserstein distance
+ 
+     - `stress_wass()`:
+        - A wrapper for the stress functions using the 2-Wasserstein distance
+     - `stress_RM_w()`:
+        - a stressed model component (random variable) fulfills a 
+        constraint on its risk measure defined by a gamma function.
+     - `stress_RM_mean_sd_w()`:
+        - a stressed model component (random variable) fulfills a 
+        constraint on its mean, standard deviation, and risk measure 
+        defined by a gamma function.
+     - `stress_HARA_RM_w()`:
+        - a stressed model component (random variable) fulfills a
+        constraint on its HARA utility defined by a, b and eta parameter
+        and risk measure defined by a gamma function.
+    - `stress_mean_sd_w()`:
+        - a stressed model component (random variable) fulfills a
+        constraint on its mean and standard deviation.
+    - `stress_mean_w()`: 
+        - a stressed model component (random variable) fulfills a
+        constraint on its mean.
+      
+
  - Functions
    
      - `mean_stressed()`:

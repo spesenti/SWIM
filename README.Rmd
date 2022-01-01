@@ -1,7 +1,7 @@
 ---
 # author: Silvana M. Pesenti
 # date: June 01, 2019
-output: github_document
+output: html_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 [![Travis-CI Build Status](https://travis-ci.org/spesenti/SWIM.svg?branch=master)](https://travis-ci.org/spesenti/SWIM)   [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/SWIM)](https://cran.r-project.org/package=SWIM) [![downloads](https://cranlogs.r-pkg.org/badges/grand-total/SWIM)](https://cran.r-project.org/package=SWIM)
 
-The SWIM package provides weights on simulated scenarios from a stochastic model, such that stressed model components (random variables) fulfill given probabilistic constraints (e.g. specified values for risk measures), under the new scenario weights. Scenario weights are selected by constrained minimisation of the relative entropy to the baseline model. The SWIM package is based on the paper Pesenti S.M, Millossovich P., Tsanakas A. (2019) ["Reverse Sensitivity Testing: What does it take to break the model"](https://openaccess.city.ac.uk/id/eprint/18896/).
+The SWIM package provides weights on simulated scenarios from a stochastic model, such that stressed model components (random variables) fulfill given probabilistic constraints (e.g. specified values for risk measures), under the new scenario weights. Scenario weights are selected by constrained minimisation of the relative entropy to the baseline model. The SWIM package is based on the papers Pesenti S.M, Millossovich P., Tsanakas A. (2019) ["Reverse Sensitivity Testing: What does it take to break the model"](https://openaccess.city.ac.uk/id/eprint/18896/) and and Pesenti S.M. (2021) ["Reverse Sensitivity Analysis for Risk Modelling"](https://ssrn.com/abstract=3878879).
 
 
 ## Vignette
@@ -40,7 +40,8 @@ alternatively from [GitHub](https://github.com/spesenti/SWIM):
 
 ## Scope of the SWIM package  
 The SWIM package provides sensitivity analysis tools for stressing model 
-components (random variables). Implemented stresses are: 
+components (random variables). Implemented stresses using the relative Entropy 
+(Kullback-Leibler divergence) are:
 
 R functions             | Stress
 ----------------------- | -------------------------------
@@ -54,6 +55,17 @@ R functions             | Stress
 `stress_prob()`         | probabilities of intervals
 `stress_user()`         | user defined scenario weights
 
+Implemented stresses using the 2-Wasserstein distance are:
+
+| R functions              | Stress                                      
+| ------------------------ | ------------------------------------------- 
+| `stress_wass()`          | A wrapper for the `stress_w` functions      
+| `stress_RM_w()`          | Risk measure                                  
+| `stress_RM_mean_sd_w()`  | Risk measure, means and standard deviations 
+| `stress_HARA_RM_w()`     | Risk measure and HARA utility               
+| `stress_mean_sd_w()`     | means and standard deviations               
+| `stress_mean_w()`        | means                                       
+
 Implemented functions allow to graphically display the change in the probability distributions under different stresses and the baseline model 
 as well as calculating sensitivity measures. 
 
@@ -65,6 +77,7 @@ We stress the VaR (quantile) of the portfolio loss Y at levels 0.75 and 0.9 with
  
 ```{r example, cache = TRUE}
  # simulating the portfolio 
+library(SWIM)
 set.seed(0)
 SD <- c(70, 45, 50, 60, 75)
 Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
@@ -87,6 +100,7 @@ lapply(summary(rev.stress, base = TRUE), FUN = knitr::kable, digits = 2)
 Visual display of the change of empirical distribution functions of the portfolio loss Y from the baseline to the two stressed models. 
 
 ```{r plot-cdf, cache = TRUE}
+library(spatstat)
 plot_cdf(object = rev.stress, xCol = 1, base = TRUE)
 ```
 
@@ -123,6 +137,7 @@ Visual display of the change of empirical distribution functions and density fro
 distribution function of X5 that has a heavier tail.  
  
 ```{r plot-cdf-input, cache = TRUE}
+library(spatstat)
 plot_cdf(object = rev.stress, xCol = 5, base = TRUE)
 plot_hist(object = rev.stress, xCol = 5, base = TRUE)
 ```
