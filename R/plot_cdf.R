@@ -63,6 +63,7 @@
 
   plot_cdf <- function(object, xCol = 1, wCol = "all", base = FALSE, n = 500,                            
                        x_limits, y_limits, displ = TRUE){
+   value <- NULL
    if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
    if (anyNA(object$x)) warning("x contains NA")
    x_data <- get_data(object)[, xCol]
@@ -85,7 +86,7 @@
       if (displ == TRUE){
          if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data))
          if (missing(y_limits)) y_limits <- c(0,1)
-         ggplot2::ggplot(plot_data, ggplot2::aes_(x = plot_data[,1], weight = ~'value')) +
+         ggplot2::ggplot(plot_data, ggplot2::aes_(x = plot_data[,1], weight = ~value)) +
             stat_ecdf(ggplot2::aes(color = factor(stress)), n = n) +
             ggplot2::labs(x = x_name, y = "ecdf") +
             ggplot2::coord_cartesian(xlim = x_limits, ylim = y_limits) +
@@ -138,7 +139,7 @@
       if (displ == TRUE){
          if (missing(x_limits)) x_limits <- c(min(x_data)-0.1, max(x_data)+0.1)
          if (missing(y_limits)) y_limits <- c(0,1)
-         ggplot2::ggplot(plot.data, ggplot2::aes(x = plot.data[,1], 'value', col=stress)) +
+         ggplot2::ggplot(plot.data, ggplot2::aes(x = plot.data[,1], value, col=stress)) +
             ggplot2::geom_line(ggplot2::aes(color = stress)) +
             ggplot2::labs(x = x_name, y = "cdf") +
             ggplot2::coord_cartesian(xlim = x_limits, ylim = y_limits) +
