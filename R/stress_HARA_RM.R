@@ -82,13 +82,17 @@
 #'}
 #'
 #' @family stress functions
-#' @inherit SWIM references
+#' @references \insertRef{Pesenti2019reverse}{SWIM}\cr
+#'
+#'     \insertRef{Pesenti2020SSRN}{SWIM}\cr
+#'
+#'     \insertRef{Pesenti2021SSRN}{SWIM}
 #' @export
 
 
 stress_HARA_RM_w <- function(x, alpha = 0.8, a, b, eta, 
                         q_ratio = NULL, q = NULL, hu_ratio = NULL, hu=NULL,
-                        k = 1, h = 1, gamma = NULL, names = NULL, log = FALSE){
+                        k = 1, h = 1, gamma = NULL, names = NULL, log = FALSE, method = "Nelder-Mead"){
 
   if (is.SWIM(x) | is.SWIMw(x)) x_data <- get_data(x) else x_data <- as.matrix(x)
   if (anyNA(x_data)) warning("x contains NA")
@@ -102,14 +106,14 @@ stress_HARA_RM_w <- function(x, alpha = 0.8, a, b, eta,
     if (!is.function(gamma)) stop("gamma must be a function")
     else {
       # if (!is.null(alpha)) stop("Both gamma and alpha are provided")
-      .gamma <- function(x, alpha = NULL){gamma(x)}
+      .gamma <- function(x, alpha = alpha){gamma(x)}
     }
   } else{
     warning("No gamma passed. Using expected shortfall.")
     if (any(alpha <= 0) || any(alpha >= 1)) stop("Invalid alpha argument")
     if (!is.null(q) && (length(q) != length(alpha))) stop("q and alpha must have the same length")
     if (!is.null(q_ratio) && (length(q_ratio) != length(alpha))) stop("q_ratio and alpha must have the same length")
-    .gamma <- function(x, alpha){as.numeric((x >= alpha) / (1 - alpha))}
+    .gamma <- function(x, alpha = alpha){as.numeric((x >= alpha) / (1 - alpha))}
   }
 
   n <- length(x_data[, k])
@@ -181,7 +185,7 @@ stress_HARA_RM_w <- function(x, alpha = 0.8, a, b, eta,
   print("Run optimization")
   max_length <- length(q)
   init_lam <- stats::rnorm(1+max_length)
-  res <- stats::optim(init_lam, .objective_fn, method = "Nelder-Mead")
+  res <- stats::optim(init_lam, .objective_fn, method = method)
   lam <- res$par
   print("Optimization converged")
   

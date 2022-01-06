@@ -3,18 +3,24 @@ Title: Scenario Weights for Importance Measurement
 Version: 0.2.2.9999
 Authors@R: c(
   person("Silvana M.", "Pesenti", email = "swimpackage@gmail.com", 
-  role = c("aut", "cre")), 
+  role = c("aut", "cre"), comment = c(ORCID = "0000-0002-6661-6970")), 
   person("Alberto", "Bettini", 
   role = c("aut")), 
   person("Pietro", "Millossovich", 
-  role = c("aut")), 
+  role = c("aut"), comment = c(ORCID = "0000-0001-8269-7507")), 
   person("Andreas", "Tsanakas", 
-  role = c("aut"))
+  role = c("aut"), comment = c(ORCID = "0000-0003-4552-5532")),
+  person("Kent", "Wu", 
+  role = c("ctb")),
+  person("Judy", "Mao", 
+  role = c("ctb"))
   )
 Author: Silvana M. Pesenti [aut, cre],
   Alberto Bettini [aut],
   Pietro Millossovich [aut],
-  Andreas Tsanakas [aut]
+  Andreas Tsanakas [aut],
+  Kent Wu [ctb],
+  Judy Mao [ctb]
 Maintainer: Silvana M. Pesenti <swimpackage@gmail.com>
 Description: An efficient sensitivity analysis for stochastic models based on 
     Monte Carlo samples. Provides weights on simulated scenarios from a 
@@ -22,9 +28,10 @@ Description: An efficient sensitivity analysis for stochastic models based on
     probabilistic constraints (e.g. specified values for risk measures), 
     under the new scenario weights. Scenario weights are selected by 
     constrained minimisation of the relative entropy to the baseline model. 
-    The 'SWIM' package is based on Pesenti S.M, Millossovich P., Tsanakas A. 
-    (2019) "Reverse Sensitivity Testing: What does it take to break the model", 
-    <openaccess.city.ac.uk/id/eprint/18896/>.
+    The 'SWIM' package is based on Pesenti S.M., Millossovich P., Tsanakas A. (2019)
+    "Reverse Sensitivity Testing: What does it take to break the model" 
+    <openaccess.city.ac.uk/id/eprint/18896/> and Pesenti S.M. (2021) 
+    "Reverse Sensitivity Analysis for Risk Modelling" <https://ssrn.com/abstract=3878879>.
 Depends: R (>= 3.5.0)
 Imports: 
     Rdpack (>= 0.7),

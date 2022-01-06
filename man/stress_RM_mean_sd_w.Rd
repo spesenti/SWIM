@@ -16,6 +16,7 @@ stress_RM_mean_sd_w(
   gamma = NULL,
   names = NULL,
   log = FALSE,
+  method = "Nelder-Mead",
   ...
 )
 }
@@ -43,11 +44,13 @@ the baseline RM (must be same length as \code{alpha}).\cr}
 
 \item{h}{Numeric, a multiplier of the default bandwidth using Silverman’s rule (default \code{h = 1}).\cr}
 
-\item{gamma}{Function of one variable, that defined the gamma of the risk measure. (\code{default Expected Shortfall}).}
+\item{gamma}{Function of one variable, that defined the gamma of the risk measure. (\code{default Expected Shortfall}).\cr}
 
 \item{names}{Character vector, the names of stressed models.}
 
 \item{log}{Boolean, the option to print weights' statistics.}
+
+\item{method}{The method to be used in [stats::optim()]. (\code{default = Nelder-Mead}).}
 
 \item{...}{Additional arguments to be passed to
 \code{\link[nleqslv]{nleqslv}}.}
@@ -120,7 +123,7 @@ summary(res2)
 
     \insertRef{Pesenti2020SSRN}{SWIM}\cr
 
-    \insertRef{Csiszar1975}{SWIM}
+    \insertRef{Pesenti2021SSRN}{SWIM}
 }
 \seealso{
 Other stress functions: 
