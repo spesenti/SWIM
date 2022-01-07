@@ -395,7 +395,7 @@
   #' @return \code{summary_weights}: print a list containing summary statistics 
   #'         of the stresses with each element being a table for a different stress. 
   #'         The summary statistics inclue minimum, maximum, standard deviation, 
-  #'         gini coefficient, entropy and effective sample size. 
+  #'         Gini coefficient, entropy and effective sample size. 
   #'         
   #'         Gini coefficient uses the formula \eqn{\frac{\sum_{i=1}^{n} \sum_{j=1}^{n}\left|x_{i}-x_{j}\right|}{2 n^{2} \bar{x}}}.
   #'         
@@ -413,7 +413,7 @@
       freqs <- w / length(w)
       sub_table <- t(matrix(c(min(w), max(w), stats::sd(w), .gini(w), .entropy(freqs), length(w)/(1 + stats::var(w)))))
       sub_table <- round(sub_table, 4)
-      colnames(sub_table) <- c("min", "max", "sd", "gini coef", "entropy", "effective sample size")
+      colnames(sub_table) <- c("min", "max", "sd", "Gini coef", "Entropy", "effective sample size")
       name <- names(object$specs)[i]
       table[[name]] <- sub_table
     }

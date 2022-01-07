@@ -7,7 +7,7 @@
 #'                of the \code{object} (\code{default = 1}). 
 #' @param wCol    Vector or characters, the columns of the scenario weights 
 #'                of the \code{object} (\code{default = "all"}).
-#' @param grid    Vecto, rthe empirical distribution of the xCol component
+#' @param grid    Vector, the empirical distribution of the xCol component
 #'                of the stressed model with weights wCol. 
 #' @param base    Logical, if TRUE, statistics under the baseline are also returned (default = "FALSE").]
 #' 

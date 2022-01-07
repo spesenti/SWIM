@@ -34,7 +34,7 @@
 #' plot_quantile(res1, xCol = 1, wCol = 1:2, base = TRUE, x_limits = c(0.8, 1), 
 #'               y_limits = c(0, 5))
 #'
-#' @author Silvani M. Pesenti, Zhuomin Mao
+#' @author Silvana M. Pesenti, Zhuomin Mao
 #'
 #' @seealso See \code{\link{quantile_stressed}} for sample quantiles of a 
 #'     stressed model and \code{\link{plot_cdf}} for plotting empirical or KDE 

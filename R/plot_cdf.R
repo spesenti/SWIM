@@ -53,7 +53,7 @@
 #' plot_cdf(res1, xCol = 1, wCol = 1:2, base = TRUE,
 #'   x_limits = c(0, 5), y_limits = c(0.5, 1))
 #'
-#' @author Silvani M. Pesenti, Zhuomin Mao
+#' @author Silvana M. Pesenti, Zhuomin Mao
 #'
 #' @seealso See \code{\link{cdf}} for the empirical or KDE distribution function
 #'     of a stressed model and \code{\link{quantile_stressed}} for
