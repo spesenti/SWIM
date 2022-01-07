@@ -53,8 +53,8 @@ stresses (\code{default = "all"}).}
 
 \code{summary_weights}: print a list containing summary statistics 
         of the stresses with each element being a table for a different stress. 
-        The summary statistics inclue minimum, maximum, standard deviation, 
-        gini coefficient, entropy and effective sample size. 
+        The summary statistics include minimum, maximum, standard deviation, 
+        Gini coefficient, entropy and effective sample size. 
         
         Gini coefficient uses the formula \eqn{\frac{\sum_{i=1}^{n} \sum_{j=1}^{n}\left|x_{i}-x_{j}\right|}{2 n^{2} \bar{x}}}.
         

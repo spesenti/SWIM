@@ -15,23 +15,23 @@ of the \code{object} (\code{default = 1}).}
 \item{wCol}{Vector or characters, the columns of the scenario weights 
 of the \code{object} (\code{default = "all"}).}
 
-\item{grid}{Vecto, rthe empirical distribution of the xCol component
-of the stressed model with weights wCol.}
+\item{grid}{Vector, the empirical distribution of the \code{xCol} component
+of the stressed model with weights \code{wCol}.}
 
 \item{base}{Logical, if TRUE, statistics under the baseline are also returned (default = "FALSE").]}
 }
 \value{
 A matrix containing the empirical distribution function 
-        applied to \code{grid} of the xCol components of the 
-        stressed model with weights wCol
+        applied to \code{grid} of the \code{xCol} components of the 
+        stressed model with weights \code{wCol}.
 }
 \description{
 Provides the empirical distribution of a stressed model component (random variable) under the scenario weights
 }
 \details{
 The \code{cdf_stressed} returns the values of the empirical distribution function 
-         of the xCol model components for weights wCol. In contrast, the \code{cdf} function 
-         returns a function, analogous to the ecdf from the base package. The 
+         of the \code{xCol} model components for weights \code{wCol}. In contrast, the \code{cdf} function 
+         returns a function, analogous to the \code{ecdf} from the base package. The 
          function \code{cdf_stressed} is the \code{cdf} function applied to grid.
 }
 \examples{

@@ -49,7 +49,7 @@ the baseline RM (must be of the same length as alpha or gamma).\cr}
 A \code{SWIMw} object containing:
     \itemize{
       \item \code{x}, a data.frame containing the data;
-      \item \code{h}, h is a multiple of the silverman’s rule;
+      \item \code{h}, h is a multiple of the Silverman’s rule;
       \item \code{u}, vector containing the gridspace on [0, 1];
       \item \code{lam}, vector containing the lambda's of the optimized model;
       \item \code{str_fY}, function defining the densities of the stressed component;
@@ -69,7 +69,7 @@ A \code{SWIMw} object containing:
 \description{
 Provides weights on simulated scenarios from a baseline 
 stochastic model, such that a stressed model component 
-(random variable) fulfills a constraint on its risk measure defined
+(random variable) fulfils a constraint on its risk measure defined
 by a gamma function. The default risk measure is the Expected 
 Shortfall at level alpha.
 }

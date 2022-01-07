@@ -44,7 +44,7 @@ the baseline RM (must be same length as \code{alpha}).\cr}
 \code{alpha} (must be same length as \code{alpha}).\cr}
 
 \item{hu_ratio}{Numeric, vector, the ratio of the HARA utility to the 
-baseline hara utility.\cr}
+baseline HARA utility.\cr}
 
 \item{hu}{Numeric, vector, the stressed HARA utility with parameters
 \code{a}, \code{b} and \code{eta}.\cr}
@@ -66,7 +66,7 @@ baseline hara utility.\cr}
 A \code{SWIMw} object containing:
     \itemize{
       \item \code{x}, a data.frame containing the data;
-      \item \code{h}, h is a multiple of the silverman’s rule;
+      \item \code{h}, h is a multiple of the Silverman’s rule;
       \item \code{u}, vector containing the gridspace on [0, 1];
       \item \code{lam}, vector containing the lambda's of the optimized model;
       \item \code{str_fY}, function defining the densities of the stressed component;

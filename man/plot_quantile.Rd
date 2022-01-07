@@ -81,5 +81,5 @@ See \code{\link{quantile_stressed}} for sample quantiles of a
     distribution functions under scenario weights.
 }
 \author{
-Silvani M. Pesenti, Zhuomin Mao
+Silvana M. Pesenti, Zhuomin Mao
 }
