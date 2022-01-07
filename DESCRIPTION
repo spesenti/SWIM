@@ -15,12 +15,6 @@ Authors@R: c(
   person("Kent", "Wu", 
   role = c("ctb"))
   )
-Author: Silvana M. Pesenti [aut, cre],
-  Alberto Bettini [aut],
-  Pietro Millossovich [aut],
-  Andreas Tsanakas [aut],
-  Zhuomin Mao[ctb],
-  Kent Wu [ctb]
 Maintainer: Silvana M. Pesenti <swimpackage@gmail.com>
 Description: An efficient sensitivity analysis for stochastic models based on 
     Monte Carlo samples. Provides weights on simulated scenarios from a 
