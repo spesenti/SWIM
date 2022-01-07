@@ -17,7 +17,7 @@
 #'          function \code{cdf_stressed} is the \code{cdf} function applied to grid.
 #' 
 #' @return A matrix containing the empirical distribution function 
-#'         applied to \code{grid} of the \colde{xCol} components of the 
+#'         applied to \code{grid} of the \code{xCol} components of the 
 #'         stressed model with weights \code{wCol}.
 #' 
 #' @examples      
