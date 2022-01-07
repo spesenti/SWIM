@@ -350,7 +350,7 @@
   #'   weights. Each component corresponds to a different stress;
   #'      \item \code{type}, specifies the stress type
   #'      \item \code{specs}, a list, each component corresponds to
-  #'    a different stressand contains a list with the specifications
+  #'    a different stress and contains a list with the specifications
   #'   of what has been stressed.
   #'     }
   #'     See \code{\link{SWIM}} for details.
@@ -394,7 +394,7 @@
   #'
   #' @return \code{summary_weights}: print a list containing summary statistics 
   #'         of the stresses with each element being a table for a different stress. 
-  #'         The summary statistics inclue minimum, maximum, standard deviation, 
+  #'         The summary statistics include minimum, maximum, standard deviation, 
   #'         Gini coefficient, entropy and effective sample size. 
   #'         
   #'         Gini coefficient uses the formula \eqn{\frac{\sum_{i=1}^{n} \sum_{j=1}^{n}\left|x_{i}-x_{j}\right|}{2 n^{2} \bar{x}}}.

@@ -1,7 +1,7 @@
 #' Stressing Mean and Standard Deviation
 #'
 #' Provides weights on simulated scenarios from a baseline stochastic
-#'     model, such that a stressed model component (random variable) fulfills a
+#'     model, such that a stressed model component (random variable) fulfils a
 #'     constraint on its mean and standard deviation.
 #'     Scenario weights are
 #'     selected by constrained minimisation of the Wasserstein distance to the
@@ -20,7 +20,7 @@
 #' @return A \code{SWIMw} object containing:
 #'     \itemize{
 #'       \item \code{x}, a data.frame containing the data;
-#'       \item \code{h}, h is a multiple of the silverman’s rule;
+#'       \item \code{h}, h is a multiple of the Silverman’s rule;
 #'       \item \code{u}, vector containing the gridspace on [0, 1];
 #'       \item \code{lam}, vector containing the lambda's of the optimized model;
 #'       \item \code{str_fY}, function defining the densities of the stressed component;

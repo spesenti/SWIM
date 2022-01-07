@@ -20,7 +20,7 @@
 #' @param hu          Numeric, vector, the stressed HARA utility with parameters
 #' \code{a}, \code{b} and \code{eta}.\cr
 #' @param hu_ratio    Numeric, vector, the ratio of the HARA utility to the 
-#' baseline hara utility.\cr
+#' baseline HARA utility.\cr
 #' @param names   Character vector, the names of stressed models.
 #' @param log     Boolean, the option to print weights' statistics.
 #'
@@ -45,7 +45,7 @@
 #' @return A \code{SWIMw} object containing:
 #'     \itemize{
 #'       \item \code{x}, a data.frame containing the data;
-#'       \item \code{h}, h is a multiple of the silverman’s rule;
+#'       \item \code{h}, h is a multiple of the Silverman’s rule;
 #'       \item \code{u}, vector containing the gridspace on [0, 1];
 #'       \item \code{lam}, vector containing the lambda's of the optimized model;
 #'       \item \code{str_fY}, function defining the densities of the stressed component;
@@ -145,7 +145,7 @@ stress_HARA_RM_w <- function(x, alpha = 0.8, a, b, eta,
   upper_bracket = max(x_data[,k])+(max(x_data[,k])-min(x_data[,k]))*0.1
   FY_inv_fn <- Vectorize(.inverse(FY_fn, lower_bracket, upper_bracket))
 
-  # Calculate the risk measure and hara utility
+  # Calculate the risk measure and HARA utility
   if(is.null(q)){
     q = c()
     for (i in 1:length(q_ratio)){
@@ -264,7 +264,7 @@ stress_HARA_RM_w <- function(x, alpha = 0.8, a, b, eta,
   outcome <- data.frame(cols = as.character(k), required_RM = m, achieved_moment = m.ac, abs_error = err, rel_error = rel.err)
   print(outcome)  
   
-  # message if the achieved hara utility is different from the specified utility.
+  # message if the achieved HARA utility is different from the specified utility.
   if(hu - hara_achieved > 1e-4) {
     message(paste("Stressed HARA Utility specified was ", round(hu, 4),", stressed HARA Utility achieved is ", round(hara_achieved, 4)))
     hu <- hara_achieved

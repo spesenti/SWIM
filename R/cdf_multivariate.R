@@ -7,18 +7,18 @@
 #'                of the \code{object} (\code{default = 1}). 
 #' @param wCol    Vector or characters, the columns of the scenario weights 
 #'                of the \code{object} (\code{default = "all"}).
-#' @param grid    Vector, the empirical distribution of the xCol component
-#'                of the stressed model with weights wCol. 
+#' @param grid    Vector, the empirical distribution of the \code{xCol} component
+#'                of the stressed model with weights \code{wCol}. 
 #' @param base    Logical, if TRUE, statistics under the baseline are also returned (default = "FALSE").]
 #' 
 #' @details The \code{cdf_stressed} returns the values of the empirical distribution function 
-#'          of the xCol model components for weights wCol. In contrast, the \code{cdf} function 
-#'          returns a function, analogous to the ecdf from the base package. The 
+#'          of the \code{xCol} model components for weights \code{wCol}. In contrast, the \code{cdf} function 
+#'          returns a function, analogous to the \code{ecdf} from the base package. The 
 #'          function \code{cdf_stressed} is the \code{cdf} function applied to grid.
 #' 
 #' @return A matrix containing the empirical distribution function 
-#'         applied to \code{grid} of the xCol components of the 
-#'         stressed model with weights wCol
+#'         applied to \code{grid} of the \colde{xCol} components of the 
+#'         stressed model with weights \code{wCol}.
 #' 
 #' @examples      
 #' ## example with a stress on VaR
