@@ -1,7 +1,7 @@
 #' Summarising Stressed Models
 #' 
 #' This function is a \code{\link[utils]{methods}} for an object of class 
-#'     \code{SWIM}. Provides summary statistics of the stochastic model, 
+#'     \code{SWIM} or \code{SWIMw}. Provides summary statistics of the stochastic model, 
 #'     stressed using the scenario weights. 
 #'     
 #' @inheritParams get_data
@@ -30,15 +30,23 @@
 #'     } 
 #'     
 #' @examples      
-#' ## continuing example in stress_VaR
+#' ## Example with the Relative Entropy
+#' ## continuing example in stress_VaR 
 #' set.seed(0)
 #' x <- as.data.frame(cbind(
 #'   "normal" = rnorm(1000), 
 #'   "gamma" = rgamma(1000, shape = 2)))
+#'   
 #' res1 <- stress(type = "VaR", x = x, 
 #'   alpha = 0.9, q_ratio = 1.05)
-#'   
 #' summary(res1, xCol = "normal", base = TRUE) 
+#' 
+#' ## Example with the Wasserstein distance 
+#' \dontrun{
+#' resW <- stress_wass(type = "RM", x = x, 
+#' alpha = 0.9, q_ratio = 1.05)
+#' summary(resW, xCol = "normal", base = TRUE) 
+#' }
 #' 
 #' @author Silvana M. Pesenti 
 #' 
@@ -66,39 +74,12 @@ summary.SWIM <- function(object, ..., xCol = "all", wCol = "all", base = FALSE){
     return(summary_w)
   }
 
-  #' Summarising Stressed Models
+  #' @describeIn summary.SWIM Summarising Stressed Models
   #' 
-  #' This function is a \code{\link[utils]{methods}} for an object of class 
-  #'     \code{SWIMw}. Provides summary statistics of the stochastic model, 
-  #'     stressed using the scenario weights. 
-  #'     
-  #' @inheritParams get_data
-  #' @param ...     Additional arguments will be ignored. 
-  #' @param xCol    Numeric or character vector, (names of) the columns of 
-  #'                the underlying data 
-  #'                of the \code{object} (\code{default = "all"}). 
-  #' @param wCol    Vector, the columns of the scenario weights 
-  #'                of the \code{object} corresponding to different 
-  #'                stresses (\code{default = "all"}).
-  #' @param base    Logical, if \code{TRUE}, statistics under the baseline 
-  #'                are also returned (\code{default = "FALSE"}).
-  #'                
-  #' @return \code{summary.SWIM} returns a list with components
-  #'     corresponding to different stresses. Components contain a
-  #'     summary statistic of each column of the data of the 
-  #'     \code{SWIMw} object:
-  #'     \tabular{ll}{
-  #'       \code{mean}        \tab The sample mean.\cr
-  #'       \code{sd}          \tab The sample standard deviation. \cr
-  #'       \code{skewness}    \tab The sample skewness.\cr
-  #'       \code{ex kurtosis} \tab The sample excess kurtosis\cr
-  #'       \code{1st Qu.}     \tab The 25\% quantile.\cr
-  #'       \code{Median}      \tab The median, 50\% quantile.\cr
-  #'       \code{3rd Qu.}     \tab The 75\% quantile.
-  #'     } 
   #'     
   #' @examples      
   #' ## continuing example in stress_VaR
+  #' 
   #' set.seed(0)
   #' x <- as.data.frame(cbind(
   #'   "normal" = rnorm(1000), 
