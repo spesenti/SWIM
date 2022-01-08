@@ -69,6 +69,7 @@
 #'     for details.
 #' 
 #' @examples 
+#' \dontrun{
 #' set.seed(0)
 #' x <- as.data.frame(cbind(
 #'   "normal" = rnorm(1000), 
@@ -76,6 +77,7 @@
 #' res <- stress_wass(type = "RM", x = x, 
 #'   alpha = 0.9, q_ratio = 1.05)
 #' summary(res)   
+#' }
 #' 
 #' @author Zhuomin Mao 
 #' @family stress functions
