@@ -7,7 +7,7 @@
 * local win (R4.1.2; R Under development)
 
 ## R CMD check results
-There were no ERRORs, no WARNINGS, and no NOTES.    
+There were no ERRORS, no WARNINGS, and no NOTES.    
 
 
 ## CRAN status: OK: 13
