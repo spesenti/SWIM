@@ -1,3 +1,28 @@
+<table>
+<tbody>
+<tr class="odd">
+<td># author: Silvana M. Pesenti</td>
+</tr>
+<tr class="even">
+<td># date: June 01, 2019</td>
+</tr>
+<tr class="odd">
+<td>output:</td>
+</tr>
+<tr class="even">
+<td>rmarkdown::html_document:</td>
+</tr>
+<tr class="odd">
+<td>md_extensions: [</td>
+</tr>
+<tr class="even">
+<td>“-autolink_bare_uris”</td>
+</tr>
+<tr class="odd">
+<td>]</td>
+</tr>
+</tbody>
+</table>
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -10,20 +35,21 @@ Status](https://travis-ci.org/spesenti/SWIM.svg?branch=master)](https://travis-c
 
 The SWIM package provides weights on simulated scenarios from a
 stochastic model, such that stressed model components (random variables)
-fulfill given probabilistic constraints (e.g. specified values for risk
+fulfil given probabilistic constraints (e.g. specified values for risk
 measures), under the new scenario weights. Scenario weights are selected
 by constrained minimisation of the relative entropy to the baseline
 model. The SWIM package is based on the papers Pesenti S.M, Millossovich
 P., Tsanakas A. (2019) [“Reverse Sensitivity Testing: What does it take
 to break the model”](https://openaccess.city.ac.uk/id/eprint/18896/) and
 and Pesenti S.M. (2021) [“Reverse Sensitivity Analysis for Risk
-Modelling”](https://ssrn.com/abstract=3878879).
+Modelling”](https://www.ssrn.com/abstract=3878879).
 
 ## Vignette
 
 The Vignette of the SWIM package is available in html format
-(<https://www.utstat.toronto.edu/pesenti/SWIMVignette/>) and as
-pdf(<https://openaccess.city.ac.uk/id/eprint/23473/>).
+[“https://www.utstat.toronto.edu/pesenti/SWIMVignette/”](https://www.utstat.toronto.edu/pesenti/SWIMVignette/)
+and as pdf
+[“https://openaccess.city.ac.uk/id/eprint/25845/”](https://openaccess.city.ac.uk/id/eprint/25845/).
 
 ## Installation
 
@@ -42,28 +68,89 @@ The SWIM package provides sensitivity analysis tools for stressing model
 components (random variables). Implemented stresses using the relative
 Entropy (Kullback-Leibler divergence) are:
 
-| R functions        | Stress                                |
-|--------------------|---------------------------------------|
-| `stress()`         | A wrapper for the `stress_` functions |
-| `stress_VaR()`     | VaR risk measure, a quantile          |
-| `stress_VaR()`     | VaR risk measure, a quantile          |
-| `stress_VaR_ES()`  | VaR and ES risk measures              |
-| `stress_mean()`    | means                                 |
-| `stress_mean_sd()` | means and standard deviations         |
-| `stress_moment()`  | moments, functions of moments         |
-| `stress_prob()`    | probabilities of intervals            |
-| `stress_user()`    | user defined scenario weights         |
+<table>
+<thead>
+<tr class="header">
+<th>R functions</th>
+<th>Stress</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>stress()</code></td>
+<td>A wrapper for the <code>stress_</code> functions</td>
+</tr>
+<tr class="even">
+<td><code>stress_VaR()</code></td>
+<td>VaR risk measure, a quantile</td>
+</tr>
+<tr class="odd">
+<td><code>stress_VaR()</code></td>
+<td>VaR risk measure, a quantile</td>
+</tr>
+<tr class="even">
+<td><code>stress_VaR_ES()</code></td>
+<td>VaR and ES risk measures</td>
+</tr>
+<tr class="odd">
+<td><code>stress_mean()</code></td>
+<td>means</td>
+</tr>
+<tr class="even">
+<td><code>stress_mean_sd()</code></td>
+<td>means and standard deviations</td>
+</tr>
+<tr class="odd">
+<td><code>stress_moment()</code></td>
+<td>moments, functions of moments</td>
+</tr>
+<tr class="even">
+<td><code>stress_prob()</code></td>
+<td>probabilities of intervals</td>
+</tr>
+<tr class="odd">
+<td><code>stress_user()</code></td>
+<td>user defined scenario weights</td>
+</tr>
+</tbody>
+</table>
 
 Implemented stresses using the 2-Wasserstein distance are:
 
-| R functions             | Stress                                      |
-|-------------------------|---------------------------------------------|
-| `stress_wass()`         | A wrapper for the `stress_w` functions      |
-| `stress_RM_w()`         | Risk measure                                |
-| `stress_RM_mean_sd_w()` | Risk measure, means and standard deviations |
-| `stress_HARA_RM_w()`    | Risk measure and HARA utility               |
-| `stress_mean_sd_w()`    | means and standard deviations               |
-| `stress_mean_w()`       | means                                       |
+<table>
+<thead>
+<tr class="header">
+<th>R functions</th>
+<th>Stress</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>stress_wass()</code></td>
+<td>A wrapper for the <code>stress_w</code> functions</td>
+</tr>
+<tr class="even">
+<td><code>stress_RM_w()</code></td>
+<td>Risk measure</td>
+</tr>
+<tr class="odd">
+<td><code>stress_RM_mean_sd_w()</code></td>
+<td>Risk measure, means and standard deviations</td>
+</tr>
+<tr class="even">
+<td><code>stress_HARA_RM_w()</code></td>
+<td>Risk measure and HARA utility</td>
+</tr>
+<tr class="odd">
+<td><code>stress_mean_sd_w()</code></td>
+<td>means and standard deviations</td>
+</tr>
+<tr class="even">
+<td><code>stress_mean_w()</code></td>
+<td>means</td>
+</tr>
+</tbody>
+</table>
 
 Implemented functions allow to graphically display the change in the
 probability distributions under different stresses and the baseline
@@ -76,22 +163,21 @@ X5) are correlated normally distributed with equal mean and different
 standard deviations. We stress the VaR (quantile) of the portfolio loss
 Y at levels 0.75 and 0.9 with an increase of 10%.
 
-``` r
- # simulating the portfolio 
-set.seed(0)
-SD <- c(70, 45, 50, 60, 75)
-Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
-x <- mvtnorm::rmvnorm(10^5, 
-   mean =  rep(100, 5), 
-   sigma = (SD %*% t(SD)) * Corr)
-data <- data.frame(rowSums(x), x)
-names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
- # stressing the portfolio 
-rev.stress <- stress(type = "VaR", x = data, 
-   alpha = c(0.75, 0.9), q_ratio = 1.1, k = 1)
-#> Stressed VaR specified was 722.9387 , stressed VaR achieved is 722.9378
-#> Stressed VaR specified was 878.859 , stressed VaR achieved is 878.8296
-```
+     # simulating the portfolio 
+    library(SWIM)
+    set.seed(0)
+    SD <- c(70, 45, 50, 60, 75)
+    Corr <- matrix(rep(0.5, 5^2), nrow = 5) + diag(rep(1 - 0.5, 5))
+    x <- mvtnorm::rmvnorm(10^5, 
+       mean =  rep(100, 5), 
+       sigma = (SD %*% t(SD)) * Corr)
+    data <- data.frame(rowSums(x), x)
+    names(data) <- c("Y", "X1", "X2", "X3", "X4", "X5")
+     # stressing the portfolio 
+    rev.stress <- stress(type = "VaR", x = data, 
+       alpha = c(0.75, 0.9), q_ratio = 1.1, k = 1)
+    #> Stressed VaR specified was 722.9387 , stressed VaR achieved is 722.9378
+    #> Stressed VaR specified was 878.859 , stressed VaR achieved is 878.8296
 
 Summary statistics of the baseline and the stressed model can be
 obtained via the `summary()` method.
@@ -128,7 +214,7 @@ obtained via the `summary()` method.
     #> |            |      Y|     X1|     X2|     X3|     X4|     X5|
     #> |:-----------|------:|------:|------:|------:|------:|------:|
     #> |mean        | 524.20| 105.87| 103.44| 103.82| 104.75| 106.33|
-    #> |sd          | 249.62|  73.14|  46.81|  52.01|  62.57|  78.46|
+    #> |sd          | 249.61|  73.14|  46.81|  52.01|  62.57|  78.46|
     #> |skewness    |   0.09|   0.04|   0.04|   0.05|   0.04|   0.06|
     #> |ex kurtosis |  -0.19|  -0.09|  -0.06|  -0.06|  -0.08|  -0.07|
     #> |1st Qu.     | 352.14|  55.99|  71.60|  68.34|  62.00|  52.93|
@@ -138,22 +224,8 @@ obtained via the `summary()` method.
 Visual display of the change of empirical distribution functions of the
 portfolio loss Y from the baseline to the two stressed models.
 
-``` r
-library(spatstat)
-#> Loading required package: spatstat.data
-#> Loading required package: spatstat.geom
-#> spatstat.geom 2.1-0
-#> Loading required package: spatstat.core
-#> Loading required package: nlme
-#> Loading required package: rpart
-#> spatstat.core 2.1-2
-#> Loading required package: spatstat.linnet
-#> spatstat.linnet 2.1-1
-#> 
-#> spatstat 2.1-0       (nickname: 'Comedic violence') 
-#> For an introduction to spatstat, type 'beginner'
-plot_cdf(object = rev.stress, xCol = 1, base = TRUE)
-```
+    library(spatstat)
+    plot_cdf(object = rev.stress, xCol = 1, base = TRUE)
 
 <img src="man/figures/README-plot-cdf-1.png" width="100%" />
 
@@ -167,50 +239,131 @@ scenario weights w by
 
 *Gamma* = ( E(Xi \* w) - E(Xi) ) / c,
 
-where c is a normalisation constant such that \|*Gamma*\| &lt;= 1, see
+where c is a normalisation constant such that |*Gamma*| &lt;= 1, see
 <https://doi.org/10.1016/j.ejor.2018.10.003>. Loosely speaking, the
 Reverse Sensitivity Measure is the normalised difference between the
 first moment of the stressed and the baseline distributions of Xi.
 
-``` r
-knitr::kable(sensitivity(rev.stress, type = "all"), digits = 2)
-```
+    knitr::kable(sensitivity(rev.stress, type = "all"), digits = 2)
+    #> Warning in sensitivity(rev.stress, type = "all"): No s passed in. Using Gamma sensitivity instead.
 
-| stress   | type        |     Y |   X1 |   X2 |   X3 |   X4 |   X5 |
-|:---------|:------------|------:|-----:|-----:|-----:|-----:|-----:|
-| stress 1 | Gamma       |  1.00 | 0.79 | 0.74 | 0.75 | 0.77 | 0.81 |
-| stress 2 | Gamma       |  1.00 | 0.79 | 0.74 | 0.75 | 0.77 | 0.80 |
-| stress 1 | Kolmogorov  |  0.08 | 0.05 | 0.05 | 0.05 | 0.05 | 0.05 |
-| stress 2 | Kolmogorov  |  0.05 | 0.03 | 0.03 | 0.03 | 0.03 | 0.03 |
-| stress 1 | Wasserstein | 33.84 | 8.07 | 4.84 | 5.45 | 6.72 | 8.77 |
-| stress 2 | Wasserstein | 24.02 | 5.73 | 3.43 | 3.88 | 4.77 | 6.21 |
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">stress</th>
+<th style="text-align: left;">type</th>
+<th style="text-align: right;">Y</th>
+<th style="text-align: right;">X1</th>
+<th style="text-align: right;">X2</th>
+<th style="text-align: right;">X3</th>
+<th style="text-align: right;">X4</th>
+<th style="text-align: right;">X5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">stress 1</td>
+<td style="text-align: left;">Gamma</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">0.79</td>
+<td style="text-align: right;">0.74</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">0.77</td>
+<td style="text-align: right;">0.81</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">stress 2</td>
+<td style="text-align: left;">Gamma</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">0.79</td>
+<td style="text-align: right;">0.74</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">0.77</td>
+<td style="text-align: right;">0.80</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">stress 1</td>
+<td style="text-align: left;">Kolmogorov</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0.05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">stress 2</td>
+<td style="text-align: left;">Kolmogorov</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">stress 1</td>
+<td style="text-align: left;">Wasserstein p = 1</td>
+<td style="text-align: right;">33.84</td>
+<td style="text-align: right;">8.07</td>
+<td style="text-align: right;">4.84</td>
+<td style="text-align: right;">5.45</td>
+<td style="text-align: right;">6.72</td>
+<td style="text-align: right;">8.77</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">stress 2</td>
+<td style="text-align: left;">Wasserstein p = 1</td>
+<td style="text-align: right;">24.02</td>
+<td style="text-align: right;">5.73</td>
+<td style="text-align: right;">3.43</td>
+<td style="text-align: right;">3.88</td>
+<td style="text-align: right;">4.77</td>
+<td style="text-align: right;">6.21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">stress 1</td>
+<td style="text-align: left;">Reverse</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">0.79</td>
+<td style="text-align: right;">0.74</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">0.77</td>
+<td style="text-align: right;">0.81</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">stress 2</td>
+<td style="text-align: left;">Reverse</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">0.79</td>
+<td style="text-align: right;">0.74</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">0.77</td>
+<td style="text-align: right;">0.80</td>
+</tr>
+</tbody>
+</table>
 
-``` r
-plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma") 
-```
+    plot_sensitivity(rev.stress, xCol = 2:6, type = "Gamma") 
 
 <img src="man/figures/README-sensitivity-1.png" width="100%" />
 
 Sensitivity to all sub-portfolios, (Xi + Xj), i,j = 1, …, 6:
 
-``` r
- # sub-portfolios
-f <- rep(list(function(x)x[1] + x[2]), 10)
-k <- list(c(2, 3), c(2, 4), c(2, 5), c(2, 6), c(3, 4), c(3, 5), c(3, 6), c(4, 5), c(4, 6), c(5, 6))
-importance_rank(rev.stress, xCol = NULL, wCol = 1, type = "Gamma", f = f, k = k)
-#>     stress  type f1 f2 f3 f4 f5 f6 f7 f8 f9 f10
-#> 1 stress 1 Gamma  7  6  3  1 10  9  5  8  4   2
-```
+     # sub-portfolios
+    f <- rep(list(function(x)x[1] + x[2]), 10)
+    k <- list(c(2, 3), c(2, 4), c(2, 5), c(2, 6), c(3, 4), c(3, 5), c(3, 6), c(4, 5), c(4, 6), c(5, 6))
+    importance_rank(rev.stress, xCol = NULL, wCol = 1, type = "Gamma", f = f, k = k)
+    #>     stress  type f1 f2 f3 f4 f5 f6 f7 f8 f9 f10
+    #> 1 stress 1 Gamma  7  6  3  1 10  9  5  8  4   2
 
 Ranking the input components according to the chosen sensitivity
 measure, in this example using *Gamma*.
 
-``` r
-importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
-#>     stress  type X1 X2 X3 X4 X5
-#> 1 stress 1 Gamma  2  5  4  3  1
-#> 2 stress 2 Gamma  2  5  4  3  1
-```
+    importance_rank(rev.stress, xCol = 2:6, type = "Gamma")
+    #>     stress  type X1 X2 X3 X4 X5
+    #> 1 stress 1 Gamma  2  5  4  3  1
+    #> 2 stress 2 Gamma  2  5  4  3  1
 
 Visual display of the change of empirical distribution functions and
 density from the baseline to the two stressed models of X5, the
@@ -218,15 +371,11 @@ portfolio component with the largest sensitivity. Stressing the
 portfolio loss Y, results in a distribution function of X5 that has a
 heavier tail.
 
-``` r
-library(spatstat)
-plot_cdf(object = rev.stress, xCol = 5, base = TRUE)
-```
+    library(spatstat)
+    plot_cdf(object = rev.stress, xCol = 5, base = TRUE)
 
 <img src="man/figures/README-plot-cdf-input-1.png" width="100%" />
 
-``` r
-plot_hist(object = rev.stress, xCol = 5, base = TRUE)
-```
+    plot_hist(object = rev.stress, xCol = 5, base = TRUE)
 
 <img src="man/figures/README-plot-cdf-input-2.png" width="100%" />
