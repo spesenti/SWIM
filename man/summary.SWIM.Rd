@@ -47,6 +47,8 @@ This function is a \code{\link[utils]{methods}} for an object of class
 }
 \section{Functions}{
 \itemize{
+\item \code{summary.SWIM}: Summarising Stressed Models
+
 \item \code{summary.SWIMw}: Summarising Stressed Models
 }}
 
@@ -63,6 +65,8 @@ res1 <- stress(type = "VaR", x = x,
   alpha = 0.9, q_ratio = 1.05)
 summary(res1, xCol = "normal", base = TRUE) 
 
+
+     
 ## Example with the Wasserstein distance 
 \dontrun{
 resW <- stress_wass(type = "RM", x = x, 
@@ -70,22 +74,8 @@ alpha = 0.9, q_ratio = 1.05)
 summary(resW, xCol = "normal", base = TRUE) 
 }
 
-     
-## continuing example in stress_VaR
-
-set.seed(0)
-x <- as.data.frame(cbind(
-  "normal" = rnorm(1000), 
-  "gamma" = rgamma(1000, shape = 2)))
-res1 <- stress_wass(type = "RM", x = x, 
-  alpha = 0.9, q_ratio = 1.05)
-  
-summary(res1, xCol = "normal", base = TRUE) 
-
 }
 \seealso{
-\code{\link{summary}}, \code{\link{SWIM}}
-
 \code{\link{summary}}, \code{\link{SWIM}}
 }
 \author{

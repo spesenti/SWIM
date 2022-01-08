@@ -41,15 +41,10 @@
 #'   alpha = 0.9, q_ratio = 1.05)
 #' summary(res1, xCol = "normal", base = TRUE) 
 #' 
-#' ## Example with the Wasserstein distance 
-#' \dontrun{
-#' resW <- stress_wass(type = "RM", x = x, 
-#' alpha = 0.9, q_ratio = 1.05)
-#' summary(resW, xCol = "normal", base = TRUE) 
-#' }
 #' 
 #' @author Silvana M. Pesenti 
 #' 
+#' @describeIn summary.SWIM Summarising Stressed Models
 #' @seealso \code{\link{summary}}, \code{\link{SWIM}}
 #' @export
 #' 
@@ -78,20 +73,15 @@ summary.SWIM <- function(object, ..., xCol = "all", wCol = "all", base = FALSE){
   #' 
   #'     
   #' @examples      
-  #' ## continuing example in stress_VaR
-  #' 
-  #' set.seed(0)
-  #' x <- as.data.frame(cbind(
-  #'   "normal" = rnorm(1000), 
-  #'   "gamma" = rgamma(1000, shape = 2)))
-  #' res1 <- stress_wass(type = "RM", x = x, 
-  #'   alpha = 0.9, q_ratio = 1.05)
-  #'   
-  #' summary(res1, xCol = "normal", base = TRUE) 
+  #' ## Example with the Wasserstein distance 
+  #' \dontrun{
+  #' resW <- stress_wass(type = "RM", x = x, 
+  #' alpha = 0.9, q_ratio = 1.05)
+  #' summary(resW, xCol = "normal", base = TRUE) 
+  #' }
   #' 
   #' @author Zhuomin Mao
   #' 
-  #' @seealso \code{\link{summary}}, \code{\link{SWIM}}
   #' @export
   
   summary.SWIMw <- function(object, ..., xCol = "all", wCol = "all", base = FALSE){
