@@ -25,7 +25,7 @@ Description: An efficient sensitivity analysis for stochastic models based on
     The 'SWIM' package is based on Pesenti S.M., Millossovich P., Tsanakas A. (2019)
     "Reverse Sensitivity Testing: What does it take to break the model" 
     <openaccess.city.ac.uk/id/eprint/18896/> and Pesenti S.M. (2021) 
-    "Reverse Sensitivity Analysis for Risk Modelling" <https://ssrn.com/abstract=3878879>.
+    "Reverse Sensitivity Analysis for Risk Modelling" <https://www.ssrn.com/abstract=3878879>.
 Depends: R (>= 3.5.0)
 Imports: 
     Rdpack (>= 0.7),
