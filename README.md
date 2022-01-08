@@ -47,7 +47,7 @@ Modelling”](https://www.ssrn.com/abstract=3878879).
 ## Vignette
 
 The Vignette of the SWIM package is available in html format
-<https://www.utstat.toronto.edu/pesenti/SWIMVignette/> and as pdf
+utstat.toronto.edu/pesenti/SWIMVignette/ and as pdf
 <https://openaccess.city.ac.uk/id/eprint/25845/>.
 
 ## Installation
