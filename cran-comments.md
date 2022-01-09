@@ -3,7 +3,7 @@
 
 ## Test environments
 * ubuntu (on travis-ci)    
-* local win (R4.1.2; R Under development)
+* local win (R4.1.2; R Under development (2022-01-07 r81458 ucrt), (2022-01-08 r81460 ucrt))
 
 ## R CMD check results
 There were no ERRORS, no WARNINGS, and no NOTES.    
