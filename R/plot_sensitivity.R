@@ -12,12 +12,11 @@
 #'     measures (\code{type}), see \code{\link{sensitivity}}.
 #'
 #'     Note that the Kolmogorov distance is the same for all inputs under
-#'     the same stress. Thus, it should only be used to compare different
-#'     stresses, not individual components.
+#'     the same stress for a SWIM object. Thus, it should only be used to 
+#'     compare different stresses, not individual components.
 #'
 #' @return If \code{displ = TRUE}, a plot displaying the sensitivity
 #'     measures of the stochastic model under the scenario weights.
-#'
 #'     If \code{displ = FALSE}, a data.frame for customised plotting with
 #'     \code{ggplot}. The data.frame
 #'     contains the columns: \code{stress} (the stresses), \code{type}
@@ -59,14 +58,25 @@
 #'     \code{\link{importance_rank}} for ranking of random
 #'     variables according to their sensitivities.
 #'
+#' @author Silvana M. Pesenti
+#'
 #' @export
 
-  plot_sensitivity <- function(object, xCol = "all", wCol = "all", type =
-                               c("Gamma",  "Kolmogorov", "Wasserstein"),
-                               f = NULL, k = NULL, displ = TRUE){
-   if (!is.SWIM(object)) stop("Object not of class SWIM")
-   if (anyNA(object$x)) warning("x contains NA")
-   sens <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f, k)
+  plot_sensitivity <- function(object, xCol = "all", wCol = "all", 
+                               type = c("Gamma", "Kolmogorov", "Wasserstein", "reverse", "all"),
+                               f = NULL, k = NULL, s= NULL, displ = TRUE, p = 1){
+  if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw.")
+  if (anyNA(object$x)) warning("x contains NA")
+  if (missing(type)) type <- "all"
+  if (!is.null(s)){
+     if (!is.function(s)) stop("s must be a function")
+  }
+  if ((type == 'reverse' | type == 'all') && is.null(s)){
+     warning("No s passed in. Using Gamma sensitivity instead.")
+     s <- function(x) x
+  }
+   sens <- sensitivity(object, xCol = xCol, wCol = wCol, type = type, f, k, s=s, p)
+   
    sens <- reshape2::melt(sens, id.var = c("stress", "type"), variable.name = "X_all")
    if (displ == TRUE){
      ggplot2::ggplot(sens, ggplot2::aes_(x = ~X_all, y = ~value)) +

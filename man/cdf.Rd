@@ -2,28 +2,29 @@
 % Please edit documentation in R/cdf.R
 \name{cdf}
 \alias{cdf}
-\title{Empirical Distribution Function of a Stressed Model}
+\title{Distribution Function of a Stressed Model}
 \usage{
 cdf(object, xCol = 1, wCol = 1)
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
-\item{xCol}{Numeric or character, (name of) the column of the underlying data 
+\item{xCol}{Numeric or character, (name of) the columns of the underlying data 
 of the \code{object} (\code{default = 1}).}
 
-\item{wCol}{Numeric, the column of the scenario weights 
+\item{wCol}{Numeric, the columns of the scenario weights 
 of the \code{object} (\code{default = 1}).}
 }
 \value{
-The empirical distribution function (a function) of 
+The empirical or KDE distribution function (a function) of 
     the \code{xCol} component of the stressed model with weights 
     \code{wCol}. The empirical distribution function can be 
     evaluated at a vector.
 }
 \description{
-Provides the empirical distribution function of a stressed 
-    model component (random variable) under the scenario weights.
+Provides the empirical distribution function of a stressed SWIM
+    model component (random variable) or KDE distribution of a stressed
+    SWIMw model component under the scenario weights.
 }
 \examples{
      
@@ -42,11 +43,11 @@ ecdf(x$normal)(grid)
 
 }
 \seealso{
-See \code{\link{plot_cdf}} for plotting the empirical 
+See \code{\link{plot_cdf}} for plotting the empirical or KDE 
     distribution function of the stressed model and 
     \code{\link{quantile_stressed}} for sample quantiles of 
     a stressed model.
 }
 \author{
-Silvana M. Pesenti
+Silvana M. Pesenti, Zhuomin Mao
 }

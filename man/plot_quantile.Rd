@@ -16,7 +16,7 @@ plot_quantile(
 )
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
 \item{xCol}{Numeric or character, (name of) the column of the underlying data
 of the \code{object} (\code{default = 1}).}
@@ -44,7 +44,7 @@ otherwise the data.frame for customised plotting with
 \code{ggplot} is returned (\code{default = TRUE}).}
 }
 \value{
-If \code{displ = TRUE}, a plot displaying the empirical
+If \code{displ = TRUE}, a plot displaying the empirical or KDE 
     quantile function of the stochastic model under the
     scenario weights.
 
@@ -58,8 +58,9 @@ If \code{displ = TRUE}, a plot displaying the empirical
     \deqn{ + geom_lines(aes(color = factor(stress))).}
 }
 \description{
-Plots the empirical quantile function of a stressed model
-    component (random variable) under the scenario weights.
+Plots the empirical quantile function of a stressed SWIM model
+    component (random variable) or KDE quantile function of a stressed
+    SWIMw model component under the scenario weights.
 }
 \examples{
 ## example with a stress on VaR
@@ -76,6 +77,9 @@ plot_quantile(res1, xCol = 1, wCol = 1:2, base = TRUE, x_limits = c(0.8, 1),
 }
 \seealso{
 See \code{\link{quantile_stressed}} for sample quantiles of a 
-    stressed model and \code{\link{plot_cdf}} for plotting empirical 
+    stressed model and \code{\link{plot_cdf}} for plotting empirical or KDE 
     distribution functions under scenario weights.
+}
+\author{
+Silvana M. Pesenti, Zhuomin Mao
 }

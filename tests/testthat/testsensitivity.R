@@ -113,9 +113,9 @@ test_that("value", {
   #stress 2, Kolmogorov
   expect_equal(as.numeric(s2[s2$type %in% "Kolmogorov", ][,3:4]), plot_im[plot_im$stress %in% "stress 2" & plot_im$type %in% "Kolmogorov", ][,4])
   #stress 1, Wasserstein
-  expect_equal(as.numeric(s1[s1$type %in% "Wasserstein", ][,3:4]), plot_im[plot_im$stress %in% "stress 1" & plot_im$type %in% "Wasserstein", ][,4])
+  expect_equal(as.numeric(s1[s1$type %in% "Wasserstein p = 1", ][,3:4]), plot_im[plot_im$stress %in% "stress 1" & plot_im$type %in% "Wasserstein p = 1", ][,4])
   #stress 2, Wasserstein
-  expect_equal(as.numeric(s2[s2$type %in% "Wasserstein", ][,3:4]), plot_im[plot_im$stress %in% "stress 2" & plot_im$type %in% "Wasserstein", ][,4])
+  expect_equal(as.numeric(s2[s2$type %in% "Wasserstein p = 1", ][,3:4]), plot_im[plot_im$stress %in% "stress 2" & plot_im$type %in% "Wasserstein p = 1", ][,4])
 })
 
 test_that("value function", {
@@ -128,7 +128,7 @@ test_that("value function", {
   #stress 2, Kolmogorov
   expect_equal(as.numeric(sf2[sf2$type %in% "Kolmogorov", ][,3:6]), plot_imf[plot_imf$stress %in% "stress 2" & plot_imf$type %in% "Kolmogorov", ][,4])
   #stress 1, Wasserstein
-  expect_equal(as.numeric(sf1[sf1$type %in% "Wasserstein", ][,3:6]), plot_imf[plot_imf$stress %in% "stress 1" & plot_imf$type %in% "Wasserstein", ][,4])
+  expect_equal(as.numeric(sf1[sf1$type %in% "Wasserstein p = 1", ][,3:6]), plot_imf[plot_imf$stress %in% "stress 1" & plot_imf$type %in% "Wasserstein p = 1", ][,4])
   #stress 2, Wasserstein
-  expect_equal(as.numeric(sf2[sf2$type %in% "Wasserstein", ][,3:6]), plot_imf[plot_imf$stress %in% "stress 2" & plot_imf$type %in% "Wasserstein", ][,4])
+  expect_equal(as.numeric(sf2[sf2$type %in% "Wasserstein p = 1", ][,3:6]), plot_imf[plot_imf$stress %in% "stress 2" & plot_imf$type %in% "Wasserstein p = 1", ][,4])
 })

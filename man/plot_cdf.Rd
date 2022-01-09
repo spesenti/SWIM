@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_cdf.R
 \name{plot_cdf}
 \alias{plot_cdf}
-\title{Plotting the Empirical Distribution Functions of a Stressed Model}
+\title{Plotting the Distribution Functions of a Stressed Model}
 \usage{
 plot_cdf(
   object,
@@ -16,7 +16,7 @@ plot_cdf(
 )
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
 \item{xCol}{Numeric or character, (name of) the column of the underlying data
 of the \code{object} (\code{default = 1}).}
@@ -45,7 +45,7 @@ otherwise the data.frame for customised plotting with
 \code{ggplot} is returned (\code{default = TRUE}).}
 }
 \value{
-If \code{displ = TRUE}, a plot displaying the empirical
+If \code{displ = TRUE}, a plot displaying the empirical or KDE
     distribution function of the stochastic model under the
     scenario weights.
 
@@ -62,8 +62,9 @@ If \code{displ = TRUE}, a plot displaying the empirical
     by Nicolas Woloszko, see Note below.
 }
 \description{
-Plots the empirical distribution function of a stressed model
-    component (random variable) under the scenario weights.
+Plots the empirical distribution function of a stressed SWIM model
+    component (random variable) or KDE distribution function of a stressed
+    SWIMw model component under the scenario weights.
 }
 \note{
 This function is based on the ggplot \code{stat_ecdf}
@@ -86,7 +87,10 @@ plot_cdf(res1, xCol = 1, wCol = 1:2, base = TRUE,
 
 }
 \seealso{
-See \code{\link{cdf}} for the empirical distribution function
+See \code{\link{cdf}} for the empirical or KDE distribution function
     of a stressed model and \code{\link{quantile_stressed}} for
     sample quantiles of a stressed model.
+}
+\author{
+Silvana M. Pesenti, Zhuomin Mao
 }

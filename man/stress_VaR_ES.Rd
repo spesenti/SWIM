@@ -12,7 +12,9 @@ stress_VaR_ES(
   q = NULL,
   s = NULL,
   k = 1,
-  normalise = FALSE
+  normalise = FALSE,
+  names = NULL,
+  log = FALSE
 )
 }
 \arguments{
@@ -49,6 +51,10 @@ the same length.}
 
 \item{normalise}{Logical. If true, values of the columns to be stressed are linearly
 normalised to the unit interval.}
+
+\item{names}{Character vector, the names of stressed models.}
+
+\item{log}{Boolean, the option to print weights' statistics.}
 }
 \value{
 A \code{SWIM} object containing:
@@ -120,12 +126,18 @@ summary(res2)
 }
 \seealso{
 Other stress functions: 
+\code{\link{stress_HARA_RM_w}()},
+\code{\link{stress_RM_mean_sd_w}()},
+\code{\link{stress_RM_w}()},
 \code{\link{stress_VaR}()},
+\code{\link{stress_mean_sd_w}()},
 \code{\link{stress_mean_sd}()},
+\code{\link{stress_mean_w}()},
 \code{\link{stress_mean}()},
 \code{\link{stress_moment}()},
 \code{\link{stress_prob}()},
 \code{\link{stress_user}()},
+\code{\link{stress_wass}()},
 \code{\link{stress}()}
 }
 \concept{stress functions}

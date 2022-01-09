@@ -1,4 +1,4 @@
-context("Stress mean")
+context("Stress Get Data")
 library("SWIM")
 
 set.seed(0)

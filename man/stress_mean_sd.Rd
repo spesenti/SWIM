@@ -4,7 +4,16 @@
 \alias{stress_mean_sd}
 \title{Stressing Mean and Standard Deviation}
 \usage{
-stress_mean_sd(x, k, new_means, new_sd, normalise = FALSE, ...)
+stress_mean_sd(
+  x,
+  k,
+  new_means,
+  new_sd,
+  normalise = TRUE,
+  names = NULL,
+  log = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame
@@ -24,6 +33,10 @@ containing the stressed standard deviations.}
 
 \item{normalise}{Logical. If true, values of \code{f(x)} are linearly
 scaled to the unit interval.}
+
+\item{names}{Character vector, the names of stressed models.}
+
+\item{log}{Boolean, the option to print weights' statistics.}
 
 \item{...}{Additional arguments to be passed to
 \code{\link[nleqslv]{nleqslv}} or
@@ -87,12 +100,18 @@ res2 <- stress_mean_sd(x = x, k = 1, new_means = 0.1,
 }
 \seealso{
 Other stress functions: 
+\code{\link{stress_HARA_RM_w}()},
+\code{\link{stress_RM_mean_sd_w}()},
+\code{\link{stress_RM_w}()},
 \code{\link{stress_VaR_ES}()},
 \code{\link{stress_VaR}()},
+\code{\link{stress_mean_sd_w}()},
+\code{\link{stress_mean_w}()},
 \code{\link{stress_mean}()},
 \code{\link{stress_moment}()},
 \code{\link{stress_prob}()},
 \code{\link{stress_user}()},
+\code{\link{stress_wass}()},
 \code{\link{stress}()}
 }
 \concept{stress functions}

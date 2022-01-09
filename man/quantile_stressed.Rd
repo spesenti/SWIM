@@ -9,11 +9,12 @@ quantile_stressed(
   probs = seq(0, 1, 0.25),
   xCol = "all",
   wCol = 1,
-  type = c("quantile", "(i-1)/(n-1)", "i/(n+1)", "i/n")
+  type = c("quantile", "(i-1)/(n-1)", "i/(n+1)", "i/n"),
+  base = FALSE
 )
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
 \item{probs}{Vector of probabilities with values 
 in \code{[0,1]} (\code{default = (0, 0.25, 
@@ -27,8 +28,11 @@ of the \code{object} (\code{default = "all"}).}
 of the \code{object} (\code{default = 1}).}
 
 \item{type}{Character, one of \code{"quantile","(i-1)/(n-1)",
-"i/(n+1)","i/n"}, with \code{default  = "quantile"}. 
+"i/(n+1)","i/n"}, (\code{default  = "quantile"}). 
 See details below.}
+
+\item{base}{Logical, if \code{TRUE}, statistics under the baseline 
+are also returned (\code{default = "FALSE"}).}
 }
 \value{
 Returns a matrix with estimates of the distribution quantiles
@@ -53,7 +57,8 @@ Provides sample quantiles for components (random variables) of a
     cumulative weight and \code{T} the total weight (usually total 
     sample size). See \code{\link[Hmisc]{wtd.quantile}} 
     for further details on \code{type}, on which
-    \code{quantile_stressed} is based.
+    \code{quantile_stressed} is based. \code{type} is ignored for 
+    when evaluating quantiles for \code{SWIMw} objects.
 }
 \examples{
      
@@ -73,4 +78,7 @@ See \code{\link[Hmisc]{wtd.quantile}} on which the function
     \code{quantile_stressed} is based. \cr
     See \code{cdf} for the empirical distribution function of 
     a stressed model.
+}
+\author{
+Silvana M. Pesenti, Zhuomin Mao
 }

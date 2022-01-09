@@ -8,13 +8,15 @@ sensitivity(
   object,
   xCol = "all",
   wCol = "all",
-  type = c("Gamma", "Kolmogorov", "Wasserstein", "all"),
+  type = c("Gamma", "Kolmogorov", "Wasserstein", "reverse", "all"),
   f = NULL,
-  k = NULL
+  k = NULL,
+  s = NULL,
+  p = 1
 )
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
 \item{xCol}{Numeric or character vector, (names of) the columns
 of the underlying data of the \code{object}
@@ -26,7 +28,7 @@ of the \code{object} corresponding to different
 stresses (\code{default = "all"}).}
 
 \item{type}{Character, one of \code{"Gamma", "Kolmogorov",
-"Wasserstein", "all"}.}
+"Wasserstein", "reverse", "all"} (\code{default = "all"}).}
 
 \item{f}{A function, or list of functions, that, applied to
 \code{x}, constitute the transformation of the data
@@ -37,6 +39,12 @@ indicating which columns of \code{x} each function
 in \code{f} operates on.\cr
 When \code{f} is a list, \code{k[[i]]} corresponds
 to the input variables of \code{f[[i]]}.}
+
+\item{s}{A function that, applied to \code{x}, defines the reverse
+sensitivity measure. If \code{type = "reverse"} and 
+\code{s = NULL}, defaults to \code{type = "Gamma"}.}
+
+\item{p}{Numeric vector, the p-th moment of Wasserstein distance (\code{default = 1}).}
 }
 \value{
 A data.frame containing the sensitivity measures of the
@@ -71,9 +79,17 @@ Provides sensitivity measures that compare the stressed and
     \item
       \code{Wasserstein}, the Wasserstein distance of order 1, defined
       for two distribution functions \code{F,G} by
-      \deqn{Wasserstein = \int | F(x) - G(x)| dx.}
+      \deqn{Wasserstein = \int |F(x) - G(x)| dx.}
+    
+    \item
+      \code{reverse}, the \emph{General Reverse Sensitivity Measure}, defined
+      for a random variable \code{Y}, scenario weights \code{w}, and a function
+      \code{s:R -> R} by \deqn{epsilon = ( E(s(Y) * w) - E(s(Y)) ) / c,}
+      where \code{c} is a normalisation constant such that
+      \code{|epsilon| <= 1}. \code{Gamma} is a special instance of
+      the reverse sensitivity measure when \code{s} is the identity function.
     }
-
+    
     If \code{f} and \code{k} are provided, the sensitivity of the
     transformed data is returned.
 }
@@ -130,4 +146,7 @@ See \code{\link{importance_rank}} for ranking of random
     \code{\link{plot_sensitivity}} for plotting
     sensitivity measures and \code{\link{summary}} for
     summary statistics of a stressed model.
+}
+\author{
+Silvana M. Pesenti, Zhuomin Mao
 }

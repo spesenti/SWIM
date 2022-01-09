@@ -44,7 +44,7 @@
 #' @export
 #' 
 plot_weights <- function(object, xCol = 1, wCol = "all", n, x_limits, y_limits, displ = TRUE){
-  if (!is.SWIM(object)) stop("Object not of class SWIM")
+  if (!is.SWIM(object) && !is.SWIMw(object)) stop("Object not of class SWIM or SWIMw")
   if (anyNA(object$x)) warning("x contains NA")
   if(is.numeric(xCol) && (length(xCol) != 1)) stop("Invalid xCol argument.")
   if(is.character(xCol) && (!(xCol %in% colnames(get_data(object))))) stop("Invalid xCol argument.")
@@ -53,19 +53,21 @@ plot_weights <- function(object, xCol = 1, wCol = "all", n, x_limits, y_limits, 
   if(is.null(colnames(get_data(object)))) x_name <- paste("X", xCol, sep = "") else if(!is.character(xCol)) x_name <- colnames(get_data(object))[xCol]
   if (is.character(wCol) && wCol == "all") wCol <- 1:ncol(get_weights(object))
   plot_data <- data.frame(x_data, get_weights(object)[ , wCol])
-  names(plot_data) <- c(x_name, paste("stress", wCol, sep = " "))
+  
+  # Display components' names
+  names(plot_data) <- c(x_name, names(object$specs)[wCol])
   
   if(missing(n)){
     n <- min(5000, dim(get_data(object))[1])
   } else {
-  if(!is.numeric(n) && (n != "all")) stop("n not a integer or 'all'.")
-  if(!is.null(n) & is.numeric(n)){
-    grid <- seq(1, dim(get_data(object))[1], length.out = n)
-    plot_data <- plot_data[order(plot_data[, 1]),][grid,]
-  }
-  if(n == "all"){
-    grid <- 1:length(x_data)
-  }
+    if(!is.numeric(n) && (n != "all")) stop("n not a integer or 'all'.")
+    if(!is.null(n) & is.numeric(n)){
+      grid <- seq(1, dim(get_data(object))[1], length.out = n)
+      plot_data <- plot_data[order(plot_data[, 1]),][grid,]
+    }
+    if(n == "all"){
+      grid <- 1:length(x_data)
+    }
   }
     
   plot_data <- reshape2::melt(plot_data, id.var = x_name, variable.name = "stress", value.name = "value")

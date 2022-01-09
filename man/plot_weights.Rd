@@ -15,7 +15,7 @@ plot_weights(
 )
 }
 \arguments{
-\item{object}{A \code{SWIM} object.}
+\item{object}{A \code{SWIM} or \code{SWIMw} object.}
 
 \item{xCol}{Numeric or character, (name of) the column of the underlying data
 of the \code{object} (\code{default = 1}).}
@@ -59,6 +59,7 @@ If \code{displ = TRUE}, a plot displaying the scenario
 Plots the scenario weights of a stressed model against a model component.
 }
 \examples{
+ \donttest{
 ## example with a stress with \code{credit_data} data set:
 data("credit_data")
 ## two stresses in VaR
@@ -66,7 +67,6 @@ model_stress <- stress_VaR(credit_data, alpha = c(0.9, 0.95), q_ratio = 1.1, k =
 plot_weights(model_stress, xCol = "L", wCol = 1:2)
 
 ## additional stress on VaR and ES
-\donttest{
 model_stress <- stress_VaR_ES(model_stress, alpha = 0.9, q_ratio = 1.1, s_ratio = 1.2, k =1) 
 plot_weights(model_stress, xCol = "L", wCol = "all", n = 1000, x_limits = c(0, 3500), 
              y_limits = c(0, 10))

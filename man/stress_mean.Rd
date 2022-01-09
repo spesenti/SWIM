@@ -4,7 +4,7 @@
 \alias{stress_mean}
 \title{Stressing Means}
 \usage{
-stress_mean(x, k, new_means, normalise = FALSE, ...)
+stress_mean(x, k, new_means, normalise = TRUE, names = NULL, log = FALSE, ...)
 }
 \arguments{
 \item{x}{A vector, matrix or data frame
@@ -21,6 +21,10 @@ containing the stressed means.}
 
 \item{normalise}{Logical. If true, values of \code{f(x)} are linearly
 scaled to the unit interval.}
+
+\item{names}{Character vector, the names of stressed models.}
+
+\item{log}{Boolean, the option to print weights' statistics.}
 
 \item{...}{Additional arguments to be passed to
 \code{\link[nleqslv]{nleqslv}} or
@@ -83,12 +87,18 @@ See \code{\link{stress_mean_sd}} for stressing means
     moment constraints.
 
 Other stress functions: 
+\code{\link{stress_HARA_RM_w}()},
+\code{\link{stress_RM_mean_sd_w}()},
+\code{\link{stress_RM_w}()},
 \code{\link{stress_VaR_ES}()},
 \code{\link{stress_VaR}()},
+\code{\link{stress_mean_sd_w}()},
 \code{\link{stress_mean_sd}()},
+\code{\link{stress_mean_w}()},
 \code{\link{stress_moment}()},
 \code{\link{stress_prob}()},
 \code{\link{stress_user}()},
+\code{\link{stress_wass}()},
 \code{\link{stress}()}
 }
 \concept{stress functions}
