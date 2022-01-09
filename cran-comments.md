@@ -1,5 +1,4 @@
-## Re-submission: Version 0.2.2
-
+## Re-submission: Version 1.0.0
 
 
 ## Test environments
