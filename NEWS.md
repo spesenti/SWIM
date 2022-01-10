@@ -1,5 +1,8 @@
 
-### SWIM 1.0.0 - current develop version on GitHub
+# Develop version SWIM v1.0.0.9000
+
+
+# SWIM 1.0.0 - curren version on GitHub
 
 ## Major changes: Additional functions and features
 
@@ -57,7 +60,7 @@
  - add `base` argument for `quantile_stressed()` and an error message if the input has `wCol` has dimension larger than 1.
 
 
-# SWIM 0.2.2 - current version on CRAN
+# SWIM 0.2.2
 
 ## Major changes: Additional functions and features
 
