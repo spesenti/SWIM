@@ -1,5 +1,5 @@
 
-### SWIM 1.0.0 - current develop version on GitHub
+# SWIM 1.0.0 - current version on GitHub
 
 ## Major changes: Additional functions and features
 
