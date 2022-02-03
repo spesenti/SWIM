@@ -1,10 +1,14 @@
-citHeader("To cite SWIM in publications, please use:")
+citHeader("If you use this package, please use the following citation information:")
 
-citEntry(entry = "unpublished",
-         author = personList(as.person("Silvana M. Pesenti"), as.person("Alberto Bettini"), as.person("Pietro Millossovich"), as.person("Andreas Tsanakas")),
-         title = "Scenario Weights for Importance Measurement (SWIM) - An R Package for Sensitivity Analysis",
-         year = "2020",
-         note = "Available at SSRN.",
-         url = "https://www.ssrn.com/abstract=3515274",
-         textVersion = "Silvana M. Pesenti, Alberto Bettini, Pietro Millossovich, Andreas Tsanakas. Scenario Weights for Importance Measurement (SWIM) - An R Package for Sensitivity Analysis. Available on SSRN, 2020."
+citEntry(entry = "Article",
+  title        = "Scenario Weights for Importance Measurement (SWIM) - An R Package for Sensitivity Analysis",
+  author       = personList(as.person("Silvana M. Pesenti"), as.person("Alberto Bettini"), as.person("Pietro Millossovich"), as.person("Andreas Tsanakas")),
+  journal      = "Annals of Actuarial Science",
+  year         = "2021",
+  volume       = "15",
+  number       = "2",
+  pages        = "458--483--25",
+  url          = "https://www.ssrn.com/abstract=3515274",
+
+  textVersion  = "Pesenti, Silvana M., et al. Scenario Weights for Importance Measurement (SWIM)–an R package for sensitivity analysis. Annals of Actuarial Science 15.2 (2021): 458-483."
 )
