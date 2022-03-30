@@ -13,3 +13,4 @@
 ^doc$
 ^Meta$
 ^README_cache$
+^vignettes\SWIM-vignette.Rmd$
