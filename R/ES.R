@@ -68,7 +68,7 @@ ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FAL
       temp <- c()
       for (alpha_i in alpha) {temp <- c(temp, .rm(G.inv.fn(u), gamma(u, alpha_i), u))}
       ES <- cbind(ES, temp)
-      
+        
       if (base == TRUE){
         # Get KDE
         F.fn <- function(x){
