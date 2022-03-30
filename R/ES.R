@@ -78,7 +78,7 @@ ES_stressed <- function(object, alpha = 0.95, xCol = "all", wCol = 1, base = FAL
         F.inv.fn <- Vectorize(.inverse(F.fn, lower_bracket, upper_bracket))
         
         temp <- c()
-        for (alpha_i in alpha) {temp <- c(temp, .rm(G.inv.fn(u), gamma(u, alpha_i), u))}
+        for (alpha_i in alpha) {temp <- c(temp, .rm(F.inv.fn(u), gamma(u, alpha_i), u))}
         ES <- cbind(ES, temp)
       }
     }
